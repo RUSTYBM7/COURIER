@@ -1,0 +1,174 @@
+#!/bin/bash
+
+set -e
+
+TARGET_URL="https://airpak-express.com/"
+CLONE_DIR="./site_clone"
+
+echo "Installing dependencies..."
+npm install express cheerio glob fs-extra >/dev/null 2>&1
+
+echo "Cloning website..."
+
+wget 
+  --mirror 
+  --convert-links 
+  --adjust-extension 
+  --page-requisites 
+  --no-parent 
+  --no-check-certificate 
+  --user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" 
+  --wait=1 
+  --limit-rate=0 
+  -e robots=off 
+  -P "$CLONE_DIR" 
+  "$TARGET_URL"
+
+echo "Creating path fixer..."
+
+cat > fix-paths.js <<'EOF'
+const fs = require('fs');
+const path = require('path');
+const cheerio = require('cheerio');
+const glob = require('glob');
+
+const ROOT = path.join(__dirname, 'site_clone');
+
+const DOMAIN_PATTERNS = [
+  /https?://(www.)?airpak-express.com/gi,
+  ///(www.)?airpak-express.com/gi
+];
+
+function normalizeAsset(targetPath, currentFile) {
+  if (!targetPath) return targetPath;
+
+  if (
+    targetPath.startsWith('data:') ||
+    targetPath.startsWith('mailto:') ||
+    targetPath.startsWith('tel:') ||
+    targetPath.startsWith('#')
+  ) {
+    return targetPath;
+  }
+
+  targetPath = targetPath.replace(/^https?://(www.)?airpak-express.com/i, '');
+  targetPath = targetPath.replace(/^//(www.)?airpak-express.com/i, '');
+
+  if (targetPath.startsWith('/')) {
+    const absoluteTarget = path.join(ROOT, targetPath);
+
+    return path.relative(
+      path.dirname(currentFile),
+      absoluteTarget
+    ).replace(/\/g, '/');
+  }
+
+  return targetPath;
+}
+
+const htmlFiles = glob.sync(${ROOT}/**/*.html);
+const cssFiles = glob.sync(${ROOT}/**/*.css);
+const jsFiles = glob.sync(${ROOT}/**/*.js);
+
+htmlFiles.forEach(file => {
+  let content = fs.readFileSync(file, 'utf8');
+  const $ = cheerio.load(content, { decodeEntities: false });
+
+  ['href','src','action'].forEach(attr => {
+    $([${attr}]).each((, el) => {
+      const val = $(el).attr(attr);
+      $(el).attr(attr, normalizeAsset(val, file));
+    });
+  });
+
+  $('[srcset]').each((, el) => {
+    const val = $(el).attr('srcset');
+    if (!val) return;
+
+    const fixed = val.split(',')
+      .map(entry => {
+        const parts = entry.trim().split(' ');
+        parts[0] = normalizeAsset(parts[0], file);
+        return parts.join(' ');
+      })
+      .join(', ');
+
+    $(el).attr('srcset', fixed);
+  });
+
+  let updated = $.html();
+
+  DOMAIN_PATTERNS.forEach(pattern => {
+    updated = updated.replace(pattern, '');
+  });
+
+  fs.writeFileSync(file, updated);
+});
+
+cssFiles.forEach(file => {
+  let content = fs.readFileSync(file, 'utf8');
+
+  content = content.replace(/url((.?))/gi, (match, p1) => {
+    let asset = p1.replace(/['"]/g, '').trim();
+    asset = normalizeAsset(asset, file);
+    return url("${asset}");
+  });
+
+  fs.writeFileSync(file, content);
+});
+
+jsFiles.forEach(file => {
+  let content = fs.readFileSync(file, 'utf8');
+
+  DOMAIN_PATTERNS.forEach(pattern => {
+    content = content.replace(pattern, '');
+  });
+
+  fs.writeFileSync(file, content);
+});
+
+console.log("Paths fixed.");
+EOF
+
+node fix-paths.js
+
+echo "Creating server..."
+
+cat > server.js <<'EOF'
+const express = require('express');
+const path = require('path');
+
+const app = express();
+const ROOT = path.join(__dirname, 'site_clone');
+
+app.use(express.static(ROOT));
+
+app.get('', (req, res) => {
+  const files = require('glob').sync(${ROOT}/**/index.html);
+  res.sendFile(files[0]);
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(Running clone on port ${PORT});
+});
+EOF
+
+cat > package.json <<'EOF'
+{
+  "name": "airpak-clone",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
+EOF
+
+cat > .replit <<'EOF'
+run = "npm install && npm start"
+EOF
+
+npm install
+npm

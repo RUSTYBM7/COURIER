@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Shipment — Airpak ShipNow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --nova-deep: #0A1628;
+      --nova-navy: #1E3A5F;
+      --nova-blue: #0066FF;
+      --nova-cyan: #00D4FF;
+      --nova-sky: #4DA6FF;
+      --nova-gold: #FFB800;
+      --nova-amber: #FF8C00;
+      --nova-green: #00C853;
+      --nova-red: #FF3B3B;
+      --nova-purple: #7B61FF;
+      --nova-white: #FFFFFF;
+      --nova-100: #F5F7FA;
+      --nova-200: #E8ECF1;
+      --nova-300: #C5CED9;
+      --nova-500: #6B7A8C;
+      --nova-800: #2D3748;
+      --nova-900: #1A202C;
+      --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+      --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px;
+      --space-12: 48px; --space-16: 64px;
+      --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px;
+      --radius-xl: 16px; --radius-2xl: 24px; --radius-full: 9999px;
+      --shadow-sm: 0 1px 3px rgba(10,22,40,0.08);
+      --shadow-md: 0 4px 12px rgba(10,22,40,0.12);
+      --shadow-lg: 0 8px 24px rgba(10,22,40,0.16);
+      --shadow-glow: 0 0 20px rgba(0,102,255,0.3);
+      --ease-swift: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --duration-fast: 150ms; --duration-base: 250ms;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --sidebar-w: 260px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--nova-100);
+      color: var(--nova-800);
+      min-height: 100vh;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: var(--font); cursor: pointer; border: none; background: none; }
+    input, select, textarea { font-family: var(--font); }
+
+    /* Same layout as dashboard */
+    .app-layout { display: flex; min-height: calc(100vh - var(--nav-height, 56px)); }
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--nova-deep);
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      transition: width var(--duration-base) var(--ease-swift);
+    }
+    .sidebar-header {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      padding: 0 var(--space-5);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      gap: var(--space-3);
+    }
+    .sidebar-logo img { height: 32px; width: auto; }
+    .sidebar-brand { font-size: var(--text-lg); font-weight: 800; color: var(--nova-white); }
+    .sidebar-nav {
+      flex: 1;
+      padding: var(--space-4) var(--space-3);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      overflow-y: auto;
+    }
+    .sidebar-section { margin-bottom: var(--space-4); }
+    .sidebar-section-title {
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.1em; color: rgba(255,255,255,0.3);
+      padding: var(--space-2) var(--space-3);
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      border-radius: var(--radius-md);
+      color: rgba(255,255,255,0.5);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      transition: all var(--duration-fast);
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); }
+    .nav-item.active { background: var(--nova-blue); color: var(--nova-white); }
+    .nav-item-icon { width: 36px; height: 36px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .nav-item-badge { margin-left: auto; background: var(--nova-red); color: white; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: var(--radius-full); }
+    .sidebar-footer { padding: var(--space-4) var(--space-3); border-top: 1px solid rgba(255,255,255,0.06); }
+    .sidebar-user { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); border-radius: var(--radius-md); transition: background var(--duration-fast); }
+    .sidebar-user:hover { background: rgba(255,255,255,0.06); }
+    .user-avatar { width: 36px; height: 36px; background: linear-gradient(135deg, var(--nova-blue), var(--nova-cyan)); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-size: var(--text-sm); font-weight: 700; color: white; flex-shrink: 0; }
+    .user-info { flex: 1; overflow: hidden; }
+    .user-name { font-size: var(--text-sm); font-weight: 600; color: var(--nova-white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-role { font-size: var(--text-xs); color: rgba(255,255,255,0.4); }
+    .sidebar-toggle { position: fixed; top: 20px; left: var(--sidebar-w); z-index: 101; width: 28px; height: 28px; background: var(--nova-white); border-radius: var(--radius-full); box-shadow: var(--shadow-md); display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--nova-500); transition: all var(--duration-base) var(--ease-swift); cursor: pointer; }
+    .main-content { flex: 1; margin-left: var(--sidebar-w); transition: margin-left var(--duration-base) var(--ease-swift); display: flex; flex-direction: column; min-height: 100vh; }
+    .topbar { height: 72px; background: var(--nova-white); border-bottom: 1px solid var(--nova-200); display: flex; align-items: center; justify-content: space-between; padding: 0 var(--space-6); position: sticky; top: 0; z-index: 50; }
+    .topbar-left { display: flex; align-items: center; gap: var(--space-4); }
+    .topbar-title { font-size: var(--text-xl); font-weight: 700; color: var(--nova-900); }
+    .topbar-right { display: flex; align-items: center; gap: var(--space-4); }
+    .search-box { display: flex; align-items: center; gap: var(--space-2); background: var(--nova-100); border-radius: var(--radius-full); padding: 0 var(--space-4); height: 40px; min-width: 280px; }
+    .search-box input { border: none; background: none; outline: none; font-size: var(--text-sm); color: var(--nova-800); width: 100%; }
+    .search-box input::placeholder { color: var(--nova-300); }
+    .topbar-icon-btn { width: 40px; height: 40px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: var(--nova-500); transition: all var(--duration-fast); position: relative; }
+    .topbar-icon-btn:hover { background: var(--nova-100); color: var(--nova-800); }
+    .topbar-icon-btn .dot { position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; background: var(--nova-red); border-radius: var(--radius-full); border: 2px solid var(--nova-white); }
+    .page-content { flex: 1; padding: var(--space-6); }
+
+    /* ===== FORM STEPPER ===== */
+    .stepper {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      margin-bottom: var(--space-8);
+    }
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .step-num {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-sm);
+      font-weight: 700;
+      transition: all var(--duration-base);
+    }
+    .step-num-done { background: var(--nova-green); color: white; }
+    .step-num-active { background: var(--nova-blue); color: white; box-shadow: 0 0 0 4px rgba(0,102,255,0.2); }
+    .step-num-pending { background: var(--nova-200); color: var(--nova-500); }
+    .step-label {
+      font-size: var(--text-sm);
+      font-weight: 500;
+      color: var(--nova-300);
+      transition: color var(--duration-fast);
+    }
+    .step-label-active { color: var(--nova-800); }
+    .step-divider { flex: 1; height: 2px; background: var(--nova-200); border-radius: var(--radius-full); max-width: 60px; }
+    .step-divider-done { background: var(--nova-green); }
+
+    /* ===== FORM LAYOUT ===== */
+    .shipment-form {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: var(--space-6);
+    }
+    .form-card {
+      background: var(--nova-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-6);
+    }
+    .form-section-title {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      color: var(--nova-900);
+      margin-bottom: var(--space-5);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .form-section-title span { width: 32px; height: 32px; background: rgba(0,102,255,0.1); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+    }
+    .form-group { display: flex; flex-direction: column; gap: var(--space-2); }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-label { font-size: var(--text-sm); font-weight: 500; color: var(--nova-800); }
+    .form-label .required { color: var(--nova-red); }
+    .form-input, .form-select {
+      height: 48px;
+      padding: 0 var(--space-4);
+      font-size: var(--text-base);
+      color: var(--nova-900);
+      background: var(--nova-white);
+      border: 1.5px solid var(--nova-200);
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: all var(--duration-fast) var(--ease-swift);
+    }
+    .form-input:focus, .form-select:focus { border-color: var(--nova-blue); box-shadow: 0 0 0 3px rgba(0,102,255,0.15); }
+    .form-input::placeholder { color: var(--nova-300); }
+    .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7A8C' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; }
+    .form-textarea { min-height: 100px; padding: var(--space-3) var(--space-4); resize: vertical; border-radius: var(--radius-md); border: 1.5px solid var(--nova-200); outline: none; font-size: var(--text-base); font-family: var(--font); color: var(--nova-900); transition: all var(--duration-fast); }
+    .form-textarea:focus { border-color: var(--nova-blue); box-shadow: 0 0 0 3px rgba(0,102,255,0.15); }
+
+    /* Inline address row */
+    .address-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: var(--space-3);
+    }
+
+    /* Package items */
+    .package-item {
+      background: var(--nova-100);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+      margin-bottom: var(--space-4);
+      border: 1px solid var(--nova-200);
+    }
+    .package-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-4);
+    }
+    .package-num {
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--nova-900);
+    }
+    .remove-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-full);
+      background: var(--nova-red);
+      color: white;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--duration-fast);
+    }
+    .remove-btn:hover { background: #CC2F2F; transform: scale(1.1); }
+    .package-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-3); }
+    .package-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+    /* Buttons */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); padding: 10px 20px; font-size: var(--text-sm); font-weight: 600; border-radius: var(--radius-md); border: none; cursor: pointer; transition: all var(--duration-fast) var(--ease-swift); font-family: var(--font); white-space: nowrap; }
+    .btn-primary { background: var(--nova-blue); color: var(--nova-white); }
+    .btn-primary:hover { background: #0052CC; box-shadow: var(--shadow-glow); transform: translateY(-1px); }
+    .btn-secondary { background: transparent; color: var(--nova-blue); border: 1.5px solid var(--nova-blue); }
+    .btn-secondary:hover { background: rgba(0,102,255,0.08); }
+    .btn-ghost { background: transparent; color: var(--nova-500); }
+    .btn-ghost:hover { background: var(--nova-100); color: var(--nova-800); }
+    .btn-green { background: var(--nova-green); color: white; }
+    .btn-green:hover { background: #00A844; }
+    .btn-sm { padding: 6px 14px; font-size: var(--text-xs); }
+    .btn-full { width: 100%; }
+    .btn-lg { padding: 14px 32px; font-size: var(--text-lg); }
+
+    /* ===== SIDEBAR QUOTE ===== */
+    .quote-card {
+      background: linear-gradient(135deg, var(--nova-navy), var(--nova-deep));
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      color: white;
+      position: sticky;
+      top: 88px;
+    }
+    .quote-title { font-size: var(--text-lg); font-weight: 700; margin-bottom: var(--space-5); }
+    .quote-row { display: flex; justify-content: space-between; padding: var(--space-3) 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: var(--text-sm); }
+    .quote-row:last-of-type { border-bottom: none; }
+    .quote-row-label { color: rgba(255,255,255,0.6); }
+    .quote-row-value { font-weight: 600; }
+    .quote-total { display: flex; justify-content: space-between; align-items: center; padding: var(--space-4) 0; border-top: 2px solid rgba(255,255,255,0.2); margin-top: var(--space-3); }
+    .quote-total-label { font-size: var(--text-base); font-weight: 600; }
+    .quote-total-value { font-size: var(--text-2xl); font-weight: 800; color: var(--nova-cyan); }
+    .quote-actions { display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-5); }
+
+    .service-options { display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-5); }
+    .service-option {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--duration-fast);
+      font-size: var(--text-sm);
+      color: rgba(255,255,255,0.8);
+    }
+    .service-option.selected { border-color: var(--nova-cyan); background: rgba(0,212,255,0.1); color: white; }
+    .service-option input { display: none; }
+    .service-radio {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.3);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .service-option.selected .service-radio { border-color: var(--nova-cyan); background: var(--nova-cyan); }
+    .service-option.selected .service-radio::after {
+      content: ''; width: 6px; height: 6px; background: var(--nova-deep); border-radius: 50%;
+    }
+    .service-name { font-weight: 600; color: white; }
+    .service-eta { margin-left: auto; font-size: var(--text-xs); color: var(--nova-cyan); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1280px) { .shipment-form { grid-template-columns: 1fr; } .quote-card { position: static; } }
+    @media (max-width: 1024px) { :root { --sidebar-w: 0; } .sidebar { transform: translateX(-100%); } }
+    @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } .address-row { grid-template-columns: 1fr; } .package-grid { grid-template-columns: 1fr 1fr; } .stepper { flex-wrap: wrap; } }
+  </style>
+  <link rel="stylesheet" href="css/apple-tokens.css">
+  <link rel="stylesheet" href="css/glass-system.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+
+  <!-- Unified Top Nav Bar -->
+  <nav class="nav-bar" style="position: relative; z-index: 100;">
+    <div class="nav-left">
+      <a href="index.html" class="nav-logo">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="6" fill="#007AFF"/>
+          <path d="M8 16h16M16 8v16" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="16" cy="16" r="6" fill="none" stroke="white" stroke-width="2"/>
+        </svg>
+        <span class="nav-logo-text">Airpak Express</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="shipnow-dashboard.html" class="nav-link">ShipNow Dashboard</a>
+        <a href="shipnow-new-shipment.html" class="nav-link active">New Shipment</a>
+        <a href="tracking.html" class="nav-link">Tracking</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <button class="theme-toggle"><i data-lucide="moon"></i></button>
+      <a href="shipnow-dashboard.html" class="nav-signin">← Back to Dashboard</a>
+    </div>
+  </nav>
+
+<div class="app-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo"><img src="/apps/airpak/img/logo.png" alt="Airpak"></div>
+      <span class="sidebar-brand">ShipNow</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Main</div>
+        <a href="shipnow-dashboard.html" class="nav-item">
+          <div class="nav-item-icon"><i data-lucide="bar-chart-2"></i></div>
+          Dashboard
+        </a>
+        <a href="shipnow-new-shipment.html" class="nav-item active">
+          <div class="nav-item-icon"><i data-lucide="plus"></i></div>
+          New Shipment
+        </a>
+        <a href="tracking.html" class="nav-item">
+          <div class="nav-item-icon"><i data-lucide="package"></i></div>
+          My Shipments
+          <span class="nav-item-badge">3</span>
+        </a>
+        <a href="tracking.html" class="nav-item">
+          <div class="nav-item-icon"><i data-lucide="download"></i></div>
+          Collection Request
+        </a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Tools</div>
+        <a href="tracking.html" class="nav-item"><div class="nav-item-icon"><i data-lucide="search"></i></div>Track Shipment</a>
+        <a href="shipnow-new-shipment.html" class="nav-item"><div class="nav-item-icon"><i data-lucide="dollar-sign"></i></div>Get Quote</a>
+        <a href="tracking.html" class="nav-item"><div class="nav-item-icon"><i data-lucide="map-pin"></i></div>Address Book</a>
+        <a href="tracking.html" class="nav-item"><div class="nav-item-icon"><i data-lucide="printer"></i></div>Print Label</a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Finance</div>
+        <a href="payment.html" class="nav-item"><div class="nav-item-icon"><i data-lucide="credit-card"></i></div>Top Up</a>
+        <a href="payment.html" class="nav-item"><div class="nav-item-icon"><i data-lucide="scroll"></i></div>Invoices</a>
+        <a href="payment.html" class="nav-item"><div class="nav-item-icon"><i data-lucide="trending-up"></i></div>Transactions</a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Support</div>
+        <a href="chat.html" class="nav-item"><div class="nav-item-icon"><i data-lucide="clipboard"></i></div>Reports</a>
+        <a href="settings.html" class="nav-item"><div class="nav-item-icon"><i data-lucide="settings"></i></div>Settings</a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar">JW</div>
+        <div class="user-info">
+          <div class="user-name">Jason Wong</div>
+          <div class="user-role">ShipNow Account</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('collapsed')">☰</div>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-breadcrumb">Home / Shipments / <strong>New Shipment</strong></div>
+      </div>
+      <div class="topbar-right">
+        <div class="search-box">
+          <i data-lucide="search"></i>
+          <input type="text" placeholder="Search shipments, invoices...">
+        </div>
+        <button class="topbar-icon-btn"><i data-lucide="bell"></i><span class="dot"></span></button>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <!-- Stepper -->
+      <div class="stepper">
+        <div class="step-item">
+          <div class="step-num step-num-done">✓</div>
+          <span class="step-label step-label-active">Sender</span>
+        </div>
+        <div class="step-divider step-divider-done"></div>
+        <div class="step-item">
+          <div class="step-num step-num-active">2</div>
+          <span class="step-label step-label-active">Receiver</span>
+        </div>
+        <div class="step-divider"></div>
+        <div class="step-item">
+          <div class="step-num step-num-pending">3</div>
+          <span class="step-label">Package</span>
+        </div>
+        <div class="step-divider"></div>
+        <div class="step-item">
+          <div class="step-num step-num-pending">4</div>
+          <span class="step-label">Services</span>
+        </div>
+        <div class="step-divider"></div>
+        <div class="step-item">
+          <div class="step-num step-num-pending">5</div>
+          <span class="step-label">Review</span>
+        </div>
+      </div>
+
+      <!-- Form + Quote -->
+      <div class="shipment-form">
+        <!-- LEFT: FORM -->
+        <div>
+          <!-- Step 2: Receiver -->
+          <div class="form-card" style="margin-bottom:var(--space-5);">
+            <div class="form-section-title"><span><i data-lucide="user"></i></span> Receiver Details</div>
+            <div class="form-grid">
+              <div class="form-group full">
+                <label class="form-label">Company Name <span class="required">*</span></label>
+                <input type="text" class="form-input" placeholder="Receiver company name">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Contact Name <span class="required">*</span></label>
+                <input type="text" class="form-input" placeholder="Contact person name">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone Number <span class="required">*</span></label>
+                <input type="tel" class="form-input" placeholder="+65 XXXX XXXX">
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" placeholder="receiver@company.com">
+              </div>
+            </div>
+
+            <div style="margin-top:var(--space-5);">
+              <div class="form-label" style="margin-bottom:var(--space-3);">Address <span class="required">*</span></div>
+              <div class="address-row" style="margin-bottom:var(--space-3);">
+                <div class="form-group">
+                  <input type="text" class="form-input" placeholder="Street address">
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-input" placeholder="City">
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-input" placeholder="Postcode">
+                </div>
+              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <select class="form-select form-input">
+                    <option>Singapore</option>
+                    <option>Australia</option>
+                    <option>United Kingdom</option>
+                    <option>United States</option>
+                    <option>Malaysia</option>
+                    <option>Thailand</option>
+                    <option>Japan</option>
+                    <option>UAE</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <select class="form-select form-input">
+                    <option>Singapore</option>
+                    <option>Sydney</option>
+                    <option>London</option>
+                    <option>New York</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Package -->
+          <div class="form-card" style="margin-bottom:var(--space-5);">
+            <div class="form-section-title"><span><i data-lucide="package"></i></span> Package Details</div>
+            <div class="package-item">
+              <div class="package-item-header">
+                <span class="package-num">Package 1</span>
+                <div class="remove-btn" title="Remove package"><i data-lucide="x"></i></div>
+              </div>
+              <div class="package-grid">
+                <div class="form-group">
+                  <label class="form-label">Length (cm)</label>
+                  <input type="number" class="form-input" placeholder="30">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Width (cm)</label>
+                  <input type="number" class="form-input" placeholder="20">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Height (cm)</label>
+                  <input type="number" class="form-input" placeholder="15">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Weight (kg)</label>
+                  <input type="number" class="form-input" placeholder="2.5">
+                </div>
+              </div>
+              <div style="margin-top:var(--space-4);">
+                <div class="form-grid package-grid-3">
+                  <div class="form-group">
+                    <label class="form-label">Package Type</label>
+                    <select class="form-select form-input">
+                      <option>Envelope / Document</option>
+                      <option>Parcel</option>
+                      <option>Pallet</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Quantity</label>
+                    <input type="number" class="form-input" placeholder="1" value="1">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Declared Value ($)</label>
+                    <input type="number" class="form-input" placeholder="0.00">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group full" style="margin-top:var(--space-4);">
+                <label class="form-label">Description of Goods</label>
+                <textarea class="form-textarea" placeholder="Describe the contents of this package..."></textarea>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-sm" style="margin-top:var(--space-2);"><i data-lucide="plus"></i> Add Another Package</button>
+          </div>
+
+          <!-- Step 4: Services -->
+          <div class="form-card">
+            <div class="form-section-title"><span><i data-lucide="zap"></i></span> Shipping Services</div>
+            <div class="service-options">
+              <label class="service-option selected">
+                <input type="radio" name="service" checked>
+                <div class="service-radio"></div>
+                <div>
+                  <div class="service-name">Express Worldwide</div>
+                  <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px;">Documents & parcels up to 30kg</div>
+                </div>
+                <div class="service-eta">2-3 days</div>
+              </label>
+              <label class="service-option">
+                <input type="radio" name="service">
+                <div class="service-radio"></div>
+                <div>
+                  <div class="service-name">Economy Worldwide</div>
+                  <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px;">Cost-effective for larger packages</div>
+                </div>
+                <div class="service-eta">5-7 days</div>
+              </label>
+              <label class="service-option">
+                <input type="radio" name="service">
+                <div class="service-radio"></div>
+                <div>
+                  <div class="service-name">Air Freight</div>
+                  <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px;">For heavy/bulk shipments</div>
+                </div>
+                <div class="service-eta">7-10 days</div>
+              </label>
+            </div>
+
+            <div style="margin-top:var(--space-6);">
+              <div class="form-label" style="margin-bottom:var(--space-3);">Additional Services</div>
+              <div style="display:flex;flex-wrap:wrap;gap:var(--space-3);">
+                <label style="display:flex;align-items:center;gap:var(--space-2);padding:var(--space-3) var(--space-4);background:var(--nova-100);border-radius:var(--radius-md);cursor:pointer;font-size:var(--text-sm);">
+                  <input type="checkbox" style="accent-color:var(--nova-blue);" checked>
+                  <span><i data-lucide="clipboard"></i> Shipment Insurance ($5.00)</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:var(--space-2);padding:var(--space-3) var(--space-4);background:var(--nova-100);border-radius:var(--radius-md);cursor:pointer;font-size:var(--text-sm);">
+                  <input type="checkbox" style="accent-color:var(--nova-blue);">
+                  <span><i data-lucide="box"></i> Signature Confirmation ($3.00)</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:var(--space-2);padding:var(--space-3) var(--space-4);background:var(--nova-100);border-radius:var(--radius-md);cursor:pointer;font-size:var(--text-sm);">
+                  <input type="checkbox" style="accent-color:var(--nova-blue);">
+                  <span><i data-lucide="bell"></i> SMS Notifications ($1.00)</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: QUOTE -->
+        <div>
+          <div class="quote-card">
+            <div class="quote-title"><i data-lucide="wallet"></i> Shipment Summary</div>
+
+            <div class="quote-row">
+              <span class="quote-row-label">Route</span>
+              <span class="quote-row-value">SGN → SYD</span>
+            </div>
+            <div class="quote-row">
+              <span class="quote-row-label">Service</span>
+              <span class="quote-row-value">Express Worldwide</span>
+            </div>
+            <div class="quote-row">
+              <span class="quote-row-label">Packages</span>
+              <span class="quote-row-value">1 Parcel</span>
+            </div>
+            <div class="quote-row">
+              <span class="quote-row-label">Total Weight</span>
+              <span class="quote-row-value">2.5 kg</span>
+            </div>
+            <div class="quote-row">
+              <span class="quote-row-label">Declared Value</span>
+              <span class="quote-row-value">—</span>
+            </div>
+
+            <div class="quote-row">
+              <span class="quote-row-label">Shipping Cost</span>
+              <span class="quote-row-value">$42.80</span>
+            </div>
+            <div class="quote-row">
+              <span class="quote-row-label">Insurance</span>
+              <span class="quote-row-value">$5.00</span>
+            </div>
+            <div class="quote-row">
+              <span class="quote-row-label">Fuel Surcharge</span>
+              <span class="quote-row-value">$4.20</span>
+            </div>
+            <div class="quote-row">
+              <span class="quote-row-label">Taxes & Duties</span>
+              <span class="quote-row-value">$0.00</span>
+            </div>
+
+            <div class="quote-total">
+              <span class="quote-total-label">Estimated Total</span>
+              <span class="quote-total-value">$52.00</span>
+            </div>
+
+            <div class="quote-actions">
+              <button class="btn btn-green btn-full btn-lg"><i data-lucide="credit-card"></i> Confirm & Pay</button>
+              <button class="btn" style="background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.2);"><i data-lucide="save"></i> Save as Draft</button>
+            </div>
+
+            <div style="margin-top:var(--space-4);padding-top:var(--space-4);border-top:1px solid rgba(255,255,255,0.1);">
+              <div style="font-size:var(--text-xs);color:rgba(255,255,255,0.4);text-align:center;">
+                Quotes are estimates only. Final price confirmed after pick-up.<br>
+                All prices in SGD.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+  <script>lucide.createIcons();</script>
+  <footer style="background:var(--nova-deep,0A1628);color:rgba(255,255,255,0.4);padding:16px 20px;text-align:center;font-size:12px;border-top:1px solid rgba(255,255,255,0.06);">
+    Unit 7, Wales International Hub, Cardiff Bay, Wales CF10 5AL, United Kingdom &nbsp;|&nbsp; © 2026 Airpak Express. All rights reserved.
+  </footer>
+</body>
+</html>

@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ — Airpak Express</title>
+  <link rel="icon" type="image/x-icon" href="/apps/airpak/images/icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="css/apple-tokens.css" />
+  <link rel="stylesheet" href="css/glass-system.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/pages.css" />
+  <link rel="stylesheet" href="css/faq.css" />
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav-bar">
+  <div class="nav-left">
+    <a href="index.html" class="nav-logo">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="6" fill="#007AFF"/>
+        <path d="M8 16h16M16 8v16" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="16" cy="16" r="6" fill="none" stroke="white" stroke-width="2"/>
+      </svg>
+      <span class="nav-logo-text">Airpak Express</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="faq.html" class="nav-link active">FAQ</a>
+      <a href="chat.html" class="nav-link">Support</a>
+    </div>
+  </div>
+  <div class="nav-right">
+    <button class="theme-toggle" aria-label="Toggle theme"><i data-lucide="moon"></i></button>
+    <a href="signup.html" class="lang-pill"><span class="flag">EN</span> English</a>
+    <a href="signin.html" class="nav-signin">Sign In</a>
+    <a href="signup.html" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<div class="faq-page">
+  <!-- Hero -->
+  <div class="faq-hero">
+    <h1>How can we help?</h1>
+    <p>Search or browse categories below</p>
+    <div class="faq-search-wrap">
+      <svg class="faq-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" class="faq-search-input" id="faqSearchInput" placeholder="Search 97 questions..." oninput="handleFaqSearch(this.value)" />
+      <span class="faq-search-count" id="faqSearchCount"></span>
+    </div>
+  </div>
+
+  <!-- FAQ Body -->
+  <div class="faq-body">
+
+    <!-- Category Pills -->
+    <div class="faq-categories" id="faqCategories">
+      <button class="faq-category-btn active" onclick="filterCategory('all', this)">
+        <span class="cat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+        <span>All</span>
+        <span class="faq-cat-count">97</span>
+      </button>
+      <button class="faq-category-btn" onclick="filterCategory('getting-started', this)">
+        <span class="cat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+        <span>Getting Started</span>
+        <span class="faq-cat-count">15</span>
+      </button>
+      <button class="faq-category-btn" onclick="filterCategory('shipping', this)">
+        <span class="cat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span>
+        <span>Shipping</span>
+        <span class="faq-cat-count">18</span>
+      </button>
+      <button class="faq-category-btn" onclick="filterCategory('billing', this)">
+        <span class="cat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+        <span>Billing</span>
+        <span class="faq-cat-count">14</span>
+      </button>
+      <button class="faq-category-btn" onclick="filterCategory('account', this)">
+        <span class="cat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+        <span>Account</span>
+        <span class="faq-cat-count">14</span>
+      </button>
+      <button class="faq-category-btn" onclick="filterCategory('international', this)">
+        <span class="cat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+        <span>International</span>
+        <span class="faq-cat-count">16</span>
+      </button>
+      <button class="faq-category-btn" onclick="filterCategory('claims', this)">
+        <span class="cat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+        <span>Claims</span>
+        <span class="faq-cat-count">12</span>
+      </button>
+      <button class="faq-category-btn" onclick="filterCategory('technical', this)">
+        <span class="cat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
+        <span>Technical</span>
+        <span class="faq-cat-count">8</span>
+      </button>
+    </div>
+
+    <!-- All sections container -->
+    <div id="faqAllContent">
+
+      <!-- ===================== GETTING STARTED ===================== -->
+      <div class="faq-section" data-category="getting-started">
+        <div class="faq-section-header">
+          <div class="faq-section-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <h2 class="faq-section-title">Getting Started</h2>
+          <span class="faq-section-count">15 questions</span>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I create a shipping label?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Sign in to your Airpak Express account and click "New Shipment" on your dashboard. Enter your package details including weight, dimensions, origin, and destination. Select your preferred service level — Express, Standard, or Economy — then confirm the details. Your printable shipping label will be generated instantly. You can also schedule a pickup from your location or drop off at any of our 2,000+ partner locations.
+              <div class="faq-related">
+                <div class="faq-related-label">Related questions</div>
+                <div class="faq-related-items">
+                  <button class="faq-related-btn" onclick="searchRelated('How do I schedule a pickup?')">How do I schedule a pickup?</button>
+                  <button class="faq-related-btn" onclick="searchRelated('What service levels are available?')">What service levels are available?</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How quickly can I start shipping after sign-up?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              You can start shipping immediately after creating your account! Our streamlined onboarding takes less than 5 minutes — just verify your email and you're ready to create labels, schedule pickups, and track shipments. Business accounts with volume requirements or invoice billing may need additional verification (company registration, VAT number), which typically completes within 24 hours.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What services does Airpak Express offer?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              We offer: (1) <strong>Package Delivery</strong> — small to medium parcels with real-time tracking; (2) <strong>Express Shipping</strong> — 24-48 hour priority delivery for time-sensitive shipments; (3) <strong>Business Solutions</strong> — volume pricing with a dedicated account manager; (4) <strong>International Shipping</strong> — worldwide coverage with full customs clearance support; (5) <strong>Warehousing & Fulfillment</strong> — storage, picking, packing, and distribution for eCommerce businesses; (6) <strong>Freight Forwarding</strong> — air, ocean, and road freight for large or heavy cargo.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Do I need to verify my account?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Standard accounts require only email verification to get started. Business accounts that need invoice billing, volume discounts, or custom pricing require additional verification: company registration documents, VAT number, and business address. This process is designed to be quick — most verifications complete within a few hours during business days. You'll receive an email notification once your account is fully verified.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I log in to my account?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Click "Sign In" at the top right of any Airpak Express page. Enter your registered email and password. If you've forgotten your password, click "Forgot Password" and we'll send you a reset link. For business accounts (GETOnline), use your assigned login credentials provided during onboarding. Contact support if you experience login issues.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What are the system requirements for using the platform?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Airpak Express works on any modern web browser — Chrome, Firefox, Safari, and Edge. For the best experience, keep your browser updated to the latest version. Our platform is fully responsive and works on tablets and mobile devices. API integrations require HTTP/1.1 or higher support. For ShipNow and GETOnline desktop apps, Windows 10+ or macOS 10.14+ is recommended.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I add a new user to my business account?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Go to Settings > Team Members in your dashboard. Click "Invite User" and enter their name and email address. Assign a role: Admin (full access), Standard (shipping features), or Viewer (read-only). They'll receive an invitation email to set up their password. You can manage permissions and revoke access at any time from the same page.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What is the difference between ShipNow, ShipLite, and GETOnline?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              <strong>ShipNow</strong> — Prepaid account with top-up system. Ideal for merchants and businesses with regular shipping needs. Get live quotes and manage all shipments in one place.<br/><br/>
+              <strong>ShipLite</strong> — Ad-hoc shipping on a pay-per-shipment basis. No commitment required. Perfect for occasional shippers who need quick, immediate shipping without an account.<br/><br/>
+              <strong>GETOnline</strong> — Full business solution with contract pricing, customized reports, API integration, and a dedicated account manager. Designed for enterprises with high shipping volumes.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Can I integrate Airpak with my eCommerce store?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Yes! Airpak Express offers direct integrations with major eCommerce platforms including Shopify, WooCommerce, Magento, BigCommerce, and Amazon Seller Central. Our REST API also allows custom integrations. Visit our Integrations page or contact your account manager to set up the connection. Orders sync automatically and labels generate with a single click.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I reset my password?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Click "Sign In" then "Forgot Password" on the login page. Enter the email address associated with your account. You'll receive a password reset link within 2 minutes. The link expires after 30 minutes. If you don't receive the email, check your spam folder or contact support for assistance.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Is there a mobile app for Airpak Express?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Our mobile-responsive web platform works seamlessly on any smartphone or tablet — no download required. For iOS and Android, our Airpak ShipNow companion app lets you create shipments, track packages, and receive push notifications for status updates. Download from the App Store or Google Play Store.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I contact support for onboarding help?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Our support team is available 24/7 via live chat, email (enquiry@airpak-express.com), and phone (+65 6768 8833). Business account holders get a dedicated account manager for personalized onboarding assistance. You can also book a video call with our solutions team through the Contact page to discuss your specific logistics needs.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Can multiple users share one business account?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Yes — GETOnline business accounts support multiple users with role-based access control. Each user has their own login credentials and permissions. Admins can control who can create labels, view reports, manage billing, or access settings. Activity is logged per user for security and audit purposes.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What happens to my data if I close my account?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              If you close your account, we retain your shipment data for 7 years for legal and regulatory compliance. You'll receive a full export of your data in CSV format before the account is deactivated. Your personal information is handled according to our Privacy Policy. Contact our data team at privacy@airpak-express.com for specific data deletion requests.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Does Airpak Express offer a free trial?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Yes — new accounts get 5 free shipments to try our service. This applies to both personal and business accounts. No credit card is required to sign up. Business accounts can also request a personalized demo with our sales team to discuss custom pricing and feature requirements before committing.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===================== SHIPPING ===================== -->
+      <div class="faq-section" data-category="shipping">
+        <div class="faq-section-header">
+          <div class="faq-section-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <h2 class="faq-section-title">Shipping</h2>
+          <span class="faq-section-count">18 questions</span>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I track my package in real time?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Enter your tracking number (found in your confirmation email and dashboard) on our tracking page. You'll see live GPS updates including pickup confirmation, each transit checkpoint, and estimated delivery time. You can also opt in for SMS or email push notifications at every stage. For business accounts, tracking is available via API and can be embedded in your own website or app.
+              <div class="faq-related">
+                <div class="faq-related-label">Related questions</div>
+                <div class="faq-related-items">
+                  <button class="faq-related-btn" onclick="searchRelated('Why is my tracking number not found?')">Why is my tracking number not found?</button>
+                  <button class="faq-related-btn" onclick="searchRelated('How do I get SMS tracking alerts?')">How do I get SMS tracking alerts?</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What's the maximum weight and size for packages?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Our standard parcel service accepts packages up to <strong>70kg</strong> and combined dimensions (Length + Width + Height) of <strong>300cm</strong>. The maximum individual dimension is 120cm. For larger or heavier items — including pallets and freight shipments — our Business Solutions and freight services accommodate multi-item shipments. Contact our team for a custom quote on oversized or heavy cargo.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Can I schedule a pickup for my packages?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Yes! Schedule a pickup directly from your dashboard by selecting "Schedule Pickup" and choosing your preferred date and time window. We offer flexible slots throughout the day, including same-day pickup for express shipments. You can also drop off packages at any of our 2,000+ partner locations — convenience stores, lockers, and service points — across the UK and internationally.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How long does domestic shipping take?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Delivery times vary by service level: <strong>Express</strong> — next business day (by 12pm or 6pm options); <strong>Standard</strong> — 2-3 business days; <strong>Economy</strong> — 5-7 business days. Remote and offshore postcodes may add 1-2 business days. You'll see the exact delivery estimate at checkout before confirming your shipment.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How long does international shipping take?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              International delivery times depend on destination and service: <strong>Express International</strong> — 2-5 business days to major cities; <strong>Standard International</strong> — 7-14 business days; <strong>Economy International</strong> — 14-28 business days. Customs clearance procedures in the destination country can add time. Use our shipping calculator for specific route estimates.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What packaging options do you provide?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              We offer a range of packaging: (1) <strong>Standard Boxes</strong> — small (20x15x10cm), medium (30x25x20cm), large (45x35x25cm); (2) <strong>Heavy Duty Boxes</strong> — reinforced for industrial items; (3) <strong>Envelope & Mailers</strong> — padded and rigid options for documents and small items; (4) <strong>Custom Packaging</strong> — bespoke boxes built to your specifications for high-volume shippers. Order packaging materials from your dashboard or mobile app.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Can I change the delivery address after placing an order?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Address changes are possible before the package is picked up. Go to your Shipment History, find the order, and click "Edit Address." If the package has already been picked up, you can request a redirect through our support team — additional fees may apply and delivery may be delayed. Note that changes to international shipments may require new customs documentation.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What items cannot be shipped?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Prohibited items include: explosives, flammable liquids/solids, gases, poisons, corrosives, radioactive materials, and biohazards. Additional restrictions apply for international destinations — some items legal in one country may be restricted elsewhere. Always check the destination country's import regulations before shipping. For special items or custom clearance questions, contact our team before booking.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Can I request delivery at a specific time?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              For time-critical deliveries, we offer <strong>Time Definite</strong> and <strong>Before Noon</strong> delivery options on Express shipments within selected postcodes. Additional fees apply for guaranteed time slots. During label creation, select the delivery window that suits your needs. Note that time-definite delivery is not available for international shipments due to customs variables.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What happens if I'm not home when my package arrives?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Our driver will attempt delivery twice. After the first failed attempt, you'll receive a notification with options: (1) reschedule delivery for a different date/time; (2) request delivery to a neighbor; (3) collect from the nearest depot. For business addresses, we recommend scheduling delivery when someone is available or using a safe location authorization.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I cancel or void a shipping label?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              If the package hasn't been picked up, you can void the label from your Shipment History by clicking "Void Label." The shipment will be cancelled and any charges reversed to your account. Note: labels can only be voided before pickup. Once a package is in transit, cancellation is not possible — but you can request a return or hold at a depot.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What is the difference between express, standard, and economy?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              <strong>Express</strong> — Priority handling with 24-48h delivery. Includes real-time GPS tracking, proof of delivery, and up to £200 insurance. Best for time-sensitive documents and urgent parcels.<br/><br/>
+              <strong>Standard</strong> — 2-5 business day delivery with full tracking. Cost-effective for regular shipments. Includes up to £100 insurance.<br/><br/>
+              <strong>Economy</strong> — Budget-friendly 5-14 business day delivery. Best for non-urgent shipments where cost savings are the priority. Basic tracking included.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Can I ship to a PO Box or APO address?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              We can ship to PO Boxes within Singapore and most international locations that support postal delivery. However, tracked and express services require a physical street address. APO (Armed Forces Post Office) addresses are supported for US military bases — contact our team to confirm APO restrictions before booking. Additional documentation may be required for APO shipments.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I handle a refused or unclaimed package?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              If a recipient refuses delivery or the package is unclaimed after delivery attempts, it will be held at the nearest depot for 7 days. You can request a return to sender, a resend attempt, or authorise disposal through your dashboard. Return shipping fees apply. For international shipments, customs duties and taxes are non-refundable. Contact support to initiate a return or hold request.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Do you offer same-day delivery?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Same-day delivery is available in major metro areas (Singapore, London, Hong Kong, Dubai, and more) for packages booked before the cutoff time (typically 12pm local time). Same-day is available for parcels up to 10kg with express service. A surcharge applies. Confirm availability at checkout by entering your pickup and delivery postcodes.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What is proof of delivery and how do I get it?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Proof of delivery (POD) includes the recipient's signature (or photo of goods left), date and time of delivery, and the delivery address. POD is automatically generated for all tracked shipments and uploaded to your dashboard within 2 hours of delivery. You can download POD as a PDF from your Shipment History. For business accounts, POD is attached to your invoice.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I pack fragile items safely?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Use double-walled boxes for fragile items. Wrap each item individually in bubble wrap or foam. Fill empty spaces with packing peanuts or crumpled paper. Seal with strong packing tape in an H-pattern. Label the box "Fragile — Handle with Care" on all sides. Consider our <strong>Fragile Protection</strong> add-on at checkout for extra coverage on delicate items. Do not use newspaper alone as cushioning.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Can I ship alcohol or perishable items?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Alcohol shipping is restricted to licensed importers with valid permits. Perishable items (food, plants, biological samples) require temperature-controlled packaging and special handling. Not all destinations support perishable shipping — check at checkout. We strongly recommend using our Temperature-Sensitive Shipment option for items requiring specific handling. Contact our team before booking perishable or restricted goods.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===================== BILLING ===================== -->
+      <div class="faq-section" data-category="billing">
+        <div class="faq-section-header">
+          <div class="faq-section-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <h2 class="faq-section-title">Billing & Payments</h2>
+          <span class="faq-section-count">14 questions</span>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What payment methods do you accept?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              We accept all major credit and debit cards (Visa, Mastercard, American Express, UnionPay), PayPal, Apple Pay, Google Pay, and bank transfers for business accounts. Business clients can also apply for invoice billing with NET 30 terms upon credit approval. Prepaid top-up is available for ShipNow accounts via credit card or bank transfer.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How does billing work for business accounts?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Business accounts (GETOnline) enjoy volume-based pricing with monthly consolidated invoices. You receive detailed shipment reports, usage analytics, and a dedicated account manager. Invoices are generated monthly with NET 30 payment terms. Payment methods include bank transfer or credit card. Custom pricing for high-volume shippers is available — contact our sales team for a quote.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I add funds to my ShipNow prepaid account?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Log in to your ShipNow account and go to Balance > Top Up. Choose your top-up amount or set up Auto Top Up to add funds automatically when your balance falls below a threshold. Top up via credit/debit card, PayPal, or bank transfer. Funds are available instantly. Minimum top-up is £20. There are no transaction fees for top-ups.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Can I get a refund if I overpaid?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Yes. If your account has a credit balance from overpayment or a voided shipment, you can request a refund to your original payment method within 30 days. Go to Billing > Request Refund in your dashboard. Refunds to credit cards take 5-7 business days. Bank transfers take 3-5 business days. Prepaid balances can also be applied to future shipments instead of requesting a refund.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I download or view my invoices?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Go to Billing > Invoices in your dashboard. You'll see a list of all invoices with their status (paid/pending/overdue). Click on any invoice to view details and download as PDF. For business accounts, invoices include a full breakdown of shipments, zones, surcharges, and applicable taxes. You can also set up automatic invoice forwarding to your accounting team via email.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Why was I charged a fuel surcharge?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Fuel surcharges are applied to reflect fluctuating fuel costs and are reviewed monthly. They appear as a separate line item on your invoice, not embedded in the base shipping rate. The surcharge percentage varies by service type and is calculated based on the current national average fuel price. Business accounts on fixed-price contracts may have fuel surcharges included in their rate — check your contract terms.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What are the applicable taxes and duties?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Singapore shipments include GST at the prevailing rate. International shipments may be subject to import duties, VAT, and taxes in the destination country — these are the recipient's responsibility and may be collected upon delivery. Business accounts can register for duty drawback in eligible countries. Our system estimates duties at checkout but actual amounts are determined by customs at the destination.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I apply a promotional code or discount?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Enter your promo code at checkout in the "Discount Code" field. The discount will be applied to your order total before payment. Promotional codes cannot be applied after payment is completed. If you believe your code should have worked but didn't, check the expiry date and eligibility terms. Contact support with your code and order details if you believe there's an error.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Can I set up monthly invoicing for my business?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Yes — GETOnline business accounts are set up with monthly consolidated invoicing by default. You'll receive a detailed invoice at the end of each month covering all shipments. Payment terms are NET 30. You can request NET 15 or NET 60 terms based on your creditworthiness. Contact our finance team to set or modify your invoicing terms.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What surcharge applies for oversized or overweight packages?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Oversize and overweight surcharges apply when: any single dimension exceeds 100cm; combined dimensions exceed 250cm; or weight exceeds 30kg. Surcharges vary by zone and service. These are clearly displayed at checkout before you confirm. Heavy freight items (above 70kg) are quoted separately as freight shipments. Review our rate card for detailed surcharge thresholds.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I update my payment method?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Go to Settings > Payment Methods in your dashboard. Click "Add Payment Method" to register a new card or bank account. You can set a default payment method for all shipments. To remove a card, click the delete icon next to it. For business accounts, only the account admin can modify payment settings. All payment information is stored securely and never stored in plain text.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What happens if my payment fails?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              If a payment fails, your shipment will not be processed until payment is confirmed. You'll receive an email notification with the reason for failure (e.g., card declined, insufficient funds). You can retry payment from your dashboard. After 3 failed attempts within 48 hours, the order will be automatically cancelled and you'll need to create a new shipment. Contact your bank if you believe the card should have worked.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Can I earn or redeem loyalty points?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Yes — our Airpak Rewards programme gives you 1 point per £1 spent on shipping. Points can be redeemed for discounts on future shipments, free packaging materials, or extended insurance coverage. Log in to see your points balance and available rewards. Business accounts earn points faster with our Silver, Gold, and Platinum tiers. Contact support to learn about custom corporate rewards programmes.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Is VAT charged on my shipments?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              For domestic shipments within Singapore, GST applies at the prevailing rate and is included in the quoted price. International shipments are zero-rated for Singapore GST but may be subject to import VAT, duties, and taxes in the destination country. Business accounts with a valid VAT number in the destination country may be able to claim back foreign VAT — consult your tax advisor for specifics.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===================== ACCOUNT ===================== -->
+      <div class="faq-section" data-category="account">
+        <div class="faq-section-header">
+          <div class="faq-section-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <h2 class="faq-section-title">Account & Security</h2>
+          <span class="faq-section-count">14 questions</span>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I update my account details?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Go to Settings > My Account to update your name, email, phone number, and password. For business accounts, you can also update your company name, billing address, and contact preferences. Changes to your email address will require verification via a link sent to the new address. Changes to billing details may require re-verification for business accounts.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I enable two-factor authentication (2FA)?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Go to Settings > Security > Two-Factor Authentication. Choose between SMS-based 2FA (OTP sent to your registered phone) or an authenticator app (Google Authenticator, Authy). Scan the QR code with your app, enter the 6-digit code to verify, and save your backup codes in a secure place. 2FA is required for all Admin users on GETOnline business accounts.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What should I do if I suspect unauthorized access to my account?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Immediately change your password and enable 2FA if not already active. Go to Settings > Security > Active Sessions and click "Sign Out All Devices." Check your Shipment History for any unauthorized shipments and contact support immediately. For business accounts, your admin should also review team member access and revoke any suspicious sessions. We recommend enabling login alerts via email for every new sign-in.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I change my password?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Go to Settings > Security > Change Password. Enter your current password, then choose a new password (minimum 8 characters, including a number and a symbol). Confirm the new password and click Save. You'll be automatically signed out of all other devices and will need to log in again with your new password. Use a unique password you don't use on other sites.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How is my personal data handled and protected?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              We use 256-bit AES encryption for all data and TLS 1.3 for all connections. We are ISO 27001 certified. Your payment information is tokenized and never stored on our servers. We do not sell your data to third parties. Review our full Privacy Policy at airpak-express.com/privacypolicy. You can request a data export or deletion at any time by emailing privacy@airpak-express.com. Cookies are used only for session management and analytics — you can opt out in Cookie Settings.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I close or delete my account?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Go to Settings > Account > Close Account. You'll need to settle any outstanding invoices and void any active shipping labels before closure. Confirm your decision by typing your account email. Account closure is permanent and irreversible. We retain transaction records for 7 years for legal compliance. Your data will be deleted within 30 days of account closure confirmation.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Why did I receive a login alert I didn't request?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              If you receive a login alert you didn't initiate, your email may have been used by someone attempting to access your account. Your actual password was not compromised if you don't recognise the device/location. Change your password immediately and enable 2FA. If you cannot log in, use the "Forgot Password" flow to reset. Contact support if you believe your account has been compromised.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I manage my email notification preferences?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Go to Settings > Notifications. You can toggle email and SMS notifications for: shipment updates, delivery confirmations, billing alerts, promotional offers, and account security notices. You can set different preferences for yourself and team members on business accounts. Some system notifications (e.g., security alerts) cannot be disabled as they are required for account safety.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Can I use the same account for personal and business shipping?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Yes — standard accounts can be used for both personal and business purposes. However, if you need invoice billing, volume discounts, or multiple team member access, we recommend upgrading to a GETOnline business account. Business accounts provide separate billing profiles, custom reporting, and dedicated support. You can have one personal and one business account under the same email address.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I transfer account ownership?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Account ownership can only be transferred between users within the same organisation. The current owner goes to Settings > Account > Transfer Ownership, enters the email of the new owner, and confirms the transfer. Both parties receive email notifications. All account history, balance, and settings transfer automatically. You cannot transfer ownership to an email that doesn't already have a user account.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I sign out of all devices at once?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Go to Settings > Security > Active Sessions. You'll see a list of all devices currently logged into your account. Click "Sign Out All Devices" to immediately terminate all sessions except the current one. You'll stay logged in on your current device. Review the list to see if any sessions look unfamiliar — if so, also change your password. Business account admins can force-sign-out any team member.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What are the password requirements?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Passwords must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character (!@#$%^&*). Passwords cannot be the same as your previous 5 passwords. We recommend using a passphrase (e.g., "BlueCat-Runs-Fast-2026") instead of a simple word. Use a password manager to generate and store strong unique passwords.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I add or verify my phone number?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Go to Settings > Account > Phone Number. Enter your mobile number with the country code (e.g., +44 for UK, +65 for Singapore). We'll send an SMS with a 6-digit verification code — enter it within 10 minutes to confirm. Your phone number is used for 2FA, SMS tracking alerts, and delivery notifications. You can change or remove your number at any time — changing it will require re-verification.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Can I recover my account if I lost access to my email and phone?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Yes — but you must provide government-issued ID and proof of account ownership (e.g., a recent invoice or payment method on the account). Contact our support team with your account details and a scan of your passport or ID. Our verification team will review your case within 24 hours. For business accounts, the admin on record can authorise account recovery on behalf of team members. This process cannot be rushed for security reasons.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===================== INTERNATIONAL ===================== -->
+      <div class="faq-section" data-category="international">
+        <div class="faq-section-header">
+          <div class="faq-section-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <h2 class="faq-section-title">International Shipping</h2>
+          <span class="faq-section-count">16 questions</span>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Which countries do you ship to?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              We ship to over <strong>220 countries and territories</strong> worldwide. Our global network includes partnerships with local logistics providers in each region to ensure reliable delivery and customs handling. Some remote areas may have extended delivery times. Check our shipping calculator for specific routes and estimated delivery times. For destinations not covered, contact our team for a custom solution.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How does customs clearance work?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              We handle customs documentation as part of our international service. During label creation, you provide accurate item descriptions, values, quantities, and Harmonized System (HS) codes for each item. Our system generates compliant customs forms automatically (commercial invoice, packing list, and customs declaration). For complex shipments, our customs experts can advise on duties, restrictions, and required documentation. Delays at customs are beyond our control but we'll help you resolve them.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Who pays customs duties and taxes?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              By default, the recipient pays customs duties and taxes upon delivery. However, you can choose to DDP (Delivered Duty Paid) at checkout — meaning you pay these fees in advance. DDP is recommended for business shipments to ensure smooth delivery without recipient delays. If the recipient refuses to pay, the shipment may be held at customs or returned — all fees apply in either case.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What documents are required for international shipping?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Standard international shipments require: commercial invoice (generated by our system), packing list, and customs declaration. Additional documents may be needed for specific goods: certificates of origin, import licences, health certifications, or phytosanitary certificates for food/plants. Our system will prompt you for any extra documents based on the destination country and goods type. Missing documents are a common cause of customs delays.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How accurate are shipping cost estimates for international orders?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Our shipping calculator provides estimates based on the weight, dimensions, origin, and destination you enter. The final cost may differ due to: dimensional weight adjustments at pickup, fuel surcharges applied at time of booking, destination surcharges (remote areas), and customs duties/taxes (which we cannot guarantee in advance). The quote at checkout is binding — the price you see is the price you'll pay, excluding recipient-paid duties.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What happens if a package is held at customs?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              If a package is held at customs, you'll be notified via email and the tracking status will update. Common reasons include: missing or incorrect documentation, restricted goods, undervaluation, or random inspection. Contact our customs team immediately — we can liaise with the destination customs authority on your behalf. Resolution time varies from 2 days to 4 weeks depending on the country and reason. Storage fees may apply after a holding period.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Can I ship to multiple addresses internationally?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Yes — GETOnline and ShipNow accounts support bulk shipments to multiple international addresses. Use our CSV import feature to upload a list of recipients, or use our API to integrate with your order management system. Each address will generate a separate label with the correct customs documentation. Bulk discounts apply for 50+ shipments per month — contact our team for a custom quote.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I determine the correct HS code for my goods?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              HS (Harmonized System) codes are 6-10 digit numbers that classify goods for customs. You can search for codes at hscode.org or the WCO database. Using the wrong HS code can cause customs delays, fines, or seizure. Our system provides suggested HS codes based on your item description — we recommend verifying these against the destination country's tariff schedule. For high-value or complex shipments, consult our customs team for a classification review.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What is the difference between DDP and DDU shipping?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              <strong>DDP (Delivered Duty Paid)</strong> — The sender pays all duties, taxes, and customs clearance fees in advance. The recipient receives the package with no additional payment required. Recommended for B2C shipments where the recipient is a consumer.<br/><br/>
+              <strong>DDU (Delivered Duty Unpaid)</strong> — The recipient pays applicable duties and taxes upon delivery. The sender only pays shipping costs. Recommended for B2B shipments where the recipient is a business with an established import process.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Why was my package returned to sender?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              International packages are returned to sender when: the recipient refuses delivery, the address is incorrect or incomplete, customs cannot clear the shipment and the sender doesn't respond to notices within the holding period, or the goods are prohibited at the destination. Return shipping fees are non-refundable and will be charged to the sender's account. Contact support if your package has been returned unexpectedly.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Can I track shipments across multiple countries?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Yes — our tracking system provides end-to-end visibility from pickup to delivery across all countries in our network. The tracking number works throughout the entire journey, including final-mile delivery by our local partner agents. You can also use our API to pull tracking events into your own system or embed tracking on your website for your customers.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What import restrictions should I be aware of?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Restrictions vary by country. Common restrictions include: food items (many countries require health certifications), electronics (some countries restrict certain frequencies or technologies), pharmaceuticals (strict licensing required), plant and animal products (phytosanitary certificates needed), and cultural artifacts (may require export permits from origin country). Always check the destination country's import regulations before shipping. Our system will warn you if a declared category has known restrictions.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I declare the value of goods for customs?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Declare the actual transaction value — what you paid or are charging the recipient for the goods. Do not under-declare to reduce duties — this is illegal and can result in fines, seizure, or prosecution. For gifts or samples, declare the fair market retail value. Our system will help you complete the commercial invoice with item-level values. If there's no sale involved (e.g., returning goods), declare the original purchase price and note the reason.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Is there a minimum value requirement for international shipments?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              No minimum value exists for customs purposes. However, some countries apply de minimis thresholds — below this value, no duties or taxes are charged. For example, Singapore's de minimis is SGD 400. Above this, import duties apply. Our system automatically calculates whether the destination's de minimis applies and shows you the estimated duties at checkout. Note: commercial shipments generally don't qualify for de minimis regardless of value.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Can I use my business's VAT number for international shipping?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Yes — if your business is registered for VAT in the destination country or in a country with a reciprocal VAT agreement, you can use your VAT number to simplify customs. In the EU, a VAT number allows you to import under the IOR (Importer of Record) scheme, which can reduce duties and simplify reporting. Enter your VAT number in the customs section at checkout. Our system validates VAT numbers automatically.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What happens if a recipient refuses to pay customs duties?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              If the recipient refuses to pay customs duties, the package will be held at the destination customs depot. You (as the sender) will be given the option to: (1) authorise the package to be returned to you (return fees apply); (2) authorise the package to be abandoned or destroyed (no refund of shipping fees); (3) pay the duties to have the package released and reschedule delivery. You can set default instructions in your account settings for how to handle refused deliveries.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===================== CLAIMS ===================== -->
+      <div class="faq-section" data-category="claims">
+        <div class="faq-section-header">
+          <div class="faq-section-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <h2 class="faq-section-title">Claims & Compensation</h2>
+          <span class="faq-section-count">12 questions</span>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I file a claim for a damaged or lost package?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Go to your Shipment History and find the affected shipment. Click "File a Claim" and select the reason: Damaged, Lost, or Delayed. Upload photos of the damage and packaging (required for damage claims), your proof of value (invoice or receipt), and any other supporting documents. Submit within 30 days of delivery for damage claims, or 60 days from the expected delivery date for lost packages. Our claims team will review and respond within 5 business days.
+              <div class="faq-related">
+                <div class="faq-related-label">Related questions</div>
+                <div class="faq-related-items">
+                  <button class="faq-related-btn" onclick="searchRelated('What is the claims deadline?')">What is the claims deadline?</button>
+                  <button class="faq-related-btn" onclick="searchRelated('What compensation am I entitled to?')">What compensation am I entitled to?</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What is the deadline for filing a claim?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Damage claims must be filed within <strong>30 days of delivery</strong>. Lost package claims must be filed within <strong>60 days of the expected delivery date</strong>. For delayed deliveries where you choose to cancel and request a refund, you must notify us within 60 days of the expected delivery date. Claims submitted after these deadlines cannot be processed. We recommend inspecting all packages upon delivery and reporting damage immediately.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What compensation am I entitled to?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              All shipments include <strong>£50 of basic liability coverage</strong> at no extra cost. You can purchase additional coverage up to <strong>£5,000 per shipment</strong> for high-value items at checkout. Compensation is limited to the declared value or the cost of the item, whichever is lower. For delayed shipments, compensation is limited to the shipping cost only — not the value of the goods. Business accounts with premium plans include enhanced coverage as part of their package.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How long does it take to process a claim?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Claims are reviewed within 5 business days of submission. If additional information is needed, we'll contact you — this extends the timeline. Straightforward claims (with complete documentation) are resolved within 10-15 business days. Complex cases involving third-party carriers or international customs may take 30+ days. You'll receive email updates at each stage. Approved claims are paid to your original payment method or as a credit to your account.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What evidence do I need to support a damage claim?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              For damage claims, you must provide: (1) photos of the outer packaging showing the damage; (2) photos of the damaged items themselves; (3) photos of the internal packaging and cushioning; (4) the original invoice or receipt for the item; (5) the commercial invoice and packing list if it's an international shipment. Without photo evidence, claims are difficult to process. If the package was delivered with visible external damage, note it on the delivery receipt before signing and take photos immediately.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What does "lost in transit" mean and how is it determined?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              A package is considered lost in transit when there are no tracking updates for 7 days after the expected delivery date and our investigations with the destination carrier confirm the package cannot be located. Before declaring a loss, we first attempt to locate the package through our global carrier network. If after 30 days the package is still not found, a full claim can be processed. We will refund the shipping cost plus the declared value of the goods up to your coverage limit.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Can I claim for a delivery that arrived late?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Yes — if your Express shipment arrives after the guaranteed delivery time, you can claim a refund of the shipping cost. To qualify: (1) you must have shipped with a time-guaranteed service; (2) the delay is not caused by weather, customs, or recipient unavailability; (3) you submit the claim within 14 days of delivery. Compensation is limited to the shipping fee paid — not the value of the goods. Provide your tracking number and we'll compare actual vs. guaranteed delivery time. Note: refunds cannot be claimed for Standard or Economy services as their timelines are estimates, not guarantees.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What is the maximum insurance coverage available?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Standard coverage is £50 per shipment included free. Additional coverage can be purchased up to <strong>£5,000 per shipment</strong> for high-value items. For business accounts with high-volume shipping, we offer Cargo Insurance programmes with coverage up to <strong>£50,000 per shipment</strong> or higher under a separate policy. Contact our team for a quote on cargo insurance for valuable or fragile items. Premium business accounts include enhanced coverage up to £10,000 as part of their package.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What items are excluded from insurance coverage?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Insurance does not cover: prohibited or illegal items, cash and securities, jewellery and watches over £500 unless declared, damage from improper packaging, acts of war or terrorism, nuclear incidents, or delays on non-guaranteed services. Also excluded: corrosion, mould, wear and tear, and items shipped without adequate packaging for the journey. Carefully review our Insurance Policy for full exclusions. If you're shipping high-value items, declare them accurately and purchase additional coverage.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>Can I claim for a package that was opened or tampered with?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              If your package arrives visibly opened or with evidence of tampering (re-taping, cut strapping, etc.), do not accept it or note the damage on the delivery receipt before signing. Take photos immediately and contact support within 24 hours. A tampering claim requires proof that the item was properly packaged and sealed at pickup — this is why photographic evidence of proper packaging before handing over the package is important. If theft is suspected, a police report may be required.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What happens if my claim is denied?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              If your claim is denied, you'll receive a written explanation citing the specific reason (e.g., insufficient evidence, excluded items, late filing). You can appeal the decision by submitting additional evidence within 30 days. Escalate to our Customer Care Manager if the appeal is also denied. If you believe our decision is incorrect, you can contact our regulatory body or pursue dispute resolution. We keep full records of all claims for 7 years.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I claim for a partially missing shipment?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              If you received only part of your shipment, contact support immediately with your tracking number and a list of missing items. Photo evidence of what you received (including packaging contents laid out) is required. We'll investigate with the carrier. If items are confirmed missing due to our handling error, you'll be compensated for the value of the missing items proportionate to the coverage on the shipment. Partial loss claims for multi-item shipments are assessed based on the proportion of items missing.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===================== TECHNICAL ===================== -->
+      <div class="faq-section" data-category="technical">
+        <div class="faq-section-header">
+          <div class="faq-section-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <h2 class="faq-section-title">Technical & API</h2>
+          <span class="faq-section-count">8 questions</span>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I integrate Airpak Express via API?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Our REST API supports: label creation, shipment tracking, address validation, rate quoting, and booking management. Full API documentation is available at developer.airpak-express.com. Authentication uses OAuth 2.0 or API keys. Both JSON and XML responses are supported. You can use our sandbox environment to test integrations before going live. GETOnline business accounts include API access with custom rate limits. Contact our integration team for assistance with complex setups.
+              <div class="faq-related">
+                <div class="faq-related-label">Related questions</div>
+                <div class="faq-related-items">
+                  <button class="faq-related-btn" onclick="searchRelated('What is the API rate limit?')">What is the API rate limit?</button>
+                  <button class="faq-related-btn" onclick="searchRelated('How do I get an API key?')">How do I get an API key?</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What webhooks are available for real-time notifications?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Our webhook system delivers real-time events for: shipment picked up, in transit, out for delivery, delivered, exception (delay, hold), and label voided. Configure webhooks in Settings > API > Webhooks. Provide an HTTPS endpoint URL and we'll POST JSON event data to it. Failed webhook deliveries are retried up to 5 times with exponential backoff. You can view webhook delivery logs in your dashboard.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I resolve a tracking number not found error?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              If your tracking number isn't found, it may be because: (1) the label hasn't been scanned into our system yet (allow up to 24 hours from creation); (2) the tracking number was entered incorrectly — check for typos and try with the prefix (e.g., "APK" or "SHP"); (3) the shipment was created in an older legacy system — try the legacy tracking portal; (4) the package is already delivered and the tracking data has been archived. Contact support with your shipment ID if none of these apply.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I embed the tracking widget on my website?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Add our tracking widget to any website with a single JavaScript snippet. Get your widget token from Settings > API > Tracking Widget. Add this to your HTML: <code>&lt;div id="apk-track" data-token="YOUR_TOKEN" data-tracking="TRACKING_NUMBER"&gt;&lt;/div&gt;&lt;script src="https://tracking.airpak-express.com/widget.js"&gt;&lt;/script&gt;</code>. The widget is fully customisable in terms of colour and layout to match your brand. For high-traffic sites, use the API directly instead of the widget.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What are the API rate limits and quotas?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Standard API plans allow 1,000 requests per minute and 100,000 per month. Business plans (GETOnline) allow 5,000 requests per minute and 500,000 per month. Enterprise plans have custom limits. If you exceed your quota, you'll receive a 429 error. Implement exponential backoff with jitter for retry logic. Rate limit headers are included in every response showing your current usage. Contact us to increase your limits if needed.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I get an API key?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Go to Settings > API > Create API Key. Give the key a name (e.g., "My App Production") and select the permission scopes you need (e.g., create labels, track shipments, view reports). Copy the key immediately — it won't be shown again. You can have multiple keys for different applications. Revoke any keys you don't recognise immediately. API keys are available for all accounts — free accounts get basic access, business accounts get full access.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>What file formats does the bulk import tool support?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              Our bulk import tool supports CSV, XLSX, and XML formats. Templates are available in your dashboard under Shipments > Bulk Import. Required columns: recipient name, address (street, city, postcode, country), phone, email, weight (kg), dimensions (LxWxH in cm), service type, and declared value. Optional columns: reference number, insurance, delivery instructions. The system will highlight rows with errors before importing. Maximum 5,000 rows per import.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger" onclick="toggleFaqItem(this)">
+            <span>How do I report a technical issue with the platform?</span>
+            <span class="faq-accordion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-accordion-content">
+            <div class="faq-accordion-body">
+              For technical issues, email support@airpak-express.com with: (1) a description of the issue; (2) the browser and OS version you're using; (3) the URL of the page; (4) screenshots or a screen recording of the issue; (5) the approximate time the issue occurred. For urgent production issues affecting active shipments, call our technical support line directly. Our SLA for critical platform issues is 2 hours. For API issues, include your API key (masked) and request ID from the error response.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- No Results -->
+    <div class="faq-no-results" id="faqNoResults">
+      <h3>No results found</h3>
+      <p>Try a different search term or browse by category</p>
+      <button class="btn-secondary" onclick="clearSearch()">Clear Search</button>
+    </div>
+
+  <!-- Footer -->
+  <footer style="background: #1a1a2e; color: rgba(255,255,255,0.6); padding: 24px 20px; text-align: center; font-size: 13px;">
+    <p>Unit 7, Trident Business Park, Bay Road, Neath SA11 2EF, United Kingdom &nbsp;|&nbsp; © 2026 Airpak Express. All rights reserved.</p>
+  </footer>
+
+<script>
+  function toggleFaqItem(trigger) {
+    const item = trigger.closest('.faq-accordion-item');
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-accordion-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) { item.classList.add('open'); }
+  }
+  function filterCategory(category, btn) {
+    document.querySelectorAll('.faq-category-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('faqSearchInput').value = '';
+    document.getElementById('faqSearchCount').style.display = 'none';
+    document.querySelectorAll('.faq-section').forEach(section => {
+      section.style.display = (category === 'all' || section.dataset.category === category) ? 'block' : 'none';
+    });
+    document.getElementById('faqNoResults').classList.remove('visible');
+  }
+  function handleFaqSearch(query) {
+    const q = query.trim().toLowerCase();
+    const countEl = document.getElementById('faqSearchCount');
+    const noResults = document.getElementById('faqNoResults');
+    document.querySelectorAll('.faq-category-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.faq-category-btn').classList.add('active');
+    if (!q) {
+      document.querySelectorAll('.faq-section').forEach(s => s.style.display = 'block');
+      document.querySelectorAll('.faq-accordion-item').forEach(i => i.classList.remove('hidden'));
+      countEl.style.display = 'none';
+      noResults.classList.remove('visible');
+      return;
+    }
+    let matchCount = 0;
+    document.querySelectorAll('.faq-section').forEach(s => s.style.display = 'block');
+    document.querySelectorAll('.faq-accordion-item').forEach(item => {
+      const question = item.querySelector('.faq-accordion-trigger span').textContent.toLowerCase();
+      const answer = item.querySelector('.faq-accordion-body').textContent.toLowerCase();
+      if (question.includes(q) || answer.includes(q)) {
+        item.classList.remove('hidden');
+        matchCount++;
+        const questionSpan = item.querySelector('.faq-accordion-trigger span');
+        questionSpan.innerHTML = questionSpan.textContent.replace(new RegExp('(' + q + ')', 'gi'), '<mark class="faq-highlight">$1</mark>');
+      } else { item.classList.add('hidden'); }
+    });
+    countEl.textContent = matchCount + ' result' + (matchCount !== 1 ? 's' : '');
+    countEl.style.display = q ? 'block' : 'none';
+    noResults.classList.toggle('visible', matchCount === 0);
+  }
+  function searchRelated(term) {
+    document.getElementById('faqSearchInput').value = term;
+    handleFaqSearch(term);
+    window.scrollTo({ top: 300, behavior: 'smooth' });
+  }
+  function clearSearch() {
+    document.getElementById('faqSearchInput').value = '';
+    handleFaqSearch('');
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.faq-accordion-item').forEach(i => i.classList.remove('open'));
+  });
+</script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>
+  function toggleFaqItem(trigger) {
+    const item = trigger.closest('.faq-accordion-item');
+    const wasOpen = item.classList.contains('open');
+
+    // Close all items
+    document.querySelectorAll('.faq-accordion-item').forEach(i => i.classList.remove('open'));
+
+    // Toggle this one
+    if (!wasOpen) {
+      item.classList.add('open');
+    }
+  }
+
+  function filterCategory(category, btn) {
+    // Update active button
+    document.querySelectorAll('.faq-category-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // Clear search
+    document.getElementById('faqSearchInput').value = '';
+    document.getElementById('faqSearchCount').style.display = 'none';
+
+    // Show/hide sections
+    document.querySelectorAll('.faq-section').forEach(section => {
+      if (category === 'all' || section.dataset.category === category) {
+        section.style.display = 'block';
+      } else {
+        section.style.display = 'none';
+      }
+    });
+
+    // Show/hide no results
+    const visibleItems = document.querySelectorAll('.faq-accordion-item:not([style*="none"])');
+    document.getElementById('faqNoResults').classList.remove('visible');
+  }
+
+  function handleFaqSearch(query) {
+    const q = query.trim().toLowerCase();
+    const countEl = document.getElementById('faqSearchCount');
+    const noResults = document.getElementById('faqNoResults');
+
+    // Switch to "All" category
+    document.querySelectorAll('.faq-category-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.faq-category-btn').classList.add('active');
+
+    if (!q) {
+      // Show all, hide count
+      document.querySelectorAll('.faq-section').forEach(s => s.style.display = 'block');
+      document.querySelectorAll('.faq-accordion-item').forEach(i => i.classList.remove('hidden'));
+      countEl.style.display = 'none';
+      noResults.classList.remove('visible');
+      return;
+    }
+
+    // Search all sections
+    let matchCount = 0;
+    document.querySelectorAll('.faq-section').forEach(s => s.style.display = 'block');
+
+    document.querySelectorAll('.faq-accordion-item').forEach(item => {
+      const question = item.querySelector('.faq-accordion-trigger span').textContent.toLowerCase();
+      const answer = item.querySelector('.faq-accordion-body').textContent.toLowerCase();
+
+      if (question.includes(q) || answer.includes(q)) {
+        item.classList.remove('hidden');
+        matchCount++;
+
+        // Highlight
+        const questionSpan = item.querySelector('.faq-accordion-trigger span');
+        questionSpan.innerHTML = questionSpan.textContent.replace(new RegExp('(' + q + ')', 'gi'), '<mark class="faq-highlight">$1</mark>');
+      } else {
+        item.classList.add('hidden');
+      }
+    });
+
+    // Update count
+    if (q) {
+      countEl.textContent = matchCount + ' result' + (matchCount !== 1 ? 's' : '');
+      countEl.style.display = 'block';
+    } else {
+      countEl.style.display = 'none';
+    }
+
+    noResults.classList.toggle('visible', matchCount === 0);
+  }
+
+  function searchRelated(term) {
+    document.getElementById('faqSearchInput').value = term;
+    handleFaqSearch(term);
+    window.scrollTo({ top: 300, behavior: 'smooth' });
+  }
+
+  function clearSearch() {
+    document.getElementById('faqSearchInput').value = '';
+    handleFaqSearch('');
+  }
+
+  // Close all accordions on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.faq-accordion-item').forEach(i => i.classList.remove('open'));
+  });
+  </script>
+  <footer style="background:var(--apple-bg-secondary,#F2F2F7);color:var(--apple-label-secondary,#3C3C43);padding:20px;text-align:center;font-size:12px;border-top:1px solid var(--apple-separator,#C6C6C8);">
+    Unit 7, Wales International Hub, Cardiff Bay, Wales CF10 5AL, United Kingdom &nbsp;|&nbsp; © 2026 Airpak Express. All rights reserved.
+  </footer>
+</body>
+</html>

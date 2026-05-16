@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — Airpak Express</title>
+  <link rel="icon" type="image/x-icon" href="/apps/airpak/images/icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="stylesheet" href="css/apple-tokens.css" />
+  <link rel="stylesheet" href="css/glass-system.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/pages.css" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--apple-bg-grouped, #F2F2F7);
+    }
+
+    [data-theme="dark"] {
+      --apple-bg-grouped: #1C1C1E;
+      --apple-bg: #000;
+      --apple-label: #fff;
+      --apple-secondary-label: #EBEBF5;
+      --apple-bg-secondary: #2C2C2E;
+      --apple-separator: #38383A;
+    }
+
+    [data-theme="dark"] .admin-sidebar { background: #1C1C1E; border-right-color: #38383A; }
+    [data-theme="dark"] .admin-nav-item { color: #EBEBF5; }
+    [data-theme="dark"] .admin-nav-item:hover { background: #2C2C2E; }
+    [data-theme="dark"] .admin-stat-card { background: #2C2C2E; }
+    [data-theme="dark"] .admin-stat-value { color: #fff; }
+    [data-theme="dark"] .admin-title { color: #fff; }
+    [data-theme="dark"] .admin-search { background: #2C2C2E; border-color: #38383A; }
+    [data-theme="dark"] .admin-search input { color: #EBEBF5; }
+    [data-theme="dark"] .admin-filters { background: #2C2C2E; border-color: #38383A; }
+    [data-theme="dark"] .filter-btn { color: #EBEBF5; }
+    [data-theme="dark"] .filter-btn:hover { background: #3C3C3E; }
+    [data-theme="dark"] .admin-sort { background: #2C2C2E; border-color: #38383A; color: #EBEBF5; }
+    [data-theme="dark"] .table-container { background: #1C1C1E; }
+    [data-theme="dark"] .users-table thead tr { background: #2C2C2E; }
+    [data-theme="dark"] .users-table th { color: #8E8E93; }
+    [data-theme="dark"] .users-table td { color: #EBEBF5; border-color: #38383A; }
+    [data-theme="dark"] .users-table tbody tr:hover { background: #2C2C2E; }
+    [data-theme="dark"] .user-name { color: #fff; }
+    [data-theme="dark"] .pagination-bar { border-color: #38383A; }
+    [data-theme="dark"] .pagination-info { color: #8E8E93; }
+    [data-theme="dark"] .page-btn { background: #2C2C2E; border-color: #38383A; color: #EBEBF5; }
+    [data-theme="dark"] .modal-box { background: #1C1C1E; }
+    [data-theme="dark"] .modal-title { color: #fff; }
+    [data-theme="dark"] .modal-field label { color: #EBEBF5; }
+    [data-theme="dark"] .modal-field input, .modal-field select { background: #2C2C2E; border-color: #38383A; color: #EBEBF5; }
+    [data-theme="dark"] .role-option { border-color: #38383A; color: #EBEBF5; }
+    [data-theme="dark"] .confirm-title { color: #fff; }
+    [data-theme="dark"] .modal-btn.cancel { background: #2C2C2E; color: #EBEBF5; }
+    [data-theme="dark"] #sortMenu { background: #2C2C2E; border-color: #38383A; }
+    [data-theme="dark"] #sortMenu button { color: #EBEBF5; }
+    [data-theme="dark"] .admin-header-right { color: #EBEBF5; }
+
+    .admin-layout { display: flex; height: 100vh; overflow: hidden; }
+
+    .admin-sidebar {
+      width: 240px;
+      min-width: 240px;
+      background: #fff;
+      border-right: 1px solid var(--apple-separator, #C6C6C8);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .admin-sidebar-section { padding: 16px 0; }
+    .admin-sidebar-section + .admin-sidebar-section { border-top: 1px solid #F2F2F7; }
+
+    .admin-sidebar-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: #8E8E93;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0 20px 8px;
+    }
+
+    .admin-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #3C3C43;
+      text-decoration: none;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+    }
+
+    .admin-nav-item:hover { background: #F5F5F5; color: #000; }
+    .admin-nav-item.active {
+      background: #E8F4FF;
+      color: #007AFF;
+      border-left-color: #007AFF;
+      font-weight: 600;
+    }
+
+    .admin-nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .admin-nav-item .nav-badge {
+      margin-left: auto;
+      background: #FF3B30;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+
+    .sidebar-toggle {
+      display: none;
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 1001;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: none;
+      background: #007AFF;
+      color: #fff;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .admin-main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 24px 24px;
+    }
+
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0 16px;
+      position: sticky;
+      top: 0;
+      background: var(--apple-bg-grouped, #F2F2F7);
+      z-index: 10;
+    }
+
+    .admin-title { font-size: 26px; font-weight: 800; color: #000; }
+    .admin-subtitle { font-size: 14px; color: #8E8E93; margin-top: 2px; }
+
+    .admin-header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .lang-pill {
+      display: flex;
+      gap: 4px;
+      background: #fff;
+      border: 1px solid #E5E5EA;
+      border-radius: 20px;
+      padding: 4px;
+    }
+
+    .lang-btn {
+      padding: 4px 12px;
+      border-radius: 16px;
+      border: none;
+      background: none;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      color: #3C3C43;
+      transition: all 0.15s;
+    }
+
+    .lang-btn.active { background: #007AFF; color: #fff; }
+
+    .theme-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid #E5E5EA;
+      background: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3C3C43;
+      transition: all 0.15s;
+    }
+
+    .theme-btn:hover { background: #F5F5F5; }
+
+    .header-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: none;
+      background: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      color: #3C3C43;
+      transition: all 0.15s;
+    }
+
+    .header-btn:hover { background: #F5F5F5; }
+    .header-btn.primary {
+      background: #007AFF;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0,122,255,0.3);
+    }
+    .header-btn.primary:hover { background: #0056B3; }
+
+    .admin-stats-bar {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .admin-stat-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      transition: all 0.2s;
+    }
+
+    .admin-stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+    .admin-stat-value {
+      font-size: 26px;
+      font-weight: 800;
+      color: #000;
+      line-height: 1;
+    }
+
+    .admin-stat-label {
+      font-size: 12px;
+      color: #8E8E93;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .admin-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .admin-search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      border: 1px solid #E5E5EA;
+      border-radius: 10px;
+      padding: 8px 14px;
+      width: 280px;
+    }
+
+    .admin-search input {
+      border: none;
+      outline: none;
+      font-size: 14px;
+      width: 100%;
+      background: transparent;
+    }
+
+    .admin-filters {
+      display: flex;
+      gap: 4px;
+      background: #fff;
+      border: 1px solid #E5E5EA;
+      border-radius: 10px;
+      padding: 4px;
+    }
+
+    .filter-btn {
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: none;
+      background: none;
+      font-size: 13px;
+      font-weight: 500;
+      color: #3C3C43;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .filter-btn:hover { background: #F2F2F7; }
+    .filter-btn.active { background: #007AFF; color: #fff; }
+
+    .admin-sort {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: #fff;
+      border: 1px solid #E5E5EA;
+      border-radius: 10px;
+      font-size: 13px;
+      color: #3C3C43;
+      cursor: pointer;
+    }
+
+    .admin-sort:hover { background: #F5F5F5; }
+
+    #sortMenu {
+      display: none;
+      position: fixed;
+      background: #fff;
+      border: 1px solid #E5E5EA;
+      border-radius: 10px;
+      padding: 8px;
+      min-width: 180px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      z-index: 100;
+    }
+
+    #sortMenu button {
+      display: block;
+      width: 100%;
+      padding: 8px 12px;
+      border: none;
+      background: none;
+      text-align: left;
+      font-size: 13px;
+      cursor: pointer;
+      border-radius: 6px;
+      color: #3C3C43;
+    }
+
+    #sortMenu button:hover { background: #F2F2F7; }
+
+    .bulk-actions-bar {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #007AFF;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      color: #fff;
+      animation: slideDown 0.2s ease-out;
+    }
+
+    .bulk-actions-bar.visible { display: flex; }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .bulk-actions-bar span { font-size: 14px; font-weight: 600; flex: 1; }
+
+    .bulk-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .bulk-btn.danger { background: rgba(255,255,255,0.2); color: #fff; }
+    .bulk-btn.secondary { background: rgba(255,255,255,0.3); color: #fff; }
+    .bulk-btn.close { background: none; color: #fff; margin-left: auto; padding: 8px; border-radius: 50%; }
+    .bulk-btn.close:hover { background: rgba(255,255,255,0.2); }
+
+    .table-container {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .users-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .users-table thead tr {
+      background: #F5F5F7;
+    }
+
+    .users-table th {
+      padding: 12px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #8E8E93;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      text-align: left;
+      border-bottom: 1px solid #E5E5EA;
+    }
+
+    .users-table td {
+      padding: 14px 16px;
+      font-size: 14px;
+      color: #000;
+      border-bottom: 0.5px solid #F2F2F7;
+      vertical-align: middle;
+    }
+
+    .users-table tr:last-child td { border-bottom: none; }
+    .users-table tbody tr:hover { background: #FAFAFA; }
+    .users-table tbody tr { transition: background 0.15s; }
+
+    .users-table .col-check { width: 48px; }
+    .users-table .col-check input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #007AFF;
+    }
+
+    .user-cell { display: flex; align-items: center; gap: 12px; }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .user-name { font-weight: 600; font-size: 14px; color: #000; }
+    .user-email { font-size: 12px; color: #8E8E93; }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .role-badge.admin { background: rgba(0,122,255,0.1); color: #007AFF; }
+    .role-badge.user { background: rgba(142,142,147,0.1); color: #8E8E93; }
+    .role-badge.business { background: rgba(88,86,214,0.1); color: #5856D6; }
+    .role-badge.manager { background: rgba(255,149,0,0.1); color: #FF9500; }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .status-badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .status-badge.active { background: rgba(52,199,89,0.1); color: #34C759; }
+    .status-badge.active::before { background: #34C759; }
+    .status-badge.pending { background: rgba(255,149,0,0.1); color: #FF9500; }
+    .status-badge.pending::before { background: #FF9500; }
+    .status-badge.premium { background: rgba(0,122,255,0.1); color: #007AFF; }
+    .status-badge.premium::before { background: #007AFF; }
+    .status-badge.blocked { background: rgba(255,59,48,0.1); color: #FF3B30; }
+    .status-badge.blocked::before { background: #FF3B30; }
+
+    .premium-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: linear-gradient(135deg, #FFD700, #FF9500);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 10px;
+      margin-left: 4px;
+    }
+
+    .action-group {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      opacity: 0.5;
+      transition: opacity 0.15s;
+    }
+
+    tr:hover .action-group { opacity: 1; }
+
+    .action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      transition: all 0.15s;
+    }
+
+    .action-btn.edit { background: rgba(0,122,255,0.1); color: #007AFF; }
+    .action-btn.edit:hover { background: rgba(0,122,255,0.2); }
+
+    .action-btn.verify { background: rgba(52,199,89,0.1); color: #34C759; }
+    .action-btn.verify:hover { background: rgba(52,199,89,0.2); }
+
+    .action-btn.upgrade { background: rgba(88,86,214,0.1); color: #5856D6; }
+    .action-btn.upgrade:hover { background: rgba(88,86,214,0.2); }
+
+    .action-btn.block { background: rgba(255,149,0,0.1); color: #FF9500; }
+    .action-btn.block:hover { background: rgba(255,149,0,0.2); }
+
+    .action-btn.unblock { background: rgba(52,199,89,0.1); color: #34C759; }
+    .action-btn.unblock:hover { background: rgba(52,199,89,0.2); }
+
+    .action-btn.delete { background: rgba(255,59,48,0.1); color: #FF3B30; }
+    .action-btn.delete:hover { background: rgba(255,59,48,0.2); }
+
+    .action-btn svg { width: 15px; height: 15px; }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-box {
+      background: #fff;
+      border-radius: 20px;
+      width: 480px;
+      max-width: 90vw;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      overflow: hidden;
+      animation: modalPop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes modalPop {
+      from { opacity: 0; transform: scale(0.9) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px 0;
+    }
+
+    .modal-title { font-size: 18px; font-weight: 700; color: #000; }
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: #F2F2F7;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3C3C43;
+      font-size: 18px;
+    }
+    .modal-close:hover { background: #E5E5EA; }
+
+    .modal-body { padding: 20px 24px; }
+
+    .modal-field { margin-bottom: 16px; }
+
+    .modal-field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #3C3C43;
+      margin-bottom: 6px;
+    }
+
+    .modal-field input,
+    .modal-field select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #E5E5EA;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s;
+      background: #fff;
+      font-family: inherit;
+    }
+
+    .modal-field input:focus,
+    .modal-field select:focus { border-color: #007AFF; }
+
+    .modal-field input[readonly] { background: #F5F5F7; color: #8E8E93; }
+
+    .modal-footer {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      padding: 16px 24px 20px;
+    }
+
+    .modal-btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+
+    .modal-btn.cancel { background: #F2F2F7; color: #3C3C43; }
+    .modal-btn.cancel:hover { background: #E5E5EA; }
+
+    .modal-btn.danger { background: #FF3B30; color: #fff; }
+    .modal-btn.danger:hover { background: #E53929; }
+
+    .modal-btn.primary { background: #007AFF; color: #fff; }
+    .modal-btn.primary:hover { background: #0056B3; }
+
+    .modal-btn.success { background: #34C759; color: #fff; }
+    .modal-btn.success:hover { background: #2DAF47; }
+
+    .confirm-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .confirm-icon.warning { background: rgba(255,149,0,0.1); color: #FF9500; }
+    .confirm-icon.danger { background: rgba(255,59,48,0.1); color: #FF3B30; }
+    .confirm-icon.success { background: rgba(52,199,89,0.1); color: #34C759; }
+    .confirm-icon.info { background: rgba(0,122,255,0.1); color: #007AFF; }
+
+    .confirm-icon svg { width: 28px; height: 28px; }
+
+    .confirm-title { font-size: 18px; font-weight: 700; color: #000; text-align: center; margin-bottom: 8px; }
+    .confirm-desc { font-size: 14px; color: #8E8E93; text-align: center; line-height: 1.5; margin-bottom: 20px; }
+
+    .role-selector { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .role-option {
+      padding: 8px 16px;
+      border: 1.5px solid #E5E5EA;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .role-option.selected { border-color: #007AFF; background: rgba(0,122,255,0.08); color: #007AFF; }
+
+    .pagination-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-top: 1px solid #F2F2F7;
+    }
+
+    .pagination-info { font-size: 13px; color: #8E8E93; }
+
+    .pagination-controls { display: flex; align-items: center; gap: 4px; }
+
+    .page-btn {
+      min-width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid #E5E5EA;
+      background: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      color: #3C3C43;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 8px;
+      transition: all 0.15s;
+    }
+
+    .page-btn:hover:not(:disabled) { background: #F5F5F5; }
+    .page-btn.active { background: #007AFF; color: #fff; border-color: #007AFF; }
+    .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .page-dots { padding: 0 8px; color: #8E8E93; }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 999999;
+      animation: fadeInUp 0.3s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translate(-50%, 10px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; transform: scale(1); }
+      to { opacity: 0; transform: scale(0.95); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .count { background: rgba(0,0,0,0.08); border-radius: 10px; padding: 1px 6px; font-size: 11px; margin-left: 4px; }
+
+    @media (max-width: 900px) {
+      .admin-stats-bar { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar-toggle { display: flex; }
+      .admin-sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 1000;
+        transform: translateX(-100%);
+      }
+      .admin-sidebar.open { transform: translateX(0); }
+      .admin-sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        z-index: 999;
+      }
+      .admin-sidebar-overlay.open { display: block; }
+      .admin-stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .admin-toolbar { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<button class="sidebar-toggle" onclick="toggleSidebar()">
+  <i data-lucide="menu" style="width:20px;height:20px;"></i>
+</button>
+<div class="admin-sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<div class="admin-layout">
+  <aside class="admin-sidebar" id="adminSidebar">
+    <div style="padding:16px 20px;border-bottom:1px solid #F2F2F7;display:flex;align-items:center;gap:10px;">
+      <div style="width:32px;height:32px;background:linear-gradient(135deg,#007AFF,#5856D6);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+        <i data-lucide="box" style="width:18px;height:18px;color:#fff;"></i>
+      </div>
+      <div>
+        <div style="font-size:15px;font-weight:700;color:#000;">Airpak</div>
+        <div style="font-size:11px;color:#8E8E93;">Admin Panel</div>
+      </div>
+    </div>
+    <div class="admin-sidebar-section">
+      <div class="admin-sidebar-title">Overview</div>
+      <a href="admin.html" class="admin-nav-item active">
+        <i data-lucide="layout-dashboard"></i>
+        Dashboard
+      </a>
+      <a href="admin.html" class="admin-nav-item">
+        <i data-lucide="users"></i>
+        Users
+      </a>
+      <a href="tracking.html" class="admin-nav-item">
+        <i data-lucide="package"></i>
+        Shipments
+      </a>
+      <a href="payment.html" class="admin-nav-item">
+        <i data-lucide="credit-card"></i>
+        Revenue
+      </a>
+    </div>
+    <div class="admin-sidebar-section">
+      <div class="admin-sidebar-title">Management</div>
+      <a href="admin.html" class="admin-nav-item">
+        <i data-lucide="shield-check"></i>
+        Roles & Permissions
+      </a>
+      <a href="settings.html" class="admin-nav-item">
+        <i data-lucide="settings"></i>
+        System Settings
+      </a>
+      <a href="admin.html" class="admin-nav-item">
+        <i data-lucide="file-text"></i>
+        Audit Logs
+        <span class="nav-badge">12</span>
+      </a>
+    </div>
+    <div class="admin-sidebar-section">
+      <div class="admin-sidebar-title">Reports</div>
+      <a href="dashboard.html" class="admin-nav-item">
+        <i data-lucide="activity"></i>
+        Real-time Monitor
+      </a>
+      <a href="dashboard.html" class="admin-nav-item">
+        <i data-lucide="bar-chart-3"></i>
+        Analytics
+      </a>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-header">
+      <div>
+        <h1 class="admin-title">User Management</h1>
+        <p class="admin-subtitle">Manage accounts, verify users, and control access</p>
+      </div>
+      <div class="admin-header-right">
+        <div class="lang-pill">
+          <button class="lang-btn active">EN</button>
+          <button class="lang-btn">CY</button>
+        </div>
+        <button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+          <i data-lucide="sun" style="width:16px;height:16px;display:none;" class="theme-icon-light"></i>
+          <i data-lucide="moon" style="width:16px;height:16px;" class="theme-icon-dark"></i>
+        </button>
+        <button class="header-btn" onclick="exportCSV()">
+          <i data-lucide="download" style="width:16px;height:16px;"></i>
+          Export CSV
+        </button>
+        <button class="header-btn primary" onclick="openAddUserModal()">
+          <i data-lucide="user-plus" style="width:16px;height:16px;"></i>
+          Add User
+        </button>
+      </div>
+    </div>
+
+    <div class="admin-stats-bar" id="statsBar">
+      <div class="admin-stat-card">
+        <div class="admin-stat-value" id="stat-total">0</div>
+        <div class="admin-stat-label">Total Users</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-value" id="stat-active" style="color:#34C759;">0</div>
+        <div class="admin-stat-label">Active</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-value" id="stat-premium" style="color:#007AFF;">0</div>
+        <div class="admin-stat-label">Premium</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-value" id="stat-pending" style="color:#FF9500;">0</div>
+        <div class="admin-stat-label">Pending</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-value" id="stat-blocked" style="color:#FF3B30;">0</div>
+        <div class="admin-stat-label">Blocked</div>
+      </div>
+    </div>
+
+    <div class="bulk-actions-bar" id="bulkActionsBar">
+      <span id="bulkCountText">0 selected</span>
+      <button class="bulk-btn secondary" onclick="bulkVerify()">
+        <i data-lucide="check-circle" style="width:14px;height:14px;"></i>
+        Verify
+      </button>
+      <button class="bulk-btn secondary" onclick="bulkUpgrade()">
+        <i data-lucide="trending-up" style="width:14px;height:14px;"></i>
+        Upgrade to Premium
+      </button>
+      <button class="bulk-btn danger" onclick="bulkBlock()">
+        <i data-lucide="slash" style="width:14px;height:14px;"></i>
+        Block
+      </button>
+      <button class="bulk-btn close" onclick="clearBulk()">
+        <i data-lucide="x" style="width:14px;height:14px;"></i>
+      </button>
+    </div>
+
+    <div class="admin-toolbar">
+      <div class="admin-search">
+        <i data-lucide="search" style="width:16px;height:16px;color:#8E8E93;"></i>
+        <input type="text" placeholder="Search by name, email, or phone..." id="adminSearch" oninput="filterUsers()" />
+      </div>
+
+      <div class="admin-filters" id="adminFilters">
+        <button class="filter-btn active" onclick="setFilter('all', this)">All <span class="count" id="filter-all">0</span></button>
+        <button class="filter-btn" onclick="setFilter('active', this)">Active <span class="count" id="filter-active">0</span></button>
+        <button class="filter-btn" onclick="setFilter('pending', this)">Pending <span class="count" id="filter-pending">0</span></button>
+        <button class="filter-btn" onclick="setFilter('premium', this)">Premium <span class="count" id="filter-premium">0</span></button>
+        <button class="filter-btn" onclick="setFilter('blocked', this)">Blocked <span class="count" id="filter-blocked">0</span></button>
+      </div>
+
+      <div class="admin-sort" onclick="toggleSortMenu(event)">
+        <i data-lucide="arrow-up-down" style="width:14px;height:14px;"></i>
+        Sort
+      </div>
+      <div id="sortMenu">
+        <button onclick="sortBy('name-asc')">Name (A to Z)</button>
+        <button onclick="sortBy('name-desc')">Name (Z to A)</button>
+        <button onclick="sortBy('email-asc')">Email (A to Z)</button>
+        <button onclick="sortBy('email-desc')">Email (Z to A)</button>
+        <button onclick="sortBy('date-new')">Date Joined (Newest)</button>
+        <button onclick="sortBy('date-old')">Date Joined (Oldest)</button>
+        <button onclick="sortBy('shipments-desc')">Most Shipments</button>
+        <button onclick="sortBy('shipments-asc')">Fewest Shipments</button>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table class="users-table" id="usersTable">
+        <thead>
+          <tr>
+            <th class="col-check"><input type="checkbox" id="selectAll" onchange="toggleSelectAll()" /></th>
+            <th>User</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Status</th>
+            <th>Role</th>
+            <th>Joined</th>
+            <th>Shipments</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody"></tbody>
+      </table>
+
+      <div class="pagination-bar">
+        <div class="pagination-info" id="paginationInfo">Showing <strong>1-10</strong> of <strong>0</strong> users</div>
+        <div class="pagination-controls" id="paginationControls"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="addUserModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 class="modal-title">Add New User</h2>
+      <button class="modal-close" onclick="closeModal('addUserModal')">
+        <i data-lucide="x" style="width:16px;height:16px;"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-field">
+        <label>Full Name *</label>
+        <input type="text" id="addName" placeholder="Enter full name" />
+      </div>
+      <div class="modal-field">
+        <label>Email Address *</label>
+        <input type="email" id="addEmail" placeholder="firstname.lastname@example.co.uk" />
+      </div>
+      <div class="modal-field">
+        <label>Phone Number</label>
+        <input type="tel" id="addPhone" placeholder="+44 7XXX XXX XXX" />
+      </div>
+      <div class="modal-field">
+        <label>Role</label>
+        <div class="role-selector" id="addRoleSelector">
+          <div class="role-option selected" onclick="selectAddRole(this, 'user')">User</div>
+          <div class="role-option" onclick="selectAddRole(this, 'business')">Business</div>
+          <div class="role-option" onclick="selectAddRole(this, 'admin')">Admin</div>
+        </div>
+        <input type="hidden" id="addRole" value="user" />
+      </div>
+      <div class="modal-field">
+        <label>Password *</label>
+        <input type="password" id="addPassword" placeholder="Minimum 8 characters" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn cancel" onclick="closeModal('addUserModal')">Cancel</button>
+      <button class="modal-btn primary" onclick="confirmAddUser()">Create User</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="editModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 class="modal-title">Edit User</h2>
+      <button class="modal-close" onclick="closeModal('editModal')">
+        <i data-lucide="x" style="width:16px;height:16px;"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editUserId" />
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;padding:12px;background:#F5F5F7;border-radius:12px;">
+        <div id="editUserAvatar" style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,#007AFF,#5856D6);">AK</div>
+        <div>
+          <div id="editUserName" style="font-weight:600;font-size:15px;">Alex Kim</div>
+          <div id="editUserEmail" style="font-size:12px;color:#8E8E93;">alex@example.co.uk</div>
+        </div>
+      </div>
+      <div class="modal-field">
+        <label>Display Name</label>
+        <input type="text" id="editName" placeholder="Full name" />
+      </div>
+      <div class="modal-field">
+        <label>Phone Number</label>
+        <input type="tel" id="editPhone" placeholder="+44 ..." />
+      </div>
+      <div class="modal-field">
+        <label>Role</label>
+        <div class="role-selector" id="editRoleSelector">
+          <div class="role-option" onclick="selectEditRole(this, 'user')">User</div>
+          <div class="role-option" onclick="selectEditRole(this, 'business')">Business</div>
+          <div class="role-option" onclick="selectEditRole(this, 'admin')">Admin</div>
+        </div>
+        <input type="hidden" id="editRole" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn cancel" onclick="closeModal('editModal')">Cancel</button>
+      <button class="modal-btn primary" onclick="saveEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="verifyModal">
+  <div class="modal-box" style="width:420px;">
+    <div class="modal-body" style="text-align:center;padding:32px 24px;">
+      <div class="confirm-icon success">
+        <i data-lucide="user-check"></i>
+      </div>
+      <div class="confirm-title">Verify this user?</div>
+      <div class="confirm-desc" id="verifyDesc">This user will gain full access to their account. You can reverse this action at any time.</div>
+      <input type="hidden" id="verifyUserId" />
+    </div>
+    <div class="modal-footer" style="justify-content:center;">
+      <button class="modal-btn cancel" onclick="closeModal('verifyModal')">Cancel</button>
+      <button class="modal-btn success" onclick="confirmVerify()">Verify User</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="upgradeModal">
+  <div class="modal-box" style="width:420px;">
+    <div class="modal-body" style="text-align:center;padding:32px 24px;">
+      <div class="confirm-icon info">
+        <i data-lucide="crown"></i>
+      </div>
+      <div class="confirm-title">Upgrade to Premium?</div>
+      <div class="confirm-desc">This user will unlock premium features: priority support, enhanced insurance, volume discounts, and advanced analytics.</div>
+      <input type="hidden" id="upgradeUserId" />
+    </div>
+    <div class="modal-footer" style="justify-content:center;">
+      <button class="modal-btn cancel" onclick="closeModal('upgradeModal')">Cancel</button>
+      <button class="modal-btn primary" style="background:linear-gradient(135deg,#FFD700,#FF9500);" onclick="confirmUpgrade()">Upgrade to Premium</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="blockModal">
+  <div class="modal-box" style="width:420px;">
+    <div class="modal-body" style="text-align:center;padding:32px 24px;">
+      <div class="confirm-icon warning">
+        <i data-lucide="user-x"></i>
+      </div>
+      <div class="confirm-title">Block this user?</div>
+      <div class="confirm-desc" id="blockDesc">Blocked users cannot log in or access any services. You can unblock them at any time.</div>
+      <input type="hidden" id="blockUserId" />
+    </div>
+    <div class="modal-footer" style="justify-content:center;">
+      <button class="modal-btn cancel" onclick="closeModal('blockModal')">Cancel</button>
+      <button class="modal-btn danger" onclick="confirmBlock()">Block User</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="unblockModal">
+  <div class="modal-box" style="width:420px;">
+    <div class="modal-body" style="text-align:center;padding:32px 24px;">
+      <div class="confirm-icon success">
+        <i data-lucide="user-check"></i>
+      </div>
+      <div class="confirm-title">Unblock this user?</div>
+      <div class="confirm-desc">This user will regain access to their account and all services.</div>
+      <input type="hidden" id="unblockUserId" />
+    </div>
+    <div class="modal-footer" style="justify-content:center;">
+      <button class="modal-btn cancel" onclick="closeModal('unblockModal')">Cancel</button>
+      <button class="modal-btn success" onclick="confirmUnblock()">Unblock & Activate</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-box" style="width:420px;">
+    <div class="modal-body" style="text-align:center;padding:32px 24px;">
+      <div class="confirm-icon danger">
+        <i data-lucide="trash-2"></i>
+      </div>
+      <div class="confirm-title">Delete this user?</div>
+      <div class="confirm-desc" id="deleteDesc">This action is permanent. All data, shipment history, and account settings will be removed immediately.</div>
+      <input type="hidden" id="deleteUserId" />
+    </div>
+    <div class="modal-footer" style="justify-content:center;">
+      <button class="modal-btn cancel" onclick="closeModal('deleteModal')">Cancel</button>
+      <button class="modal-btn danger" onclick="confirmDelete()">Delete Permanently</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const UK_ADDRESS = 'Unit 7, Wales International Hub, Cardiff Bay, Wales CF10 5AL, United Kingdom';
+
+const allUsers = [
+  { id: 1, name: 'Oliver Bennett', email: 'oliver.bennett@meridian-logistics.co.uk', phone: '+44 7911 123456', role: 'admin', status: 'active', isPremium: true, joined: '2024-01-15', shipments: 1847, lastActive: '2 min ago' },
+  { id: 2, name: 'Charlotte Hughes', email: 'charlotte.hughes@atlantic-freight.com', phone: '+44 7922 987654', role: 'user', status: 'active', isPremium: false, joined: '2024-03-22', shipments: 432, lastActive: '15 min ago' },
+  { id: 3, name: 'James Crawford', email: 'james.crawford@designworks.co.uk', phone: '+44 7555 111222', role: 'user', status: 'active', isPremium: false, joined: '2024-04-05', shipments: 89, lastActive: '1 hour ago' },
+  { id: 4, name: 'Amelia Foster', email: 'amelia.foster@startupventures.io', phone: '+44 7700 900123', role: 'business', status: 'active', isPremium: true, joined: '2024-05-12', shipments: 2156, lastActive: '3 hours ago' },
+  { id: 5, name: 'William Sterling', email: 'william.sterling@enterprise-holdings.com', phone: '+44 7832 654321', role: 'business', status: 'pending', isPremium: false, joined: '2024-06-30', shipments: 5891, lastActive: '5 days ago' },
+  { id: 6, name: 'Sophia Adams', email: 'sophia.adams@creative-agency.net', phone: '+44 7900 123456', role: 'user', status: 'blocked', isPremium: false, joined: '2024-07-18', shipments: 12, lastActive: '2 weeks ago' },
+  { id: 7, name: 'Benjamin Clarke', email: 'ben.clarke@consulting-partners.co.uk', phone: '+44 7711 987654', role: 'admin', status: 'active', isPremium: true, joined: '2024-08-25', shipments: 3421, lastActive: '30 min ago' },
+  { id: 8, name: 'Emma Richardson', email: 'emma.richardson@newstart.io', phone: '+44 7888 555000', role: 'user', status: 'pending', isPremium: false, joined: '2024-09-10', shipments: 0, lastActive: 'Never' },
+  { id: 9, name: 'Henry McAllister', email: 'henry.mcallister@highland-courier.co.uk', phone: '+44 7522 334455', role: 'user', status: 'active', isPremium: false, joined: '2024-10-03', shipments: 567, lastActive: '1 day ago' },
+  { id: 10, name: 'Grace Thornton', email: 'grace.thornton@urban-delivery.com', phone: '+44 7933 112233', role: 'business', status: 'active', isPremium: true, joined: '2024-11-21', shipments: 3244, lastActive: '4 hours ago' },
+  { id: 11, name: 'Thomas Wright', email: 'thomas.wright@northern-express.co.uk', phone: '+44 7644 556677', role: 'user', status: 'blocked', isPremium: false, joined: '2024-12-05', shipments: 34, lastActive: '1 month ago' },
+  { id: 12, name: 'Mia Sanderson', email: 'mia.sanderson@elegance-styles.co.uk', phone: '+44 7955 778899', role: 'user', status: 'active', isPremium: true, joined: '2025-01-14', shipments: 892, lastActive: '20 min ago' },
+  { id: 13, name: 'Daniel Porter', email: 'daniel.porter@swift-shipping.co.uk', phone: '+44 7666 990011', role: 'business', status: 'active', isPremium: false, joined: '2025-02-08', shipments: 156, lastActive: '2 days ago' },
+  { id: 14, name: 'Emily Harrison', email: 'emily.harrison@coastal-logistics.com', phone: '+44 7912 345678', role: 'user', status: 'pending', isPremium: false, joined: '2025-03-01', shipments: 0, lastActive: 'Never' },
+  { id: 15, name: 'Samuel Cooper', email: 'samuel.cooper@pioneer-freight.uk', phone: '+44 7733 246810', role: 'admin', status: 'active', isPremium: true, joined: '2025-03-15', shipments: 4102, lastActive: '5 min ago' },
+  { id: 16, name: 'Lily Matthews', email: 'lily.matthews@modern-transport.co.uk', phone: '+44 7444 135792', role: 'user', status: 'active', isPremium: false, joined: '2025-04-02', shipments: 78, lastActive: '6 hours ago' },
+  { id: 17, name: 'George Holloway', email: 'george.holloway@royal-mail-services.co.uk', phone: '+44 7555 864209', role: 'business', status: 'pending', isPremium: false, joined: '2025-04-18', shipments: 23, lastActive: '1 week ago' },
+  { id: 18, name: 'Isabelle Chapman', email: 'isabelle.chapman@precision-cargo.com', phone: '+44 7222 112233', role: 'user', status: 'active', isPremium: true, joined: '2025-05-05', shipments: 445, lastActive: '3 hours ago' },
+  { id: 19, name: 'Lucas Fitzgerald', email: 'lucas.fitzgerald@peak-performance.co.uk', phone: '+44 7333 445566', role: 'user', status: 'blocked', isPremium: false, joined: '2025-05-22', shipments: 8, lastActive: '3 weeks ago' },
+  { id: 20, name: 'Chloe Paterson', email: 'chloe.paterson@swift-solutions.io', phone: '+44 7111 998877', role: 'business', status: 'active', isPremium: true, joined: '2025-06-10', shipments: 1876, lastActive: '10 min ago' },
+  { id: 21, name: 'Jack Simpson', email: 'jack.simpson@express-delivery.co.uk', phone: '+44 7444 223344', role: 'user', status: 'active', isPremium: false, joined: '2025-07-01', shipments: 234, lastActive: '8 hours ago' },
+  { id: 22, name: 'Abigail Morris', email: 'abigail.morris@global-shipping.com', phone: '+44 7222 556677', role: 'user', status: 'pending', isPremium: false, joined: '2025-07-15', shipments: 0, lastActive: 'Never' },
+  { id: 23, name: 'Ryan Gallagher', email: 'ryan.gallagher@premier-freight.co.uk', phone: '+44 7555 667788', role: 'business', status: 'active', isPremium: true, joined: '2025-08-08', shipments: 2567, lastActive: '45 min ago' },
+  { id: 24, name: 'Ella Watson', email: 'ella.watson@nationwide-cargo.co.uk', phone: '+44 7333 778899', role: 'user', status: 'active', isPremium: false, joined: '2025-09-12', shipments: 145, lastActive: '2 days ago' },
+  { id: 25, name: 'Leo Sullivan', email: 'leo.sullivan@secure-transport.uk', phone: '+44 7666 889900', role: 'user', status: 'blocked', isPremium: false, joined: '2025-10-01', shipments: 19, lastActive: '1 month ago' }
+];
+
+const AVATAR_COLORS = [
+  'linear-gradient(135deg,#007AFF,#5856D6)',
+  'linear-gradient(135deg,#34C759,#30D158)',
+  'linear-gradient(135deg,#FF9500,#FF9F0A)',
+  'linear-gradient(135deg,#FF3B30,#FF453A)',
+  'linear-gradient(135deg,#5856D6,#AF52DE)',
+  'linear-gradient(135deg,#00C7BE,#30D158)',
+  'linear-gradient(135deg,#FF9500,#FF3B30)',
+  'linear-gradient(135deg,#8E8E93,#636366)',
+  'linear-gradient(135deg,#FF2D55,#FF375F)',
+  'linear-gradient(135deg,#64D2FF,#0A84FF)'
+];
+
+let currentFilter = 'all';
+let currentSort = { field: 'date-new', dir: 'desc' };
+let currentPage = 1;
+let usersPerPage = 10;
+let filteredUsers = [...allUsers];
+
+function getInitials(name) {
+  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function formatNumber(n) {
+  return n.toLocaleString('en-GB');
+}
+
+function getStatusClass(status, isPremium) {
+  if (status === 'blocked') return 'blocked';
+  if (status === 'pending') return 'pending';
+  if (isPremium) return 'premium';
+  return 'active';
+}
+
+function getStatusLabel(status) {
+  if (status === 'blocked') return 'Blocked';
+  if (status === 'pending') return 'Pending';
+  if (status === 'premium') return 'Premium';
+  return 'Active';
+}
+
+function updateStats() {
+  const total = allUsers.length;
+  const active = allUsers.filter(u => u.status === 'active').length;
+  const premium = allUsers.filter(u => u.isPremium).length;
+  const pending = allUsers.filter(u => u.status === 'pending').length;
+  const blocked = allUsers.filter(u => u.status === 'blocked').length;
+
+  document.getElementById('stat-total').textContent = formatNumber(total);
+  document.getElementById('stat-active').textContent = formatNumber(active);
+  document.getElementById('stat-premium').textContent = formatNumber(premium);
+  document.getElementById('stat-pending').textContent = formatNumber(pending);
+  document.getElementById('stat-blocked').textContent = formatNumber(blocked);
+
+  document.getElementById('filter-all').textContent = total;
+  document.getElementById('filter-active').textContent = active;
+  document.getElementById('filter-premium').textContent = premium;
+  document.getElementById('filter-pending').textContent = pending;
+  document.getElementById('filter-blocked').textContent = blocked;
+}
+
+function applyFilter() {
+  const q = document.getElementById('adminSearch').value.toLowerCase();
+
+  filteredUsers = allUsers.filter(u => {
+    const matchesSearch = !q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q) || u.phone.includes(q);
+    const matchesFilter = currentFilter === 'all' ||
+      (currentFilter === 'active' && u.status === 'active') ||
+      (currentFilter === 'pending' && u.status === 'pending') ||
+      (currentFilter === 'blocked' && u.status === 'blocked') ||
+      (currentFilter === 'premium' && u.isPremium);
+    return matchesSearch && matchesFilter;
+  });
+
+  applySort();
+  currentPage = 1;
+  renderTable();
+  renderPagination();
+}
+
+function applySort() {
+  filteredUsers.sort((a, b) => {
+    let cmp = 0;
+    switch (currentSort.field) {
+      case 'name-asc': cmp = a.name.localeCompare(b.name); break;
+      case 'name-desc': cmp = b.name.localeCompare(a.name); break;
+      case 'email-asc': cmp = a.email.localeCompare(b.email); break;
+      case 'email-desc': cmp = b.email.localeCompare(a.email); break;
+      case 'date-new': cmp = new Date(b.joined) - new Date(a.joined); break;
+      case 'date-old': cmp = new Date(a.joined) - new Date(b.joined); break;
+      case 'shipments-desc': cmp = b.shipments - a.shipments; break;
+      case 'shipments-asc': cmp = a.shipments - b.shipments; break;
+    }
+    return currentSort.dir === 'desc' ? cmp : -cmp;
+  });
+}
+
+function renderTable() {
+  const tbody = document.getElementById('usersTableBody');
+  const start = (currentPage - 1) * usersPerPage;
+  const pageUsers = filteredUsers.slice(start, start + usersPerPage);
+
+  tbody.innerHTML = pageUsers.map((u, i) => {
+    const initials = getInitials(u.name);
+    const color = AVATAR_COLORS[(u.id - 1) % AVATAR_COLORS.length];
+    const statusClass = getStatusClass(u.status, u.isPremium);
+    const premiumHtml = u.isPremium ? '<span class="premium-badge"><i data-lucide="star" style="width:9px;height:9px;"></i> PRO</span>' : '';
+
+    const editBtn = `<button class="action-btn edit" onclick="openEditModal(${u.id})"><i data-lucide="pencil"></i></button>`;
+    const verifyBtn = u.status === 'pending' ? `<button class="action-btn verify" onclick="openVerifyModal(${u.id})"><i data-lucide="user-check"></i></button>` : '';
+    const upgradeBtn = !u.isPremium ? `<button class="action-btn upgrade" onclick="openUpgradeModal(${u.id})"><i data-lucide="crown"></i></button>` : '';
+    const blockBtn = u.status !== 'blocked' ? `<button class="action-btn block" onclick="openBlockModal(${u.id})"><i data-lucide="slash"></i></button>` : `<button class="action-btn unblock" onclick="openUnblockModal(${u.id})"><i data-lucide="user-check"></i></button>`;
+    const deleteBtn = `<button class="action-btn delete" onclick="openDeleteModal(${u.id})"><i data-lucide="trash-2"></i></button>`;
+
+    return `<tr data-user-id="${u.id}" data-status="${u.status}" data-role="${u.role}" data-email="${u.email}" data-name="${u.name}" data-shipments="${u.shipments}" data-joined="${u.joined}">
+      <td class="col-check"><input type="checkbox" class="row-checkbox" onchange="updateBulk()" /></td>
+      <td>
+        <div class="user-cell">
+          <div class="user-avatar" style="background:${color};">${initials}</div>
+          <div class="user-info">
+            <div class="user-name">${u.name} ${premiumHtml}</div>
+            <div class="user-email">${u.email}</div>
+          </div>
+        </div>
+      </td>
+      <td>${u.email}</td>
+      <td>${u.phone}</td>
+      <td><span class="status-badge ${statusClass}">${u.status === 'active' && u.isPremium ? 'Premium' : u.status.charAt(0).toUpperCase() + u.status.slice(1)}</span></td>
+      <td><span class="role-badge ${u.role}">${u.role.charAt(0).toUpperCase() + u.role.slice(1)}</span></td>
+      <td>${formatDate(u.joined)}</td>
+      <td>${formatNumber(u.shipments)}</td>
+      <td>
+        <div class="action-group">${editBtn}${verifyBtn}${upgradeBtn}${blockBtn}${deleteBtn}</div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  lucide.createIcons();
+
+  const total = filteredUsers.length;
+  const startNum = total > 0 ? start + 1 : 0;
+  const endNum = Math.min(start + usersPerPage, total);
+  document.getElementById('paginationInfo').innerHTML = `Showing <strong>${startNum}-${endNum}</strong> of <strong>${formatNumber(total)}</strong> users`;
+}
+
+function renderPagination() {
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+  const controls = document.getElementById('paginationControls');
+
+  if (totalPages <= 1) {
+    controls.innerHTML = '';
+    return;
+  }
+
+  let html = `<button class="page-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+    <i data-lucide="chevron-left" style="width:14px;height:14px;"></i>
+  </button>`;
+
+  const maxVisible = 5;
+  let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+  let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+
+  if (endPage - startPage < maxVisible - 1) {
+    startPage = Math.max(1, endPage - maxVisible + 1);
+  }
+
+  if (startPage > 1) {
+    html += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+    if (startPage > 2) html += `<span class="page-dots">...</span>`;
+  }
+
+  for (let i = startPage; i <= endPage; i++) {
+    html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+  }
+
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) html += `<span class="page-dots">...</span>`;
+    html += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+  }
+
+  html += `<button class="page-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+    <i data-lucide="chevron-right" style="width:14px;height:14px;"></i>
+  </button>`;
+
+  controls.innerHTML = html;
+  lucide.createIcons();
+}
+
+function goToPage(page) {
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+  if (page < 1 || page > totalPages) return;
+  currentPage = page;
+  renderTable();
+  renderPagination();
+}
+
+function setFilter(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilter();
+}
+
+function sortBy(criteria) {
+  const [field, dir] = criteria.split('-');
+  currentSort = { field, dir };
+  applySort();
+  renderTable();
+  document.getElementById('sortMenu').style.display = 'none';
+}
+
+function toggleSortMenu(e) {
+  e.stopPropagation();
+  const menu = document.getElementById('sortMenu');
+  const sortBtn = document.querySelector('.admin-sort');
+  const rect = sortBtn.getBoundingClientRect();
+  menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+  menu.style.position = 'fixed';
+  menu.style.top = (rect.bottom + 8) + 'px';
+  menu.style.left = rect.left + 'px';
+}
+
+function filterUsers() {
+  applyFilter();
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.admin-sort') && !e.target.closest('#sortMenu')) {
+    document.getElementById('sortMenu').style.display = 'none';
+  }
+});
+
+function toggleSelectAll() {
+  const checked = document.getElementById('selectAll').checked;
+  document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = checked);
+  updateBulk();
+}
+
+function updateBulk() {
+  const selected = document.querySelectorAll('.row-checkbox:checked');
+  const bar = document.getElementById('bulkActionsBar');
+  const countText = document.getElementById('bulkCountText');
+  if (selected.length > 0) {
+    bar.classList.add('visible');
+    countText.textContent = `${selected.length} selected`;
+  } else {
+    bar.classList.remove('visible');
+  }
+}
+
+function clearBulk() {
+  document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = false);
+  document.getElementById('selectAll').checked = false;
+  updateBulk();
+}
+
+function getSelectedRows() {
+  return Array.from(document.querySelectorAll('.row-checkbox:checked')).map(cb => {
+    const id = parseInt(cb.closest('tr').dataset.userId);
+    return allUsers.find(u => u.id === id);
+  });
+}
+
+function bulkVerify() {
+  getSelectedRows().forEach(u => {
+    u.status = 'active';
+    const row = document.querySelector(`tr[data-user-id="${u.id}"]`);
+    if (row) {
+      row.dataset.status = 'active';
+      row.querySelector('.status-badge').className = `status-badge active`;
+      row.querySelector('.status-badge').innerHTML = 'Active';
+    }
+  });
+  updateStats();
+  clearBulk();
+  showToast('Users verified successfully');
+}
+
+function bulkUpgrade() {
+  getSelectedRows().forEach(u => {
+    u.isPremium = true;
+    const row = document.querySelector(`tr[data-user-id="${u.id}"]`);
+    if (row) {
+      const nameEl = row.querySelector('.user-name');
+      if (!nameEl.innerHTML.includes('premium-badge')) {
+        nameEl.innerHTML += ` <span class="premium-badge"><i data-lucide="star" style="width:9px;height:9px;"></i> PRO</span>`;
+      }
+      row.querySelector('.status-badge').className = `status-badge premium`;
+      row.querySelector('.status-badge').innerHTML = 'Premium';
+    }
+  });
+  lucide.createIcons();
+  updateStats();
+  clearBulk();
+  showToast('Users upgraded to Premium');
+}
+
+function bulkBlock() {
+  getSelectedRows().forEach(u => {
+    u.status = 'blocked';
+    const row = document.querySelector(`tr[data-user-id="${u.id}"]`);
+    if (row) {
+      row.dataset.status = 'blocked';
+      row.querySelector('.status-badge').className = `status-badge blocked`;
+      row.querySelector('.status-badge').innerHTML = 'Blocked';
+    }
+  });
+  updateStats();
+  clearBulk();
+  showToast('Users blocked');
+}
+
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+function openAddUserModal() {
+  document.getElementById('addName').value = '';
+  document.getElementById('addEmail').value = '';
+  document.getElementById('addPhone').value = '';
+  document.getElementById('addPassword').value = '';
+  document.querySelectorAll('#addRoleSelector .role-option').forEach(o => o.classList.remove('selected'));
+  document.querySelector('#addRoleSelector .role-option').classList.add('selected');
+  document.getElementById('addRole').value = 'user';
+  openModal('addUserModal');
+}
+
+function selectAddRole(el, role) {
+  document.querySelectorAll('#addRoleSelector .role-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('addRole').value = role;
+}
+
+function confirmAddUser() {
+  const name = document.getElementById('addName').value.trim();
+  const email = document.getElementById('addEmail').value.trim();
+  const phone = document.getElementById('addPhone').value.trim();
+  const role = document.getElementById('addRole').value;
+  const password = document.getElementById('addPassword').value;
+
+  if (!name || !email) { showToast('Name and email are required', 'error'); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Please enter a valid email address', 'error'); return; }
+  if (allUsers.some(u => u.email === email)) { showToast('Email already exists', 'error'); return; }
+  if (password && password.length < 8) { showToast('Password must be at least 8 characters', 'error'); return; }
+
+  const newId = Math.max(...allUsers.map(u => u.id)) + 1;
+  const newUser = {
+    id: newId,
+    name,
+    email,
+    phone: phone || '+44 7XXX XXX XXX',
+    role,
+    status: 'pending',
+    isPremium: false,
+    joined: new Date().toISOString().split('T')[0],
+    shipments: 0,
+    lastActive: 'Never'
+  };
+
+  allUsers.push(newUser);
+  filteredUsers.push(newUser);
+  updateStats();
+  applyFilter();
+  closeModal('addUserModal');
+  showToast('User created successfully');
+}
+
+function openEditModal(userId) {
+  const user = allUsers.find(u => u.id === userId);
+  if (!user) return;
+
+  document.getElementById('editUserId').value = userId;
+  document.getElementById('editUserName').textContent = user.name;
+  document.getElementById('editUserEmail').textContent = user.email;
+  document.getElementById('editName').value = user.name;
+  document.getElementById('editPhone').value = user.phone;
+  document.getElementById('editUserAvatar').textContent = getInitials(user.name);
+  document.getElementById('editUserAvatar').style.background = AVATAR_COLORS[(userId - 1) % AVATAR_COLORS.length];
+
+  document.querySelectorAll('#editRoleSelector .role-option').forEach(opt => {
+    opt.classList.remove('selected');
+    if (opt.textContent.toLowerCase() === user.role) {
+      opt.classList.add('selected');
+    }
+  });
+
+  openModal('editModal');
+}
+
+function selectEditRole(el, role) {
+  document.querySelectorAll('#editRoleSelector .role-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('editRole').value = role;
+}
+
+function saveEdit() {
+  const userId = parseInt(document.getElementById('editUserId').value);
+  const newName = document.getElementById('editName').value.trim();
+  const newPhone = document.getElementById('editPhone').value.trim();
+  const newRole = document.getElementById('editRole').value;
+
+  if (!newName) { showToast('Name is required', 'error'); return; }
+
+  const user = allUsers.find(u => u.id === userId);
+  if (!user) return;
+
+  user.name = newName;
+  user.phone = newPhone;
+  if (newRole) user.role = newRole;
+
+  const row = document.querySelector(`tr[data-user-id="${userId}"]`);
+  if (row) {
+    const initials = getInitials(newName);
+    row.dataset.name = newName;
+    row.querySelector('.user-avatar').textContent = initials;
+    row.querySelector('.user-name').innerHTML = newName + (user.isPremium ? ` <span class="premium-badge"><i data-lucide="star" style="width:9px;height:9px;"></i> PRO</span>` : '');
+    row.querySelectorAll('.user-email')[0].textContent = newPhone;
+    row.querySelector('.role-badge').textContent = newRole.charAt(0).toUpperCase() + newRole.slice(1);
+    row.querySelector('.role-badge').className = `role-badge ${newRole}`;
+    row.dataset.role = newRole;
+    lucide.createIcons();
+  }
+
+  closeModal('editModal');
+  showToast('User updated successfully');
+}
+
+function openVerifyModal(userId) {
+  const user = allUsers.find(u => u.id === userId);
+  document.getElementById('verifyUserId').value = userId;
+  document.getElementById('verifyDesc').textContent = `Verifying ${user ? user.name : 'user'} will grant them full account access.`;
+  openModal('verifyModal');
+}
+
+function confirmVerify() {
+  const userId = parseInt(document.getElementById('verifyUserId').value);
+  const user = allUsers.find(u => u.id === userId);
+  if (user) user.status = 'active';
+
+  const row = document.querySelector(`tr[data-user-id="${userId}"]`);
+  if (row) {
+    row.dataset.status = 'active';
+    row.querySelector('.status-badge').className = 'status-badge active';
+    row.querySelector('.status-badge').innerHTML = 'Active';
+  }
+
+  updateStats();
+  closeModal('verifyModal');
+  showToast('User verified successfully');
+}
+
+function openUpgradeModal(userId) {
+  document.getElementById('upgradeUserId').value = userId;
+  openModal('upgradeModal');
+}
+
+function confirmUpgrade() {
+  const userId = parseInt(document.getElementById('upgradeUserId').value);
+  const user = allUsers.find(u => u.id === userId);
+  if (user) user.isPremium = true;
+
+  const row = document.querySelector(`tr[data-user-id="${userId}"]`);
+  if (row) {
+    const nameEl = row.querySelector('.user-name');
+    if (!nameEl.innerHTML.includes('premium-badge')) {
+      nameEl.innerHTML += ` <span class="premium-badge"><i data-lucide="star" style="width:9px;height:9px;"></i> PRO</span>`;
+    }
+    row.querySelector('.status-badge').className = 'status-badge premium';
+    row.querySelector('.status-badge').innerHTML = 'Premium';
+    lucide.createIcons();
+  }
+
+  updateStats();
+  closeModal('upgradeModal');
+  showToast('User upgraded to Premium');
+}
+
+function openBlockModal(userId) {
+  const user = allUsers.find(u => u.id === userId);
+  document.getElementById('blockUserId').value = userId;
+  document.getElementById('blockDesc').textContent = `Blocking ${user ? user.name : 'user'} will prevent them from accessing their account.`;
+  openModal('blockModal');
+}
+
+function confirmBlock() {
+  const userId = parseInt(document.getElementById('blockUserId').value);
+  const user = allUsers.find(u => u.id === userId);
+  if (user) user.status = 'blocked';
+
+  const row = document.querySelector(`tr[data-user-id="${userId}"]`);
+  if (row) {
+    row.dataset.status = 'blocked';
+    row.querySelector('.status-badge').className = 'status-badge blocked';
+    row.querySelector('.status-badge').innerHTML = 'Blocked';
+  }
+
+  updateStats();
+  closeModal('blockModal');
+  showToast('User blocked');
+}
+
+function openUnblockModal(userId) {
+  document.getElementById('unblockUserId').value = userId;
+  openModal('unblockModal');
+}
+
+function confirmUnblock() {
+  const userId = parseInt(document.getElementById('unblockUserId').value);
+  const user = allUsers.find(u => u.id === userId);
+  if (user) user.status = 'active';
+
+  const row = document.querySelector(`tr[data-user-id="${userId}"]`);
+  if (row) {
+    row.dataset.status = 'active';
+    row.querySelector('.status-badge').className = 'status-badge active';
+    row.querySelector('.status-badge').innerHTML = 'Active';
+  }
+
+  updateStats();
+  closeModal('unblockModal');
+  showToast('User unblocked and activated');
+}
+
+function openDeleteModal(userId) {
+  const user = allUsers.find(u => u.id === userId);
+  document.getElementById('deleteUserId').value = userId;
+  document.getElementById('deleteDesc').textContent = `Permanently deleting ${user ? user.name : 'user'} will remove all data immediately. This cannot be undone.`;
+  openModal('deleteModal');
+}
+
+function confirmDelete() {
+  const userId = parseInt(document.getElementById('deleteUserId').value);
+  const row = document.querySelector(`tr[data-user-id="${userId}"]`);
+
+  if (row) {
+    row.style.animation = 'fadeOut 0.3s ease-out forwards';
+    setTimeout(() => {
+      row.remove();
+      const idx = allUsers.findIndex(u => u.id === userId);
+      if (idx !== -1) allUsers.splice(idx, 1);
+      const fIdx = filteredUsers.findIndex(u => u.id === userId);
+      if (fIdx !== -1) filteredUsers.splice(fIdx, 1);
+      updateStats();
+      applyFilter();
+    }, 300);
+  }
+
+  closeModal('deleteModal');
+  showToast('User deleted permanently');
+}
+
+function exportCSV() {
+  const headers = ['ID', 'Name', 'Email', 'Phone', 'Status', 'Role', 'Premium', 'Joined', 'Shipments'];
+  const rows = filteredUsers.map(u => [
+    u.id, u.name, u.email, u.phone, u.status, u.role, u.isPremium ? 'Yes' : 'No', u.joined, u.shipments
+  ]);
+
+  const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `airpak-users-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('CSV exported successfully');
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.querySelector('.theme-icon-light').style.display = isDark ? 'none' : 'block';
+  document.querySelector('.theme-icon-dark').style.display = isDark ? 'block' : 'none';
+}
+
+function toggleSidebar() {
+  document.getElementById('adminSidebar').classList.toggle('open');
+  document.querySelector('.admin-sidebar-overlay').classList.toggle('open');
+}
+
+function showToast(message, type = 'success') {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.style.background = type === 'error' ? '#FF3B30' : '#333';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => {
+    toast.style.animation = 'fadeOut 0.3s ease-out forwards';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
+  updateStats();
+  applyFilter();
+});
+</script>
+</body>
+</html>
