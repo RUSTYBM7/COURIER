@@ -34,7 +34,7 @@ interface Props {
 
 export function AdminSimulateDialog({ shipmentId, trigger }: Props) {
   const [open, setOpen] = React.useState(false);
-  const [status, setStatus] = React.useState<string>(ShipmentStatus.in_transit);
+  const [status, setStatus] = React.useState<ShipmentStatus>(ShipmentStatus.in_transit);
   const [message, setMessage] = React.useState("");
   const [location, setLocation] = React.useState("");
 
@@ -43,7 +43,7 @@ export function AdminSimulateDialog({ shipmentId, trigger }: Props) {
 
   const submitStatus = () => {
     setStatusMut.mutate(
-      { id: shipmentId, data: { status: status as any } },
+      { id: shipmentId, data: { status } },
       {
         onSuccess: () => {
           toast.success("Shipment status updated");
@@ -59,7 +59,7 @@ export function AdminSimulateDialog({ shipmentId, trigger }: Props) {
       {
         id: shipmentId,
         data: {
-          status: status as any,
+          status,
           message,
           location,
           lat: 51.5,
@@ -92,7 +92,7 @@ export function AdminSimulateDialog({ shipmentId, trigger }: Props) {
           <TabsContent value="status" className="space-y-4 pt-4">
             <div className="space-y-2">
               <Label>Status</Label>
-              <Select value={status} onValueChange={setStatus}>
+              <Select value={status} onValueChange={(v) => setStatus(v as ShipmentStatus)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -114,7 +114,7 @@ export function AdminSimulateDialog({ shipmentId, trigger }: Props) {
           <TabsContent value="event" className="space-y-4 pt-4">
             <div className="space-y-2">
               <Label>Status</Label>
-              <Select value={status} onValueChange={setStatus}>
+              <Select value={status} onValueChange={(v) => setStatus(v as ShipmentStatus)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
