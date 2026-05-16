@@ -15,7 +15,6 @@ const replitPlugins = isDev && isReplit
       import("@replit/vite-plugin-cartographer").then((m) =>
         m.cartographer({ root: path.resolve(import.meta.dirname, "..") }),
       ),
-      import("@replit/vite-plugin-dev-banner").then((m) => m.devBanner()),
     ])
   : [];
 
