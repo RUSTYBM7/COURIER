@@ -1,7 +1,27 @@
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
+import fs from "node:fs";
+
+const cleanUrlsPlugin = (publicDir: string): Plugin => ({
+  name: "clean-urls",
+  configureServer(server) {
+    server.middlewares.use((req, _res, next) => {
+      if (!req.url) return next();
+      const [pathname, query] = req.url.split("?");
+      if (
+        pathname &&
+        !pathname.endsWith("/") &&
+        !path.extname(pathname) &&
+        fs.existsSync(path.join(publicDir, `${pathname}.html`))
+      ) {
+        req.url = `${pathname}.html${query ? `?${query}` : ""}`;
+      }
+      next();
+    });
+  },
+});
 
 const rawPort = process.env.PORT;
 const port = rawPort ? Number(rawPort) : 5173;
@@ -20,7 +40,12 @@ const replitPlugins = isDev && isReplit
 
 export default defineConfig({
   base: basePath,
-  plugins: [react(), tailwindcss(), ...replitPlugins],
+  plugins: [
+    react(),
+    tailwindcss(),
+    cleanUrlsPlugin(path.resolve(import.meta.dirname, "public")),
+    ...replitPlugins,
+  ],
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "src"),
