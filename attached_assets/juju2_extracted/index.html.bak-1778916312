@@ -1,0 +1,1305 @@
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+
+<!DOCTYPE html prefix="og: http://ogp.me/ns#">
+<html lang="en">
+    <head>
+		<meta property="og:title" content="Reliable International Shipping & Courier Service | Airpak Express" />
+        <meta property="og:description" content="Airpak Express is a trusted courier company in United Kingdom, offering international shipping & courier logistics, express delivery, and overseas courier services." />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://airpak-express.com/" />
+        <meta property="og:image" content="" />
+
+        <title>Reliable International Shipping & Courier Service | Airpak Express</title>
+        <meta name="description" content="Airpak Express is a trusted courier company in United Kingdom, offering international shipping & courier logistics, express delivery, and overseas courier services." />
+        <meta name="keywords" content="" />
+        <meta name="image_src" content="" />
+        <meta name="image_url" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" href="/apps/airpak/images/icon.png" />
+
+        <link rel="canonical" href="https://airpak-express.com/index" />
+        <!-- Template CSS -->
+        <link class="main-stylesheet" href="/pages/css/themes/modern.css?v=4" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="/apps/airpak/assets/css/plugins/animate.min.css" />
+        <link rel="stylesheet" href="/apps/airpak/assets/css/main.css?v=3.7" />
+        <link rel="stylesheet" href="/apps/airpak/assets/css/font-awesome.min.css" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Inter&family=Poppins:wght@400;600&family=Sarabun:wght@100;400&display=swap" rel="stylesheet" />
+
+        <style type="text/css">
+            .g-recaptcha{margin-bottom:8px;}
+            .enquireform{
+                background-color:#F3F4F8;padding:20px;border-radius:10px;
+            }
+            .enquireform label{font-size:12px;margin-bottom:2px;}
+            .infobox{margin-bottom:20px;}
+            ..burger-icon{background-color:#000;}
+            ..burger-icon.burger-icon-white > span::before, ..burger-icon.burger-icon-white > span::after{background-color:#FFF;}
+
+
+            h1,h2,h3,h4,h5,h6{font-family: 'Sarabun', sans-serif;}
+            .bgred{background-color:#CD2727;}
+            .bgblack{background-color:#373F41;}
+            .bgdarkgrey{background-color:#737B7D;}
+            .bgmediumgrey{background-color:#C6C6C6;}
+            .bgdarkbrown{background-color:#2464E3;}
+            .bgblue{background-color:#6E9FFF;}
+            .bggrey{background-color:#F3F4F8;}
+            p, body{font-family: 'Inter', sans-serif;}
+            .mobile-header-wrapper-style .mobile-header-wrapper-inner .mobile-header-top .mobile-header-logo a img{width:200px;}
+            .infolink{padding-left:7px;}
+            .infolinkactive{font-weight:bold;border-left:solid 2px #CD2727;}
+            footer .copyright{margin-top:40px;}
+            footer .copyright a{font-size:16px;color:#C6C6C6;}
+            footer li{padding:10px 0px;}
+            footer a .fa{color:#CD2727 !important;font-size:10px;}
+            footer a{font-size:14px;}
+            footer {
+    padding: 0px 0 !important;
+    background-color: #FFF !important;
+}
+
+
+
+
+            .table thead tr th[class*='sorting_']:not([class='sorting_disabled']), .table thead tr th{background-color:#000;color:#FFF;border-color:#000;border-bottom:0px solid #000;}
+            @media only screen and (min-width: 1200px){
+
+..main .container {
+    max-width:1480px !important;
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+}
+main .container .row{
+    margin-right:0px;margin-left:0px;
+}
+.container, footer .container, header .container {
+    max-width:1600px !important;
+    .padding-right: 0px !important;
+    .padding-left: 0px !important;
+}
+            }
+            .card{padding:20px;
+                  background: rgba(255,255,255,0.5);
+                  margin-bottom:10px;
+            }
+            .main-menu > nav > ul > li > fa, .main-menu > nav > ul > li > a {
+                color:#000;
+                font-weight:bold;
+            }
+
+            .main-menu > nav > ul > li ul.sub-menu li a, .main-menu > nav > ul > li > a{font-family:'Sarabun', sans-serif !important;}
+            ..btn, .button{background-color:#D1B000 !important;font-family:'Sarabun', sans-serif !important;}
+            ..btn:hover, .button:hover{color:#D1B000 !important;background-color:#FFF !important;border-color:#D1B000 !important;}
+            ..btnlogin{color:#D1B000 !important;background-color:#FFF;border-color:#D1B000;}
+            .h3{color:#D1B000;}
+            .logo.logo-width-1 a img{
+                max-height:90px;min-width:10px !important;width:auto !important;
+            }
+            @media only screen and (max-width: 768px){
+                .logo.logo-width-1 a img{min-width:120px !important;width:120px;}
+            }
+
+            .printinvoice{display:none;}
+            .btn-block{width:100%;display:block !important;}
+            .main-menu > nav > ul > li ul.sub-menu li ul.level-menu{top:0px;left:60%;z-index:100;}
+            .main-menu > nav > ul > li ul.sub-menu{left:-150%;1top:50px;}
+            .logo.logo-width-1{margin-right:10px;}
+            .logo{margin: 4px 5px;}
+            .header-info > ul > li > ul.myprofile-dropdown{min-width:150px;right:0px;left:auto;}
+            .modalalerttext{margin-bottom:10px !important;}
+            i.fa{line-height:normal !important;}
+            .m-auto, .container{position:relative;}
+            .page-button {
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    z-index: 200;
+}
+            .btn-block{display:block;margin-bottom:5px;}
+            .nav-package, .nav-booking{display:none;}
+            #notifications .close{padding:0px 5px !important;margin-right:10px !important;}
+            @media (min-width: 768px) {
+                .displaytable{display: table;}
+                .displaytable .col-lg-6{display: table-cell;}
+            }
+            #notifications {
+    cursor: pointer;
+    position: fixed;
+    right: 0px;
+    z-index: 9999;
+    bottom: 0px;
+    margin-bottom: 20px;
+    margin-right: 60px;
+    max-width: 300px;
+}
+            .language-dropdown li a{margin:3px 0px;}
+            .header-top-ptb-1{border-bottom:none;}
+            .header-style-1 .header-middle-ptb-1{padding-top:0px;padding-bottom:10px;}
+            .header-style-1 .header-bottom-bg-color{border-top:0px;border-bottom:0px;}
+            .row{--bs-gutter-x:0.5em}
+            .product-action-1{padding-top:18px;}
+
+            .main-menu > nav > ul > li:hover > a.btn{color:#FFF;}
+            .main-menu > nav > ul > li:hover > a.btn{}
+            .main-menu.main-menu-padding-1 > nav > ul > li{padding-right:8px;}
+        </style>
+        <style type="text/css">
+            body{background-color:#FFF;}
+            .btn.red-btn{background-color:#CD2727;color:#fff;}
+            .btn.default-btn{background-color:#FFF;color:#CD2727 !important;border:solid 1px #CD2727;}
+            .nav-tabs .nav-link.active{background-color:#FFF !important;}
+            .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active,.nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover{
+                    border: none !important;
+            }
+            .nav-tabs .nav-item{border:none;border-bottom:solid 1px #CCC;}
+            ..nav-tabs .nav-item-active{border:none;border-bottom:solid 1px #CD2727;}
+            .nav-tabs .nav-item:has(> a.active) {border:none;border-bottom:solid 1px #CD2727;}
+            .nav-tabs .nav-link:hover,.nav-tabs .nav-link{background-color:#FFF;}
+        </style>
+        <style type="text/css">
+            .home-banner h3{font-family: 'Sarabun', sans-serif !important;font-weight:bolder !important;font-size:48px !important;}
+            footer .aph3{margin-bottom:30px;color:#373F41;}
+            .apdisplay,.aph1,.aph2,.aph3,.aph4,.aph5,.aph6{font-family: 'Sarabun', sans-serif !important;font-weight:bold !important;}
+            .apdisplay{font-weight:bolder !important;font-size:48px !important;}
+            .aph1{font-size:40px !important;}
+            .aph2{font-size:32px !important;}
+            .aph3{font-size:24px !important;}
+            .aph4{font-size:20px !important;}
+            .aph5{font-size:18px !important;}
+            .aph6{font-size:16px !important;}
+            .apb1, .apb2, .apb3, .apb4{font-family: 'Inter', sans-serif !important;color:#383838;}
+            .apb1{font-size:24px !important;}
+            .apb2{font-size:18px !important;}
+            .apb3{font-size:16px !important;}
+            .apb4{font-size:12px !important;}
+
+            footer p, footer li{font-family: 'Inter', sans-serif !important;font-size:18px !important;color:#4B5563;}
+            .site-copyright{color:#C6C6C6;font-family: 'Inter', sans-serif !important;font-size:16px !important;}
+
+            .ap-colorblack{color:#373F41;}
+
+            .apbg-grey{background-color:#F3F4F8;}
+            .ap-red{background-color:#CD2727;}
+            .ap-black{background-color:#373F41;}
+            .ap-darkbrown{background-color:#373334;}
+            .ap-darkgrey{background-color:#737B7D;}
+            .ap-mediumgrey{background-color:#C6C6C6;}
+            .ap-lightgrey{background-color:#F3F4F8 !important;}
+            .ap-blue{background-color:#6E9FFF;}
+            a.blue{color:#2B6396;text-decoration:underline;}
+            .main-menu ul{margin-bottom:10px;}
+
+        </style>
+        <link rel="image_src" href=""/>
+        <link rel="stylesheet" href="/apps/airpak/vendor/css/bundle.min.css" />
+   <!-- Plugin Css -->
+   <link rel="stylesheet" href="/apps/airpak/vendor/css/jquery.fancybox.min.css" />
+   <link rel="stylesheet" href="/apps/airpak/vendor/css/owl.carousel.min.css" />
+   <link rel="stylesheet" href="/apps/airpak/vendor/css/swiper.min.css" />
+   <link rel="stylesheet" href="/apps/airpak/vendor/css/cubeportfolio.min.css" />
+   <link rel="stylesheet" href="/apps/airpak/vendor/css/wow.css" />
+   <!-- Slider Settings -->
+   <link rel="stylesheet" href="/apps/airpak/vendor/css/LineIcons.min.css" />
+   <link rel="stylesheet" href="/apps/airpak/skincare/css/settings.css" />
+        <link rel="stylesheet" href="/apps/airpak/skincare/css/style.css" />
+   <link rel="stylesheet" href="/apps/airpak/skincare/css/custom.css"/>
+        <style type="text/css">a:active, a:hover{color:#CD2727;}</style>
+        <style type="text/css">
+        svg:not(:root).svg-inline--fa {
+    overflow: visible;
+}
+<style type="text/css">
+.svg-inline--fa.fa-w-18 {
+    width: 1.125em;
+}
+<style type="text/css">
+.svg-inline--fa {
+    display: inline-block;
+    font-size: inherit;
+    height: 1em;
+    overflow: visible;
+    vertical-align: -0.125em;
+}
+.home-banner{padding:20px;margin-bottom:54px;}
+.home-banner h1, .home-banner h2,.home-banner h5,.home-banner h3,.home-banner p{color:#FFF;}
+.redbg .title{color:#FFF;
+}
+a{color:#CD2727;}
+#signup .modal-dialog{min-width:600px !important;}
+.mobileonly{display:none;}
+@media only screen and (max-width: 700px) {
+    .home-banner{padding-top:70px !important;}
+    .screenonly{display:none;}
+    .mobileonly{display:block;}
+                .container{
+                    padding-left:0px ;
+                    padding-right:0px ;
+                }
+                .header-bottom{
+                    padding-left:20px ;
+                    padding-right:20px ;
+                }
+                h1{font-size:34px;}
+                p{font-size:20px;line-height:29px !important;}
+                .header-wrap.header-space-between{
+                    justify-content:normal;
+                }
+                .stick .container{padding-top:20px;}
+                .stick .header-action-icon-2{padding-right:20px;}
+                .logo-width-2{width:90%;}
+                #signup .modal-dialog{min-width:0px !important;}
+                #signup .col-lg-6 > div{background-color:#FFF !important;border:solid 1px #CCC;margin-bottom:30px;}
+                footer .col-lg-3{padding-left:30px;margin-bottom:20px;}
+    footer .col-lg-6{text-align:center !important;}
+    .row{margin-left:0px;margin-right:0px;}
+    .servicesmall .col-lg-31 img{width:100%;height:auto !important;}
+    .servicesmall img{max-height:1000px !important;}
+            }
+
+    @media only screen and (min-width: 781px) {
+        #home {
+            overflow: hidden;
+        }
+    }
+</style>
+        <link rel="alternate" href="https://airpak-express.com/" hreflang="en-sg" />
+        <script src="https://unpkg.com/lucide@latest"></script>
+    </head>
+
+<body>
+    <!-- Modal -->
+
+ <header class="header-area header-style-1 header-height-2">
+            <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+                <div class="container">
+                    <div class="header-wrap">
+                        <div class="logo logo-width-1">
+                            <a href="/index"><img src="/apps/airpak/img/logo.png" alt="Get Reliable International Shipping & Courier Service | Airpak Express" /></a>
+                        </div>
+                        <div class="header-right" style="display:block;">
+                              <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block font-heading" style="float:right;margin-top:20px;">
+                                <nav>
+                                    <ul>
+                                        <li>
+                                            <a href="/aboutus" class="tlang aph6" >About Us</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="tlang aph6">Services <i class="fi-rs-angle-down"></i></a>
+                                            <ul class="sub-menu">
+                                                <li><a href="/worldwide-domestic-courier-service">Worldwide Express & Domestic Express</a></li>
+                                                <li><a href="/service-warehousing">Warehousing & Fulfillment</a></li>
+                                                <li><a href="/service-worldwideforwarding">Worldwide Freight Forwarding</a></li>
+                            <li><a href="/service-international-crossborder">International Logistics Solutions</a></li>
+                                                 <li><a href="/international-shipping">International Shipping</a></li>
+                                                <li><a href="/logistics-partner-unitedkingdom">Logistics Partner United Kingdom</a></li>
+                                                </ul>
+                                    </li>
+<li>
+                                            <a href="/media-listing" class="tlang aph6">Media Centre</a>
+                                    </li>
+                                        <li>
+                                            <a href="/contact" class="tlang aph6">Contact</a>
+                                        </li>
+                                        <li>
+                                            <a href="/careers" class="tlang aph6">Careers</a>
+                                        </li>
+                                        <li>
+                                            <a href="https://tracking.airpak-express.com/tracking_search.aspx?stid=airpak" target="_blank" class="tlang aph6">Track Shipment</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="tlang aph6">Login <i class="fi-rs-angle-down"></i></a>
+                                            <ul class="sub-menu">
+                                                <li>
+                                                <a href="https://ship.airpak-express.com/" class="tlang">GETOnline</a>
+                                            </li>
+                                                <li>
+                                                <a href="https://ship.airpak-express.com/eshipping_lite_s2.aspx?token=E8-F0-72-DB-E2-54-E1-FA-96-9E-50-3F-D9-69-A5-5C" target="_blank" class="tlang">ShipLite</a>
+                                            </li>
+                                            <li>
+                                                <a href="https://shipnow.airpak-express.com/login" class="tlang">ShipNow</a>
+                                            </li>
+
+                                                </ul>
+                                    </li>
+                                        <li>
+                                            <a class="btn button btn-rounded red-btn btn-hvr-red btn-xs ah5" href="signup.html">Sign Up</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div class="header-bottom header-bottom-bg-color sticky-bar1">
+                <div class="container">
+                    <div class="header-wrap header-space-between position-relative">
+                        <div class="header-action-icon-2 d-block d-lg-none">
+                            <div class="burger-icon burger-icon-white" style="display:none !important;">
+                                <span class="burger-icon-top"></span>
+                                <span class="burger-icon-mid"></span>
+                                <span class="burger-icon-bottom"></span>
+                            </div>
+                        </div>
+
+                        <div class="logo logo-width-2 d-block d-lg-none">
+                            <a href="/index"><img src="/apps/airpak/img/logosmall.png" alt="Get Reliable International Shipping & Courier Service | Airpak Express" style="max-height:70px;" /></a>
+                        </div>
+                        <div class="header-nav d-none d-lg-flex">
+
+
+                        </div>
+                        <div class="header-action-icon-2 d-block d-lg-none">
+                            <div class="burger-icon burger-icon-white">
+                                <span class="burger-icon-top"></span>
+                                <span class="burger-icon-mid"></span>
+                                <span class="burger-icon-bottom"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="mobile-header-active mobile-header-wrapper-style">
+            <div class="mobile-header-wrapper-inner">
+                <div class="mobile-header-top">
+                    <div class="mobile-header-logo">
+                        <a href="/index"><img src="/apps/airpak/img/logo.png" alt="logo" /></a>
+                    </div>
+                    <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
+                        <button class="close-style search-close">
+                            <i class="icon-top"></i>
+                            <i class="icon-bottom"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="mobile-header-content-area">
+                    <div class="mobile-menu-wrap mobile-header-border">
+                        <nav>
+                            <ul class="mobile-menu font-heading" style="padding-left:0px;">
+                                <li>
+                                            <a href="/aboutus" class="tlang" >About Us</a>
+                                        </li>
+                                        <li class="menu-item-has-children">
+                                            <a href="#" class="tlang">Services</a>
+                                            <ul class="dropdown">
+                                                <li><a href="/worldwide-domestic-courier-service">Worldwide Express & Domestic Express</a></li>
+                                                <li><a href="/service-warehousing">Warehousing & Fulfillment</a></li>
+                                                <li><a href="/service-worldwideforwarding">Worldwide Freight Forwarding</a></li>
+                            <li><a href="/service-international-crossborder">International Logistics Solutions</a></li>
+                                                <li><a href="/international-shipping">International Shipping</a></li>
+                                                <li><a href="/logistics-partner-unitedkingdom">Logistics Partner United Kingdom</a></li>
+                                                </ul>
+                                    </li>
+<li style="display:none;">
+                                            <a href="/media-listing" class="tlang">Media Centre</a>
+                                    </li>
+                                        <li>
+                                            <a href="/contact" class="tlang">Contact</a>
+                                        </li>
+                                        <li>
+                                            <a href="/careers" class="tlang">Careers</a>
+                                        </li>
+                                        <li>
+                                            <a href="https://tracking.airpak-express.com/tracking_search.aspx?stid=airpak" target="_blank" class="tlang">Track Shipment</a>
+                                        </li>
+                                        <li class="menu-item-has-children">
+                                            <a href="#" class="tlang">Login</a>
+                                            <ul class="dropdown">
+                                        <li>
+                                                <a href="https://ship.airpak-express.com/" class="tlang">GETOnline</a>
+                                            </li>
+                                                <li>
+                                                <a href="https://ship.airpak-express.com/eshipping_lite_s2.aspx?token=E8-F0-72-DB-E2-54-E1-FA-96-9E-50-3F-D9-69-A5-5C" target="_blank" class="tlang">ShipLite</a>
+                                            </li>
+                                                <li>
+                                                <a href="https://shipnow.airpak-express.com/login" class="tlang">ShipNow</a>
+                                            </li>
+                                                </ul>
+                                    </li>
+                                        <li>
+                                            <a href="signup.html">Sign Up</a>
+                                        </li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <div class="site-copyright"> Copyright @ 2002 - 2026 Airpak Express. All rights reserved. <a href="/privacypolicy">Privacy Policy</a></div>
+                </div>
+            </div>
+        </div>
+        <!--End header-->
+        <main class="main">
+            <div class="page-content">
+                <div class="">
+            <div id="pnlPageNameNoLogin">
+
+           <style>
+    h3.title{    font-size: 1.25rem;font-weight:700;}
+    .ourservice h5,#ourservices h3.samesize{text-align:center;font-weight: 700;}
+    .trackentry{margin-bottom:0px;border:solid 0px #FFF;}
+    ..home-banner{background: url(/apps/airpak/img/home/banner.png) no-repeat top;background-size: cover;}
+    .home-banner{background: none !important;}
+    .home-banner{min-height:630px;}
+    #ourservices h5,#ourservices h3.samesize{font-size:16px;}
+
+    #ourservices .ourservice .content,#ourservices .ourservice .content a{color:#CD2727;font-size:14px;text-align:center;}
+    #ourservices .ourservice .content div{text-align:center;}
+    #ourservices .ourservice img{max-height:60px;display:block;margin-left:auto;margin-right:auto;margin-bottom:10px;margin-top:10px;}
+    .itemservice {
+    padding: 20px;
+    border-radius: 0px;
+    -webkit-box-shadow:none !important;
+    box-shadow:none !important;
+}
+    .itemservice  h1 img,.itemservice  div img {max-height:40px;}
+    @media only screen and (max-width: 780px) {
+        .tab3 .heading-area{padding:20px 10px !important;}
+        .tab3 .col-lg-6{padding-left:0px;padding-right:0px;}
+        .tab3  p.paragraph{line-height:33px !important;font-size:18px;}
+        #ourservices .col-3{padding-left:3px;padding-right:3px;}
+        .home-banner{
+                        background: url(/apps/airpak/img/home/mbg.png) no-repeat top !important;
+                        background-size:cover !important;
+                }
+
+        #ourservices h3{font-size:50px;}
+    #ourservices h5,#ourservices h3.samesize{font-size:20px;}
+    #ourservices .content{margin-bottom:30px;}
+    .internationalex .internationalexcontent{padding:40px !important;}
+    .internationalex h5{font-size:30px;}
+    .internationalex .internationalexcontent p{color:#C6C6C6;}
+
+    .nav-tabs {background-color:#FFF !important;}
+    .nav-tabs .nav-item{max-width:33%;background-color:#FFF !important;text-align:center;}
+    .nav-tabs .nav-item .nav-link{display:block;font-size:17px;line-height:24px;}
+    .nav-tabs .nav-link{margin:0px 0px;}
+    .nav-tabs .nav-link{font-size:19px !important;}
+    .nav-tabs{padding:0px 20px;}
+    .about-image{padding:20px;}
+    .bg4bg img{display:none;}
+    .bg4bg{background-size:cover !important;min-height:280px;}
+    .itemservicebg .col-lg-4{width:100%;padding:5px;text-align:center;}
+    .itemservicebg .col-lg-4 .itemservice{padding:20px;}
+    .itemservicebg .col-lg-4 .itemservice h3{font-size:25px;}
+    .shippingrequirements .heading-area{padding:20px;}
+    .logisticsexperience .nav-tabs{padding:0px 10px;}
+    ..videoplay{display:none;}
+    .videoplay{position:relative;}
+    .home-banner{padding-top:250px !important;}
+    .home-banner{
+                        background: none !important;
+                        background-size:cover !important;
+                        background-color:#000 !important;
+                }
+    }
+
+    @media only screen and (min-width: 781px) {
+        #home {
+            overflow: hidden;
+        }
+    }
+</style>
+       <section id="home" class="home-banner" style="padding-top:140px;position:relative;">
+           <div class="videoplay" style="position:absolute;top:0px;left:0px;width:100%;">
+            <div style="margin-left:auto;margin-right:auto;max-width:1600px;"><video width="400"  autoplay muted loop playsinline src="/apps/airpak/img/homepage_small.mp4">
+    <source src="/apps/airpak/img/homepage_small.mp4" type="video/mp4">
+</video></div>
+               </div>
+           <div class="container">
+               <div class="row">
+                   <div class="col-lg-7">
+                       <h1 class="apdisplay">Seamless International Express Courier Services</h1>
+                       <p class="apb1">With over 30 years of experience, we know what it takes to deliver.</p>
+                       <p class="aph5" style="margin-bottom:15px;margin-top:40px;">Track your shipment</p>
+                                   <div style="background-color:#FFF;padding:10px;margin-top:0px;border-radius:30px;">
+                                       <div class="row">
+                                       <div class="col-8">
+                                           <input type="text" class="form-control trackentry apb3" placeholder="Enter your tracking number" id="trackentry"/>
+                                       </div>
+                                       <div class="col-4" style="padding-right:0px;">
+                                           <button type="button" class="btn button btn-rounded red-btn btn-hvr-black btn-block" style="padding:.375rem .75rem !important;;max-width:200px;margin-bottom:0px;" onclick="window.location.href='tracking.html'">Track</button>
+                                       </div>
+                                       </div>
+                                   </div>
+
+                       </div>
+               </div>
+           </div>
+       </section>
+       <!--Home End-->
+       <!--About Star-->
+       <section id="ourservices">
+           <div class="container">
+               <div class="row dot-box">
+                   <div class="col-lg-12" style="text-align:center;margin-bottom:30px;">
+                       <h2 class="aph1">Our services</h2>
+                   </div>
+               </div>
+               <div class="row dot-box ourservice">
+                   <div class="col-lg-4 apb2" style="border-right:solid 1px #C6C6C6;"><h3 class="samesize">Worldwide Freight Forwarding</h3>
+                       <div class="row content">
+                                <div class="col-4">
+                                    <img src="/apps/airpak/img/icons/airplanes.png" />
+                                    <a href="service-worldwideforwarding" class="aph6">Air Freight</a>
+                                </div>
+                           <div class="col-4">
+                               <img src="/apps/airpak/img/icons/freight.png" />
+                                    <a href="service-worldwideforwarding" class="aph6">Ocean Freight</a>
+                               </div>
+                           <div class="col-4">
+                               <img src="/apps/airpak/img/icons/tourist.png" />
+                                    <a href="service-worldwideforwarding" class="aph6">Road Freight</a>
+                               </div>
+                           </div>
+                   </div>
+                   <div class="col-lg-4 apb2"  style="border-right:solid 1px #C6C6C6;"><h3 class="samesize">AIRPAK Warehousing & Fulfillment</h3>
+                       <div class="row content">
+                                <div class="col-lg-12">
+                                    <img src="/apps/airpak/img/icons/stack.png" />
+                                    <a href="service-warehousing" class="aph6">Omnichannel Fulfilment</a></div>
+                           </div>
+                   </div>
+                   <div class="col-lg-4 apb2"><h3 class="samesize">AIRPAK Worldwide Express</h3>
+                       <div class="row content">
+                                <div class="col-6">
+                                    <img src="/apps/airpak/img/home/internation_icon@2x.png" />
+                                    <a href="service-domestic-worldwide-deliveries" class="aph6">International Worldwide Express</a>
+                                    </div>
+                           <div class="col-6">
+                               <img src="/apps/airpak/img/icons/fast-delivery.png" />
+                                    <a href="service-domestic-worldwide-deliveries" class="aph6">Domestic Express</a>
+                               </div>
+                           </div>
+                   </div>
+                   </div>
+           </div>
+       </section>
+<style>
+    .scrollingdiv .col-lg-3{overflow:hidden;background-color:#CD2727;padding:0px !important;position:relative;}
+    .scrollingdiv .bnimg1{width:100%;}
+    .service4box{position:absolute;bottom:30px;left:30px;}
+    .service4box .abh3{margin-top:20px;font-weight:bold;}
+    .serviceboxhidden {position:absolute;left:0px;top:0px;height:100%;}
+    .serviceboxhidden img{margin-top:10px;margin-bottom:10px;}
+    .serviceboxhidden{display:none;}
+
+</style>
+
+<section id="" class="redbg internationalex scrollingdiv" style="background-color:#F3F4F8;padding:0px !important;">
+           <div class="container">
+               <div class="row dot-box">
+                   <!-- Heading Area-->
+                   <div class="col-lg-3 bg1" >
+                       <img src="/apps/airpak/img/tab/image_international.jpg" class="bnimg1"/>
+                       <div class="service4box">
+                           <img src="/apps/airpak/img/tab/icon_international.png" />
+                           <p class="abh3">Worldwide Freight Forwarding</p>
+                       </div>
+
+                       <div class="ap-darkbrown serviceboxhidden">
+                           <div style="padding:20px;" class="internationalexcontent ap-darkbrown">
+                            <img src="/apps/airpak/img/tab/icon_international.png" />
+                           <h3 class="title">Worldwide Freight Forwarding</h3>
+                           <p class="paragraph" style="margin-top:30px;">
+                               Airpak Worldwide Freight Forwarding specialize in offering a range of air freight, ocean freight, and road freight services with delivery options that include door-to-door and port-to-port.
+                           </p>
+                           <a href="service-worldwideforwarding">Read more ></a>
+                               </div>
+                       </div>
+                   </div>
+                   <!-- Features Box-->
+                   <div class="col-lg-3 bg1" >
+                       <img src="/apps/airpak/img/tab/image_omnichannel.jpg" class="bnimg1" />
+                       <div class="service4box">
+                           <img src="/apps/airpak/img/tab/icon_omnichannel.png" />
+                           <p class="abh3">Warehousing & Fulfillment</p>
+                       </div>
+
+                       <div class="ap-darkbrown serviceboxhidden">
+                           <div style="padding:20px;" class="internationalexcontent ap-darkbrown">
+                           <img src="/apps/airpak/img/tab/icon_omnichannel.png" />
+                           <h3 class="title">Warehousing & Fulfillment</h3>
+                           <p class="paragraph" style="margin-top:30px;">
+                               Providing businesses with storage and distribution services for their products, as well as kitting, reverse logistics, and cross-docking.
+
+                           </p>
+                           <a href="service-warehousing">Read more ></a>
+                               </div>
+                       </div>
+
+                   </div>
+                   <div class="col-lg-3 bg2" >
+                       <img src="/apps/airpak/img/tab/image_domestic.jpg" class="bnimg1" />
+                       <div class="service4box">
+                           <img src="/apps/airpak/img/tab/icon_domestic.png" />
+                           <p class="abh3">Worldwide Express & Domestic Express</p>
+                       </div>
+
+                       <div class="ap-darkbrown serviceboxhidden">
+                           <div style="padding:20px;" class="internationalexcontent ap-darkbrown">
+                            <img src="/apps/airpak/img/tab/icon_domestic.png" />
+                           <h3 class="title">Worldwide Express & Domestic Express</h3>
+                           <p class="paragraph" style="margin-top:30px;">
+                               Enjoy International Express for Parcels and documents. With access to 220+ countries worldwide.
+                           </p>
+                           <a href="service-domestic-worldwide-deliveries">Read more ></a>
+                               </div>
+                       </div>
+
+                   </div>
+                   <div class="col-lg-3 bg3" >
+                       <img src="/apps/airpak/img/tab/image_airfrieght.jpg" class="bnimg1" />
+                       <div class="service4box">
+                           <img src="/apps/airpak/img/tab/icon_airfreight.png" />
+                           <p class="abh3">International Logistics Solutions</p>
+                       </div>
+
+                       <div class="ap-darkbrown serviceboxhidden">
+                           <div style="padding:20px;" class="internationalexcontent ap-darkbrown">
+                            <img src="/apps/airpak/img/tab/icon_airfreight.png" />
+                           <h3 class="title">International Logistics Solutions</h3>
+                           <p class="paragraph" style="margin-top:30px;">
+                               Have a special international logistics project? Check with us for any customized international solutions.
+                           </p>
+                           <a href="service-international-crossborder">Read more ></a>
+                               </div>
+                       </div>
+
+                   </div>
+
+               </div>
+
+           </div>
+       </section>
+<section id="" class="altbg1 itemservicebg">
+           <div class="container">
+               <div class="row " style="margin-top:30px;">
+                   <div class="col-lg-12" style="text-align:center;margin-bottom:30px;">
+                       <h2 class="aph1">Powering your logistics needs</h2>
+                   </div>
+                   <div class="col-lg-4">
+                       <div class="itemservice">
+                           <!--About Image-->
+                           <div><img src="/apps/airpak/img/home/icon_international_freight.png" /></div>
+                           <h3 class="aph3"> International Freight, Express, Postal to 220 countries</h3>
+                           <p class="apb2">Airpak's robust global logistics network enables customers to ship airfreight, seafreight, door-to-door express, or postal items worldwide.</p>
+                       </div>
+                   </div>
+                   <div class="col-lg-4">
+                       <div class="itemservice">
+                           <!--About Image-->
+                           <div><img src="/apps/airpak/img/home/icon_onestop.png" /></div>
+                           <h3 class="aph3">Cross-Border eCommerce & 3rd Party Logistics Solutions</h3>
+                           <p class="apb2">As a leading 3rd party logistics (3PL) provider, Airpak Express offers one-stop eCommerce logistics solutions to streamline international shipping, reduce costs, and enhance the customer experience.</p>
+                           </div>
+                       </div>
+                   <div class="col-lg-4">
+                       <div class="itemservice">
+                           <!--About Image-->
+                           <div><img src="/apps/airpak/img/home/icon_crossborder_returns.png" /></div>
+                           <h3  class="aph3">One Stop International Trade Logistics solutions</h3>
+                           <p class="apb2">Airpak offers Import and Export and Transhipments of your products be it big or small and the incoterms. Enable business to get their products from their suppliers or to their customers fast and efficient and cost effectively.</p>
+                           </div>
+                       </div>
+                   </div>
+               <div class="row " style="margin-top:30px;">
+                   <div class="col-lg-4">
+                       <div class="itemservice">
+                           <!--About Image-->
+                           <div><img src="/apps/airpak/img/home/icon_warehouse.png" /></div>
+                           <h3 class="aph3">Warehouse and Fulfillment</h3>
+                           <p class="apb2">Providing businesses with storage and distribution services for their products, as well as kitting, reverse logistics, and cross-docking.</p>
+                       </div>
+                   </div>
+                   <div class="col-lg-4">
+                       <div class="itemservice">
+                           <!--About Image-->
+                           <div><img src="/apps/airpak/img/home/icon_international_reverse.png" /></div>
+                           <h3 class="aph3">International and Domestic Reverse Logistics</h3>
+                           <p class="apb2">Manage the flow of products from the customer back to the manufacturer or retailer for purposes such as returns, refurbishment, repair, repackaging, and recycling.</p>
+                           </div>
+                       </div>
+                   <div class="col-lg-4">
+                       <div class="itemservice">
+                           <!--About Image-->
+                           <div><img src="/apps/airpak/img/home/icon_customs.png" /></div>
+                           <h3 class="aph3">International Customs Clearance (B2B & B2C) & International Postage</h3>
+                           <p class="apb2">Our expert customs clearance services ensure smooth international trade, handling all documentation, duties, and inspections. We also provide IOR (Importer of Record) and EOR (Exporter of Record) services for various general products, simplifying cross-border transactions. Additionally, our international postage solutions enable businesses to send mail and packages worldwide with ease.</p>
+                           </div>
+                       </div>
+                   </div>
+
+           </div>
+       </section>
+<section id="" class="logisticsexperience">
+           <div class="container">
+               <div class="row dot-box">
+                   <div class="col-lg-12" style="text-align:center;margin-bottom:30px;">
+                       <h2 class="aph1">Shipping Solutions</h2>
+                   </div>
+               </div>
+               <div class="row dot-box">
+                   <!-- Tabs navs -->
+<ul class="nav nav-tabs nav-fill mb-3" id="ex1" role="tablist">
+  <li class="nav-item nav-item-active" role="presentation">
+    <a class="nav-link active aph4" id="ex2-tab-1" data-toggle="tab" href="#ex2-tabs-1" role="tab" aria-controls="ex2-tabs-1" aria-selected="true" >Airpak ShipNow</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link aph4" id="ex2-tab-2" data-toggle="tab" href="#ex2-tabs-2" role="tab" aria-controls="ex2-tabs-2" aria-selected="false" >Airpak ShipLite</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link aph4" id="ex2-tab-3" data-toggle="tab" href="#ex2-tabs-3" role="tab" aria-controls="ex2-tabs-3" aria-selected="false">Airpak GETOnline</a>
+  </li>
+</ul>
+<!-- Tabs navs -->
+<!-- Tabs content -->
+<div class="tab-content tab3" id="ex2-content">
+  <div class="tab-pane fade show active" id="ex2-tabs-1" role="tabpanel" aria-labelledby="ex2-tab-1">
+    <div class="row dot-box">
+                   <!-- Heading Area-->
+                   <div class="col-lg-6 order-lg-2">
+                       <div class="heading-area pl-lg-4 " style="padding-top:2em !important;padding:20px;">
+                           <div><img src="/apps/airpak/img/tab/shipnow_logo.png" style="max-height:90px;"/></div>
+                           <p class="paragraph" style="margin-top:10px;line-height:30px;">
+                               a. Prepaid account: Conveniently manage shipping costs with a preloaded account balance.
+<br />b. Top-up payment system: Easily add funds to your account as needed.
+<br />c. Live quotes: Access real-time shipping rates for informed decision-making.
+<br />d. Ideal for merchants and businesses
+                           </p>
+                           <a href="https://shipnow.airpak-express.com/" class="btn button btn-rounded red-btn btn-hvr-black" id="" style="padding-top:5px !important;padding-bottom:5px !important;">Go To Airpak ShipNow</a>
+                       </div>
+                   </div>
+
+                   <!-- Features Box-->
+                   <div class="col-lg-6">
+                       <!--About Image-->
+                       <div class="about-image">
+                           <img src="/apps/airpak/img/home/shipnow.png" alt="about-img" style="width:100%;">
+                       </div>
+                   </div>
+
+               </div>
+  </div>
+  <div class="tab-pane fade" id="ex2-tabs-2" role="tabpanel" aria-labelledby="ex2-tab-2">
+    <div class="row dot-box">
+                   <!-- Heading Area-->
+                   <div class="col-lg-6 order-lg-2">
+                       <div class="heading-area pl-lg-4 " style="padding-top:2em !important;padding:20px;">
+                           <div><img src="/apps/airpak/img/home/shiplite_logo.png" style="max-height:90px;"/></div>
+                           <p class="paragraph" style="margin-top:30px;line-height:30px;">
+                               a. Ad hoc shipment: Ship items on a case-by-case basis without a long-term commitment.
+<br />b. Immediate shipping: Quickly send your packages with minimal delay.
+<br />c. Pay-per-shipment basis: Pay only for the shipments you make, offering flexibility.
+                           </p>
+                           <a href="https://ship.airpak-express.com/eshipping_lite_s2.aspx?token=E8-F0-72-DB-E2-54-E1-FA-96-9E-50-3F-D9-69-A5-5C" target="_blank" class="btn button btn-rounded red-btn btn-hvr-black " id="" style="padding-top:5px !important;padding-bottom:5px !important;">Go to Airpak ShipLite</a>
+                       </div>
+                   </div>
+
+                   <!-- Features Box-->
+                   <div class="col-lg-6">
+                       <!--About Image-->
+                       <div class="about-image">
+                           <img src="/apps/airpak/img/home/shiplite_tab.png" alt="about-img" style="width:100%;">
+                       </div>
+                   </div>
+
+               </div>
+  </div>
+  <div class="tab-pane fade" id="ex2-tabs-3" role="tabpanel" aria-labelledby="ex2-tab-3">
+    <div class="row dot-box">
+                   <!-- Heading Area-->
+                   <div class="col-lg-6 order-lg-2">
+                       <div class="heading-area pl-lg-4 " style="padding-top:2em !important;padding:20px;">
+                           <div><img src="/apps/airpak/img/home/getonline_logo.png" style="max-height:90px;"/></div>
+                           <p class="paragraph" style="margin-top:30px;line-height:30px;">
+                               a. Targeted at businesses and enterprise users: Designed to support larger organizations with higher shipping demands.
+<br />b. Contract pricing: Benefit from Custom Rates tailored to your business needs.
+<br />c. Customized reports: Monitor your shipping activities with tailored reporting and analytics.
+<br />d. API integration: Seamlessly connect our shipping services to your existing systems.
+                           </p>
+                           <a href="https://ship.airpak-express.com/" target="_blank" class="btn button btn-rounded red-btn btn-hvr-black " id="" style="padding-top:5px !important;padding-bottom:5px !important;">Go to Airpak GETOnline</a>
+                       </div>
+                   </div>
+
+                   <!-- Features Box-->
+                   <div class="col-lg-6">
+                       <!--About Image-->
+                       <div class="about-image">
+                           <img src="/apps/airpak/img/home/getonline_tab.png" alt="about-img" style="width:100%;">
+                       </div>
+                   </div>
+
+               </div>
+  </div>
+</div>
+<!-- Tabs content -->
+                   </div>
+
+
+           </div>
+       </section>
+
+<section id="" class="apbg-grey" style="padding:60px 0;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12" style="text-align:center;margin-bottom:30px;">
+                <h2 class="aph1">Why Choose AIRPAK Express?</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="card" style="background:rgba(255,255,255,0.8);text-align:center;padding:30px;">
+                    <div style="margin-bottom:15px;"><img src="/apps/airpak/img/icons/network.png" style="max-height:50px;" /></div>
+                    <h3 class="aph5">Global Network</h3>
+                    <p class="apb4">Deliver to over 220 countries and territories worldwide with our extensive network of partners and agents.</p>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="card" style="background:rgba(255,255,255,0.8);text-align:center;padding:30px;">
+                    <div style="margin-bottom:15px;"><img src="/apps/airpak/img/icons/fast.png" style="max-height:50px;" /></div>
+                    <h3 class="aph5">Express Delivery</h3>
+                    <p class="apb4">Time-sensitive? We offer express delivery options to meet your urgent shipping needs.</p>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="card" style="background:rgba(255,255,255,0.8);text-align:center;padding:30px;">
+                    <div style="margin-bottom:15px;"><img src="/apps/airpak/img/icons/secure.png" style="max-height:50px;" /></div>
+                    <h3 class="aph5">Secure & Safe</h3>
+                    <p class="apb4">Your packages are handled with care. We offer insurance and tracking for peace of mind.</p>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="card" style="background:rgba(255,255,255,0.8);text-align:center;padding:30px;">
+                    <div style="margin-bottom:15px;"><img src="/apps/airpak/img/icons/support.png" style="max-height:50px;" /></div>
+                    <h3 class="aph5">24/7 Support</h3>
+                    <p class="apb4">Our customer support team is available around the clock to assist you with any queries.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="" class="shippingrequirements">
+    <div class="container">
+        <div class="row dot-box">
+            <div class="col-lg-12" style="text-align:center;margin-bottom:30px;">
+                <h2 class="aph1">Shipping Requirements</h2>
+            </div>
+        </div>
+        <div class="row dot-box">
+            <div class="col-lg-6">
+                <div class="heading-area" style="padding:20px;">
+                    <h3 class="aph3">What can you ship?</h3>
+                    <p class="apb3" style="margin-top:15px;line-height:28px;">We accept a wide range of items for international shipping including documents, parcels, cargo, and personal effects. Some items may require special handling or permits. Please contact us for specific requirements.</p>
+                    <div style="margin-top:20px;">
+                        <p class="aph6"><i class="fa fa-check" style="color:#CD2727;"></i> Documents & Business Shipments</p>
+                        <p class="aph6"><i class="fa fa-check" style="color:#CD2727;"></i> Commercial Goods & E-commerce Products</p>
+                        <p class="aph6"><i class="fa fa-check" style="color:#CD2727;"></i> Personal Effects & Relocation Items</p>
+                        <p class="aph6"><i class="fa fa-check" style="color:#CD2727;"></i> Machinery & Industrial Equipment</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="about-image" style="padding:20px;">
+                    <img src="/apps/airpak/img/home/shipping_requirements.png" alt="shipping requirements" style="width:100%;">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="" class="bg4bg" style="background: url(/apps/airpak/img/home/bg4.png) no-repeat center;background-size:cover;min-height:500px;position:relative;">
+    <div style="background:rgba(0,0,0,0.6);position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h2 class="aph1" style="color:#FFF;">Start shipping with AIRPAK Express today</h2>
+                    <p class="apb2" style="color:#FFF;margin-top:15px;">Experience the difference of a truly global logistics partner. Get in touch with us now.</p>
+                    <div style="margin-top:30px;">
+                        <a href="https://shipnow.airpak-express.com/" class="btn button btn-rounded red-btn btn-hvr-black" style="margin-right:15px;">Ship Now</a>
+                        <a href="/contact" class="btn button btn-rounded default-btn btn-hvr-black">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal -->
+<div class="modal" id="signup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Sign Up for Airpak Express</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+            <div class="col-lg-6">
+                <div style="background:#CD2727;padding:30px;color:#FFF;height:100%;">
+                    <h3 class="aph3" style="color:#FFF;">Why Sign Up?</h3>
+                    <ul style="list-style:none;padding:0;margin-top:20px;">
+                        <li style="padding:8px 0;"><i class="fa fa-check"></i> Track your shipments in real-time</li>
+                        <li style="padding:8px 0;"><i class="fa fa-check"></i> Get exclusive shipping rates</li>
+                        <li style="padding:8px 0;"><i class="fa fa-check"></i> Manage all your shipments in one place</li>
+                        <li style="padding:8px 0;"><i class="fa fa-check"></i> Access to Airpak ShipNow, ShipLite & GETOnline</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="enquireform">
+                    <form>
+                        <div class="form-group">
+                            <label>Full Name *</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address *</label>
+                            <input type="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number *</label>
+                            <input type="tel" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn red-btn btn-block">Sign Up Now</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+           </div>
+            </div>
+        </main>
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="row" style="padding:60px 0 0 0;">
+                    <div class="col-lg-3">
+                        <h3 class="aph3 ap-colorblack">About Us</h3>
+                        <ul style="list-style:none;padding:0;">
+                            <li><a href="/aboutus" class="ap-colorblack">Our Story</a></li>
+                            <li><a href="/media-listing" class="ap-colorblack">Media Centre</a></li>
+                            <li><a href="/careers" class="ap-colorblack">Careers</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-3">
+                        <h3 class="aph3 ap-colorblack">Services</h3>
+                        <ul style="list-style:none;padding:0;">
+                            <li><a href="/worldwide-domestic-courier-service" class="ap-colorblack">Worldwide Express</a></li>
+                            <li><a href="/service-warehousing" class="ap-colorblack">Warehousing</a></li>
+                            <li><a href="/service-worldwideforwarding" class="ap-colorblack">Freight Forwarding</a></li>
+                            <li><a href="/service-international-crossborder" class="ap-colorblack">International Logistics</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-3">
+                        <h3 class="aph3 ap-colorblack">Tools</h3>
+                        <ul style="list-style:none;padding:0;">
+                            <li><a href="https://tracking.airpak-express.com/tracking_search.aspx?stid=airpak" target="_blank" class="ap-colorblack">Track Shipment</a></li>
+                            <li><a href="https://shipnow.airpak-express.com/" class="ap-colorblack">ShipNow</a></li>
+                            <li><a href="https://ship.airpak-express.com/" class="ap-colorblack">GETOnline</a></li>
+                            <li><a href="https://ship.airpak-express.com/eshipping_lite_s2.aspx?token=E8-F0-72-DB-E2-54-E1-FA-96-9E-50-3F-D9-69-A5-5C" target="_blank" class="ap-colorblack">ShipLite</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-3">
+                        <h3 class="aph3 ap-colorblack">Contact Us</h3>
+                        <p class="ap-colorblack">AIRPAK EXPRESS<br>
+                        1 Fusionopolis Place,<br>
+                        Unit 7, Wales International Hub,<br>
+                        Cardiff Bay,<br>
+                        Wales CF10 5AL,<br>
+                        United Kingdom</p>
+                        <p class="ap-colorblack" style="margin-top:10px;">Tel: +44 29 2046 0958<br>Email: uk@airpak-express.com</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="footer-social" style="margin-top:20px;">
+                            <a href="https://www.facebook.com/airpakexpressUK" style="margin-right:15px;"><i class="fa fa-facebook"></i></a>
+                            <a href="https://www.instagram.com/airpakexpressUK" style="margin-right:15px;"><i class="fa fa-instagram"></i></a>
+                            <a href="https://www.linkedin.com/company/airpak-express" style="margin-right:15px;"><i class="fa fa-linkedin"></i></a>
+                            <a href="https://www.youtube.com/@airpakexpressUK" style="margin-right:15px;"><i class="fa fa-youtube-play"></i></a>
+                            <a href="https://twitter.com/airpakexpressUK"><i class="fa fa-twitter"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6" style="text-align:right;">
+                        <div class="site-copyright">Copyright @ 2002 - 2026 Airpak Express. All rights reserved. <a href="/privacypolicy">Privacy Policy</a></div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- End Footer -->
+
+        <!-- Vendor scripts -->
+        <script src="/apps/airpak/assets/js/vendor/vendor.min.js"></script>
+        <script src="/apps/airpak/assets/js/vendor/jquery.fancybox.min.js"></script>
+        <script src="/apps/airpak/assets/js/vendor/jquery.mousewheel.min.js"></script>
+        <script src="/apps/airpak/vendor/js/bundle.min.js"></script>
+        <script src="/apps/airpak/assets/js/main.js?v=3.7"></script>
+        <script src="/apps/airpak/skincare/js/main.js"></script>
+
+        <!-- Chat Widget Overlay - Part 1 -->
+        <div id="airpak-chat-widget" style="position:fixed;bottom:32px;left:32px;right:auto;z-index:99999;font-family:'Inter',sans-serif;">
+            <!-- Unread badge -->
+            <div id="chat-unread-badge" style="position:absolute;top:-4px;right:-4px;width:20px;height:20px;background:#CD2727;border-radius:50%;display:none;align-items:center;justify-content:center;color:#FFF;font-size:11px;font-weight:700;animation:pulse-badge 2s infinite;">3</div>
+
+            <!-- Trigger Button (64px frosted glass circle) -->
+            <button id="chat-trigger" onclick="toggleAirpakChat()" style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,rgba(205,39,39,0.9),rgba(55,63,65,0.9));backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:2px solid rgba(255,255,255,0.3);box-shadow:0 8px 32px rgba(205,39,39,0.4),0 0 0 1px rgba(255,255,255,0.1) inset;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s ease;position:relative;overflow:hidden;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <!-- Pulse ring -->
+                <span style="position:absolute;width:100%;height:100%;border-radius:50%;border:2px solid rgba(205,39,39,0.5);animation:chat-pulse 2s ease-out infinite;"></span>
+            </button>
+
+            <!-- Chat Panel (400x560, slide-up) -->
+            <div id="chat-panel" style="position:absolute;bottom:80px;right:0;width:400px;height:560px;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:24px;box-shadow:0 24px 80px rgba(0,0,0,0.2),0 0 0 1px rgba(0,0,0,0.05);display:none;flex-direction:column;overflow:hidden;transform:translateY(20px) scale(0.95);opacity:0;transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);">
+
+                <!-- Panel Header -->
+                <div style="padding:20px;background:linear-gradient(135deg,#CD2727,#373F41);display:flex;align-items:center;gap:12px;">
+                    <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <div style="flex:1;">
+                        <div style="color:#FFF;font-weight:700;font-size:16px;">Airpak Support</div>
+                        <div style="color:rgba(255,255,255,0.8);font-size:12px;">We typically reply in minutes</div>
+                    </div>
+                    <button onclick="toggleAirpakChat()" style="background:none;border:none;color:#FFF;cursor:pointer;padding:8px;opacity:0.8;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+
+                <!-- Quick Actions -->
+                <div style="padding:12px 16px;display:flex;gap:8px;overflow-x:auto;background:#F9F9F9;border-bottom:1px solid #EEE;">
+                    <button onclick="insertQuickAction('track')" style="flex-shrink:0;padding:8px 16px;background:#FFF;border:1px solid #DDD;border-radius:20px;font-size:13px;color:#333;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#CD2727" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                        Track
+                    </button>
+                    <button onclick="insertQuickAction('quote')" style="flex-shrink:0;padding:8px 16px;background:#FFF;border:1px solid #DDD;border-radius:20px;font-size:13px;color:#333;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#CD2727" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        Get Quote
+                    </button>
+                    <button onclick="insertQuickAction('location')" style="flex-shrink:0;padding:8px 16px;background:#FFF;border:1px solid #DDD;border-radius:20px;font-size:13px;color:#333;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#CD2727" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Location
+                    </button>
+                    <button onclick="insertQuickAction('lang')" style="flex-shrink:0;padding:8px 16px;background:#FFF;border:1px solid #DDD;border-radius:20px;font-size:13px;color:#333;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#CD2727" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        Language
+                    </button>
+                </div>
+
+                <!-- Messages Area -->
+                <div id="chat-messages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;">
+                    <!-- Agent message -->
+                    <div style="display:flex;gap:8px;align-items:flex-start;">
+                        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#CD2727,#373F41);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        </div>
+                        <div style="background:#F1F1F1;border-radius:16px;padding:12px 16px;max-width:260px;font-size:14px;line-height:1.5;color:#333;">
+                            Hi there! Welcome to Airpak Express. How can I help you today?
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Offline Form -->
+                <div id="chat-offline-form" style="padding:16px;background:#FAFAFA;border-top:1px solid #EEE;display:none;">
+                    <div style="text-align:center;padding:8px 0 12px;">
+                        <div style="font-weight:600;font-size:14px;color:#333;margin-bottom:4px;">We're offline</div>
+                        <div style="font-size:12px;color:#666;">Leave a message and we'll get back to you</div>
+                    </div>
+                    <input type="text" placeholder="Your name" id="offline-name" style="width:100%;padding:10px 12px;border:1px solid #DDD;border-radius:12px;font-size:13px;margin-bottom:8px;box-sizing:border-box;">
+                    <input type="email" placeholder="Your email" id="offline-email" style="width:100%;padding:10px 12px;border:1px solid #DDD;border-radius:12px;font-size:13px;margin-bottom:8px;box-sizing:border-box;">
+                    <textarea placeholder="Your message" id="offline-message" rows="3" style="width:100%;padding:10px 12px;border:1px solid #DDD;border-radius:12px;font-size:13px;resize:none;margin-bottom:8px;box-sizing:border-box;"></textarea>
+                    <button onclick="sendOfflineMessage()" style="width:100%;padding:12px;background:#CD2727;color:#FFF;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;">Send Message</button>
+                </div>
+
+                <!-- Input Area -->
+                <div id="chat-input-area" style="padding:12px 16px;background:#FFF;border-top:1px solid #EEE;display:flex;gap:8px;align-items:center;">
+                    <!-- Attachment button -->
+                    <button onclick="triggerAttachment()" style="width:36px;height:36px;border-radius:50%;background:#F5F5F5;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#666;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                    </button>
+                    <input type="file" id="chat-attachment" style="display:none;" multiple onchange="handleAttachment(this)">
+
+                    <!-- Text input -->
+                    <div style="flex:1;position:relative;">
+                        <input type="text" id="chat-input" placeholder="Type a message..." onkeypress="if(event.key==='Enter'&&!event.shiftKey){sendChatMessage();return false;}" style="width:100%;padding:10px 14px;background:#F5F5F5;border:none;border-radius:24px;font-size:14px;outline:none;">
+                    </div>
+
+                    <!-- Emoji button -->
+                    <button onclick="toggleEmojiPicker()" style="width:36px;height:36px;border-radius:50%;background:#F5F5F5;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#666;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                    </button>
+
+                    <!-- Send button -->
+                    <button onclick="sendChatMessage()" style="width:36px;height:36px;border-radius:50%;background:#CD2727;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#FFF;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    </button>
+                </div>
+
+                <!-- Emoji Picker -->
+                <div id="emoji-picker" style="display:none;padding:8px;background:#FFF;border-top:1px solid #EEE;overflow-x:auto;white-space:nowrap;text-align:center;">
+                    <span onclick="insertEmoji('👍')" style="font-size:22px;cursor:pointer;padding:4px;">👍</span>
+                    <span onclick="insertEmoji('❤️')" style="font-size:22px;cursor:pointer;padding:4px;">❤️</span>
+                    <span onclick="insertEmoji('😂')" style="font-size:22px;cursor:pointer;padding:4px;">😂</span>
+                    <span onclick="insertEmoji('😮')" style="font-size:22px;cursor:pointer;padding:4px;">😮</span>
+                    <span onclick="insertEmoji('😢')" style="font-size:22px;cursor:pointer;padding:4px;">😢</span>
+                    <span onclick="insertEmoji('🎉')" style="font-size:22px;cursor:pointer;padding:4px;">🎉</span>
+                    <span onclick="insertEmoji('🔥')" style="font-size:22px;cursor:pointer;padding:4px;">🔥</span>
+                    <span onclick="insertEmoji('✅')" style="font-size:22px;cursor:pointer;padding:4px;">✅</span>
+                    <span onclick="insertEmoji('🙏')" style="font-size:22px;cursor:pointer;padding:4px;">🙏</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pulse animation styles -->
+        <style>
+            @keyframes pulse-badge {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.2); }
+                100% { transform: scale(1); }
+            }
+            @keyframes chat-pulse {
+                0% { transform: scale(1); opacity: 0.8; }
+                100% { transform: scale(1.6); opacity: 0; }
+            }
+        </style>
+
+        <!-- Chat Widget JS -->
+        <script>
+            let chatOpen = false;
+            let chatUnread = 0;
+            let isAgentOnline = true;
+
+            function toggleAirpakChat() {
+                chatOpen = !chatOpen;
+                const panel = document.getElementById('chat-panel');
+                const trigger = document.getElementById('chat-trigger');
+                const badge = document.getElementById('chat-unread-badge');
+
+                if (chatOpen) {
+                    panel.style.display = 'flex';
+                    setTimeout(() => {
+                        panel.style.transform = 'translateY(0) scale(1)';
+                        panel.style.opacity = '1';
+                    }, 10);
+                    badge.style.display = 'none';
+                    trigger.style.transform = 'rotate(0deg) scale(1)';
+                } else {
+                    panel.style.transform = 'translateY(20px) scale(0.95)';
+                    panel.style.opacity = '0';
+                    setTimeout(() => { panel.style.display = 'none'; }, 350);
+                }
+            }
+
+            function sendChatMessage() {
+                const input = document.getElementById('chat-input');
+                const text = input.value.trim();
+                if (!text) return;
+
+                const messages = document.getElementById('chat-messages');
+                const msgDiv = document.createElement('div');
+                msgDiv.style.cssText = 'display:flex;justify-content:flex-end;';
+                msgDiv.innerHTML = '<div style="background:#CD2727;color:#FFF;border-radius:18px 18px 4px 18px;padding:10px 14px;max-width:260px;font-size:14px;line-height:1.5;">' + text + '</div>';
+                messages.appendChild(msgDiv);
+                messages.scrollTop = messages.scrollHeight;
+                input.value = '';
+
+                // Simulate agent reply
+                setTimeout(() => {
+                    const replies = [
+                        'Thanks for reaching out! How can I assist you today?',
+                        'I\'ll be happy to help with that. Could you provide more details?',
+                        'Let me look into that for you. One moment please.',
+                        'Your shipment is on track! Expected delivery is as scheduled.'
+                    ];
+                    const agentDiv = document.createElement('div');
+                    agentDiv.style.cssText = 'display:flex;gap:8px;align-items:flex-start;margin-top:8px;';
+                    agentDiv.innerHTML = '<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#CD2727,#373F41);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div style="background:#F1F1F1;border-radius:16px;padding:12px 16px;max-width:260px;font-size:14px;line-height:1.5;color:#333;">' + replies[Math.floor(Math.random() * replies.length)] + '</div>';
+                    messages.appendChild(agentDiv);
+                    messages.scrollTop = messages.scrollHeight;
+                }, 1500);
+            }
+
+            function insertQuickAction(action) {
+                const input = document.getElementById('chat-input');
+                const messages = document.getElementById('chat-messages');
+                const texts = {
+                    track: 'I want to track a package',
+                    quote: 'I need a shipping quote',
+                    location: 'Where is my nearest drop-off point?',
+                    lang: 'I need language support'
+                };
+                input.value = texts[action] || '';
+                sendChatMessage();
+            }
+
+            function toggleEmojiPicker() {
+                const picker = document.getElementById('emoji-picker');
+                picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
+            }
+
+            function insertEmoji(emoji) {
+                const input = document.getElementById('chat-input');
+                input.value += emoji;
+                toggleEmojiPicker();
+            }
+
+            function triggerAttachment() {
+                document.getElementById('chat-attachment').click();
+            }
+
+            function handleAttachment(input) {
+                if (input.files.length > 0) {
+                    const messages = document.getElementById('chat-messages');
+                    const file = input.files[0];
+                    const msgDiv = document.createElement('div');
+                    msgDiv.style.cssText = 'display:flex;justify-content:flex-end;';
+                    const isImage = file.type.startsWith('image/');
+                    msgDiv.innerHTML = isImage
+                        ? '<div style="background:#CD2727;color:#FFF;border-radius:18px;padding:4px;max-width:200px;"><img src="' + URL.createObjectURL(file) + '" style="width:100%;border-radius:14px;"></div>'
+                        : '<div style="background:#CD2727;color:#FFF;border-radius:18px;padding:10px 14px;font-size:13px;display:flex;align-items:center;gap:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' + file.name + '</div>';
+                    messages.appendChild(msgDiv);
+                    messages.scrollTop = messages.scrollHeight;
+                    input.value = '';
+                }
+            }
+
+            function sendOfflineMessage() {
+                const name = document.getElementById('offline-name').value;
+                const email = document.getElementById('offline-email').value;
+                const msg = document.getElementById('offline-message').value;
+                if (!name || !email || !msg) { alert('Please fill all fields'); return; }
+                AIRPAK.Toast && AIRPAK.Toast.success('Message sent! We\'ll reply within 24 hours.');
+                document.getElementById('offline-name').value = '';
+                document.getElementById('offline-email').value = '';
+                document.getElementById('offline-message').value = '';
+            }
+
+            // Simulate unread message
+            setTimeout(() => {
+                if (!chatOpen) {
+                    document.getElementById('chat-unread-badge').style.display = 'flex';
+                    document.getElementById('chat-unread-badge').textContent = '3';
+                }
+            }, 5000);
+        </script>
+        <script>lucide.createIcons();</script>
+    </body>
+</html>

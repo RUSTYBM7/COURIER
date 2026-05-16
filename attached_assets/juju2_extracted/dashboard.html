@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Airpak Express</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23007AFF'/%3E%3Cpath d='M8 16h16M16 8v16' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/apple-tokens.css">
+  <link rel="stylesheet" href="css/glass-system.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="nav-bar">
+    <div class="nav-left">
+      <a href="index.html" class="nav-logo">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="6" fill="#007AFF"/>
+          <path d="M8 16h16M16 8v16" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="16" cy="16" r="6" fill="none" stroke="white" stroke-width="2"/>
+        </svg>
+        <span class="nav-logo-text">Airpak Express</span>
+      </a>
+      <div class="nav-links">
+        <a href="dashboard.html" class="nav-link active">Dashboard</a>
+        <a href="tracking.html" class="nav-link">Shipments</a>
+        <a href="dashboard.html" class="nav-link">Analytics</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="lang-pill-wrapper">
+        <button class="lang-pill" aria-label="Select language">
+          <span class="flag">EN</span>
+        </button>
+        <div class="lang-dropdown">
+          <button class="lang-option" data-lang="en"><span class="flag">EN</span> English</button>
+          <button class="lang-option" data-lang="zh"><span class="flag">ZH</span> 中文</button>
+          <button class="lang-option" data-lang="ms"><span class="flag">MY</span> Bahasa</button>
+          <button class="lang-option" data-lang="ar"><span class="flag">AR</span> العربية</button>
+        </div>
+      </div>
+      <button class="theme-toggle" aria-label="Toggle theme"><span class="icon-moon"><i data-lucide="moon"></i></span></button>
+      <button class="nav-icon" aria-label="Notifications">
+        <i data-lucide="bell"></i>
+        <span class="badge-dot"></span>
+      </button>
+      <a href="settings.html" class="nav-signin" style="margin-left: 8px;">
+        <i data-lucide="settings"></i> Settings
+      </a>
+    </div>
+  </nav>
+
+  <!-- Dashboard Layout -->
+  <div class="dashboard-layout" style="padding-top: var(--nav-height);">
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar">
+      <a href="dashboard.html" class="dashboard-sidebar-item active"><span><i data-lucide="bar-chart-2"></i></span> Overview</a>
+      <a href="tracking.html" class="dashboard-sidebar-item"><span><i data-lucide="package"></i></span> My Packages</a>
+      <a href="tracking.html" class="dashboard-sidebar-item"><span><i data-lucide="zap"></i></span> Express Shipments</a>
+      <a href="tracking.html" class="dashboard-sidebar-item"><span><i data-lucide="globe"></i></span> International</a>
+      <a href="tracking.html" class="dashboard-sidebar-item"><span><i data-lucide="clipboard"></i></span> Order History</a>
+      <a href="payment.html" class="dashboard-sidebar-item"><span><i data-lucide="credit-card"></i></span> Billing</a>
+      <a href="chat.html" class="dashboard-sidebar-item"><span><i data-lucide="file-text"></i></span> Documents</a>
+      <div style="flex: 1;"></div>
+      <a href="chat.html" class="dashboard-sidebar-item"><span><i data-lucide="message-circle"></i></span> Support Chat</a>
+      <a href="index.html" class="dashboard-sidebar-item"><span><i data-lucide="arrow-left"></i></span> Back to Site</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+      <div class="dashboard-header">
+        <div>
+          <h1 class="dashboard-title" data-i18n="dashboard.welcome">Welcome back, Alex</h1>
+          <p style="color: var(--apple-label-secondary); margin-top: var(--space-1);">Unit 7, Wales International Hub, Cardiff Bay, Wales CF10 5AL, United Kingdom</p>
+        </div>
+        <div class="dashboard-actions">
+          <button class="btn-secondary"><i data-lucide="download"></i> Export Report</button>
+          <a href="shipnow-new-shipment.html" class="btn-primary"><i data-lucide="plus"></i> New Shipment</a>
+        </div>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="dashboard-stats">
+        <div class="dashboard-stat-card">
+          <div class="dashboard-stat-header">
+            <div class="dashboard-stat-icon" style="background: rgba(0,122,255,0.1); color: var(--apple-blue);"><i data-lucide="truck"></i></div>
+            <span class="dashboard-stat-badge badge-blue">Active</span>
+          </div>
+          <div class="dashboard-stat-value">347</div>
+          <div class="dashboard-stat-label">Active Shipments</div>
+        </div>
+        <div class="dashboard-stat-card">
+          <div class="dashboard-stat-header">
+            <div class="dashboard-stat-icon" style="background: rgba(52,199,89,0.1); color: var(--apple-green);"><i data-lucide="check-circle"></i></div>
+            <span class="dashboard-stat-badge badge-green">+18</span>
+          </div>
+          <div class="dashboard-stat-value">89</div>
+          <div class="dashboard-stat-label">Delivered Today</div>
+        </div>
+        <div class="dashboard-stat-card">
+          <div class="dashboard-stat-header">
+            <div class="dashboard-stat-icon" style="background: rgba(255,149,0,0.1); color: var(--apple-orange);"><i data-lucide="clock"></i></div>
+            <span class="dashboard-stat-badge badge-orange">Pending</span>
+          </div>
+          <div class="dashboard-stat-value">42</div>
+          <div class="dashboard-stat-label">Pending Pickups</div>
+        </div>
+        <div class="dashboard-stat-card">
+          <div class="dashboard-stat-header">
+            <div class="dashboard-stat-icon" style="background: rgba(88,86,214,0.1); color: var(--apple-indigo);"><i data-lucide="sterling-sign"></i></div>
+            <span class="dashboard-stat-badge badge-green">+31%</span>
+          </div>
+          <div class="dashboard-stat-value">£31,240</div>
+          <div class="dashboard-stat-label">Revenue MTD</div>
+        </div>
+      </div>
+
+      <!-- Charts + Quick Actions + Activity -->
+      <div class="dashboard-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 class="chart-title">Shipment Volume</h3>
+            <div class="tabs">
+              <button class="tab active">Week</button>
+              <button class="tab">Month</button>
+              <button class="tab">Year</button>
+            </div>
+          </div>
+          <div class="chart-area">
+            <div class="chart-bars" style="display: flex; align-items: flex-end; gap: 8px; height: 100%; padding: 0 8px;">
+              <div class="chart-bar" style="height: 45%; background: var(--apple-blue); opacity: 0.7;"></div>
+              <div class="chart-bar" style="height: 60%; background: var(--apple-blue); opacity: 0.75;"></div>
+              <div class="chart-bar" style="height: 55%; background: var(--apple-blue); opacity: 0.7;"></div>
+              <div class="chart-bar" style="height: 80%; background: var(--apple-blue); opacity: 0.85;"></div>
+              <div class="chart-bar" style="height: 70%; background: var(--apple-blue); opacity: 0.8;"></div>
+              <div class="chart-bar" style="height: 95%; background: var(--apple-blue); opacity: 1;"></div>
+              <div class="chart-bar" style="height: 65%; background: var(--apple-blue); opacity: 0.75;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="quick-actions-panel">
+          <h3 class="chart-title" style="padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--apple-separator);">Quick Actions</h3>
+          <div class="quick-actions-list">
+            <button class="quick-action-item"><span><i data-lucide="plus-circle"></i></span> New Shipment</button>
+            <button class="quick-action-item"><span><i data-lucide="scan-barcode"></i></span> Track Package</button>
+            <button class="quick-action-item"><span><i data-lucide="printer"></i></span> Print Label</button>
+            <button class="quick-action-item"><span><i data-lucide="file-plus"></i></span> Request Pickup</button>
+            <button class="quick-action-item"><span><i data-lucide="message-square"></i></span> Contact Support</button>
+            <button class="quick-action-item"><span><i data-lucide="receipt"></i></span> View Invoices</button>
+          </div>
+        </div>
+
+        <div class="recent-activity">
+          <div class="recent-activity-header">
+            <h3 class="chart-title">Recent Activity</h3>
+            <a href="tracking.html" class="btn-ghost">View All</a>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-icon" style="background: rgba(52,199,89,0.1); color: var(--apple-green);"><i data-lucide="check-circle"></i></div>
+              <div class="activity-content">
+                <div class="activity-title">APK992841 delivered to Bristol</div>
+                <div class="activity-time">3 minutes ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background: rgba(0,122,255,0.1); color: var(--apple-blue);"><i data-lucide="truck"></i></div>
+              <div class="activity-content">
+                <div class="activity-title">APK773210 departed Cardiff Hub</div>
+                <div class="activity-time">18 minutes ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background: rgba(88,86,214,0.1); color: var(--apple-indigo);"><i data-lucide="package"></i></div>
+              <div class="activity-content">
+                <div class="activity-title">New shipment created: APK441902</div>
+                <div class="activity-time">45 minutes ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background: rgba(255,149,0,0.1); color: var(--apple-orange);"><i data-lucide="map-pin"></i></div>
+              <div class="activity-content">
+                <div class="activity-title">APK229381 arrived at Edinburgh Hub</div>
+                <div class="activity-time">1 hour ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background: rgba(255,59,48,0.1); color: var(--apple-red);"><i data-lucide="alert-triangle"></i></div>
+              <div class="activity-content">
+                <div class="activity-title">Delivery exception for APK881200</div>
+                <div class="activity-time">2 hours ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Packages Table -->
+      <div class="table-container" style="margin-top: var(--space-6);">
+        <div style="padding: var(--space-5) var(--space-6); border-bottom: 1px solid var(--apple-separator); display: flex; justify-content: space-between; align-items: center;">
+          <h3 class="chart-title">Recent Shipments</h3>
+          <div class="tabs">
+            <button class="tab active">All</button>
+            <button class="tab">In Transit</button>
+            <button class="tab">Delivered</button>
+            <button class="tab">Pending</button>
+          </div>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Tracking</th>
+              <th>Route</th>
+              <th>Service</th>
+              <th>Status</th>
+              <th>ETA</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code style="background: var(--apple-fill); padding: 2px 8px; border-radius: 4px; font-size: var(--text-sm);">APK992841</code></td>
+              <td>London → Bristol</td>
+              <td><span class="badge badge-express">Express</span></td>
+              <td><span class="badge badge-delivered">Delivered</span></td>
+              <td>Delivered</td>
+              <td>
+                <div class="table-actions">
+                  <button class="btn-icon" title="View"><i data-lucide="eye"></i></button>
+                  <button class="btn-icon" title="Download"><i data-lucide="download"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><code style="background: var(--apple-fill); padding: 2px 8px; border-radius: 4px; font-size: var(--text-sm);">APK773210</code></td>
+              <td>Cardiff → Edinburgh</td>
+              <td><span class="badge badge-economy">Economy</span></td>
+              <td><span class="badge badge-processing">In Transit</span></td>
+              <td>Tomorrow 2:00 PM</td>
+              <td>
+                <div class="table-actions">
+                  <button class="btn-icon" title="View"><i data-lucide="eye"></i></button>
+                  <button class="btn-icon" title="Track"><i data-lucide="map-pin"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><code style="background: var(--apple-fill); padding: 2px 8px; border-radius: 4px; font-size: var(--text-sm);">APK441902</code></td>
+              <td>Manchester → Birmingham</td>
+              <td><span class="badge badge-blue">Standard</span></td>
+              <td><span class="badge badge-pending">Pending</span></td>
+              <td>3 days</td>
+              <td>
+                <div class="table-actions">
+                  <button class="btn-icon" title="View"><i data-lucide="eye"></i></button>
+                  <button class="btn-icon" title="Edit"><i data-lucide="pencil"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><code style="background: var(--apple-fill); padding: 2px 8px; border-radius: 4px; font-size: var(--text-sm);">APK229381</code></td>
+              <td>London → Paris (Intl)</td>
+              <td><span class="badge badge-express">Express</span></td>
+              <td><span class="badge badge-processing">In Transit</span></td>
+              <td>2 days</td>
+              <td>
+                <div class="table-actions">
+                  <button class="btn-icon" title="View"><i data-lucide="eye"></i></button>
+                  <button class="btn-icon" title="Support"><i data-lucide="message-circle"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><code style="background: var(--apple-fill); padding: 2px 8px; border-radius: 4px; font-size: var(--text-sm);">APK881200</code></td>
+              <td>Belfast → Glasgow</td>
+              <td><span class="badge badge-blue">Standard</span></td>
+              <td><span class="badge badge-delay">Delayed</span></td>
+              <td>Pending</td>
+              <td>
+                <div class="table-actions">
+                  <button class="btn-icon" title="View"><i data-lucide="eye"></i></button>
+                  <button class="btn-icon" title="Support"><i data-lucide="help-circle"></i></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
