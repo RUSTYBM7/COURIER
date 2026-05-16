@@ -1,0 +1,80 @@
+/* Airpak Express brand overlay for juju2 (Apple-design) pages.
+   Inspired by juju1's #CD2727 red — uniquely branded with a deeper crimson
+   and warm coral gradient so juju2 keeps its own identity. */
+
+:root {
+  --ap-red-50:  #fff1f1;
+  --ap-red-100: #ffd9d9;
+  --ap-red-300: #f08585;
+  --ap-red-500: #CD2727;      /* juju1 brand red */
+  --ap-red-600: #b71f1f;
+  --ap-red-700: #8f1717;
+  --ap-coral:   #ff5a4d;
+  --ap-grad:    linear-gradient(135deg, #CD2727 0%, #ff5a4d 100%);
+
+  /* Override juju2 Apple-blue accent tokens */
+  --color-accent: var(--ap-red-500);
+  --color-accent-hover: var(--ap-red-600);
+  --color-primary: var(--ap-red-500);
+  --color-primary-hover: var(--ap-red-600);
+  --apple-blue: var(--ap-red-500);
+  --ios-blue: var(--ap-red-500);
+}
+
+[data-theme="dark"] {
+  --color-accent: #ff6b6b;
+  --color-primary: #ff6b6b;
+}
+
+/* Buttons & primary actions */
+.btn-primary, .button-primary, .primary-btn,
+button.primary, .btn.primary {
+  background: var(--ap-grad) !important;
+  border-color: var(--ap-red-600) !important;
+  color: #fff !important;
+}
+.btn-primary:hover, .button-primary:hover, .primary-btn:hover,
+button.primary:hover, .btn.primary:hover {
+  filter: brightness(1.06);
+  box-shadow: 0 6px 22px rgba(205,39,39,.32);
+}
+
+/* Links and active nav */
+a, .nav-link, .nav-link.active { color: inherit; }
+.nav-link.active,
+.nav-link:hover,
+.sidebar-link.active,
+.menu-item.active {
+  color: var(--ap-red-500) !important;
+}
+.nav-link.active::after,
+.tab.active::after,
+.tab-active {
+  background: var(--ap-grad) !important;
+}
+
+/* Replace the blue SVG logo background with our brand red */
+.nav-logo svg rect[fill="#007AFF"],
+svg rect[fill="#007AFF"] { fill: var(--ap-red-500) !important; }
+
+/* Glass cards get a subtle red top accent */
+.glass-card::before, .card-accent {
+  background: var(--ap-grad);
+}
+
+/* Status pills */
+.status-success { background: rgba(205,39,39,.10) !important; color: var(--ap-red-600) !important; }
+.badge-primary { background: var(--ap-red-500) !important; color:#fff !important; }
+
+/* Focus ring */
+*:focus-visible {
+  outline: 2px solid var(--ap-red-500) !important;
+  outline-offset: 2px;
+}
+
+/* Brand logo helper class — drop juju1 logo anywhere */
+.ap-brand-logo {
+  height: 28px; width: auto; display: inline-block; vertical-align: middle;
+}
+.ap-brand-logo--footer { height: 64px; }
+.ap-brand-logo--invoice { height: 48px; }
