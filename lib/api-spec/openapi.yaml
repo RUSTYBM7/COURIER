@@ -3,34 +3,538 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Airpak Express app API — shipments, tracking, messages, payments, admin simulation.
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
-    description: Health operations
+  - name: auth
+  - name: shipments
+  - name: tracking
+  - name: messages
+  - name: payments
+  - name: dashboard
+  - name: admin
+  - name: settings
+  - name: content
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
+          content: { application/json: { schema: { $ref: "#/components/schemas/HealthStatus" } } }
+
+  /auth/me:
+    get:
+      operationId: getCurrentUser
+      tags: [auth]
+      summary: Get currently authenticated user (null if guest)
+      responses:
+        "200":
+          description: OK
+          content: { application/json: { schema: { $ref: "#/components/schemas/AuthMe" } } }
+  /auth/signin:
+    post:
+      operationId: signIn
+      tags: [auth]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/SignInInput" } } } }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/AuthSession" } } } }
+        "401": { description: Invalid credentials, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorBody" } } } }
+  /auth/signup:
+    post:
+      operationId: signUp
+      tags: [auth]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/SignUpInput" } } } }
+      responses:
+        "201": { description: Created, content: { application/json: { schema: { $ref: "#/components/schemas/AuthSession" } } } }
+        "409": { description: Conflict, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorBody" } } } }
+  /auth/signout:
+    post:
+      operationId: signOut
+      tags: [auth]
+      responses:
+        "204": { description: Signed out }
+  /auth/reset:
+    post:
+      operationId: requestPasswordReset
+      tags: [auth]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/PasswordResetInput" } } } }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/SimpleOk" } } } }
+
+  /shipments:
+    get:
+      operationId: listShipments
+      tags: [shipments]
+      summary: List current user's shipments
+      parameters:
+        - in: query
+          name: status
+          schema: { $ref: "#/components/schemas/ShipmentStatus" }
+      responses:
+        "200":
+          description: OK
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/HealthStatus"
+              schema: { type: array, items: { $ref: "#/components/schemas/Shipment" } }
+    post:
+      operationId: createShipment
+      tags: [shipments]
+      summary: Book a new shipment (ShipNow)
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/ShipmentInput" } } } }
+      responses:
+        "201": { description: Created, content: { application/json: { schema: { $ref: "#/components/schemas/Shipment" } } } }
+  /shipments/{id}:
+    get:
+      operationId: getShipment
+      tags: [shipments]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Shipment" } } } }
+        "404": { description: Not found, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorBody" } } } }
+  /shipments/{id}/events:
+    get:
+      operationId: listShipmentEvents
+      tags: [shipments]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/TrackingEvent" } }
+
+  /tracking/{number}:
+    get:
+      operationId: trackByNumber
+      tags: [tracking]
+      summary: Public lookup by tracking number (no auth required)
+      parameters:
+        - in: path
+          name: number
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: OK
+          content: { application/json: { schema: { $ref: "#/components/schemas/TrackingResult" } } }
+        "404": { description: Not found, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorBody" } } } }
+
+  /messages:
+    get:
+      operationId: listMessageThreads
+      tags: [messages]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/MessageThread" } }
+  /messages/{threadId}:
+    get:
+      operationId: getMessageThread
+      tags: [messages]
+      parameters:
+        - in: path
+          name: threadId
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/ChatMessage" } }
+    post:
+      operationId: sendMessage
+      tags: [messages]
+      parameters:
+        - in: path
+          name: threadId
+          required: true
+          schema: { type: integer }
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/MessageInput" } } } }
+      responses:
+        "201": { description: Created, content: { application/json: { schema: { $ref: "#/components/schemas/ChatMessage" } } } }
+
+  /payments:
+    get:
+      operationId: listPayments
+      tags: [payments]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/Payment" } }
+    post:
+      operationId: createPayment
+      tags: [payments]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/PaymentInput" } } } }
+      responses:
+        "201": { description: Created, content: { application/json: { schema: { $ref: "#/components/schemas/Payment" } } } }
+
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      responses:
+        "200":
+          description: OK
+          content: { application/json: { schema: { $ref: "#/components/schemas/DashboardSummary" } } }
+  /dashboard/activity:
+    get:
+      operationId: getDashboardActivity
+      tags: [dashboard]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/ActivityItem" } }
+
+  /admin/stats:
+    get:
+      operationId: getAdminStats
+      tags: [admin]
+      summary: Platform-wide stats for admin dashboard
+      responses:
+        "200":
+          description: OK
+          content: { application/json: { schema: { $ref: "#/components/schemas/AdminStats" } } }
+  /admin/users:
+    get:
+      operationId: adminListUsers
+      tags: [admin]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/User" } }
+  /admin/shipments:
+    get:
+      operationId: adminListShipments
+      tags: [admin]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/Shipment" } }
+  /admin/shipments/{id}/status:
+    post:
+      operationId: adminSetShipmentStatus
+      tags: [admin]
+      summary: Simulate status change (admin-driven backend simulation)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/ShipmentStatusInput" } } } }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Shipment" } } } }
+  /admin/shipments/{id}/events:
+    post:
+      operationId: adminAddTrackingEvent
+      tags: [admin]
+      summary: Inject a tracking event for a shipment
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/TrackingEventInput" } } } }
+      responses:
+        "201": { description: Created, content: { application/json: { schema: { $ref: "#/components/schemas/TrackingEvent" } } } }
+
+  /me/settings:
+    get:
+      operationId: getMySettings
+      tags: [settings]
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/UserSettings" } } } }
+    patch:
+      operationId: updateMySettings
+      tags: [settings]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/UserSettingsUpdate" } } } }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/UserSettings" } } } }
+
+  /faqs:
+    get:
+      operationId: listFaqs
+      tags: [content]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/Faq" } }
+
 components:
   schemas:
     HealthStatus:
       type: object
+      required: [status]
       properties:
-        status:
-          type: string
-      required:
-        - status
+        status: { type: string }
+    SimpleOk:
+      type: object
+      required: [ok]
+      properties:
+        ok: { type: boolean }
+    ErrorBody:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
+        code:  { type: string }
 
+    User:
+      type: object
+      required: [id, email, name, role, createdAt]
+      properties:
+        id:        { type: integer }
+        email:     { type: string }
+        name:      { type: string }
+        avatarUrl: { type: ["string", "null"] }
+        role:      { type: string, enum: [customer, admin] }
+        createdAt: { type: string, format: date-time }
+    AuthMe:
+      type: object
+      properties:
+        user: { anyOf: [ { $ref: "#/components/schemas/User" }, { type: "null" } ] }
+    AuthSession:
+      type: object
+      required: [user]
+      properties:
+        user: { $ref: "#/components/schemas/User" }
+    SignInInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:    { type: string, format: email }
+        password: { type: string, minLength: 4 }
+    SignUpInput:
+      type: object
+      required: [email, password, name]
+      properties:
+        email:    { type: string, format: email }
+        password: { type: string, minLength: 6 }
+        name:     { type: string, minLength: 1 }
+    PasswordResetInput:
+      type: object
+      required: [email]
+      properties:
+        email: { type: string, format: email }
+
+    ShipmentStatus:
+      type: string
+      enum: [pending, picked_up, in_transit, out_for_delivery, delivered, exception, cancelled]
+    Shipment:
+      type: object
+      required: [id, trackingNumber, status, service, origin, destination, weightKg, costGbp, createdAt, recipientName]
+      properties:
+        id:             { type: integer }
+        userId:         { type: integer }
+        trackingNumber: { type: string }
+        status:         { $ref: "#/components/schemas/ShipmentStatus" }
+        service:        { type: string, enum: [domestic, international, express, freight] }
+        origin:         { type: string }
+        destination:    { type: string }
+        recipientName:  { type: string }
+        recipientPhone: { type: ["string", "null"] }
+        weightKg:       { type: number }
+        costGbp:        { type: number }
+        eta:            { type: ["string", "null"], format: date-time }
+        createdAt:      { type: string, format: date-time }
+        updatedAt:      { type: string, format: date-time }
+        latestEvent:    { anyOf: [ { $ref: "#/components/schemas/TrackingEvent" }, { type: "null" } ] }
+    ShipmentInput:
+      type: object
+      required: [service, origin, destination, recipientName, weightKg]
+      properties:
+        service:        { type: string, enum: [domestic, international, express, freight] }
+        origin:         { type: string, minLength: 2 }
+        destination:    { type: string, minLength: 2 }
+        recipientName:  { type: string, minLength: 1 }
+        recipientPhone: { type: string }
+        weightKg:       { type: number, minimum: 0.1 }
+        notes:          { type: string }
+    ShipmentStatusInput:
+      type: object
+      required: [status]
+      properties:
+        status: { $ref: "#/components/schemas/ShipmentStatus" }
+        note:   { type: string }
+
+    TrackingEvent:
+      type: object
+      required: [id, shipmentId, status, message, location, lat, lng, createdAt]
+      properties:
+        id:         { type: integer }
+        shipmentId: { type: integer }
+        status:     { $ref: "#/components/schemas/ShipmentStatus" }
+        message:    { type: string }
+        location:   { type: string }
+        lat:        { type: number }
+        lng:        { type: number }
+        createdAt:  { type: string, format: date-time }
+    TrackingEventInput:
+      type: object
+      required: [status, message, location, lat, lng]
+      properties:
+        status:   { $ref: "#/components/schemas/ShipmentStatus" }
+        message:  { type: string }
+        location: { type: string }
+        lat:      { type: number }
+        lng:      { type: number }
+    TrackingResult:
+      type: object
+      required: [shipment, events]
+      properties:
+        shipment: { $ref: "#/components/schemas/Shipment" }
+        events:
+          type: array
+          items: { $ref: "#/components/schemas/TrackingEvent" }
+
+    MessageThread:
+      type: object
+      required: [id, subject, lastMessage, lastMessageAt, unreadCount, participantName]
+      properties:
+        id:              { type: integer }
+        subject:         { type: string }
+        lastMessage:     { type: string }
+        lastMessageAt:   { type: string, format: date-time }
+        unreadCount:     { type: integer }
+        participantName: { type: string }
+        shipmentId:      { type: ["integer", "null"] }
+    ChatMessage:
+      type: object
+      required: [id, threadId, fromMe, body, createdAt, authorName]
+      properties:
+        id:         { type: integer }
+        threadId:   { type: integer }
+        fromMe:     { type: boolean }
+        authorName: { type: string }
+        body:       { type: string }
+        createdAt:  { type: string, format: date-time }
+    MessageInput:
+      type: object
+      required: [body]
+      properties:
+        body: { type: string, minLength: 1 }
+
+    Payment:
+      type: object
+      required: [id, amountGbp, status, method, createdAt, reference]
+      properties:
+        id:         { type: integer }
+        shipmentId: { type: ["integer", "null"] }
+        amountGbp:  { type: number }
+        status:     { type: string, enum: [paid, pending, failed, refunded] }
+        method:     { type: string, enum: [card, applepay, googlepay, bank] }
+        reference:  { type: string }
+        createdAt:  { type: string, format: date-time }
+    PaymentInput:
+      type: object
+      required: [shipmentId, amountGbp, method]
+      properties:
+        shipmentId: { type: integer }
+        amountGbp:  { type: number, minimum: 0.01 }
+        method:     { type: string, enum: [card, applepay, googlepay, bank] }
+
+    DashboardSummary:
+      type: object
+      required: [activeShipments, inTransit, delivered, exceptions, spentGbp, lastUpdated, statusBreakdown]
+      properties:
+        activeShipments: { type: integer }
+        inTransit:       { type: integer }
+        delivered:       { type: integer }
+        exceptions:      { type: integer }
+        spentGbp:        { type: number }
+        lastUpdated:     { type: string, format: date-time }
+        statusBreakdown:
+          type: array
+          items:
+            type: object
+            required: [status, count]
+            properties:
+              status: { $ref: "#/components/schemas/ShipmentStatus" }
+              count:  { type: integer }
+    ActivityItem:
+      type: object
+      required: [id, kind, title, description, createdAt]
+      properties:
+        id:          { type: integer }
+        kind:        { type: string, enum: [shipment, payment, message, status] }
+        title:       { type: string }
+        description: { type: string }
+        shipmentId:  { type: ["integer", "null"] }
+        createdAt:   { type: string, format: date-time }
+
+    AdminStats:
+      type: object
+      required: [users, shipments, revenueGbp, activeNow, statusBreakdown, recentRevenue]
+      properties:
+        users:      { type: integer }
+        shipments:  { type: integer }
+        revenueGbp: { type: number }
+        activeNow:  { type: integer }
+        statusBreakdown:
+          type: array
+          items:
+            type: object
+            required: [status, count]
+            properties:
+              status: { $ref: "#/components/schemas/ShipmentStatus" }
+              count:  { type: integer }
+        recentRevenue:
+          type: array
+          items:
+            type: object
+            required: [day, amountGbp]
+            properties:
+              day:       { type: string, format: date }
+              amountGbp: { type: number }
+
+    UserSettings:
+      type: object
+      required: [language, theme, notifyEmail, notifyPush]
+      properties:
+        language:    { type: string, enum: [en, zh, ms, ar] }
+        theme:       { type: string, enum: [light, dark, system] }
+        notifyEmail: { type: boolean }
+        notifyPush:  { type: boolean }
+    UserSettingsUpdate:
+      type: object
+      properties:
+        language:    { type: string, enum: [en, zh, ms, ar] }
+        theme:       { type: string, enum: [light, dark, system] }
+        notifyEmail: { type: boolean }
+        notifyPush:  { type: boolean }
+
+    Faq:
+      type: object
+      required: [id, category, question, answer]
+      properties:
+        id:       { type: integer }
+        category: { type: string }
+        question: { type: string }
+        answer:   { type: string }

@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/app/"
+title = "Airpak Express App"
+version = "1.0.0"
+id = "artifacts/airpak-app"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/app/" ]
+localPort = 23150
+
+[services.development]
+run = "pnpm --filter @workspace/airpak-app run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/airpak-app", "run", "build" ]
+publicDir = "artifacts/airpak-app/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23150"
+BASE_PATH = "/app/"
