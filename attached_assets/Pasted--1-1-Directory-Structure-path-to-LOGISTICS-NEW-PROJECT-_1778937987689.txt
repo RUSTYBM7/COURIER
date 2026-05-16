@@ -1,0 +1,388 @@
+
+#### 1.1 Directory Structure
+```
+/path/to/LOGISTICS/                    ← NEW PROJECT ROOT
+├── src/
+│   ├── landing/                       ← Landing page juju1
+│   ├── user/                          ← User dashboard area
+│   │   ├── dashboard/
+│   │   ├── tracking/
+│   │   ├── payment/
+│   │   ├── settings/
+│   │   └── messages/
+│   ├── admin/                         ← Admin panel 
+│   │   ├── panel/
+│   │   ├── users/
+│   │   ├── shipments/
+│   │   ├── analytics/
+│   │   └── components/                 ← COMPONENT_LIBRARY (admin-only)
+│   ├── auth/                          ← Auth pages
+│   │   ├── signup/
+│   │   ├── signin/
+│   │   └── shipnow-login/
+│   ├── shipnow/                       ← Prepaid user flow
+│   │   ├── dashboard/
+│   │   └── new-shipment/
+│   ├── enterprise/                    ← GETOnline enterprise
+│   │   └── dashboard/
+│   └── public/                        ← Public info pages
+│       ├── faq/
+│       ├── aboutus/
+│       ├── careers/
+│       ├── contact/
+│       └── policies/
+│           ├── privacy/
+│           ├── terms/
+│           └── conditions/
+├── assets/
+│   ├── css/                           ← Design system CSS
+│   │   ├── apple-tokens.css
+│   │   ├── glass-system.css
+│   │   ├── animations.css
+│   │   ├── components.css
+│   │   ├── pages.css
+│   │   └── faq.css
+│   ├── js/
+│   ├── images/
+│   └── icons/
+├── BUILD.md
+├── DESIGN_SYSTEM.md
+├── SITE_MAP.md
+└── manifest.json
+```
+
+---
+
+
+### 3. LANDING PAGE  — JUJU1
+
+#### 3.1 Design Direction
+**MIRROR the exact visual style from your Dribbble reference**:
+- Service cards with icons and descriptions
+- Trust badges and social proof
+- Modern footer with contact info
+
+
+#### 3.3 Landing Page Additions (GLOBAL Focus)
+- **Chat Widget**: Bottom-left (GLOBAL based support)
+- **Address Change**: Singapore → United Kingdom throughout
+- **Wales Address**: Unit 7, Wales International Hub, Cardiff Bay, Wales CF10 5AL, United Kingdom
+- **Phone**: +44 29 2011 3344
+
+---
+
+### 4. PAGE ARCHITECTURE
+
+
+#### 4.2 Admin Interface — DIFFERENT Visual Language
+
+| Page | Route | Sidebar | Content |
+|------|-------|---------|---------|
+| **Admin Panel** | `/src/admin/panel/` | Users, Shipments, Analytics, System | Dark theme dashboard |
+| **Users** | `/src/admin/users/` | User management | Table + actions |
+| **Shipments** | `/src/admin/shipments/` | All shipments | Data table |
+| **Analytics** | `/src/admin/analytics/` | Charts | Revenue, metrics |
+| **Components** | `/src/admin/components/` | UI showcase | Admin-only access |
+
+
+#### 4.4 Auth Pages
+
+| Page | Route | Purpose |
+|------|-------|---------|
+| **Sign Up** | `/src/auth/signup/` | User registration |
+| **Sign In** | `/src/auth/signin/` | User login |
+
+
+#### 4.5 ShipNow Flow
+
+| Page | Route | Purpose |
+|------|-------|---------|
+| **ShipNow Dashboard** | `/src/shipnow/dashboard/` | Prepaid user dashboard |
+| **New Shipment** | `/src/shipnow/new-shipment/` | 5-step form |
+
+
+
+### 5. SIDEBAR RULES (CRITICAL)
+
+#### ✅ CORRECT — Each page is standalone
+```
+┌─────────────────────────┐
+│ 📊 Dashboard           │  ← Links to /user/dashboard/
+│ 📦 Tracking            │  ← Links to /user/tracking/
+│ 💳 Payment             │  ← Links to /user/payment/
+│ ⚙️ Settings            │  ← Links to /user/settings/ (inline sections)
+│ 💬 Messages            │  ← Links to /user/messages/
+│                         │
+│ ──────────────────────  │
+│ 👤 Profile              │
+│ 🚪 Sign Out             │
+└─────────────────────────┘
+```
+
+#### ❌ WRONG — No nested sub-pages in sidebar
+```
+┌─────────────────────────┐
+│ ⚙️ Settings             │  ← ONE link, NOT expandable
+│   └ General             │  ← NEVER show sub-items
+│   └ Privacy             │
+│   └ Security            │
+└─────────────────────────┘
+```
+
+#### 5.1 Settings Page Structure (INLINE SECTIONS)
+```html
+<!-- settings.html contains ALL of these as cards: -->
+<div class="settings-page">
+  <section class="settings-account">...</section>
+  <section class="settings-security">...</section>
+  <section class="settings-notifications">...</section>
+  <section class="settings-privacy">...</section>
+  <section class="settings-appearance">...</section>
+  <section class="settings-billing">...</section>
+</div>
+```
+
+### 6. PAGES TO REPAIR
+
+#### 6.1 FAQ Page (Repair Checklist)
+- [ ] Accordion animation (smooth expand/collapse)
+- [ ] Search functionality (real-time filtering)
+- [ ] Category pills (All, Shipping, Tracking, Billing, etc.)
+- [ ] Question count badges
+- [ ] Mobile responsive accordions
+- [ ] Keyboard accessible (Enter/Space to toggle)
+- [ ] Smooth SHADCN UI CSS transitions
+
+#### 6.2 Payment Page (Apple Wallet Style)
+- [ ] Card display (virtual + physical cards)
+- [ ] Balance display (large, prominent)
+- [ ] Add payment method flow
+- [ ] Transaction history (scrollable list)
+- [ ] Top-up functionality
+- [ ] Mobile-optimized card swipe appearance
+- [ ] Apple Pay / Google Pay buttons
+- [ ] Payment method management
+
+#### 6.3 Tracking Page (Full Map)
+- [ ] Leaflet map (full-page)
+- [ ] Animated route line (SVG path animation)
+- [ ] Pulsing current position marker
+- [ ] Route markers: Singapore → Dubai Hub → Wales
+- [ ] 5-step progress bar
+- [ ] Shipment timeline (6+ events)
+- [ ] Glass cards: Package, Route, Contact, Actions
+- [ ] Responsive at all breakpoints
+
+#### 6.4 Component Library (Admin Only)
+- [ ] Dark theme
+- [ ] Organized sections by component type
+- [ ] Interactive component showcase
+- [ ] Remove from public navigation
+- [ ] Access control (admin auth check)
+
+-
+
+#### 7.2 Keyboard Navigation
+- [ ] Tab order follows visual order
+- [ ] Enter/Space activates buttons
+- [ ] Escape closes modals/dropdowns
+- [ ] Arrow keys in menus
+- [ ] Focus trapped in modals
+- [ ] No keyboard traps
+
+#### 7.3 Screen Reader Support
+- [ ] Form error announcements
+
+#### 7.4 Reduced Motion
+```css
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+```
+
+---
+
+### 8. DESIGN TOKENS
+
+#### 8.1 CSS Custom Properties
+```css
+:root {
+  /* Colors - Light Mode */
+  --color-primary: #2563EB;
+  --color-secondary: #1E40AF;
+  --color-accent: #06B6D4;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  
+  --bg-primary: #F8FAFC;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #F1F5F9;
+  --bg-glass: rgba(255, 255, 255, 0.7);
+  
+  --text-primary: #0F172A;
+  --text-secondary: #64748B;
+  --text-tertiary: #94A3B8;
+  
+  --border-color: #E2E8F0;
+  --border-focus: #2563EB;
+  
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  
+  /* Typography */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* Glass Effect */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-blur: blur(16px) saturate(180%);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] {
+  /* Dark Mode Overrides */
+  --bg-primary: #0F172A;
+  --bg-secondary: #1E293B;
+  --bg-tertiary: #334155;
+  --bg-glass: rgba(30, 41, 59, 0.7);
+  
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-tertiary: #64748B;
+  
+  --border-color: #334155;
+}
+```
+
+---
+
+### 9. JAVASCRIPT STANDARDS
+
+#### 9.1 Libraries
+- **Icons**: Lucide Icons
+  ```html
+  <script src="https://unpkg.com/lucide@latest"></script>
+  ```
+- **Maps**: Leaflet (for tracking page)
+  ```html
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  ```
+
+#### 9.2 Theme Toggle
+```javascript
+const toggleTheme = () => {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+};
+```
+
+#### 9.3 Language Switcher
+- Support: EN, ZH, MS, AR
+- Store: `localStorage.setItem('lang', 'en')`
+- Apply: CSS `direction: rtl` for Arabic
+
+---
+
+### 10. DEPLOYMENT CHECKLIST
+
+#### 10.1 Pre-Deployment
+- [ ] All HTML validates (no broken tags)
+- [ ] All CSS loads without 404
+- [ ] All JS runs without console errors
+- [ ] Theme toggle works (light ↔ dark)
+- [ ] Language switcher works (EN/ZH/MS/AR)
+- [ ] Mobile responsive (375px, 768px, 1024px, 1440px)
+- [ ] No horizontal scroll on mobile
+- [ ] All forms functional (submit, validation)
+- [ ] All buttons have hover/active states
+- [ ] Focus states visible on all interactive elements
+
+#### 10.2 Accessibility Audit
+- [ ] axe DevTools audit passes (0 violations)
+- [ ] Color contrast checker passes (4.5:1 / 3:1)
+- [ ] Keyboard-only navigation works
+- [ ] Screen reader announces correctly
+- [ ] Reduced motion preference respected
+
+#### 10.3 Security
+- [ ] No inline event handlers (use addEventListener)
+- [ ] No eval() or innerHTML with user input
+- [ ] HTTPS only (for production)
+- [ ] CSP headers configured
+
+---
+
+### 11. KEY ADDRESSES
+
+| Location | Details |
+|----------|---------|
+| **Headquarters** | 45 Changi South Ave 2 #01-01, Singapore 486133 |
+| **Wales Hub** | Unit 7, Wales International Hub, Cardiff Bay, Wales CF10 5AL, United Kingdom |
+| **Phone (Wales)** | +44 29 2011 3344 |
+
+---
+
+### 12. FILE NAMING CONVENTIONS
+
+| Page Type | File Name | Directory |
+|-----------|-----------|----------|
+| Landing | `index.html` | `/landing/` |
+| User Dashboard | `index.html` | `/src/user/dashboard/` |
+| User Tracking | `index.html` | `/src/user/tracking/` |
+| User Payment | `index.html` | `/src/user/payment/` |
+| User Settings | `index.html` | `/src/user/settings/` |
+| User Messages | `index.html` | `/src/user/messages/` |
+| Admin Panel | `index.html` | `/src/admin/panel/` |
+| Admin Users | `index.html` | `/src/admin/users/` |
+| Admin Shipments | `index.html` | `/src/admin/shipments/` |
+| Admin Analytics | `index.html` | `/src/admin/analytics/` |
+| Admin Components | `index.html` | `/src/admin/components/` |
+| Auth Signup | `index.html` | `/src/auth/signup/` |
+| Auth Signin | `index.html` | `/src/auth/signin/` |
+| FAQ | `index.html` | `/src/public/faq/` |
+| Privacy | `index.html` | `/src/public/policies/privacy/` |
+
+---
+
+**END OF ADVANCED PROMPT — LOGISTICS PROJECT**
+
+Want me to save this as `LOGISTICS_BUILD_PROMPT.md` in your Downloads?
