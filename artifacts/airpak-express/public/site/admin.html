@@ -1,0 +1,2107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://example.com/admin.html">
+    <meta name="description" content="Page description - update this with relevant content.">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Admin Portal | Airpak Express Operations</title>
+<link rel="shortcut icon" type="image/x-icon" href="/apps/airpak/images/icon.png"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#CD2727;--red-d:#9b1a1a;--dark:#0f0f14;--sidebar:#13131c;
+  --card:#1c1c28;--card2:#22222f;--border:rgba(255,255,255,.07);
+  --text:#e0e0e0;--sub:rgba(255,255,255,.4);--green:#16a34a;
+  --amber:#d97706;--blue:#2563eb;--purple:#7c3aed;
+  --sidebar-w:260px;
+}
+html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;background:var(--dark);color:var(--text);}
+
+/* ===== TOP BAR ===== */
+.topbar{
+  position:fixed;top:0;left:var(--sidebar-w);right:0;height:56px;
+  background:var(--sidebar);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;z-index:200;gap:16px;
+}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.topbar-title{font-size:15px;font-weight:700;color:#fff;}
+.topbar-breadcrumb{font-size:12px;color:var(--sub);}
+.topbar-right{display:flex;align-items:center;gap:14px;}
+.topbar-stat{text-align:center;}
+.topbar-stat .ts-val{font-size:15px;font-weight:800;color:var(--red);}
+.topbar-stat .ts-lbl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;}
+.tbar-sep{width:1px;height:28px;background:var(--border);}
+.user-chip{display:flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:5px 14px 5px 5px;cursor:pointer;}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
+.user-name{font-size:13px;font-weight:600;color:#fff;}
+.user-role{font-size:10px;color:var(--sub);text-transform:uppercase;}
+.logout-btn{background:none;border:1px solid rgba(205,39,39,.3);color:#ff9999;border-radius:8px;padding:6px 14px;font-size:12px;cursor:pointer;transition:all .2s;}
+.logout-btn:hover{background:rgba(205,39,39,.15);}
+.notif-btn{position:relative;background:none;border:none;color:var(--sub);font-size:18px;cursor:pointer;padding:4px;}
+.notif-dot{position:absolute;top:2px;right:2px;width:8px;height:8px;border-radius:50%;background:var(--red);border:2px solid var(--sidebar);}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);
+  background:var(--sidebar);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;z-index:300;
+}
+.sidebar-header{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.sidebar-logo{max-height:32px;filter:brightness(10);}
+.sidebar-brand{font-size:11px;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:1px;line-height:1.3;}
+.sidebar-brand span{display:block;color:var(--red);font-size:9px;}
+
+.sidebar-search{padding:10px 14px;border-bottom:1px solid var(--border);}
+.sidebar-search input{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:#fff;font-size:12px;outline:none;}
+.sidebar-search input::placeholder{color:var(--sub);}
+
+.sidebar-scroll{flex:1;overflow-y:auto;padding:8px 0;}
+.sidebar-scroll::-webkit-scrollbar{width:3px;}
+.sidebar-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+
+.nav-group-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:1px;padding:12px 18px 4px;}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:8px 18px;
+  cursor:pointer;transition:all .15s;border-left:2px solid transparent;
+  font-size:13px;color:rgba(255,255,255,.6);
+}
+.nav-item:hover{background:rgba(255,255,255,.04);color:#fff;}
+.nav-item.active{background:rgba(205,39,39,.12);border-left-color:var(--red);color:#fff;}
+.nav-item .nav-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0;}
+.nav-item .nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:700;}
+.nav-item .nav-badge.green{background:var(--green);}
+.nav-item .nav-badge.amber{background:var(--amber);}
+
+/* ===== MAIN CONTENT ===== */
+.main{position:fixed;top:56px;left:var(--sidebar-w);right:0;bottom:0;overflow-y:auto;}
+.panel{display:none;padding:28px;min-height:100%;}
+.panel.active{display:block;}
+
+/* ===== CARDS ===== */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;}
+.card-sm{padding:14px 18px;}
+.card-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.card-title .ctag{margin-left:auto;font-size:10px;padding:2px 8px;border-radius:8px;font-weight:700;}
+.ctag-live{background:rgba(22,163,74,.15);color:#4ade80;}
+.ctag-ai{background:rgba(124,58,237,.15);color:#a78bfa;}
+
+/* ===== GRID HELPERS ===== */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.g14{display:grid;grid-template-columns:1fr 3fr;gap:20px;}
+@media(max-width:1100px){.g4{grid-template-columns:1fr 1fr;}.g3{grid-template-columns:1fr 1fr;}}
+@media(max-width:800px){.g2,.g3,.g4,.g14{grid-template-columns:1fr;}}
+
+/* ===== STAT BOX ===== */
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;position:relative;overflow:hidden;}
+.stat-box::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.stat-box.red::after{background:var(--red);}
+.stat-box.green::after{background:var(--green);}
+.stat-box.amber::after{background:var(--amber);}
+.stat-box.blue::after{background:var(--blue);}
+.stat-box.purple::after{background:var(--purple);}
+.stat-val{font-size:2rem;font-weight:800;color:#fff;line-height:1;}
+.stat-lbl{font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-top:5px;}
+.stat-chg{font-size:12px;margin-top:8px;font-weight:600;}
+.stat-chg.up{color:#4ade80;}.stat-chg.down{color:#f87171;}
+
+/* ===== TABLE ===== */
+.ent-table{width:100%;border-collapse:collapse;font-size:13px;}
+.ent-table th{background:rgba(255,255,255,.04);color:var(--sub);padding:10px 12px;font-size:10px;text-transform:uppercase;letter-spacing:.5px;text-align:left;border-bottom:1px solid var(--border);}
+.ent-table td{padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--text);vertical-align:middle;}
+.ent-table tr:hover td{background:rgba(255,255,255,.02);}
+.ent-table td strong{color:#fff;}
+
+/* ===== BADGES ===== */
+.badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:700;}
+.b-green{background:rgba(22,163,74,.15);color:#4ade80;}
+.b-red{background:rgba(205,39,39,.15);color:#f87171;}
+.b-amber{background:rgba(217,119,6,.15);color:#fbbf24;}
+.b-blue{background:rgba(37,99,235,.15);color:#60a5fa;}
+.b-purple{background:rgba(124,58,237,.15);color:#a78bfa;}
+.b-grey{background:rgba(255,255,255,.07);color:rgba(255,255,255,.5);}
+
+/* ===== FORM CONTROLS ===== */
+.f-label{font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block;}
+.f-input,.f-select,.f-textarea{
+  width:100%;padding:9px 12px;
+  background:rgba(255,255,255,.05);border:1px solid var(--border);
+  border-radius:8px;color:#fff;font-size:13px;outline:none;
+  transition:border-color .2s;font-family:inherit;
+}
+.f-input:focus,.f-select:focus,.f-textarea:focus{border-color:rgba(205,39,39,.5);}
+.f-input::placeholder,.f-textarea::placeholder{color:rgba(255,255,255,.2);}
+.f-select option{background:#1c1c28;}
+.f-textarea{resize:vertical;min-height:80px;}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.f-row.f3{grid-template-columns:1fr 1fr 1fr;}
+.f-group{margin-bottom:14px;}
+
+/* ===== BUTTONS ===== */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .2s;}
+.btn-primary{background:var(--red);color:#fff;}
+.btn-primary:hover{background:var(--red-d);transform:translateY(-1px);}
+.btn-ghost{background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);border:1px solid var(--border);}
+.btn-ghost:hover{background:rgba(255,255,255,.1);color:#fff;}
+.btn-success{background:rgba(22,163,74,.2);color:#4ade80;border:1px solid rgba(22,163,74,.3);}
+.btn-warning{background:rgba(217,119,6,.2);color:#fbbf24;border:1px solid rgba(217,119,6,.3);}
+.btn-danger{background:rgba(205,39,39,.15);color:#f87171;border:1px solid rgba(205,39,39,.3);}
+.btn-sm{padding:4px 10px;font-size:11px;}
+
+/* ===== TIMELINE ===== */
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-item{display:flex;gap:14px;position:relative;padding-bottom:20px;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-left{display:flex;flex-direction:column;align-items:center;width:28px;flex-shrink:0;}
+.tl-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;border:2px solid transparent;}
+.tl-dot.done{background:rgba(22,163,74,.15);border-color:var(--green);color:#4ade80;}
+.tl-dot.current{background:rgba(205,39,39,.15);border-color:var(--red);color:#f87171;animation:tl-pulse 2s ease infinite;}
+.tl-dot.pending{background:rgba(255,255,255,.05);border-color:var(--border);color:var(--sub);}
+@keyframes tl-pulse{0%,100%{box-shadow:0 0 0 0 rgba(205,39,39,.4)}50%{box-shadow:0 0 0 6px rgba(205,39,39,0)}}
+.tl-line{flex:1;width:2px;background:var(--border);margin-top:4px;}
+.tl-line.done{background:var(--green);}
+.tl-body{padding-top:4px;flex:1;}
+.tl-title{font-size:13px;font-weight:700;color:#fff;}
+.tl-meta{font-size:11px;color:var(--sub);margin-top:2px;}
+
+/* ===== MODAL ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.6);}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-header h3{font-size:16px;font-weight:700;color:#fff;}
+.modal-close{background:none;border:none;color:var(--sub);font-size:20px;cursor:pointer;}
+.modal-body{padding:24px;}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;}
+
+/* ===== CHAT ===== */
+.chat-wrap{background:var(--dark);border-radius:10px;overflow:hidden;}
+.chat-msgs{padding:16px;max-height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
+.chat-msg{display:flex;gap:8px;align-items:flex-start;}
+.chat-msg.admin{flex-direction:row-reverse;}
+.chat-bubble{padding:8px 12px;border-radius:10px;font-size:12px;max-width:78%;line-height:1.5;}
+.chat-msg.client .chat-bubble{background:rgba(255,255,255,.07);color:var(--text);}
+.chat-msg.admin .chat-bubble{background:rgba(205,39,39,.2);color:#fff;}
+.chat-avatar{width:28px;height:28px;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.chat-input-row{display:flex;border-top:1px solid var(--border);}
+.chat-input-row input{flex:1;background:transparent;border:none;padding:10px 14px;color:#fff;font-size:13px;outline:none;}
+.chat-input-row input::placeholder{color:rgba(255,255,255,.2);}
+.chat-send{background:var(--red);border:none;padding:10px 16px;color:#fff;cursor:pointer;font-size:13px;}
+
+/* ===== EMAIL BUILDER ===== */
+.email-template-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.email-tpl{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;transition:all .2s;}
+.email-tpl:hover,.email-tpl.selected{border-color:var(--red);background:rgba(205,39,39,.08);}
+.email-tpl .et-icon{font-size:20px;margin-bottom:6px;}
+.email-tpl .et-name{font-size:11px;font-weight:700;color:#fff;}
+.email-tpl .et-desc{font-size:10px;color:var(--sub);}
+
+/* ===== ALERTS ===== */
+.alert-item{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--card2);border-radius:10px;margin-bottom:8px;border-left:3px solid transparent;}
+.alert-item.danger{border-left-color:var(--red);}
+.alert-item.warning{border-left-color:var(--amber);}
+.alert-item.ok{border-left-color:var(--green);}
+.alert-item.info{border-left-color:var(--blue);}
+.alert-icon{font-size:16px;flex-shrink:0;margin-top:2px;}
+.alert-body h5{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px;}
+.alert-body p{font-size:12px;color:var(--sub);}
+.alert-actions{margin-left:auto;display:flex;gap:6px;flex-shrink:0;}
+
+/* ===== AUDIT LOG ===== */
+.audit-row{display:flex;gap:12px;padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px;align-items:center;}
+.audit-row:hover{background:rgba(255,255,255,.02);}
+.audit-time{color:var(--sub);width:90px;flex-shrink:0;font-family:monospace;}
+.audit-user{width:90px;flex-shrink:0;color:var(--text);}
+.audit-action{flex:1;color:#fff;}
+.audit-tag{font-size:10px;padding:1px 7px;border-radius:6px;}
+
+/* ===== PROGRESS BAR ===== */
+.pbar-wrap{background:rgba(255,255,255,.07);border-radius:4px;height:6px;overflow:hidden;}
+.pbar-fill{height:100%;border-radius:4px;transition:width 1s ease;}
+
+/* ===== SCROLLBAR ===== */
+.main::-webkit-scrollbar{width:4px;}
+.main::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+
+/* ===== SECTION HEADER ===== */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+.section-hdr h2{font-size:1.3rem;font-weight:800;color:#fff;}
+.section-hdr p{font-size:13px;color:var(--sub);margin-top:4px;}
+.hdr-actions{display:flex;gap:8px;flex-shrink:0;}
+
+/* ===== NOTIFICATION TOAST ===== */
+#toast{
+  position:fixed;bottom:28px;right:28px;z-index:9999;
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:12px 18px;font-size:13px;color:#fff;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+  transform:translateY(80px);opacity:0;transition:all .3s;
+  display:flex;align-items:center;gap:10px;max-width:320px;
+}
+#toast.show{transform:translateY(0);opacity:1;}
+#toast .toast-icon{font-size:16px;}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-header">
+    <img src="/apps/airpak/img/logo.png" class="sidebar-logo" alt=""/>
+    <div class="sidebar-brand">Airpak Express<span>&#128274; Admin Portal</span></div>
+  </div>
+  <div class="sidebar-search">
+    <input type="text" placeholder="&#128269; Search services..." oninput="filterNav(this.value)"/>
+  </div>
+  <div class="sidebar-scroll" id="sidebarNav">
+    <div class="nav-group-label">Overview</div>
+    <div class="nav-item active" onclick="nav('dashboard')"><span class="nav-icon">&#127968;</span>Dashboard<span class="nav-badge">3</span></div>
+    <div class="nav-item" onclick="nav('audit')"><span class="nav-icon">&#128196;</span>Audit Logs</div>
+    <div class="nav-item" onclick="nav('alerts')"><span class="nav-icon">&#9888;</span>System Alerts<span class="nav-badge amber">5</span></div>
+
+    <div class="nav-group-label">Client Management</div>
+    <div class="nav-item" onclick="nav('clients')"><span class="nav-icon">&#128101;</span>Client Accounts</div>
+    <div class="nav-item" onclick="nav('client-create')"><span class="nav-icon">&#10133;</span>Create Account</div>
+    <div class="nav-item" onclick="nav('client-verify')"><span class="nav-icon">&#9989;</span>Verification Queue<span class="nav-badge">7</span></div>
+    <div class="nav-item" onclick="nav('client-suspend')"><span class="nav-icon">&#128683;</span>Account Control</div>
+    <div class="nav-item" onclick="nav('messaging')"><span class="nav-icon">&#128172;</span>Messaging Center<span class="nav-badge green">2</span></div>
+
+    <div class="nav-group-label">Parcel Management</div>
+    <div class="nav-item" onclick="nav('parcels')"><span class="nav-icon">&#128230;</span>All Parcels</div>
+    <div class="nav-item" onclick="nav('parcel-create')"><span class="nav-icon">&#10133;</span>Create Parcel</div>
+    <div class="nav-item" onclick="nav('parcel-status')"><span class="nav-icon">&#128257;</span>Update Status</div>
+    <div class="nav-item" onclick="nav('parcel-transit')"><span class="nav-icon">&#128665;</span>Simulate Transit</div>
+    <div class="nav-item" onclick="nav('route-assign')"><span class="nav-icon">&#128205;</span>Assign Route</div>
+    <div class="nav-item" onclick="nav('reroute')"><span class="nav-icon">&#128260;</span>Reroute Shipment</div>
+    <div class="nav-item" onclick="nav('delay-schedule')"><span class="nav-icon">&#9200;</span>Delay Scheduling</div>
+    <div class="nav-item" onclick="nav('hold-release')"><span class="nav-icon">&#128275;</span>Release Hold</div>
+    <div class="nav-item" onclick="nav('customs-clear')"><span class="nav-icon">&#128203;</span>Customs Clearance</div>
+    <div class="nav-item" onclick="nav('delivery-confirm')"><span class="nav-icon">&#9989;</span>Delivery Confirm</div>
+
+    <div class="nav-group-label">Tracking Control</div>
+    <div class="nav-item" onclick="nav('live-tracking')"><span class="nav-icon">&#128507;</span>Live Progress<span class="nav-badge green">Live</span></div>
+    <div class="nav-item" onclick="nav('route-monitor')"><span class="nav-icon">&#128681;</span>Route Monitor</div>
+    <div class="nav-item" onclick="nav('status-override')"><span class="nav-icon">&#9881;</span>Status Override</div>
+    <div class="nav-item" onclick="nav('checkpoint')"><span class="nav-icon">&#128204;</span>Checkpoint Inject</div>
+    <div class="nav-item" onclick="nav('scan-sim')"><span class="nav-icon">&#128247;</span>Scan Simulation</div>
+
+    <div class="nav-group-label">Communication</div>
+    <div class="nav-item" onclick="nav('send-update')"><span class="nav-icon">&#128140;</span>Send Customer Update</div>
+    <div class="nav-item" onclick="nav('email-auto')"><span class="nav-icon">&#128231;</span>Email Automation</div>
+    <div class="nav-item" onclick="nav('email-manual')"><span class="nav-icon">&#9993;</span>Manual Email</div>
+    <div class="nav-item" onclick="nav('sms-control')"><span class="nav-icon">&#128241;</span>SMS Notifications</div>
+    <div class="nav-item" onclick="nav('escalation')"><span class="nav-icon">&#128680;</span>Escalation Notices</div>
+
+    <div class="nav-group-label">Payment Management</div>
+    <div class="nav-item" onclick="nav('payments')"><span class="nav-icon">&#128179;</span>Payment Records</div>
+    <div class="nav-item" onclick="nav('invoice-gen')"><span class="nav-icon">&#128196;</span>Invoice Generator</div>
+    <div class="nav-item" onclick="nav('balance-adj')"><span class="nav-icon">&#9878;</span>Balance Adjustment</div>
+    <div class="nav-item" onclick="nav('pay-verify')"><span class="nav-icon">&#128274;</span>Payment Verification</div>
+    <div class="nav-item" onclick="nav('billing-auto')"><span class="nav-icon">&#9881;</span>Billing Automation</div>
+
+    <div class="nav-group-label">System Operations</div>
+    <div class="nav-item" onclick="nav('analytics')"><span class="nav-icon">&#128200;</span>Analytics Dashboard</div>
+    <div class="nav-item" onclick="nav('ai-control')"><span class="nav-icon">&#129302;</span>AI Logistics Center</div>
+    <div class="nav-item" onclick="nav('route-intel')"><span class="nav-icon">&#127760;</span>Route Intelligence</div>
+    <div class="nav-item" onclick="nav('workflow-auto')"><span class="nav-icon">&#9889;</span>Workflow Automation</div>
+    <div class="nav-item" onclick="nav('sys-alerts')"><span class="nav-icon">&#128308;</span>Alert Management</div>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div>
+      <div class="topbar-title" id="topbar-title">Operations Dashboard</div>
+      <div class="topbar-breadcrumb">Admin Portal / <span id="topbar-sub">Overview</span></div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-stat"><div class="ts-val" id="tb-parcels">2,147</div><div class="ts-lbl">Active</div></div>
+    <div class="tbar-sep"></div>
+    <div class="topbar-stat"><div class="ts-val" id="tb-alerts" style="color:#fbbf24">5</div><div class="ts-lbl">Alerts</div></div>
+    <div class="tbar-sep"></div>
+    <div class="topbar-stat"><div class="ts-val" id="tb-online" style="color:#4ade80">98.4%</div><div class="ts-lbl">On-Time</div></div>
+    <div class="tbar-sep"></div>
+    <button class="notif-btn" onclick="nav('alerts')">&#128276;<div class="notif-dot"></div></button>
+    <div class="user-chip">
+      <div class="user-avatar" id="userAvatarTop">SA</div>
+      <div><div class="user-name" id="userName">Administrator</div><div class="user-role" id="userRole">Super Admin</div></div>
+    </div>
+    <button class="logout-btn" onclick="doLogout()">&#128274; Logout</button>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main" id="mainContent">
+
+<!-- ===== DASHBOARD ===== -->
+<div class="panel active" id="panel-dashboard">
+  <div class="section-hdr">
+    <div><h2>&#127968; Operations Dashboard</h2><p>Live overview of all logistics operations</p></div>
+    <div class="hdr-actions">
+      <button class="btn btn-ghost" onclick="refreshDash()">&#8635; Refresh</button>
+      <button class="btn btn-primary" onclick="nav('parcel-create')">&#10133; New Parcel</button>
+    </div>
+  </div>
+
+  <div class="g4" style="margin-bottom:20px;">
+    <div class="stat-box red"><div class="stat-val" id="ds-active">2,147</div><div class="stat-lbl">Active Shipments</div><div class="stat-chg up">&#8593; 12.4% this week</div></div>
+    <div class="stat-box green"><div class="stat-val" id="ds-delivered">18,742</div><div class="stat-lbl">Delivered This Month</div><div class="stat-chg up">&#8593; 8.7% vs last month</div></div>
+    <div class="stat-box amber"><div class="stat-val" id="ds-delayed">23</div><div class="stat-lbl">Delayed Shipments</div><div class="stat-chg down">&#8595; 3 vs yesterday</div></div>
+    <div class="stat-box blue"><div class="stat-val" id="ds-clients">1,284</div><div class="stat-lbl">Active Clients</div><div class="stat-chg up">&#8593; 34 new this week</div></div>
+  </div>
+
+  <div class="g2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">&#128308; Recent Alerts <span class="ctag ctag-live">Live</span></div>
+      <div id="dash-alerts">
+        <div class="alert-item danger"><span class="alert-icon">&#9889;</span><div class="alert-body"><h5>SLA Breach — AP-88064</h5><p>Amazon SG — Typhoon delay, 28h overdue</p></div><div class="alert-actions"><button class="btn btn-sm btn-ghost" onclick="nav('alerts')">View</button></div></div>
+        <div class="alert-item warning"><span class="alert-icon">&#9888;&#65039;</span><div class="alert-body"><h5>Customs Risk — AP-88097</h5><p>Apple Asia — 78% hold probability flagged</p></div><div class="alert-actions"><button class="btn btn-sm btn-ghost" onclick="nav('customs-clear')">Handle</button></div></div>
+        <div class="alert-item info"><span class="alert-icon">&#128683;</span><div class="alert-body"><h5>Account Flagged — #CL-0047</h5><p>Unusual booking pattern detected</p></div><div class="alert-actions"><button class="btn btn-sm btn-ghost" onclick="nav('client-suspend')">Review</button></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">&#128200; Shipment Velocity</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Air Freight</span><strong>42%</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:42%;background:var(--red);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Sea Freight</span><strong>31%</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:31%;background:var(--blue);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Road</span><strong>16%</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:16%;background:var(--amber);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Express</span><strong>11%</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:11%;background:var(--green);"></div></div></div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:10px;">
+        <div style="flex:1;text-align:center;background:var(--card2);border-radius:8px;padding:10px;"><div style="font-size:1.4rem;font-weight:800;color:#4ade80;">98.4%</div><div style="font-size:10px;color:var(--sub);">On-Time Rate</div></div>
+        <div style="flex:1;text-align:center;background:var(--card2);border-radius:8px;padding:10px;"><div style="font-size:1.4rem;font-weight:800;color:#fbbf24;">1.07%</div><div style="font-size:10px;color:var(--sub);">Delay Rate</div></div>
+        <div style="flex:1;text-align:center;background:var(--card2);border-radius:8px;padding:10px;"><div style="font-size:1.4rem;font-weight:800;color:#60a5fa;">SGD 4.2M</div><div style="font-size:10px;color:var(--sub);">Month Revenue</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#128230; Latest Parcels <span class="ctag ctag-live">Live</span></div>
+    <table class="ent-table" id="dash-parcels-table">
+      <thead><tr><th>AWB</th><th>Client</th><th>Origin → Dest</th><th>Service</th><th>Status</th><th>SLA</th><th>Actions</th></tr></thead>
+      <tbody id="dash-parcel-rows"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== AUDIT LOGS ===== -->
+<div class="panel" id="panel-audit">
+  <div class="section-hdr">
+    <div><h2>&#128196; Audit Logs</h2><p>Complete record of all admin actions</p></div>
+    <div class="hdr-actions">
+      <select class="f-select" style="width:auto;padding:7px 12px;font-size:12px;" id="audit-filter" onchange="renderAudit()">
+        <option value="all">All Actions</option><option value="parcel">Parcel</option><option value="client">Client</option><option value="payment">Payment</option><option value="system">System</option>
+      </select>
+      <button class="btn btn-ghost">&#11123; Export CSV</button>
+    </div>
+  </div>
+  <div class="card">
+    <div style="display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:14px;">
+      <input class="f-input" style="max-width:300px;" placeholder="&#128269; Search logs..." oninput="filterAudit(this.value)" id="audit-search"/>
+      <span style="font-size:12px;color:var(--sub);" id="audit-count"></span>
+    </div>
+    <div id="audit-list"></div>
+  </div>
+</div>
+
+<!-- ===== SYSTEM ALERTS ===== -->
+<div class="panel" id="panel-alerts">
+  <div class="section-hdr"><div><h2>&#9888; System Alerts</h2><p>Active alerts requiring attention</p></div></div>
+  <div class="g2">
+    <div>
+      <div class="alert-item danger"><span class="alert-icon">&#9889;</span><div class="alert-body"><h5>SLA Breach — AP-88064 (Amazon SG)</h5><p>28h delay due to Typhoon Hato. Auto-escalation triggered. Reroute via GZH evaluated.</p></div><div class="alert-actions"><button class="btn btn-sm btn-danger" onclick="dismissAlert(this)">Dismiss</button><button class="btn btn-sm btn-ghost" onclick="nav('reroute')">Reroute</button></div></div>
+      <div class="alert-item warning"><span class="alert-icon">&#9888;&#65039;</span><div class="alert-body"><h5>Customs Risk — AP-88097 (Apple Asia)</h5><p>AI flagged 78% hold probability. Value mismatch on 3 SKUs. Submit revised invoice before 17:00 SGT.</p></div><div class="alert-actions"><button class="btn btn-sm btn-danger" onclick="dismissAlert(this)">Dismiss</button><button class="btn btn-sm btn-ghost" onclick="nav('customs-clear')">Resolve</button></div></div>
+      <div class="alert-item warning"><span class="alert-icon">&#128683;</span><div class="alert-body"><h5>Fleet — VH-002 Signal Lost</h5><p>Vehicle last GPS ping 22 minutes ago. Last known: Tuas Checkpoint. Driver unresponsive.</p></div><div class="alert-actions"><button class="btn btn-sm btn-danger" onclick="dismissAlert(this)">Dismiss</button><button class="btn btn-sm btn-ghost" onclick="nav('route-monitor')">Monitor</button></div></div>
+      <div class="alert-item info"><span class="alert-icon">&#128196;</span><div class="alert-body"><h5>Invoice Overdue — INV-2024-1138</h5><p>Samsung SG — SGD $4,820 overdue by 14 days. 3rd reminder scheduled.</p></div><div class="alert-actions"><button class="btn btn-sm btn-danger" onclick="dismissAlert(this)">Dismiss</button><button class="btn btn-sm btn-ghost" onclick="nav('payments')">View</button></div></div>
+      <div class="alert-item ok"><span class="alert-icon">&#9989;</span><div class="alert-body"><h5>Route Optimised — SIN&#8594;LAX corridor</h5><p>14 air shipments rerouted via NRT. Saving: SGD $2,340 and 6h transit improvement.</p></div><div class="alert-actions"><button class="btn btn-sm btn-danger" onclick="dismissAlert(this)">Dismiss</button></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">&#128200; Alert Statistics</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;"><span>Critical</span><strong style="color:#f87171;">1</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:20%;background:var(--red);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;"><span>Warning</span><strong style="color:#fbbf24;">2</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:40%;background:var(--amber);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;"><span>Info</span><strong style="color:#60a5fa;">1</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:20%;background:var(--blue);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;"><span>Resolved</span><strong style="color:#4ade80;">1</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:20%;background:var(--green);"></div></div></div>
+      </div>
+      <div style="margin-top:16px;padding:12px;background:var(--card2);border-radius:8px;font-size:12px;color:var(--sub);">
+        <strong style="color:#fff;">Auto-actions enabled:</strong><br/>
+        AI auto-reroutes delays &gt;12h &bull; SLA breach auto-notifies client &bull; Customs holds auto-email compliance team
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CLIENTS ===== -->
+<div class="panel" id="panel-clients">
+  <div class="section-hdr">
+    <div><h2>&#128101; Client Accounts</h2><p>Manage all client accounts and profiles</p></div>
+    <div class="hdr-actions">
+      <button class="btn btn-ghost" onclick="nav('client-verify')">&#9989; Verify Queue (7)</button>
+      <button class="btn btn-primary" onclick="nav('client-create')">&#10133; New Client</button>
+    </div>
+  </div>
+  <div class="card">
+    <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+      <input class="f-input" style="max-width:260px;" placeholder="&#128269; Search clients..." oninput="filterClients(this.value)"/>
+      <select class="f-select" style="width:auto;" onchange="filterClientStatus(this.value)"><option value="all">All Statuses</option><option>Active</option><option>Suspended</option><option>Pending</option></select>
+    </div>
+    <table class="ent-table" id="clients-table">
+      <thead><tr><th>Client ID</th><th>Name / Company</th><th>Email</th><th>Country</th><th>Shipments</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="clients-rows"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== CLIENT CREATE ===== -->
+<div class="panel" id="panel-client-create">
+  <div class="section-hdr"><div><h2>&#10133; Create Client Account</h2><p>Register a new client in the system</p></div></div>
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-title">Personal Details</div>
+        <div class="f-row"><div><label class="f-label">First Name</label><input class="f-input" id="cc-fname" placeholder="John"/></div><div><label class="f-label">Last Name</label><input class="f-input" id="cc-lname" placeholder="Smith"/></div></div>
+        <div class="f-group"><label class="f-label">Email Address</label><input class="f-input" id="cc-email" placeholder="john@company.com" type="email"/></div>
+        <div class="f-group"><label class="f-label">Phone Number</label><input class="f-input" id="cc-phone" placeholder="+65 9000 0000"/></div>
+        <div class="f-group"><label class="f-label">Company Name</label><input class="f-input" id="cc-company" placeholder="Company Pte Ltd"/></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Address & Classification</div>
+        <div class="f-group"><label class="f-label">Country</label><select class="f-select" id="cc-country"><option>Singapore</option><option>Malaysia</option><option>USA</option><option>China</option><option>UK</option><option>Australia</option><option>Japan</option><option>UAE</option></select></div>
+        <div class="f-group"><label class="f-label">Address</label><textarea class="f-textarea" id="cc-addr" rows="2" placeholder="Street address..."></textarea></div>
+        <div class="f-row"><div><label class="f-label">Account Type</label><select class="f-select" id="cc-type"><option>Enterprise</option><option>SME</option><option>Individual</option></select></div><div><label class="f-label">Credit Limit (SGD)</label><input class="f-input" id="cc-credit" type="number" placeholder="5000"/></div></div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="createClient()">&#10133; Create Account</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Account Preview</div>
+      <div style="background:var(--card2);border-radius:10px;padding:18px;margin-bottom:14px;" id="cc-preview">
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:14px;">
+          <div style="width:50px;height:50px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;" id="cc-avatar">?</div>
+          <div><div style="font-size:16px;font-weight:700;color:#fff;" id="cc-prev-name">—</div><div style="font-size:12px;color:var(--sub);" id="cc-prev-company">—</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;">
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--sub);">Email</span><span id="cc-prev-email">—</span></div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--sub);">Country</span><span id="cc-prev-country">—</span></div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--sub);">Account Type</span><span class="badge b-green" id="cc-prev-type">Enterprise</span></div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--sub);">Client ID</span><span style="color:#a78bfa;font-family:monospace;" id="cc-prev-id">—</span></div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--sub);padding:12px;background:rgba(255,255,255,.03);border-radius:8px;">
+        &#128274; Account will be created with <strong style="color:#fff;">Pending Verification</strong> status. Welcome email sent automatically on creation.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CLIENT VERIFY ===== -->
+<div class="panel" id="panel-client-verify">
+  <div class="section-hdr"><div><h2>&#9989; Verification Queue</h2><p>7 accounts awaiting verification</p></div></div>
+  <div class="card">
+    <table class="ent-table">
+      <thead><tr><th>Client ID</th><th>Name</th><th>Submitted</th><th>Documents</th><th>Risk</th><th>Actions</th></tr></thead>
+      <tbody id="verify-rows"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== CLIENT SUSPEND ===== -->
+<div class="panel" id="panel-client-suspend">
+  <div class="section-hdr"><div><h2>&#128683; Account Control</h2><p>Suspend, reinstate, or flag accounts</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Quick Actions</div>
+      <div class="f-group"><label class="f-label">Client ID or Email</label><input class="f-input" id="susp-client" placeholder="CL-0001 or email@example.com"/></div>
+      <div class="f-group"><label class="f-label">Action</label><select class="f-select" id="susp-action"><option value="suspend">Suspend Account</option><option value="reinstate">Reinstate Account</option><option value="flag">Flag for Review</option><option value="close">Close Account</option></select></div>
+      <div class="f-group"><label class="f-label">Internal Reason</label><textarea class="f-textarea" id="susp-reason" placeholder="Document the reason for this action..."></textarea></div>
+      <div style="display:flex;gap:8px;margin-top:4px;">
+        <button class="btn btn-danger" style="flex:1;justify-content:center;" onclick="doSuspend()">Execute Action</button>
+        <button class="btn btn-ghost" onclick="toast('Action cancelled','&#10006;')">Cancel</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Suspended Accounts</div>
+      <table class="ent-table">
+        <thead><tr><th>Client ID</th><th>Name</th><th>Suspended</th><th>Reason</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td><strong>CL-0019</strong></td><td>Tan H. Wei</td><td>May 10</td><td>Fraud flag</td><td><button class="btn btn-sm btn-success" onclick="toast('Account reinstated','&#9989;')">Reinstate</button></td></tr>
+          <tr><td><strong>CL-0047</strong></td><td>Pacific Imports</td><td>May 12</td><td>Unusual booking</td><td><button class="btn btn-sm btn-success" onclick="toast('Account reinstated','&#9989;')">Reinstate</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MESSAGING ===== -->
+<div class="panel" id="panel-messaging">
+  <div class="section-hdr"><div><h2>&#128172; Client Messaging Center</h2><p>Live conversations with clients</p></div></div>
+  <div class="g14">
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--border);font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;">Conversations</div>
+      <div id="conv-list"></div>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+        <div style="width:34px;height:34px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;" id="msg-avatar">AS</div>
+        <div><div style="font-size:14px;font-weight:700;color:#fff;" id="msg-client-name">Amazon SG</div><div style="font-size:11px;color:var(--sub);">CL-0001 &bull; Active &bull; Last seen 2m ago</div></div>
+        <div style="margin-left:auto;display:flex;gap:6px;">
+          <button class="btn btn-sm btn-ghost" onclick="nav('send-update')">&#128140; Send Update</button>
+          <button class="btn btn-sm btn-ghost" onclick="nav('escalation')">&#128680; Escalate</button>
+        </div>
+      </div>
+      <div class="chat-wrap" style="flex:1;display:flex;flex-direction:column;">
+        <div class="chat-msgs" id="msg-chat"></div>
+        <div style="padding:8px;border-top:1px solid var(--border);display:flex;gap:6px;align-items:center;">
+          <input class="f-input" id="msg-input" placeholder="Type a message to client..." style="flex:1;" onkeydown="if(event.key==='Enter')sendMsg()"/>
+          <button class="btn btn-primary btn-sm" onclick="sendMsg()">Send</button>
+          <button class="btn btn-ghost btn-sm" onclick="toast('Note saved internally','&#128204;')">Note</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PARCELS ===== -->
+<div class="panel" id="panel-parcels">
+  <div class="section-hdr">
+    <div><h2>&#128230; Parcel Management</h2><p>All shipments in the system</p></div>
+    <div class="hdr-actions">
+      <button class="btn btn-ghost" onclick="nav('parcel-create')">&#10133; Create</button>
+      <button class="btn btn-ghost">&#11123; Export</button>
+    </div>
+  </div>
+  <div class="card">
+    <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+      <input class="f-input" style="max-width:260px;" placeholder="&#128269; AWB or client search..."/>
+      <select class="f-select" style="width:auto;"><option value="all">All Statuses</option><option>In Transit</option><option>Delivered</option><option>Delayed</option><option>Customs Hold</option><option>Out for Delivery</option></select>
+      <select class="f-select" style="width:auto;"><option>All Services</option><option>Air Freight</option><option>Sea Freight</option><option>Road</option><option>Express</option></select>
+    </div>
+    <table class="ent-table">
+      <thead><tr><th>AWB</th><th>Client</th><th>Route</th><th>Service</th><th>Weight</th><th>Status</th><th>SLA</th><th>Actions</th></tr></thead>
+      <tbody id="all-parcel-rows"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== PARCEL CREATE ===== -->
+<div class="panel" id="panel-parcel-create">
+  <div class="section-hdr"><div><h2>&#10133; Create Parcel</h2><p>Register a new shipment in the system</p></div></div>
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-title">Shipment Details</div>
+        <div class="f-group"><label class="f-label">Client Account</label><select class="f-select" id="pc-client"><option>Amazon SG — CL-0001</option><option>Samsung SG — CL-0002</option><option>Apple Asia — CL-0003</option><option>Walmart SG — CL-0004</option><option>Google APAC — CL-0005</option></select></div>
+        <div class="f-row"><div><label class="f-label">Origin</label><select class="f-select" id="pc-origin"><option>Singapore</option><option>Malaysia</option><option>China</option><option>USA</option></select></div><div><label class="f-label">Destination</label><select class="f-select" id="pc-dest"><option>USA</option><option>UK</option><option>Australia</option><option>Japan</option><option>Germany</option></select></div></div>
+        <div class="f-row"><div><label class="f-label">Service Type</label><select class="f-select" id="pc-service"><option>Express 3-day</option><option>Air Freight</option><option>Sea Freight</option><option>Road Freight</option></select></div><div><label class="f-label">Weight (kg)</label><input class="f-input" id="pc-weight" type="number" placeholder="5.0" value="5"/></div></div>
+        <div class="f-row f3"><div><label class="f-label">Length (cm)</label><input class="f-input" id="pc-l" type="number" value="30"/></div><div><label class="f-label">Width (cm)</label><input class="f-input" id="pc-w" type="number" value="20"/></div><div><label class="f-label">Height (cm)</label><input class="f-input" id="pc-h" type="number" value="15"/></div></div>
+        <div class="f-group"><label class="f-label">Declared Value (SGD)</label><input class="f-input" id="pc-value" type="number" placeholder="500"/></div>
+        <div class="f-group"><label class="f-label">Description</label><textarea class="f-textarea" id="pc-desc" placeholder="Contents description (required for customs)..."></textarea></div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-title">Consignee</div>
+        <div class="f-group"><label class="f-label">Recipient Name</label><input class="f-input" id="pc-rname" placeholder="Full name"/></div>
+        <div class="f-group"><label class="f-label">Recipient Address</label><textarea class="f-textarea" id="pc-raddr" rows="2" placeholder="Full delivery address..."></textarea></div>
+        <div class="f-group"><label class="f-label">Recipient Phone</label><input class="f-input" id="pc-rphone" placeholder="+1 555 000 0000"/></div>
+        <div class="f-group"><label class="f-label">Special Handling</label><select class="f-select" id="pc-handling"><option>Standard</option><option>Fragile</option><option>Temperature Sensitive</option><option>Hazardous Material</option><option>Perishable</option></select></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Rate Preview</div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid var(--border);"><span style="color:var(--sub);">Base Rate</span><strong>SGD $87.50</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid var(--border);"><span style="color:var(--sub);">Fuel Surcharge</span><strong>SGD $15.75</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid var(--border);"><span style="color:var(--sub);">GST (9%)</span><strong>SGD $9.29</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;padding:10px 0;"><span>Total</span><strong style="color:var(--red);">SGD $112.54</strong></div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="createParcel()">&#128230; Create Parcel & Generate AWB</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PARCEL STATUS ===== -->
+<div class="panel" id="panel-parcel-status">
+  <div class="section-hdr"><div><h2>&#128257; Update Parcel Status</h2><p>Change the status of any shipment</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Status Update Tool</div>
+      <div class="f-group"><label class="f-label">AWB Number</label><input class="f-input" id="ps-awb" placeholder="AP-2024-XXXXX"/></div>
+      <div class="f-group"><label class="f-label">New Status</label><select class="f-select" id="ps-status">
+        <option>Shipment Booked</option><option>Picked Up</option><option>At Origin Facility</option>
+        <option>Departed Origin</option><option>In Transit</option><option>Arrived at Hub</option>
+        <option>Customs Clearance</option><option>Customs Cleared</option><option>Out for Delivery</option>
+        <option>Delivery Attempted</option><option>Delivered</option><option>Exception — Delay</option>
+        <option>Exception — Customs Hold</option><option>Returned</option>
+      </select></div>
+      <div class="f-group"><label class="f-label">Location</label><input class="f-input" id="ps-location" placeholder="e.g. Singapore Hub, T1"/></div>
+      <div class="f-group"><label class="f-label">Timestamp</label><input class="f-input" id="ps-time" type="datetime-local"/></div>
+      <div class="f-group"><label class="f-label">Admin Note (internal)</label><textarea class="f-textarea" id="ps-note" placeholder="Internal note — not visible to customer..."></textarea></div>
+      <div class="f-group"><label class="f-label">Notify Customer?</label><select class="f-select" id="ps-notify"><option value="yes">Yes — send status email</option><option value="no">No — silent update</option></select></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="updateStatus()">&#128257; Update Status & Log</button>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-title">Recent Status Updates</div>
+        <div id="status-log"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Bulk Status Update</div>
+        <p style="font-size:13px;color:var(--sub);margin-bottom:12px;">Update status for multiple AWBs at once</p>
+        <textarea class="f-textarea" placeholder="Enter AWB numbers, one per line..." rows="4"></textarea>
+        <select class="f-select" style="margin-top:8px;"><option>Select bulk status...</option><option>In Transit</option><option>Out for Delivery</option><option>Delivered</option></select>
+        <button class="btn btn-warning" style="margin-top:10px;width:100%;justify-content:center;" onclick="toast('Bulk update applied to 0 parcels','&#128257;')">Apply Bulk Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SIMULATE TRANSIT ===== -->
+<div class="panel" id="panel-parcel-transit">
+  <div class="section-hdr"><div><h2>&#128665; Simulate Parcel Transit</h2><p>Step-by-step transit simulation with real-time updates</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Transit Simulator</div>
+      <div class="f-group"><label class="f-label">AWB Number</label><input class="f-input" id="sim-awb" placeholder="AP-2024-88102" value="AP-2024-88102"/></div>
+      <div class="f-group"><label class="f-label">Simulation Speed</label><select class="f-select" id="sim-speed"><option value="5000">Slow (5s per step)</option><option value="2000" selected>Normal (2s per step)</option><option value="500">Fast (0.5s per step)</option></select></div>
+      <div class="f-group"><label class="f-label">Notify Customer Each Step?</label><select class="f-select" id="sim-notify"><option>Yes — all milestones</option><option>Key milestones only</option><option>No notifications</option></select></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary" style="flex:1;justify-content:center;" id="sim-btn" onclick="startSim()">&#9654; Start Simulation</button>
+        <button class="btn btn-danger" onclick="stopSim()">&#9646;&#9646; Stop</button>
+      </div>
+      <div style="margin-top:14px;padding:10px;background:var(--card2);border-radius:8px;font-size:12px;" id="sim-progress">Press Start to begin simulation...</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Simulation Timeline</div>
+      <div class="timeline" id="sim-timeline"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ROUTE ASSIGN ===== -->
+<div class="panel" id="panel-route-assign">
+  <div class="section-hdr"><div><h2>&#128205; Assign Route</h2><p>Assign or change carrier and route for a shipment</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Route Assignment</div>
+      <div class="f-group"><label class="f-label">AWB Number</label><input class="f-input" id="ra-awb" placeholder="AP-2024-XXXXX"/></div>
+      <div class="f-group"><label class="f-label">Primary Carrier</label><select class="f-select"><option>Airpak Express (Direct)</option><option>FedEx</option><option>DHL Express</option><option>UPS</option><option>Maersk (Sea)</option><option>DP World (Sea)</option></select></div>
+      <div class="f-group"><label class="f-label">Route Waypoints</label>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <input class="f-input" placeholder="Origin: Singapore Changi"/>
+          <input class="f-input" placeholder="Hub 1: Tokyo Narita (optional)"/>
+          <input class="f-input" placeholder="Destination: Los Angeles LAX"/>
+        </div>
+      </div>
+      <div class="f-row"><div><label class="f-label">Est. Departure</label><input class="f-input" type="datetime-local"/></div><div><label class="f-label">Est. Arrival</label><input class="f-input" type="datetime-local"/></div></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="toast('Route assigned successfully','&#128205;')">&#128205; Assign Route</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Available Carriers Today</div>
+      <table class="ent-table">
+        <thead><tr><th>Carrier</th><th>Type</th><th>Capacity</th><th>On-Time</th><th>ETA</th></tr></thead>
+        <tbody>
+          <tr><td><strong>AP Express</strong></td><td><span class="badge b-red">Air</span></td><td>340 kg</td><td><span class="badge b-green">99.1%</span></td><td>3 days</td></tr>
+          <tr><td><strong>FedEx SG</strong></td><td><span class="badge b-red">Air</span></td><td>1,200 kg</td><td><span class="badge b-green">97.8%</span></td><td>2 days</td></tr>
+          <tr><td><strong>DHL Express</strong></td><td><span class="badge b-red">Air</span></td><td>800 kg</td><td><span class="badge b-green">96.2%</span></td><td>3 days</td></tr>
+          <tr><td><strong>Maersk SIN</strong></td><td><span class="badge b-blue">Sea</span></td><td>20 TEU</td><td><span class="badge b-amber">88.4%</span></td><td>21 days</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== REROUTE ===== -->
+<div class="panel" id="panel-reroute">
+  <div class="section-hdr"><div><h2>&#128260; Reroute Shipment</h2><p>Emergency rerouting for delayed or held shipments</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Reroute Tool</div>
+      <div class="f-group"><label class="f-label">AWB Number</label><input class="f-input" id="rr-awb" placeholder="AP-2024-88064" value="AP-2024-88064"/></div>
+      <div class="f-group"><label class="f-label">Current Route Problem</label><select class="f-select"><option>Weather disruption</option><option>Congestion at hub</option><option>Carrier cancellation</option><option>Customs issue at transit port</option><option>Capacity overflow</option></select></div>
+      <div class="f-group"><label class="f-label">New Route Via</label><select class="f-select" id="rr-via"><option>Tokyo Narita (NRT)</option><option>Guangzhou (CAN)</option><option>Dubai (DXB)</option><option>Frankfurt (FRA)</option><option>Direct — Priority Charter</option></select></div>
+      <div class="f-group"><label class="f-label">Impact on ETA</label><select class="f-select"><option>&#8593; Faster by 6-12h</option><option>&#8594; No change</option><option>&#8595; Slower by 1 day</option></select></div>
+      <div class="f-group"><label class="f-label">Notify Client?</label><select class="f-select"><option>Yes — explain reroute and new ETA</option><option>Yes — brief update only</option><option>No</option></select></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="toast('Reroute confirmed. AP-88064 via Tokyo Narita. Client notified.','&#128260;')">&#128260; Confirm Reroute</button>
+    </div>
+    <div class="card">
+      <div class="card-title">&#129302; AI Route Recommendation</div>
+      <div style="background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:16px;margin-bottom:14px;">
+        <div style="font-size:13px;font-weight:700;color:#a78bfa;margin-bottom:8px;">AI Analysis — AP-88064</div>
+        <div style="font-size:12px;color:var(--text);line-height:1.7;">
+          Typhoon Hato expected to clear Hong Kong airspace by <strong>May 14, 06:00 SGT</strong>.<br/>
+          <strong>Recommended:</strong> Reroute via Tokyo Narita (NRT).<br/>
+          ETA improvement: <strong style="color:#4ade80;">14h faster</strong><br/>
+          Cost difference: <strong style="color:#fbbf24;">+SGD $48 fuel</strong><br/>
+          Probability of success: <strong style="color:#4ade80;">94%</strong>
+        </div>
+      </div>
+      <button class="btn btn-success" style="width:100%;justify-content:center;" onclick="toast('AI recommendation applied','&#129302;')">Apply AI Recommendation</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DELAY SCHEDULE ===== -->
+<div class="panel" id="panel-delay-schedule">
+  <div class="section-hdr"><div><h2>&#9200; Delay Scheduling</h2><p>Schedule or register expected delays</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Schedule Delay</div>
+      <div class="f-group"><label class="f-label">AWB Number</label><input class="f-input" placeholder="AP-2024-XXXXX"/></div>
+      <div class="f-group"><label class="f-label">Delay Reason</label><select class="f-select"><option>Weather</option><option>Customs Hold</option><option>Capacity Overflow</option><option>Carrier Issue</option><option>Documentation Missing</option><option>Regulatory Review</option></select></div>
+      <div class="f-row"><div><label class="f-label">Delay Start</label><input class="f-input" type="datetime-local"/></div><div><label class="f-label">Est. Resolution</label><input class="f-input" type="datetime-local"/></div></div>
+      <div class="f-group"><label class="f-label">New ETA</label><input class="f-input" type="date"/></div>
+      <div class="f-group"><label class="f-label">Customer Message</label><textarea class="f-textarea" placeholder="Message to send to client about the delay..."></textarea></div>
+      <button class="btn btn-warning" style="width:100%;justify-content:center;" onclick="toast('Delay scheduled. Customer notified.','&#9200;')">Register Delay &amp; Notify</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Scheduled Delays</div>
+      <table class="ent-table">
+        <thead><tr><th>AWB</th><th>Reason</th><th>Est. Resolution</th><th>Client</th></tr></thead>
+        <tbody>
+          <tr><td><strong>AP-88064</strong></td><td>Weather — Typhoon</td><td>May 14</td><td>Amazon SG</td></tr>
+          <tr><td><strong>AP-88097</strong></td><td>Customs Hold</td><td>May 14–15</td><td>Apple Asia</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HOLD RELEASE ===== -->
+<div class="panel" id="panel-hold-release">
+  <div class="section-hdr"><div><h2>&#128275; Release Hold</h2><p>Release shipments from customs or operational holds</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Release Tool</div>
+      <div class="f-group"><label class="f-label">AWB Number</label><input class="f-input" placeholder="AP-2024-XXXXX"/></div>
+      <div class="f-group"><label class="f-label">Hold Type</label><select class="f-select"><option>Customs Hold</option><option>Regulatory Hold</option><option>Payment Hold</option><option>Documentation Hold</option><option>Operational Hold</option></select></div>
+      <div class="f-group"><label class="f-label">Release Authority</label><input class="f-input" placeholder="Reference or authorization code"/></div>
+      <div class="f-group"><label class="f-label">Release Notes</label><textarea class="f-textarea" placeholder="Clearance notes..."></textarea></div>
+      <button class="btn btn-success" style="width:100%;justify-content:center;" onclick="toast('Hold released. Parcel resumed transit.','&#128275;')">&#128275; Release Hold</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Currently On Hold</div>
+      <table class="ent-table">
+        <thead><tr><th>AWB</th><th>Hold Type</th><th>Days Held</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td><strong>AP-88097</strong></td><td><span class="badge b-amber">Customs</span></td><td>2 days</td><td><button class="btn btn-sm btn-success" onclick="toast('Hold released','&#128275;')">Release</button></td></tr>
+          <tr><td><strong>AP-88034</strong></td><td><span class="badge b-red">Payment</span></td><td>5 days</td><td><button class="btn btn-sm btn-success" onclick="toast('Hold released','&#128275;')">Release</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CUSTOMS CLEAR ===== -->
+<div class="panel" id="panel-customs-clear">
+  <div class="section-hdr"><div><h2>&#128203; Customs Clearance Updates</h2><p>Manage customs status and documentation</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Clearance Tool</div>
+      <div class="f-group"><label class="f-label">AWB Number</label><input class="f-input" placeholder="AP-2024-88097" value="AP-2024-88097"/></div>
+      <div class="f-group"><label class="f-label">Customs Status</label><select class="f-select"><option>Under Review</option><option>Documents Submitted</option><option>Duty Assessed</option><option>Payment Received</option><option>Cleared</option><option>Rejected — Return</option></select></div>
+      <div class="f-group"><label class="f-label">Duty Amount (SGD)</label><input class="f-input" type="number" placeholder="0.00"/></div>
+      <div class="f-group"><label class="f-label">Reference Number</label><input class="f-input" placeholder="Customs ref / permit no."/></div>
+      <div class="f-group"><label class="f-label">Notes</label><textarea class="f-textarea" placeholder="Customs officer notes or requirements..."></textarea></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="toast('Customs status updated. Client notified.','&#128203;')">Update Customs Status</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Customs Queue</div>
+      <table class="ent-table">
+        <thead><tr><th>AWB</th><th>Country</th><th>Status</th><th>Duty</th><th>Days</th></tr></thead>
+        <tbody>
+          <tr><td><strong>AP-88097</strong></td><td>🇨🇳 China</td><td><span class="badge b-amber">Under Review</span></td><td>$320</td><td>2</td></tr>
+          <tr><td><strong>AP-88034</strong></td><td>🇮🇳 India</td><td><span class="badge b-amber">Duty Assessed</span></td><td>$680</td><td>5</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DELIVERY CONFIRM ===== -->
+<div class="panel" id="panel-delivery-confirm">
+  <div class="section-hdr"><div><h2>&#9989; Delivery Confirmation</h2><p>Confirm deliveries and close shipments</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Confirm Delivery</div>
+      <div class="f-group"><label class="f-label">AWB Number</label><input class="f-input" placeholder="AP-2024-XXXXX"/></div>
+      <div class="f-row"><div><label class="f-label">Delivery Date</label><input class="f-input" type="date"/></div><div><label class="f-label">Delivery Time</label><input class="f-input" type="time"/></div></div>
+      <div class="f-group"><label class="f-label">Received By</label><input class="f-input" placeholder="Recipient name or 'Left at door'"/></div>
+      <div class="f-group"><label class="f-label">Delivery Type</label><select class="f-select"><option>In-person — Signature</option><option>Left at door</option><option>Collected at branch</option><option>Safe drop authorised</option></select></div>
+      <div class="f-group"><label class="f-label">Send Completion Email</label><select class="f-select"><option>Yes — delivery confirmation</option><option>Yes — with invoice</option><option>No</option></select></div>
+      <button class="btn btn-success" style="width:100%;justify-content:center;" onclick="toast('Delivery confirmed. Completion email sent.','&#9989;')">&#9989; Confirm Delivery</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Pending Delivery Confirmation</div>
+      <table class="ent-table">
+        <thead><tr><th>AWB</th><th>Client</th><th>Out Since</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td><strong>AP-88085</strong></td><td>Microsoft</td><td>08:30 today</td><td><button class="btn btn-sm btn-success" onclick="toast('Confirmed AP-88085','&#9989;')">Confirm</button></td></tr>
+          <tr><td><strong>AP-88101</strong></td><td>Google</td><td>09:15 today</td><td><button class="btn btn-sm btn-success" onclick="toast('Confirmed AP-88101','&#9989;')">Confirm</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LIVE TRACKING ===== -->
+<div class="panel" id="panel-live-tracking">
+  <div class="section-hdr"><div><h2>&#128507; Live Parcel Progress</h2><p>Real-time tracking control for all active shipments</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Parcel Timeline Editor <span class="ctag ctag-live">Live</span></div>
+      <div class="f-group"><label class="f-label">AWB Number</label>
+        <div style="display:flex;gap:6px;"><input class="f-input" id="tl-awb" placeholder="AP-2024-88102" value="AP-2024-88102"/><button class="btn btn-ghost" onclick="loadTimeline()">Load</button></div>
+      </div>
+      <div id="timeline-editor" class="timeline" style="margin-top:16px;"></div>
+      <div style="margin-top:14px;display:flex;gap:6px;">
+        <button class="btn btn-primary" onclick="addCheckpoint()">&#10133; Add Checkpoint</button>
+        <button class="btn btn-ghost" onclick="toast('Timeline saved','&#128204;')">Save Changes</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Active Shipments — Live Feed <span class="ctag ctag-live">Live</span></div>
+      <div id="live-feed" style="display:flex;flex-direction:column;gap:6px;max-height:400px;overflow-y:auto;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ROUTE MONITOR ===== -->
+<div class="panel" id="panel-route-monitor">
+  <div class="section-hdr"><div><h2>&#128681; Real-Time Route Monitor</h2><p>Live monitoring of all active routes and vehicles</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Fleet Status <span class="ctag ctag-live">Live</span></div>
+      <table class="ent-table">
+        <thead><tr><th>Vehicle</th><th>Driver</th><th>Route</th><th>Status</th><th>Speed</th><th>ETA</th></tr></thead>
+        <tbody>
+          <tr><td><strong>VH-001</strong></td><td>Ahmad R.</td><td>SIN→JB</td><td><span class="badge b-green">On Route</span></td><td id="v1-speed">82 km/h</td><td>14:30</td></tr>
+          <tr><td><strong>VH-002</strong></td><td>Chen W.</td><td>SIN→Batam</td><td><span class="badge b-red">Signal Lost</span></td><td>—</td><td>—</td></tr>
+          <tr><td><strong>VH-003</strong></td><td>Raj P.</td><td>SIN Hub</td><td><span class="badge b-blue">Loading</span></td><td>0 km/h</td><td>—</td></tr>
+          <tr><td><strong>VH-004</strong></td><td>Lee S.</td><td>Changi→Jurong</td><td><span class="badge b-green">On Route</span></td><td id="v4-speed">61 km/h</td><td>15:15</td></tr>
+          <tr><td><strong>VH-005</strong></td><td>Muthu K.</td><td>SIN→KL</td><td><span class="badge b-amber">Border Check</span></td><td>0 km/h</td><td>18:45</td></tr>
+          <tr><td><strong>VH-006</strong></td><td>Tan H.</td><td>SIN→Penang</td><td><span class="badge b-green">On Route</span></td><td id="v6-speed">94 km/h</td><td>Tomorrow 09:00</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Actions</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <button class="btn btn-warning" style="width:100%;justify-content:center;" onclick="toast('Contact attempted on VH-002. Dispatch notified.','&#128241;')">&#128680; Ping VH-002 Driver</button>
+        <button class="btn btn-ghost" style="width:100%;justify-content:center;" onclick="toast('Emergency contact raised for VH-002','&#9888;')">&#9888; Raise Emergency Alert</button>
+        <button class="btn btn-ghost" style="width:100%;justify-content:center;" onclick="toast('Replacement vehicle dispatched','&#128665;')">&#128665; Dispatch Replacement</button>
+      </div>
+      <div style="margin-top:16px;padding:12px;background:var(--card2);border-radius:8px;">
+        <div style="font-size:11px;color:var(--sub);margin-bottom:6px;">GPS Update Rate</div>
+        <div style="font-size:1.4rem;font-weight:800;color:#4ade80;" id="gps-timer">00:43</div>
+        <div style="font-size:11px;color:var(--sub);">seconds since last ping</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== STATUS OVERRIDE ===== -->
+<div class="panel" id="panel-status-override">
+  <div class="section-hdr"><div><h2>&#9881; Status Override Controls</h2><p>Force-override shipment status with full audit trail</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">&#9888; Override Tool — Admin Only</div>
+      <div style="background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.3);border-radius:8px;padding:10px;font-size:12px;color:#fbbf24;margin-bottom:14px;">All overrides are permanently logged with your admin ID and timestamp.</div>
+      <div class="f-group"><label class="f-label">AWB Number</label><input class="f-input" placeholder="AP-2024-XXXXX"/></div>
+      <div class="f-group"><label class="f-label">Override Status To</label><select class="f-select"><option>Force — Delivered</option><option>Force — In Transit</option><option>Force — Customs Cleared</option><option>Force — Return to Sender</option><option>Force — Cancel Shipment</option></select></div>
+      <div class="f-group"><label class="f-label">Override Justification (Required)</label><textarea class="f-textarea" placeholder="Mandatory justification for audit log..."></textarea></div>
+      <div class="f-group"><label class="f-label">Admin Password Confirmation</label><input class="f-input" type="password" placeholder="Confirm with your admin password"/></div>
+      <button class="btn btn-danger" style="width:100%;justify-content:center;" onclick="toast('Status override applied and logged to audit trail','&#9881;')">&#9881; Execute Override</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Recent Overrides</div>
+      <table class="ent-table">
+        <thead><tr><th>AWB</th><th>Override</th><th>By</th><th>Time</th></tr></thead>
+        <tbody>
+          <tr><td><strong>AP-88011</strong></td><td>Force Delivered</td><td>admin</td><td>May 12 14:22</td></tr>
+          <tr><td><strong>AP-88003</strong></td><td>Cancel Shipment</td><td>manager</td><td>May 11 09:14</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CHECKPOINT INJECT ===== -->
+<div class="panel" id="panel-checkpoint">
+  <div class="section-hdr"><div><h2>&#128204; Checkpoint Injection</h2><p>Manually inject tracking checkpoints into parcel history</p></div></div>
+  <div class="card">
+    <div class="f-row"><div><label class="f-label">AWB Number</label><input class="f-input" placeholder="AP-2024-XXXXX"/></div><div><label class="f-label">Checkpoint Type</label><select class="f-select"><option>Facility Scan</option><option>Vehicle Loaded</option><option>Departed Facility</option><option>Arrived at Hub</option><option>Customs Entry</option><option>Customs Exit</option><option>Out for Delivery</option><option>Delivery Attempted</option></select></div></div>
+    <div class="f-row"><div><label class="f-label">Location</label><input class="f-input" placeholder="e.g. Singapore Hub Terminal 1"/></div><div><label class="f-label">Date &amp; Time</label><input class="f-input" type="datetime-local"/></div></div>
+    <div class="f-group"><label class="f-label">Scan Code / Reference</label><input class="f-input" placeholder="Auto-generated or manual code"/></div>
+    <div class="f-group"><label class="f-label">Staff ID</label><input class="f-input" placeholder="Facility staff ID (optional)"/></div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-primary" onclick="toast('Checkpoint injected into parcel timeline','&#128204;')">Inject Checkpoint</button>
+      <button class="btn btn-ghost">Inject &amp; Notify Customer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCAN SIM ===== -->
+<div class="panel" id="panel-scan-sim">
+  <div class="section-hdr"><div><h2>&#128247; Scan Event Simulation</h2><p>Simulate barcode/RFID scan events at any facility</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Scan Simulator</div>
+      <div class="f-group"><label class="f-label">AWB / Barcode</label><input class="f-input" id="scan-awb" placeholder="Scan or type barcode..."/></div>
+      <div class="f-group"><label class="f-label">Scan Type</label><select class="f-select"><option>Inbound Scan</option><option>Outbound Scan</option><option>Sort Scan</option><option>Exception Scan</option><option>Delivery Scan</option></select></div>
+      <div class="f-group"><label class="f-label">Scanner Location</label><select class="f-select"><option>Singapore Hub — Gate A</option><option>Singapore Hub — Customs</option><option>Changi Airport T5</option><option>JB Customs Checkpoint</option><option>Delivery Vehicle — VH-001</option></select></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="doScan()">&#128247; Simulate Scan</button>
+      <div style="margin-top:14px;" id="scan-log">
+        <div style="font-size:11px;color:var(--sub);margin-bottom:6px;">Scan Log</div>
+        <div id="scan-events" style="font-size:11px;font-family:monospace;background:var(--dark);border-radius:6px;padding:10px;max-height:160px;overflow-y:auto;color:#4ade80;"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Live Scanner Feed <span class="ctag ctag-live">Live</span></div>
+      <div id="live-scan-feed" style="font-size:12px;font-family:monospace;background:var(--dark);border-radius:6px;padding:12px;height:280px;overflow-y:auto;color:#4ade80;line-height:1.8;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SEND UPDATE ===== -->
+<div class="panel" id="panel-send-update">
+  <div class="section-hdr"><div><h2>&#128140; Send Customer Update</h2><p>Broadcast shipment updates directly to customers</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Update Composer</div>
+      <div class="f-group"><label class="f-label">Recipients</label><select class="f-select"><option>Specific Client</option><option>All Clients with Delayed Shipments</option><option>All Clients with Customs Holds</option><option>All Active Clients</option></select></div>
+      <div class="f-group"><label class="f-label">Client ID (if specific)</label><input class="f-input" placeholder="CL-XXXX or email"/></div>
+      <div class="f-group"><label class="f-label">Update Type</label><select class="f-select"><option>Shipment Status Update</option><option>Delay Notification</option><option>Customs Alert</option><option>Delivery Scheduled</option><option>General Announcement</option></select></div>
+      <div class="f-group"><label class="f-label">Subject Line</label><input class="f-input" placeholder="Update on your Airpak Express shipment"/></div>
+      <div class="f-group"><label class="f-label">Message</label><textarea class="f-textarea" rows="5" placeholder="Your shipment [AWB] is currently..."></textarea></div>
+      <div class="f-group"><label class="f-label">Channels</label>
+        <div style="display:flex;gap:12px;font-size:13px;margin-top:4px;">
+          <label><input type="checkbox" checked/> Email</label>
+          <label><input type="checkbox" checked/> SMS</label>
+          <label><input type="checkbox"/> Push Notification</label>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary" style="flex:1;justify-content:center;" onclick="toast('Update sent to client(s) via Email + SMS','&#128140;')">Send Update</button>
+        <button class="btn btn-ghost" onclick="toast('Saved as draft','&#128196;')">Save Draft</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Recent Broadcasts</div>
+      <table class="ent-table">
+        <thead><tr><th>Time</th><th>Type</th><th>Recipients</th><th>Channels</th></tr></thead>
+        <tbody>
+          <tr><td>Today 10:42</td><td><span class="badge b-amber">Delay</span></td><td>Amazon SG</td><td>Email + SMS</td></tr>
+          <tr><td>Today 09:11</td><td><span class="badge b-green">Delivered</span></td><td>Microsoft</td><td>Email</td></tr>
+          <tr><td>Yesterday</td><td><span class="badge b-blue">Status</span></td><td>12 clients</td><td>Email</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== EMAIL AUTOMATION ===== -->
+<div class="panel" id="panel-email-auto">
+  <div class="section-hdr"><div><h2>&#128231; Email Automation</h2><p>Configure and trigger automated email workflows</p></div></div>
+  <div class="card" style="margin-bottom:18px;">
+    <div class="card-title">Email Templates</div>
+    <div class="email-template-grid" id="email-templates">
+      <div class="email-tpl selected" onclick="selectTpl(this,'shipment-booked')"><div class="et-icon">&#128230;</div><div class="et-name">Shipment Booked</div><div class="et-desc">Booking confirmation</div></div>
+      <div class="email-tpl" onclick="selectTpl(this,'in-transit')"><div class="et-icon">&#128665;</div><div class="et-name">In Transit</div><div class="et-desc">Transit milestone</div></div>
+      <div class="email-tpl" onclick="selectTpl(this,'delay')"><div class="et-icon">&#9200;</div><div class="et-name">Delay Alert</div><div class="et-desc">Delay notification</div></div>
+      <div class="email-tpl" onclick="selectTpl(this,'customs')"><div class="et-icon">&#128203;</div><div class="et-name">Customs Hold</div><div class="et-desc">Documents required</div></div>
+      <div class="email-tpl" onclick="selectTpl(this,'out-delivery')"><div class="et-icon">&#128646;</div><div class="et-name">Out for Delivery</div><div class="et-desc">Today's delivery</div></div>
+      <div class="email-tpl" onclick="selectTpl(this,'delivered')"><div class="et-icon">&#9989;</div><div class="et-name">Delivered</div><div class="et-desc">Completion email</div></div>
+      <div class="email-tpl" onclick="selectTpl(this,'payment-due')"><div class="et-icon">&#128179;</div><div class="et-name">Payment Due</div><div class="et-desc">Invoice reminder</div></div>
+      <div class="email-tpl" onclick="selectTpl(this,'payment-overdue')"><div class="et-icon">&#9888;</div><div class="et-name">Payment Overdue</div><div class="et-desc">2nd/3rd reminder</div></div>
+      <div class="email-tpl" onclick="selectTpl(this,'welcome')"><div class="et-icon">&#127881;</div><div class="et-name">Welcome Email</div><div class="et-desc">New account</div></div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Template Preview — <span id="tpl-name">Shipment Booked</span></div>
+      <div style="background:var(--dark);border-radius:8px;padding:16px;font-size:12px;line-height:1.8;border:1px solid var(--border);" id="tpl-preview">
+        <div style="border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:10px;display:flex;gap:10px;align-items:center;">
+          <img src="/apps/airpak/img/logo.png" style="height:24px;filter:brightness(10);" alt="Logo" /><strong style="color:#fff;font-size:14px;">Airpak Express</strong alt="Logo">
+        </div>
+        <strong style="color:#fff;">Your shipment has been booked!</strong><br/><br/>
+        Dear [Client Name],<br/><br/>
+        Your shipment <strong style="color:#CD2727;">[AWB]</strong> has been booked and is being prepared for collection.<br/><br/>
+        Route: [Origin] → [Destination]<br/>
+        Service: [Service Type]<br/>
+        Estimated Delivery: [ETA]<br/><br/>
+        You can track your shipment at any time at <a href="#" style="color:#CD2727;">airpak-express.com/track</a><br/><br/>
+        Best regards,<br/><span style="color:#CD2727;">Airpak Express Operations</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Send Template</div>
+      <div class="f-group"><label class="f-label">AWB Reference</label><input class="f-input" placeholder="AP-2024-XXXXX"/></div>
+      <div class="f-group"><label class="f-label">Recipient Email</label><input class="f-input" placeholder="client@company.com" type="email"/></div>
+      <div class="f-group"><label class="f-label">Custom Variables</label><textarea class="f-textarea" placeholder="ETA: May 17&#10;Service: Express 3-day" rows="3"></textarea></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary" style="flex:1;justify-content:center;" onclick="toast('Template email sent successfully','&#128231;')">&#128231; Send Email</button>
+        <button class="btn btn-ghost" onclick="toast('Scheduled for 09:00 tomorrow','&#128197;')">Schedule</button>
+      </div>
+      <div style="margin-top:14px;padding:10px;background:var(--card2);border-radius:8px;font-size:12px;">
+        <strong style="color:#fff;">Automation Rules Active:</strong><br/>
+        <span style="color:var(--sub);">
+        &#9989; Booking confirmation — immediate<br/>
+        &#9989; Transit updates — every 24h<br/>
+        &#9989; Out for delivery — 07:00 day-of<br/>
+        &#9989; Payment reminder — 3, 7, 14 days<br/>
+        &#9989; Delivery confirmation — on status change
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MANUAL EMAIL ===== -->
+<div class="panel" id="panel-email-manual">
+  <div class="section-hdr"><div><h2>&#9993; Manual Email Dispatch</h2><p>Compose and send custom emails to any client</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Email Composer</div>
+      <div class="f-group"><label class="f-label">To</label><input class="f-input" placeholder="client@company.com" type="email"/></div>
+      <div class="f-group"><label class="f-label">CC</label><input class="f-input" placeholder="cc@company.com (optional)"/></div>
+      <div class="f-group"><label class="f-label">Subject</label><input class="f-input" placeholder="Re: Your Airpak Express shipment AP-2024-XXXXX"/></div>
+      <div class="f-group"><label class="f-label">Body</label><textarea class="f-textarea" rows="10" placeholder="Dear [Name],&#10;&#10;This is regarding your shipment..."></textarea></div>
+      <div class="f-group"><label class="f-label">Brand Template</label><select class="f-select"><option>Airpak Express Standard</option><option>Plain Text</option></select></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary" style="flex:1;justify-content:center;" onclick="toast('Email dispatched successfully','&#9993;')">&#9993; Send Email</button>
+        <button class="btn btn-ghost" onclick="toast('Preview opened in new tab — feature requires deployment','&#128065;')">Preview</button>
+        <button class="btn btn-ghost" onclick="toast('Saved as draft','&#128196;')">Draft</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Sent History</div>
+      <table class="ent-table">
+        <thead><tr><th>To</th><th>Subject</th><th>Sent</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>amazon@sg.com</td><td>Re: AP-88064 Delay</td><td>10:45</td><td><span class="badge b-green">Delivered</span></td></tr>
+          <tr><td>apple@asia.com</td><td>Customs — AP-88097</td><td>09:33</td><td><span class="badge b-green">Delivered</span></td></tr>
+          <tr><td>ms@corp.com</td><td>Delivery Confirm</td><td>Yesterday</td><td><span class="badge b-green">Delivered</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SMS ===== -->
+<div class="panel" id="panel-sms-control">
+  <div class="section-hdr"><div><h2>&#128241; SMS Notification Control</h2><p>Manage SMS alerts to customers</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Send SMS</div>
+      <div class="f-group"><label class="f-label">Recipient Phone</label><input class="f-input" placeholder="+65 9000 0000"/></div>
+      <div class="f-group"><label class="f-label">Message Template</label><select class="f-select" onchange="fillSms(this.value)">
+        <option value="">Custom message</option>
+        <option value="out">Your Airpak Express parcel [AWB] is out for delivery today. Track at airpak-express.com</option>
+        <option value="del">Your Airpak Express parcel [AWB] has been delivered. Thank you for choosing us!</option>
+        <option value="delay">Your parcel [AWB] is delayed due to [REASON]. New ETA: [DATE]. Apologies for the inconvenience.</option>
+        <option value="cust">Action required: Customs documents needed for parcel [AWB]. Contact us: +65 6XXX XXXX</option>
+      </select></div>
+      <div class="f-group"><label class="f-label">Message (160 chars max)</label><textarea class="f-textarea" id="sms-body" rows="3" placeholder="Type your SMS message..." maxlength="160"></textarea></div>
+      <div style="font-size:11px;color:var(--sub);margin-top:-8px;margin-bottom:12px;"><span id="sms-count">0</span>/160 characters</div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="toast('SMS sent successfully','&#128241;')">Send SMS</button>
+    </div>
+    <div class="card">
+      <div class="card-title">SMS Automation Rules</div>
+      <table class="ent-table">
+        <thead><tr><th>Trigger</th><th>Message</th><th>Status</th><th>Toggle</th></tr></thead>
+        <tbody>
+          <tr><td>Out for Delivery</td><td>Delivery alert</td><td><span class="badge b-green">Active</span></td><td><input type="checkbox" checked/></td></tr>
+          <tr><td>Delivered</td><td>Completion</td><td><span class="badge b-green">Active</span></td><td><input type="checkbox" checked/></td></tr>
+          <tr><td>Delay</td><td>Delay notice</td><td><span class="badge b-green">Active</span></td><td><input type="checkbox" checked/></td></tr>
+          <tr><td>Customs Hold</td><td>Action required</td><td><span class="badge b-amber">Paused</span></td><td><input type="checkbox"/></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ESCALATION ===== -->
+<div class="panel" id="panel-escalation">
+  <div class="section-hdr"><div><h2>&#128680; Escalation Notices</h2><p>Send formal escalation communications</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Create Escalation</div>
+      <div class="f-group"><label class="f-label">AWB / Case Reference</label><input class="f-input" placeholder="AP-2024-XXXXX"/></div>
+      <div class="f-group"><label class="f-label">Escalation Level</label><select class="f-select"><option>L1 — Standard Complaint</option><option>L2 — Formal Complaint</option><option>L3 — Executive Escalation</option><option>L4 — Legal Notice</option></select></div>
+      <div class="f-group"><label class="f-label">Escalation To</label><select class="f-select"><option>Client (Customer Escalation)</option><option>Internal — Operations Manager</option><option>Internal — Executive Team</option><option>Carrier Partner</option></select></div>
+      <div class="f-group"><label class="f-label">Summary</label><textarea class="f-textarea" rows="4" placeholder="Describe the issue requiring escalation..."></textarea></div>
+      <div class="f-group"><label class="f-label">Proposed Resolution</label><input class="f-input" placeholder="How will this be resolved?"/></div>
+      <button class="btn btn-danger" style="width:100%;justify-content:center;" onclick="toast('Escalation notice dispatched. Case reference created.','&#128680;')">&#128680; Send Escalation Notice</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Open Escalations</div>
+      <table class="ent-table">
+        <thead><tr><th>Case</th><th>Level</th><th>Client</th><th>Age</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><strong>ESC-0024</strong></td><td><span class="badge b-red">L2</span></td><td>Amazon SG</td><td>1 day</td><td><span class="badge b-amber">Open</span></td></tr>
+          <tr><td><strong>ESC-0019</strong></td><td><span class="badge b-amber">L1</span></td><td>Pacific Imports</td><td>4 days</td><td><span class="badge b-amber">Pending</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAYMENTS ===== -->
+<div class="panel" id="panel-payments">
+  <div class="section-hdr">
+    <div><h2>&#128179; Payment Records</h2><p>All payment transactions and statuses</p></div>
+    <div class="hdr-actions"><button class="btn btn-primary" onclick="nav('invoice-gen')">&#128196; New Invoice</button></div>
+  </div>
+  <div class="g4" style="margin-bottom:20px;">
+    <div class="stat-box green"><div class="stat-val">$4.2M</div><div class="stat-lbl">Collected (Month)</div><div class="stat-chg up">&#8593; 8.7%</div></div>
+    <div class="stat-box amber"><div class="stat-val">$284K</div><div class="stat-lbl">Outstanding</div><div class="stat-chg down">&#8595; 14 invoices</div></div>
+    <div class="stat-box red"><div class="stat-val">$48K</div><div class="stat-lbl">Overdue (&gt;30d)</div><div class="stat-chg down">3 accounts</div></div>
+    <div class="stat-box blue"><div class="stat-val">98.2%</div><div class="stat-lbl">Collection Rate</div><div class="stat-chg up">&#8593; 0.4pp</div></div>
+  </div>
+  <div class="card">
+    <table class="ent-table">
+      <thead><tr><th>Invoice #</th><th>Client</th><th>Amount</th><th>Due Date</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="payment-rows"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== INVOICE GEN ===== -->
+<div class="panel" id="panel-invoice-gen">
+  <div class="section-hdr"><div><h2>&#128196; Invoice Generator</h2><p>Create and send branded invoices</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Invoice Builder</div>
+      <div class="f-group"><label class="f-label">Client</label><select class="f-select"><option>Amazon SG — CL-0001</option><option>Samsung SG — CL-0002</option><option>Apple Asia — CL-0003</option></select></div>
+      <div class="f-row"><div><label class="f-label">Invoice Date</label><input class="f-input" type="date"/></div><div><label class="f-label">Due Date</label><input class="f-input" type="date"/></div></div>
+      <div class="f-group"><label class="f-label">Shipments (AWBs)</label><textarea class="f-textarea" rows="2" placeholder="AP-88102, AP-88097, AP-88085..."></textarea></div>
+      <div class="f-row"><div><label class="f-label">Subtotal (SGD)</label><input class="f-input" type="number" id="inv-sub" placeholder="0.00" oninput="calcInv()"/></div><div><label class="f-label">GST (9%)</label><input class="f-input" type="number" id="inv-gst" readonly placeholder="0.00"/></div></div>
+      <div class="f-group"><label class="f-label">Total</label><input class="f-input" id="inv-total" readonly style="font-weight:700;color:#CD2727;" placeholder="SGD $0.00"/></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary" style="flex:1;justify-content:center;" onclick="toast('Invoice generated and emailed to client','&#128196;')">Generate &amp; Send</button>
+        <button class="btn btn-ghost" onclick="toast('PDF saved','&#11123;')">&#11123; PDF</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Invoice Preview</div>
+      <div style="background:#fff;border-radius:8px;padding:20px;color:#222;font-size:12px;line-height:1.8;">
+        <div style="display:flex;justify-content:space-between;border-bottom:2px solid #CD2727;padding-bottom:10px;margin-bottom:14px;">
+          <div><img src="/apps/airpak/img/logo.png" style="height:32px;" alt="Logo" /></div alt="Logo">
+          <div style="text-align:right;"><strong style="color:#CD2727;font-size:18px;">INVOICE</strong><br/>INV-2024-<span id="inv-num">1142</span></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+          <div><strong>Bill To:</strong><br/>Client Name<br/>Company Pte Ltd<br/>Singapore</div>
+          <div style="text-align:right;"><strong>Airpak Express Pte Ltd</strong><br/>Changi Business Park<br/>Singapore 486038<br/>GST Reg: M2-XXXXXX-X</div>
+        </div>
+        <table style="width:100%;border-collapse:collapse;font-size:11px;">
+          <tr style="background:#f5f5f5;"><th style="padding:6px;text-align:left;">Description</th><th style="padding:6px;text-align:right;">Amount</th></tr>
+          <tr><td style="padding:6px;">Freight Services — See AWB refs</td><td style="padding:6px;text-align:right;">$0.00</td></tr>
+          <tr><td style="padding:6px;">GST (9%)</td><td style="padding:6px;text-align:right;" id="inv-prev-gst">$0.00</td></tr>
+          <tr style="font-weight:700;"><td style="padding:6px;color:#CD2727;">TOTAL DUE</td><td style="padding:6px;text-align:right;color:#CD2727;" id="inv-prev-total">SGD $0.00</td></tr>
+        </table>
+        <div style="margin-top:12px;font-size:10px;color:#888;">Payment terms: 30 days from invoice date. Bank transfer: DBS Bank, Account 0XX-XXXXXX-X, Swift: DBSSSGSG</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BALANCE ADJ ===== -->
+<div class="panel" id="panel-balance-adj">
+  <div class="section-hdr"><div><h2>&#9878; Balance Adjustment</h2><p>Issue credits, refunds, and balance corrections</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Adjustment Tool</div>
+      <div class="f-group"><label class="f-label">Client Account</label><input class="f-input" placeholder="CL-XXXX or email"/></div>
+      <div class="f-group"><label class="f-label">Adjustment Type</label><select class="f-select"><option>Credit Note</option><option>Refund</option><option>Goodwill Adjustment</option><option>Billing Correction</option><option>Write-Off</option></select></div>
+      <div class="f-row"><div><label class="f-label">Amount (SGD)</label><input class="f-input" type="number" placeholder="0.00"/></div><div><label class="f-label">Reference Invoice</label><input class="f-input" placeholder="INV-2024-XXXX"/></div></div>
+      <div class="f-group"><label class="f-label">Justification (Required)</label><textarea class="f-textarea" placeholder="Reason for adjustment — mandatory for audit..."></textarea></div>
+      <div class="f-group"><label class="f-label">Approver Sign-Off</label><input class="f-input" type="password" placeholder="Enter approver password"/></div>
+      <button class="btn btn-warning" style="width:100%;justify-content:center;" onclick="toast('Balance adjustment applied and logged','&#9878;')">Apply Adjustment</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Recent Adjustments</div>
+      <table class="ent-table">
+        <thead><tr><th>Client</th><th>Type</th><th>Amount</th><th>By</th><th>Date</th></tr></thead>
+        <tbody>
+          <tr><td>Amazon SG</td><td><span class="badge b-blue">Credit</span></td><td>-$240</td><td>admin</td><td>May 11</td></tr>
+          <tr><td>Pacific Imports</td><td><span class="badge b-amber">Correction</span></td><td>+$80</td><td>manager</td><td>May 10</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAY VERIFY ===== -->
+<div class="panel" id="panel-pay-verify">
+  <div class="section-hdr"><div><h2>&#128274; Payment Verification</h2><p>Verify and confirm incoming payments</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Verify Payment</div>
+      <div class="f-group"><label class="f-label">Invoice Number</label><input class="f-input" placeholder="INV-2024-XXXX"/></div>
+      <div class="f-row"><div><label class="f-label">Amount Received (SGD)</label><input class="f-input" type="number" placeholder="0.00"/></div><div><label class="f-label">Payment Date</label><input class="f-input" type="date"/></div></div>
+      <div class="f-group"><label class="f-label">Payment Method</label><select class="f-select"><option>Bank Transfer (DBS)</option><option>PayNow</option><option>SWIFT (International)</option><option>Cheque</option><option>Credit Card</option></select></div>
+      <div class="f-group"><label class="f-label">Transaction Reference</label><input class="f-input" placeholder="Bank ref or transaction ID"/></div>
+      <button class="btn btn-success" style="width:100%;justify-content:center;" onclick="toast('Payment verified. Invoice marked as paid.','&#128274;')">&#9989; Verify &amp; Mark Paid</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Pending Verification</div>
+      <table class="ent-table">
+        <thead><tr><th>Invoice</th><th>Client</th><th>Amount</th><th>Submitted</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td><strong>INV-1139</strong></td><td>Samsung SG</td><td>SGD $8,240</td><td>May 12</td><td><button class="btn btn-sm btn-success" onclick="toast('Verified','&#9989;')">Verify</button></td></tr>
+          <tr><td><strong>INV-1135</strong></td><td>Apple Asia</td><td>SGD $3,180</td><td>May 11</td><td><button class="btn btn-sm btn-success" onclick="toast('Verified','&#9989;')">Verify</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BILLING AUTO ===== -->
+<div class="panel" id="panel-billing-auto">
+  <div class="section-hdr"><div><h2>&#9881; Billing Workflow Automation</h2><p>Configure automated billing rules and schedules</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Automation Rules</div>
+      <table class="ent-table">
+        <thead><tr><th>Rule</th><th>Trigger</th><th>Action</th><th>Status</th><th>Toggle</th></tr></thead>
+        <tbody>
+          <tr><td>Auto-Invoice on Delivery</td><td>Status = Delivered</td><td>Generate &amp; email invoice</td><td><span class="badge b-green">Active</span></td><td><input type="checkbox" checked/></td></tr>
+          <tr><td>Reminder — Day 3</td><td>Invoice &gt; 3 days</td><td>Send payment reminder</td><td><span class="badge b-green">Active</span></td><td><input type="checkbox" checked/></td></tr>
+          <tr><td>Reminder — Day 7</td><td>Invoice &gt; 7 days</td><td>2nd reminder + SMS</td><td><span class="badge b-green">Active</span></td><td><input type="checkbox" checked/></td></tr>
+          <tr><td>Overdue Flag</td><td>Invoice &gt; 30 days</td><td>Flag + manager alert</td><td><span class="badge b-green">Active</span></td><td><input type="checkbox" checked/></td></tr>
+          <tr><td>Auto-Credit Limits</td><td>Monthly</td><td>Review &amp; adjust limits</td><td><span class="badge b-amber">Paused</span></td><td><input type="checkbox"/></td></tr>
+        </tbody>
+      </table>
+      <button class="btn btn-primary" style="margin-top:14px;" onclick="toast('Automation rules saved','&#9881;')">Save Rules</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Run Manual Billing Cycle</div>
+      <p style="font-size:13px;color:var(--sub);margin-bottom:14px;">Manually trigger billing processes for selected accounts</p>
+      <div class="f-group"><label class="f-label">Billing Run Type</label><select class="f-select"><option>Monthly Invoice Run</option><option>Overdue Reminder Batch</option><option>Credit Limit Review</option><option>End of Month Reconciliation</option></select></div>
+      <div class="f-group"><label class="f-label">Target Accounts</label><select class="f-select"><option>All Active Accounts</option><option>Enterprise Accounts Only</option><option>Overdue Accounts Only</option></select></div>
+      <button class="btn btn-warning" style="width:100%;justify-content:center;" onclick="toast('Billing cycle started. Processing 1,284 accounts...','&#9881;')">&#9889; Run Billing Cycle</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ANALYTICS ===== -->
+<div class="panel" id="panel-analytics">
+  <div class="section-hdr"><div><h2>&#128200; Analytics Dashboard</h2><p>Business intelligence and performance metrics</p></div></div>
+  <div class="g4" style="margin-bottom:20px;">
+    <div class="stat-box red"><div class="stat-val">2,147</div><div class="stat-lbl">Active Shipments</div><div class="stat-chg up">&#8593; 12.4%</div></div>
+    <div class="stat-box green"><div class="stat-val">$4.2M</div><div class="stat-lbl">Monthly Revenue</div><div class="stat-chg up">&#8593; 8.7%</div></div>
+    <div class="stat-box amber"><div class="stat-val">98.4%</div><div class="stat-lbl">On-Time Rate</div><div class="stat-chg up">&#8593; 1.2pp</div></div>
+    <div class="stat-box blue"><div class="stat-val">94.3%</div><div class="stat-lbl">SLA Compliance</div><div class="stat-chg up">&#8593; 0.8pp</div></div>
+  </div>
+  <div class="g2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">Shipment Volume — 8 Months</div>
+      <div style="display:flex;align-items:flex-end;gap:8px;height:120px;" id="admin-barchart"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Revenue by Service</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Air Freight</span><strong>SGD $1.76M (42%)</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:42%;background:var(--red);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Sea Freight</span><strong>SGD $1.30M (31%)</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:31%;background:var(--blue);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Road</span><strong>SGD $672K (16%)</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:16%;background:var(--amber);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Express</span><strong>SGD $462K (11%)</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:11%;background:var(--green);"></div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Top Clients by Volume</div>
+      <table class="ent-table">
+        <thead><tr><th>Client</th><th>Shipments</th><th>Revenue</th><th>On-Time</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Amazon SG</strong></td><td>3,842</td><td>$1.1M</td><td><span class="badge b-green">99.1%</span></td></tr>
+          <tr><td><strong>Samsung SG</strong></td><td>2,311</td><td>$620K</td><td><span class="badge b-green">97.8%</span></td></tr>
+          <tr><td><strong>Apple Asia</strong></td><td>1,944</td><td>$580K</td><td><span class="badge b-amber">94.2%</span></td></tr>
+          <tr><td><strong>Walmart SG</strong></td><td>1,588</td><td>$390K</td><td><span class="badge b-green">98.4%</span></td></tr>
+          <tr><td><strong>Google APAC</strong></td><td>1,204</td><td>$310K</td><td><span class="badge b-green">99.6%</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Operational KPIs</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Avg Delivery Time (Air)</span><strong>2.8 days</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:85%;background:var(--green);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>First Attempt Delivery Rate</span><strong>91.2%</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:91%;background:var(--blue);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Customs Clearance Rate</span><strong>98.7%</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:99%;background:var(--green);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Customer Satisfaction</span><strong>4.7 / 5.0</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:94%;background:var(--amber);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Invoice Collection Rate</span><strong>98.2%</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:98%;background:var(--green);"></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== AI CONTROL ===== -->
+<div class="panel" id="panel-ai-control">
+  <div class="section-hdr"><div><h2>&#129302; AI Logistics Control Center</h2><p>Configure, monitor, and command the AI operations engine</p></div></div>
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-title">AI Engine Status <span class="ctag ctag-ai">AI Active</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center;"><div style="font-size:1.6rem;font-weight:800;color:#4ade80;">94%</div><div style="font-size:11px;color:var(--sub);">Prediction Accuracy</div></div>
+          <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center;"><div style="font-size:1.6rem;font-weight:800;color:#a78bfa;">2,147</div><div style="font-size:11px;color:var(--sub);">Parcels Monitored</div></div>
+          <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center;"><div style="font-size:1.6rem;font-weight:800;color:#fbbf24;">14</div><div style="font-size:11px;color:var(--sub);">Auto-Optimisations</div></div>
+          <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center;"><div style="font-size:1.6rem;font-weight:800;color:#60a5fa;">SGD $2.3K</div><div style="font-size:11px;color:var(--sub);">Saved Today</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">AI Command Center</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <button class="btn btn-ghost" style="width:100%;justify-content:center;" onclick="toast('AI running full corridor analysis...','&#129302;')">&#127760; Run Corridor Analysis</button>
+          <button class="btn btn-ghost" style="width:100%;justify-content:center;" onclick="toast('AI delay scan: 3 parcels at risk detected','&#129302;')">&#9200; Delay Risk Scan</button>
+          <button class="btn btn-ghost" style="width:100%;justify-content:center;" onclick="toast('AI customs pre-check completed on 247 parcels','&#128203;')">&#128203; Customs Pre-Check</button>
+          <button class="btn btn-ghost" style="width:100%;justify-content:center;" onclick="toast('AI route optimisation applied to SIN-LAX, SIN-LHR corridors','&#128205;')">&#128205; Optimise All Routes</button>
+          <button class="btn btn-danger" style="width:100%;justify-content:center;" onclick="toast('AI auto-actions paused. Manual mode activated.','&#128683;')">&#128683; Pause AI Auto-Actions</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">AI Chat Interface <span class="ctag ctag-ai">Powered by AI</span></div>
+      <div style="background:var(--dark);border-radius:8px;overflow:hidden;height:420px;display:flex;flex-direction:column;">
+        <div id="ai-admin-msgs" style="flex:1;padding:14px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;">
+          <div style="background:rgba(124,58,237,.1);border-radius:8px;padding:10px;font-size:12px;color:#a78bfa;">&#129302; AI Logistics Engine online. Monitoring 2,147 active shipments. 3 alerts require your attention. Ask me anything about operations.</div>
+        </div>
+        <div style="display:flex;border-top:1px solid var(--border);">
+          <input class="f-input" id="ai-admin-input" placeholder="Ask AI about routes, delays, customs..." style="flex:1;border:none;background:transparent;" onkeydown="if(event.key==='Enter')sendAdminAI()"/>
+          <button class="btn btn-primary" onclick="sendAdminAI()" style="border-radius:0;">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ROUTE INTEL ===== -->
+<div class="panel" id="panel-route-intel">
+  <div class="section-hdr"><div><h2>&#127760; Route Intelligence Management</h2><p>Configure and optimise global routing rules</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Active Routing Rules</div>
+      <table class="ent-table">
+        <thead><tr><th>Corridor</th><th>Preferred Carrier</th><th>Fallback</th><th>Condition</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>SIN→USA</td><td>AP Express</td><td>FedEx</td><td>Weight &lt; 100kg</td><td><span class="badge b-green">Active</span></td></tr>
+          <tr><td>SIN→UK</td><td>DHL Express</td><td>AP Express</td><td>All</td><td><span class="badge b-green">Active</span></td></tr>
+          <tr><td>SIN→AUS</td><td>AP Express</td><td>UPS</td><td>All</td><td><span class="badge b-green">Active</span></td></tr>
+          <tr><td>SIN→CHN</td><td>SF Express</td><td>AP Express</td><td>Docs/Small</td><td><span class="badge b-amber">Review</span></td></tr>
+          <tr><td>SIN→JP</td><td>AP Express</td><td>Yamato</td><td>All</td><td><span class="badge b-green">Active</span></td></tr>
+        </tbody>
+      </table>
+      <button class="btn btn-primary" style="margin-top:12px;" onclick="toast('Routing rules saved','&#127760;')">Save Rules</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Add / Edit Routing Rule</div>
+      <div class="f-group"><label class="f-label">Corridor</label><div style="display:flex;gap:6px;"><select class="f-select"><option>Singapore</option><option>Malaysia</option></select><span style="line-height:38px;">→</span><select class="f-select"><option>USA</option><option>UK</option><option>Australia</option></select></div></div>
+      <div class="f-group"><label class="f-label">Primary Carrier</label><select class="f-select"><option>Airpak Express</option><option>FedEx</option><option>DHL Express</option><option>UPS</option><option>Maersk</option></select></div>
+      <div class="f-group"><label class="f-label">Fallback Carrier</label><select class="f-select"><option>FedEx</option><option>DHL Express</option><option>UPS</option><option>Airpak Express</option></select></div>
+      <div class="f-group"><label class="f-label">Condition</label><input class="f-input" placeholder="e.g. Weight &lt; 50kg or All"/></div>
+      <button class="btn btn-success" style="width:100%;justify-content:center;" onclick="toast('Route rule added','&#127760;')">Add Rule</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== WORKFLOW AUTO ===== -->
+<div class="panel" id="panel-workflow-auto">
+  <div class="section-hdr"><div><h2>&#9889; Workflow Automation Control</h2><p>Manage all automated workflows across the operations platform</p></div></div>
+  <div class="card">
+    <table class="ent-table">
+      <thead><tr><th>Workflow</th><th>Trigger</th><th>Actions</th><th>Runs Today</th><th>Status</th><th>Controls</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Booking Confirmation</strong></td><td>Parcel Created</td><td>Email + SMS + Timeline init</td><td>47</td><td><span class="badge b-green">Active</span></td><td><button class="btn btn-sm btn-ghost">Pause</button></td></tr>
+        <tr><td><strong>Transit Milestone</strong></td><td>Status Change</td><td>Email customer + Update timeline</td><td>312</td><td><span class="badge b-green">Active</span></td><td><button class="btn btn-sm btn-ghost">Pause</button></td></tr>
+        <tr><td><strong>Delay Handler</strong></td><td>Delay &gt; 4h</td><td>Alert + Reroute eval + Email</td><td>3</td><td><span class="badge b-green">Active</span></td><td><button class="btn btn-sm btn-ghost">Pause</button></td></tr>
+        <tr><td><strong>SLA Breach Alert</strong></td><td>SLA breached</td><td>Alert team + Email client + Log</td><td>1</td><td><span class="badge b-green">Active</span></td><td><button class="btn btn-sm btn-ghost">Pause</button></td></tr>
+        <tr><td><strong>Delivery Completion</strong></td><td>Status = Delivered</td><td>Email + Invoice + Survey</td><td>28</td><td><span class="badge b-green">Active</span></td><td><button class="btn btn-sm btn-ghost">Pause</button></td></tr>
+        <tr><td><strong>Invoice Reminder</strong></td><td>Invoice &gt; 3d</td><td>Email reminder + SMS</td><td>14</td><td><span class="badge b-green">Active</span></td><td><button class="btn btn-sm btn-ghost">Pause</button></td></tr>
+        <tr><td><strong>AI Route Optimise</strong></td><td>Every 4h</td><td>Analyse + Reroute + Save</td><td>2</td><td><span class="badge b-green">Active</span></td><td><button class="btn btn-sm btn-ghost">Pause</button></td></tr>
+        <tr><td><strong>New Client Onboard</strong></td><td>Account Created</td><td>Welcome email + Setup + Notify</td><td>7</td><td><span class="badge b-green">Active</span></td><td><button class="btn btn-sm btn-ghost">Pause</button></td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:16px;display:flex;gap:8px;">
+      <button class="btn btn-primary" onclick="toast('All workflows running','&#9889;')">&#9654; Enable All</button>
+      <button class="btn btn-danger" onclick="toast('All workflows paused. Manual mode.','&#9646;&#9646;')">&#9646;&#9646; Pause All</button>
+      <button class="btn btn-ghost" onclick="toast('Workflow logs exported','&#11123;')">&#11123; Export Logs</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SYS ALERTS ===== -->
+<div class="panel" id="panel-sys-alerts">
+  <div class="section-hdr"><div><h2>&#128308; Alert Management</h2><p>Create, configure, and manage system-wide alerts</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Create Alert Rule</div>
+      <div class="f-group"><label class="f-label">Alert Name</label><input class="f-input" placeholder="e.g. SLA Breach — Priority Clients"/></div>
+      <div class="f-group"><label class="f-label">Trigger Condition</label><select class="f-select"><option>SLA breached</option><option>Delay &gt; 24h</option><option>Customs hold &gt; 3 days</option><option>Payment overdue</option><option>Fleet vehicle offline</option><option>Revenue threshold</option></select></div>
+      <div class="f-group"><label class="f-label">Alert Severity</label><select class="f-select"><option>Critical</option><option>Warning</option><option>Info</option></select></div>
+      <div class="f-group"><label class="f-label">Notify (Admin)</label><div style="display:flex;gap:12px;font-size:13px;margin-top:4px;"><label><input type="checkbox" checked/> Dashboard</label><label><input type="checkbox" checked/> Email</label><label><input type="checkbox"/> SMS</label></div></div>
+      <div class="f-group"><label class="f-label">Also Notify Customer?</label><select class="f-select"><option>No — admin only</option><option>Yes — send customer notification</option></select></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="toast('Alert rule created and activated','&#128308;')">Create Alert Rule</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Alert Configuration</div>
+      <table class="ent-table">
+        <thead><tr><th>Alert</th><th>Severity</th><th>Triggers/Day</th><th>Status</th><th>Toggle</th></tr></thead>
+        <tbody>
+          <tr><td>SLA Breach</td><td><span class="badge b-red">Critical</span></td><td>1</td><td><span class="badge b-green">On</span></td><td><input type="checkbox" checked/></td></tr>
+          <tr><td>Delay &gt; 24h</td><td><span class="badge b-amber">Warning</span></td><td>3</td><td><span class="badge b-green">On</span></td><td><input type="checkbox" checked/></td></tr>
+          <tr><td>Payment Overdue</td><td><span class="badge b-amber">Warning</span></td><td>2</td><td><span class="badge b-green">On</span></td><td><input type="checkbox" checked/></td></tr>
+          <tr><td>Fleet Signal Lost</td><td><span class="badge b-red">Critical</span></td><td>1</td><td><span class="badge b-green">On</span></td><td><input type="checkbox" checked/></td></tr>
+          <tr><td>Customs &gt; 3 days</td><td><span class="badge b-amber">Warning</span></td><td>0</td><td><span class="badge b-green">On</span></td><td><input type="checkbox" checked/></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-client-edit">
+  <div class="modal">
+    <div class="modal-header"><h3>&#9998; Edit Client Profile</h3><button class="modal-close" onclick="closeModal('modal-client-edit')">&#10005;</button></div>
+    <div class="modal-body">
+      <div class="f-row"><div><label class="f-label">First Name</label><input class="f-input" id="me-fname"/></div><div><label class="f-label">Last Name</label><input class="f-input" id="me-lname"/></div></div>
+      <div class="f-group"><label class="f-label">Email</label><input class="f-input" id="me-email" type="email"/></div>
+      <div class="f-group"><label class="f-label">Phone</label><input class="f-input" id="me-phone"/></div>
+      <div class="f-group"><label class="f-label">Company</label><input class="f-input" id="me-company"/></div>
+      <div class="f-group"><label class="f-label">Account Status</label><select class="f-select" id="me-status"><option>Active</option><option>Suspended</option><option>Pending</option></select></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-client-edit')">Cancel</button><button class="btn btn-primary" onclick="saveClientEdit()">Save Changes</button></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"><span class="toast-icon" id="toast-icon"></span><span id="toast-msg"></span></div>
+
+<script>
+// ===== AUTH CHECK =====
+const session = JSON.parse(sessionStorage.getItem('ap_admin') || 'null');
+if (!session) { window.location.href = '/admin-login'; }
+
+// Set user info
+if (session) {
+  document.getElementById('userName').textContent = session.name;
+  document.getElementById('userRole').textContent = session.role === 'superadmin' ? 'Super Admin' : session.role === 'manager' ? 'Manager' : 'Support';
+  document.getElementById('userAvatarTop').textContent = session.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+}
+
+// ===== SAMPLE DATA =====
+let clients = [
+  {id:'CL-0001',name:'Amazon SG',email:'ops@amazon.sg',country:'Singapore',shipments:3842,status:'Active'},
+  {id:'CL-0002',name:'Samsung SG',email:'logistics@samsung.sg',country:'Singapore',shipments:2311,status:'Active'},
+  {id:'CL-0003',name:'Apple Asia',email:'supply@apple.asia',country:'Singapore',shipments:1944,status:'Active'},
+  {id:'CL-0004',name:'Walmart SG',email:'freight@walmart.sg',country:'Singapore',shipments:1588,status:'Active'},
+  {id:'CL-0005',name:'Google APAC',email:'logistics@google.apac',country:'Singapore',shipments:1204,status:'Active'},
+  {id:'CL-0006',name:'Tan H. Wei',email:'tanwei@email.com',country:'Malaysia',shipments:24,status:'Suspended'},
+  {id:'CL-0007',name:'Pacific Imports',email:'info@pacificimports.com',country:'Malaysia',shipments:342,status:'Suspended'},
+  {id:'CL-0008',name:'FreshGrocer SG',email:'ceo@freshgrocer.sg',country:'Singapore',shipments:0,status:'Pending'},
+];
+
+let parcels = [
+  {awb:'AP-88102',client:'Amazon SG',origin:'SIN',dest:'USA',service:'Express 3-day',weight:'8.4kg',status:'In Transit',sla:'On Track'},
+  {awb:'AP-88097',client:'Apple Asia',origin:'SIN',dest:'CHN',service:'Air Freight',weight:'14.2kg',status:'Customs Hold',sla:'AT RISK'},
+  {awb:'AP-88091',client:'Walmart SG',origin:'SIN',dest:'UK',service:'Economy 7-day',weight:'22.1kg',status:'In Transit',sla:'On Track'},
+  {awb:'AP-88085',client:'Microsoft',origin:'SIN',dest:'USA',service:'Express 1-day',weight:'3.2kg',status:'Delivered',sla:'MET'},
+  {awb:'AP-88079',client:'Google APAC',origin:'SIN',dest:'AUS',service:'Express 3-day',weight:'5.6kg',status:'In Transit',sla:'On Track'},
+  {awb:'AP-88064',client:'Amazon SG',origin:'SIN',dest:'HKG',service:'Air Freight',weight:'31.0kg',status:'Delayed',sla:'BREACHED'},
+  {awb:'AP-88055',client:'Samsung SG',origin:'SIN',dest:'JPN',service:'Express 3-day',weight:'9.8kg',status:'In Transit',sla:'On Track'},
+  {awb:'AP-88034',client:'Tesla Energy',origin:'MYS',dest:'AUS',service:'Sea Freight',weight:'520kg',status:'Customs Hold',sla:'On Track'},
+];
+
+let payments = [
+  {inv:'INV-1142',client:'Amazon SG',amount:'SGD $24,880',due:'May 20',status:'Unpaid'},
+  {inv:'INV-1141',client:'Samsung SG',amount:'SGD $8,240',due:'May 18',status:'Pending'},
+  {inv:'INV-1139',client:'Apple Asia',amount:'SGD $7,420',due:'May 16',status:'Pending'},
+  {inv:'INV-1138',client:'Samsung SG',amount:'SGD $4,820',due:'Apr 30',status:'Overdue'},
+  {inv:'INV-1137',client:'Google APAC',amount:'SGD $6,100',due:'May 14',status:'Paid'},
+  {inv:'INV-1136',client:'Walmart SG',amount:'SGD $9,340',due:'May 19',status:'Paid'},
+];
+
+let verifyQueue = [
+  {id:'CL-0008',name:'FreshGrocer SG',submitted:'May 12',docs:'BizFile, ID',risk:'Low'},
+  {id:'CL-0009',name:'Rapid Imports',submitted:'May 11',docs:'BizFile',risk:'Medium'},
+  {id:'CL-0010',name:'John T.',submitted:'May 10',docs:'Passport',risk:'High'},
+  {id:'CL-0011',name:'ProTech Supply',submitted:'May 10',docs:'BizFile, BankStmt',risk:'Low'},
+  {id:'CL-0012',name:'K. Rajan',submitted:'May 9',docs:'ID',risk:'Medium'},
+  {id:'CL-0013',name:'Eastlink Corp',submitted:'May 9',docs:'BizFile, IC',risk:'Low'},
+  {id:'CL-0014',name:'MightyBox',submitted:'May 8',docs:'BizFile',risk:'Low'},
+];
+
+let auditLog = [
+  {time:'10:44:01',user:'admin',action:'Status override: AP-88011 → Delivered',tag:'parcel',tagc:'b-red'},
+  {time:'10:32:18',user:'admin',action:'Sent escalation notice ESC-0024 to Amazon SG',tag:'comm',tagc:'b-amber'},
+  {time:'10:15:44',user:'admin',action:'Client CL-0007 suspended: Pacific Imports',tag:'client',tagc:'b-purple'},
+  {time:'10:02:11',user:'manager',action:'Invoice INV-1139 generated and emailed to Apple Asia',tag:'payment',tagc:'b-blue'},
+  {time:'09:55:30',user:'admin',action:'AI reroute applied: AP-88064 via Tokyo Narita',tag:'system',tagc:'b-green'},
+  {time:'09:44:22',user:'manager',action:'Customs status updated: AP-88097 → Under Review',tag:'parcel',tagc:'b-red'},
+  {time:'09:31:08',user:'support',action:'Client message sent to Amazon SG (CL-0001)',tag:'comm',tagc:'b-amber'},
+  {time:'09:14:56',user:'manager',action:'Route rule updated: SIN→CHN via SF Express',tag:'system',tagc:'b-green'},
+  {time:'08:58:33',user:'admin',action:'Payment INV-1137 verified: Google APAC SGD $6,100',tag:'payment',tagc:'b-blue'},
+  {time:'08:41:12',user:'support',action:'Parcel created: AP-88102 for Amazon SG',tag:'parcel',tagc:'b-red'},
+  {time:'08:30:00',user:'system',action:'Daily billing cycle run: 1,284 accounts processed',tag:'system',tagc:'b-green'},
+  {time:'08:15:44',user:'admin',action:'New client created: FreshGrocer SG (CL-0008)',tag:'client',tagc:'b-purple'},
+];
+
+let convMessages = {
+  'Amazon SG': [
+    {from:'client',text:'Hi, is there any update on AP-88064? Our customer is waiting.'},
+    {from:'admin',text:'We are aware of the delay caused by Typhoon Hato. We have initiated a reroute via Tokyo Narita. New ETA: May 15.'},
+    {from:'client',text:'Thank you. Please keep us posted on any further changes.'},
+  ],
+  'Apple Asia': [
+    {from:'client',text:'We received a customs hold notification for AP-88097. Can you explain?'},
+    {from:'admin',text:'Our compliance team has reviewed the shipment. A value mismatch was detected on 3 SKUs. We need a revised commercial invoice from you.'},
+  ],
+};
+
+const simSteps = [
+  {icon:'&#128230;',title:'Shipment Booked',loc:'Airpak Singapore HQ',done:true},
+  {icon:'&#128665;',title:'Picked Up',loc:'Client premises — Woodlands',done:true},
+  {icon:'&#127968;',title:'Arrived at Origin Facility',loc:'Singapore Hub, Terminal 1',done:true},
+  {icon:'&#9992;',title:'Departed Origin',loc:'Singapore Changi Airport, T5',done:false},
+  {icon:'&#128681;',title:'In Transit — Hub Transfer',loc:'Tokyo Narita Airport',done:false},
+  {icon:'&#128203;',title:'Customs Clearance',loc:'Los Angeles Customs, LAX',done:false},
+  {icon:'&#128230;',title:'Arrived at Destination Facility',loc:'FedEx Hub, Compton CA',done:false},
+  {icon:'&#128646;',title:'Out for Delivery',loc:'Delivery vehicle — Driver assigned',done:false},
+  {icon:'&#9989;',title:'Delivered',loc:'Recipient premises',done:false},
+];
+
+// ===== NAV =====
+const titleMap = {
+  dashboard:'Operations Dashboard',audit:'Audit Logs',alerts:'System Alerts',
+  clients:'Client Accounts','client-create':'Create Account','client-verify':'Verification Queue',
+  'client-suspend':'Account Control',messaging:'Messaging Center',
+  parcels:'All Parcels','parcel-create':'Create Parcel','parcel-status':'Update Status',
+  'parcel-transit':'Simulate Transit','route-assign':'Assign Route',reroute:'Reroute Shipment',
+  'delay-schedule':'Delay Scheduling','hold-release':'Release Hold','customs-clear':'Customs Clearance',
+  'delivery-confirm':'Delivery Confirm','live-tracking':'Live Tracking','route-monitor':'Route Monitor',
+  'status-override':'Status Override',checkpoint:'Checkpoint Inject','scan-sim':'Scan Simulation',
+  'send-update':'Customer Update','email-auto':'Email Automation','email-manual':'Manual Email',
+  'sms-control':'SMS Control',escalation:'Escalation Notices',
+  payments:'Payment Records','invoice-gen':'Invoice Generator','balance-adj':'Balance Adjustment',
+  'pay-verify':'Payment Verify','billing-auto':'Billing Automation',
+  analytics:'Analytics','ai-control':'AI Control','route-intel':'Route Intelligence',
+  'workflow-auto':'Workflow Automation','sys-alerts':'Alert Management',
+};
+
+function nav(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const panel = document.getElementById('panel-' + id);
+  if (panel) panel.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'"+id+"'")) n.classList.add('active');
+  });
+  document.getElementById('topbar-title').textContent = titleMap[id] || id;
+  document.getElementById('topbar-sub').textContent = titleMap[id] || id;
+  document.getElementById('mainContent').scrollTop = 0;
+  // lazy load
+  if (id === 'clients') renderClients();
+  if (id === 'dashboard') renderDashParcels();
+  if (id === 'audit') renderAudit();
+  if (id === 'client-verify') renderVerify();
+  if (id === 'parcels') renderAllParcels();
+  if (id === 'payments') renderPayments();
+  if (id === 'messaging') renderConvList();
+  if (id === 'live-tracking') { loadTimeline(); startLiveFeed(); }
+  if (id === 'scan-sim') startScanFeed();
+  if (id === 'parcel-status') renderStatusLog();
+  if (id === 'analytics') renderAdminChart();
+  if (id === 'parcel-transit') renderSimTimeline();
+  if (id === 'route-monitor') startFleetSim();
+}
+
+function filterNav(q) {
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.style.display = q && !item.textContent.toLowerCase().includes(q.toLowerCase()) ? 'none' : '';
+  });
+}
+
+// ===== RENDERERS =====
+function renderClients() {
+  const rows = document.getElementById('clients-rows');
+  rows.innerHTML = clients.map(c => `
+    <tr>
+      <td><strong>${c.id}</strong></td>
+      <td>${c.name}</td>
+      <td style="font-size:11px;">${c.email}</td>
+      <td>${c.country}</td>
+      <td>${c.shipments.toLocaleString()}</td>
+      <td><span class="badge ${c.status==='Active'?'b-green':c.status==='Suspended'?'b-red':'b-amber'}">${c.status}</span></td>
+      <td style="display:flex;gap:4px;">
+        <button class="btn btn-sm btn-ghost" onclick="openClientEdit('${c.id}')">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="toast('${c.name} ${c.status==='Active'?'suspended':'reinstated'}','${c.status==='Active'?'&#128683;':'&#9989;'}')">
+          ${c.status==='Active'?'Suspend':'Reinstate'}
+        </button>
+      </td>
+    </tr>`).join('');
+}
+
+function renderDashParcels() {
+  const rows = document.getElementById('dash-parcel-rows');
+  rows.innerHTML = parcels.slice(0,6).map(p => `
+    <tr>
+      <td><strong style="color:#a78bfa;font-family:monospace;">${p.awb}</strong></td>
+      <td>${p.client}</td>
+      <td style="font-family:monospace;font-size:12px;">${p.origin} → ${p.dest}</td>
+      <td><span class="badge b-grey" style="font-size:10px;">${p.service}</span></td>
+      <td><span class="badge ${statusBadge(p.status)}">${p.status}</span></td>
+      <td><span class="badge ${slaBadge(p.sla)}">${p.sla}</span></td>
+      <td style="display:flex;gap:4px;">
+        <button class="btn btn-sm btn-ghost" onclick="nav('parcel-status')">Status</button>
+        <button class="btn btn-sm btn-ghost" onclick="nav('live-tracking')">Track</button>
+      </td>
+    </tr>`).join('');
+}
+
+function renderAllParcels() {
+  const rows = document.getElementById('all-parcel-rows');
+  rows.innerHTML = parcels.map(p => `
+    <tr>
+      <td><strong style="color:#a78bfa;font-family:monospace;">${p.awb}</strong></td>
+      <td>${p.client}</td>
+      <td style="font-family:monospace;font-size:12px;">${p.origin} → ${p.dest}</td>
+      <td style="font-size:11px;">${p.service}</td>
+      <td>${p.weight}</td>
+      <td><span class="badge ${statusBadge(p.status)}">${p.status}</span></td>
+      <td><span class="badge ${slaBadge(p.sla)}">${p.sla}</span></td>
+      <td style="display:flex;gap:4px;">
+        <button class="btn btn-sm btn-ghost" onclick="nav('parcel-status')">Update</button>
+        <button class="btn btn-sm btn-ghost" onclick="nav('reroute')">Reroute</button>
+      </td>
+    </tr>`).join('');
+}
+
+function renderVerify() {
+  const rows = document.getElementById('verify-rows');
+  rows.innerHTML = verifyQueue.map(v => `
+    <tr>
+      <td><strong>${v.id}</strong></td>
+      <td>${v.name}</td>
+      <td>${v.submitted}</td>
+      <td style="font-size:11px;">${v.docs}</td>
+      <td><span class="badge ${v.risk==='Low'?'b-green':v.risk==='Medium'?'b-amber':'b-red'}">${v.risk}</span></td>
+      <td style="display:flex;gap:4px;">
+        <button class="btn btn-sm btn-success" onclick="verifyClient('${v.id}')">Approve</button>
+        <button class="btn btn-sm btn-danger" onclick="toast('${v.id} rejected','&#10006;')">Reject</button>
+      </td>
+    </tr>`).join('');
+}
+
+function renderPayments() {
+  const rows = document.getElementById('payment-rows');
+  rows.innerHTML = payments.map(p => `
+    <tr>
+      <td><strong>${p.inv}</strong></td>
+      <td>${p.client}</td>
+      <td>${p.amount}</td>
+      <td>${p.due}</td>
+      <td><span class="badge ${p.status==='Paid'?'b-green':p.status==='Overdue'?'b-red':'b-amber'}">${p.status}</span></td>
+      <td style="display:flex;gap:4px;">
+        <button class="btn btn-sm btn-ghost" onclick="toast('Invoice resent to ${p.client}','&#128231;')">Email</button>
+        ${p.status!=='Paid'?'<button class="btn btn-sm btn-success" onclick="markPaid(\''+p.inv+'\')">Mark Paid</button>':''}
+      </td>
+    </tr>`).join('');
+}
+
+function renderAudit() {
+  const filter = document.getElementById('audit-filter').value;
+  const search = (document.getElementById('audit-search')?.value||'').toLowerCase();
+  let logs = auditLog.filter(l => {
+    if (filter !== 'all' && l.tag !== filter) return false;
+    if (search && !l.action.toLowerCase().includes(search) && !l.user.includes(search)) return false;
+    return true;
+  });
+  document.getElementById('audit-count').textContent = logs.length + ' entries';
+  document.getElementById('audit-list').innerHTML = logs.map(l => `
+    <div class="audit-row">
+      <span class="audit-time">${l.time}</span>
+      <span class="audit-user">${l.user}</span>
+      <span class="audit-action">${l.action}</span>
+      <span class="badge ${l.tagc} audit-tag">${l.tag}</span>
+    </div>`).join('');
+}
+
+function filterAudit(q) { renderAudit(); }
+
+function renderConvList() {
+  const list = document.getElementById('conv-list');
+  list.innerHTML = Object.keys(convMessages).map((name,i) => `
+    <div style="padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer;display:flex;gap:10px;align-items:center;background:${i===0?'rgba(205,39,39,.08)':''};" onclick="loadConv('${name}')">
+      <div style="width:34px;height:34px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">${name[0]}</div>
+      <div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;color:#fff;">${name}</div><div style="font-size:11px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${convMessages[name].slice(-1)[0].text.slice(0,30)}...</div></div>
+      <span class="badge b-green" style="font-size:9px;">Live</span>
+    </div>`).join('');
+  loadConv('Amazon SG');
+}
+
+function loadConv(name) {
+  document.getElementById('msg-client-name').textContent = name;
+  document.getElementById('msg-avatar').textContent = name[0];
+  const chat = document.getElementById('msg-chat');
+  chat.innerHTML = (convMessages[name]||[]).map(m => `
+    <div class="chat-msg ${m.from==='admin'?'admin':'client'}">
+      <div class="chat-avatar">${m.from==='admin'?'A':'C'}</div>
+      <div class="chat-bubble">${m.text}</div>
+    </div>`).join('');
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function sendMsg() {
+  const input = document.getElementById('msg-input');
+  const msg = input.value.trim(); if (!msg) return;
+  input.value = '';
+  const chat = document.getElementById('msg-chat');
+  chat.innerHTML += `<div class="chat-msg admin"><div class="chat-avatar">A</div><div class="chat-bubble">${msg}</div></div>`;
+  chat.scrollTop = chat.scrollHeight;
+  addAuditEntry('support', 'Client message sent: "'+msg.slice(0,40)+'"', 'comm', 'b-amber');
+  toast('Message sent', '&#128140;');
+}
+
+function renderStatusLog() {
+  document.getElementById('status-log').innerHTML = `
+    <div style="font-size:11px;font-family:monospace;background:var(--dark);border-radius:6px;padding:10px;">
+      <div style="color:#4ade80;">10:44 — AP-88011 → Delivered by admin</div>
+      <div style="color:#4ade80;margin-top:4px;">10:32 — AP-88097 → Customs Hold by admin</div>
+      <div style="color:#fbbf24;margin-top:4px;">10:15 — AP-88064 → Delayed by manager</div>
+    </div>`;
+}
+
+function renderAdminChart() {
+  const months = ['Oct','Nov','Dec','Jan','Feb','Mar','Apr','May'];
+  const vals = [1420,1580,1380,1720,1880,2050,1960,2210];
+  const max = Math.max(...vals);
+  const chart = document.getElementById('admin-barchart');
+  if (!chart) return;
+  chart.innerHTML = months.map((m,i) => {
+    const pct = Math.round((vals[i]/max)*100);
+    return `<div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+      <div style="background:linear-gradient(180deg,var(--red),#ff9999);border-radius:4px 4px 0 0;width:100%;height:${pct}%;transition:height .8s ease;" title="${m}: ${vals[i]}"></div>
+      <div style="font-size:9px;color:var(--sub);margin-top:4px;">${m}</div>
+    </div>`;
+  }).join('');
+}
+
+function loadTimeline() {
+  const el = document.getElementById('timeline-editor'); if (!el) return;
+  const steps = simSteps;
+  el.innerHTML = steps.map((s,i) => `
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot ${s.done?'done':'pending'}">${s.icon}</div>
+        ${i < steps.length-1 ? `<div class="tl-line ${s.done?'done':''}"></div>` : ''}
+      </div>
+      <div class="tl-body">
+        <div class="tl-title">${s.title}</div>
+        <div class="tl-meta">${s.loc}</div>
+      </div>
+    </div>`).join('');
+}
+
+function addCheckpoint() {
+  const el = document.getElementById('timeline-editor');
+  const div = document.createElement('div'); div.className = 'tl-item';
+  div.innerHTML = `<div class="tl-left"><div class="tl-dot current">&#128204;</div></div><div class="tl-body"><div class="tl-title">Custom Checkpoint</div><div class="tl-meta">Injected by admin at ${new Date().toLocaleTimeString()}</div></div>`;
+  el.insertBefore(div, el.children[3] || null);
+  toast('Checkpoint injected', '&#128204;');
+}
+
+let liveFeedInterval;
+function startLiveFeed() {
+  const feed = document.getElementById('live-feed'); if (!feed) return;
+  const items = ['AP-88102 — Singapore Hub → Departed', 'AP-88079 — In Transit — Sydney approach', 'AP-88091 — Customs cleared London', 'AP-88055 — Out for delivery Tokyo', 'AP-88064 — DELAYED — Reroute in progress'];
+  feed.innerHTML = items.map(i => `<div style="background:var(--card2);border-radius:6px;padding:8px 10px;font-size:12px;display:flex;gap:6px;align-items:center;"><span style="width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0;"></span>${i}</div>`).join('');
+  clearInterval(liveFeedInterval);
+  liveFeedInterval = setInterval(() => {
+    const t = new Date().toLocaleTimeString();
+    const msg = `${['AP-88102','AP-88079','AP-88085','AP-88091'][Math.floor(Math.random()*4)]} — ${['Scanned at hub','Departed facility','Cleared customs','Status updated'][Math.floor(Math.random()*4)]} at ${t}`;
+    const div = document.createElement('div');
+    div.style.cssText = 'background:var(--card2);border-radius:6px;padding:8px 10px;font-size:12px;display:flex;gap:6px;align-items:center;animation:none;';
+    div.innerHTML = `<span style="width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0;"></span>${msg}`;
+    feed.insertBefore(div, feed.firstChild);
+    if (feed.children.length > 12) feed.removeChild(feed.lastChild);
+  }, 3000);
+}
+
+let scanFeedInterval;
+const scanPhrases = ['INBOUND SCAN','OUTBOUND SCAN','SORT SCAN','DELIVERY SCAN','EXCEPTION'];
+const scanColors = {'INBOUND SCAN':'#4ade80','OUTBOUND SCAN':'#60a5fa','SORT SCAN':'#fbbf24','DELIVERY SCAN':'#a78bfa','EXCEPTION':'#f87171'};
+function startScanFeed() {
+  const feed = document.getElementById('live-scan-feed'); if (!feed) return;
+  clearInterval(scanFeedInterval);
+  const awbs = ['AP-88102','AP-88079','AP-88091','AP-88085','AP-88064','AP-88055'];
+  scanFeedInterval = setInterval(() => {
+    const type = scanPhrases[Math.floor(Math.random()*scanPhrases.length)];
+    const awb = awbs[Math.floor(Math.random()*awbs.length)];
+    const t = new Date().toLocaleTimeString();
+    feed.innerHTML += `<span style="color:${scanColors[type]}">[${t}] ${type} — ${awb} — Singapore Hub</span>\n`;
+    feed.scrollTop = feed.scrollHeight;
+  }, 1400);
+}
+
+function doScan() {
+  const awb = document.getElementById('scan-awb').value || 'AP-88102';
+  const log = document.getElementById('scan-events');
+  const t = new Date().toLocaleTimeString();
+  log.innerHTML += `[${t}] SCAN OK — ${awb} — Gate A\n`;
+  log.scrollTop = log.scrollHeight;
+  toast('Scan recorded: ' + awb, '&#128247;');
+}
+
+let simInterval;
+let simStep = 2;
+function renderSimTimeline() {
+  const el = document.getElementById('sim-timeline'); if (!el) return;
+  el.innerHTML = simSteps.map((s,i) => `
+    <div class="tl-item" id="sim-step-${i}">
+      <div class="tl-left">
+        <div class="tl-dot ${i < simStep ? 'done' : i === simStep ? 'current' : 'pending'}">${s.icon}</div>
+        ${i < simSteps.length-1 ? `<div class="tl-line ${i < simStep ? 'done' : ''}"></div>` : ''}
+      </div>
+      <div class="tl-body">
+        <div class="tl-title">${s.title}</div>
+        <div class="tl-meta">${s.loc}</div>
+      </div>
+    </div>`).join('');
+}
+function startSim() {
+  const speed = parseInt(document.getElementById('sim-speed').value);
+  const prog = document.getElementById('sim-progress');
+  document.getElementById('sim-btn').disabled = true;
+  simStep = 2;
+  clearInterval(simInterval);
+  simInterval = setInterval(() => {
+    simStep++;
+    if (simStep >= simSteps.length) { clearInterval(simInterval); document.getElementById('sim-btn').disabled = false; prog.textContent = 'Simulation complete — Parcel delivered!'; return; }
+    renderSimTimeline();
+    prog.textContent = '&#9654; ' + simSteps[simStep].title + ' — ' + simSteps[simStep].loc;
+    addAuditEntry('admin', 'Transit simulated: '+simSteps[simStep].title, 'parcel', 'b-red');
+  }, speed);
+}
+function stopSim() { clearInterval(simInterval); document.getElementById('sim-btn').disabled = false; document.getElementById('sim-progress').textContent = 'Simulation stopped.'; }
+
+// ===== HELPERS =====
+function statusBadge(s) {
+  if (s==='Delivered') return 'b-blue';
+  if (s==='Delayed') return 'b-red';
+  if (s.includes('Hold')) return 'b-amber';
+  return 'b-green';
+}
+function slaBadge(s) {
+  if (s==='MET') return 'b-green';
+  if (s==='BREACHED') return 'b-red';
+  if (s==='AT RISK') return 'b-amber';
+  return 'b-green';
+}
+
+function filterClients(q) {
+  document.querySelectorAll('#clients-rows tr').forEach(tr => {
+    tr.style.display = !q || tr.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
+  });
+}
+function filterClientStatus(v) {
+  document.querySelectorAll('#clients-rows tr').forEach(tr => {
+    tr.style.display = v==='all' || tr.textContent.includes(v) ? '' : 'none';
+  });
+}
+
+function createClient() {
+  const fname = document.getElementById('cc-fname').value;
+  const lname = document.getElementById('cc-lname').value;
+  const email = document.getElementById('cc-email').value;
+  if (!fname || !email) { toast('Please fill in name and email', '&#9888;'); return; }
+  const id = 'CL-' + String(clients.length + 1).padStart(4,'0');
+  clients.push({id, name:fname+' '+lname, email, country: document.getElementById('cc-country').value, shipments:0, status:'Pending'});
+  addAuditEntry('admin', 'New client created: '+fname+' '+lname+' ('+id+')', 'client', 'b-purple');
+  toast('Client account created: ' + id, '&#10133;');
+}
+
+function createParcel() {
+  const awb = 'AP-'+new Date().getFullYear()+'-'+Math.floor(10000+Math.random()*90000);
+  parcels.unshift({awb, client:'New Client', origin:'SIN', dest: document.getElementById('pc-dest').value.slice(0,3).toUpperCase(), service: document.getElementById('pc-service').value, weight: document.getElementById('pc-weight').value+'kg', status:'Shipment Booked', sla:'On Track'});
+  addAuditEntry('admin', 'Parcel created: '+awb, 'parcel', 'b-red');
+  toast('Parcel created: ' + awb, '&#128230;');
+}
+
+function updateStatus() {
+  const awb = document.getElementById('ps-awb').value;
+  const status = document.getElementById('ps-status').value;
+  const notify = document.getElementById('ps-notify').value;
+  if (!awb) { toast('Enter an AWB number', '&#9888;'); return; }
+  addAuditEntry('admin', 'Status updated: '+awb+' → '+status, 'parcel', 'b-red');
+  toast('Status updated' + (notify==='yes' ? ' + Customer notified' : ''), '&#128257;');
+  renderStatusLog();
+}
+
+function verifyClient(id) {
+  const idx = verifyQueue.findIndex(v => v.id === id);
+  if (idx > -1) verifyQueue.splice(idx, 1);
+  addAuditEntry('admin', 'Account verified: '+id, 'client', 'b-purple');
+  toast(id + ' verified and activated', '&#9989;');
+  renderVerify();
+}
+
+function doSuspend() {
+  const client = document.getElementById('susp-client').value;
+  const action = document.getElementById('susp-action').value;
+  if (!client) { toast('Enter a client ID', '&#9888;'); return; }
+  addAuditEntry('admin', action+': '+client, 'client', 'b-purple');
+  toast(action + ' applied to ' + client, '&#128683;');
+}
+
+function markPaid(inv) {
+  const p = payments.find(x => x.inv === inv);
+  if (p) p.status = 'Paid';
+  addAuditEntry('admin', 'Payment marked as paid: '+inv, 'payment', 'b-blue');
+  renderPayments();
+  toast(inv + ' marked as paid', '&#9989;');
+}
+
+function openClientEdit(id) {
+  const c = clients.find(x => x.id === id);
+  if (!c) return;
+  const [fn,...ln] = c.name.split(' ');
+  document.getElementById('me-fname').value = fn;
+  document.getElementById('me-lname').value = ln.join(' ');
+  document.getElementById('me-email').value = c.email;
+  document.getElementById('me-phone').value = '+65 9000 0000';
+  document.getElementById('me-company').value = c.name;
+  document.getElementById('me-status').value = c.status;
+  document.getElementById('modal-client-edit').classList.add('open');
+}
+
+function saveClientEdit() {
+  addAuditEntry('admin', 'Client profile updated', 'client', 'b-purple');
+  closeModal('modal-client-edit');
+  toast('Client profile saved', '&#9989;');
+  renderClients();
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function calcInv() {
+  const sub = parseFloat(document.getElementById('inv-sub').value) || 0;
+  const gst = sub * 0.09;
+  const total = sub + gst;
+  document.getElementById('inv-gst').value = gst.toFixed(2);
+  document.getElementById('inv-total').value = 'SGD $' + total.toFixed(2);
+  document.getElementById('inv-prev-gst').textContent = '$' + gst.toFixed(2);
+  document.getElementById('inv-prev-total').textContent = 'SGD $' + total.toFixed(2);
+  document.getElementById('inv-num').textContent = '' + (1142 + Math.floor(Math.random()*5));
+}
+
+function selectTpl(el, key) {
+  document.querySelectorAll('.email-tpl').forEach(t => t.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('tpl-name').textContent = el.querySelector('.et-name').textContent;
+}
+
+function fillSms(v) {
+  const el = document.getElementById('sms-body');
+  el.value = v;
+  document.getElementById('sms-count').textContent = v.length;
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const sms = document.getElementById('sms-body');
+  if (sms) sms.addEventListener('input', () => { document.getElementById('sms-count').textContent = sms.value.length; });
+});
+
+const aiAdminResponses = {
+  delay: 'Current delays: AP-88064 (28h — Amazon SG, Typhoon HKG), AP-88097 (Customs Hold — Apple Asia). I have initiated reroute for AP-88064 via NRT. Probability of SLA recovery: 62%.',
+  route: 'SIN→LAX optimised via NRT: +14h speed, +SGD $48 cost. SIN→LHR via DXB transship: -SGD $120 but +6h. SIN→SYD direct via AP Express is optimal this week. Recommend activating NRT corridor.',
+  customs: 'AP-88097 (Apple Asia) — 78% hold probability. Suggest: submit revised commercial invoice and HS code 8471.30.00 for laptop units. Pre-clearance window: before 17:00 SGT today.',
+  sla: 'SLA compliance: 94.3%. 1 breach (AP-88064), 1 at-risk (AP-88097). 5 shipments on track. Recommend client escalation for AP-88064 if reroute ETA &gt; 48h.',
+  default: 'I\'m monitoring all 2,147 shipments and 6 fleet vehicles. Ask me about delays, route optimisation, customs risk, SLA, fleet status, or revenue forecasts.',
+};
+
+function sendAdminAI() {
+  const input = document.getElementById('ai-admin-input');
+  const msg = input.value.trim(); if (!msg) return;
+  input.value = '';
+  const msgs = document.getElementById('ai-admin-msgs');
+  msgs.innerHTML += `<div style="align-self:flex-end;background:rgba(205,39,39,.2);padding:8px 12px;border-radius:8px;font-size:12px;max-width:80%;">${msg}</div>`;
+  setTimeout(() => {
+    const lc = msg.toLowerCase();
+    let r = aiAdminResponses.default;
+    if (lc.includes('delay') || lc.includes('late')) r = aiAdminResponses.delay;
+    else if (lc.includes('route')) r = aiAdminResponses.route;
+    else if (lc.includes('custom')) r = aiAdminResponses.customs;
+    else if (lc.includes('sla')) r = aiAdminResponses.sla;
+    msgs.innerHTML += `<div style="background:rgba(124,58,237,.1);padding:8px 12px;border-radius:8px;font-size:12px;max-width:90%;">&#129302; ${r}</div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 600);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addAuditEntry(user, action, tag, tagc) {
+  const t = new Date().toLocaleTimeString('en-SG',{hour12:false});
+  auditLog.unshift({time:t, user, action, tag, tagc});
+}
+
+function dismissAlert(btn) { btn.closest('.alert-item').style.opacity='0.4'; toast('Alert dismissed','&#10006;'); }
+
+function toast(msg, icon) {
+  const el = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  document.getElementById('toast-icon').innerHTML = icon || '&#9989;';
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+function doLogout() {
+  sessionStorage.removeItem('ap_admin');
+  addAuditEntry(session?.user || 'unknown', 'Admin logged out', 'system', 'b-grey');
+  window.location.href = '/admin-login';
+}
+
+function refreshDash() { renderDashParcels(); toast('Dashboard refreshed','&#8635;'); }
+
+let fleetInterval;
+function startFleetSim() {
+  clearInterval(fleetInterval);
+  fleetInterval = setInterval(() => {
+    const speeds = [document.getElementById('v1-speed'), document.getElementById('v4-speed'), document.getElementById('v6-speed')];
+    speeds.forEach(el => { if (el) el.textContent = (Math.floor(Math.random()*40)+55) + ' km/h'; });
+  }, 2000);
+}
+
+let gpsTimer = 0;
+setInterval(() => {
+  gpsTimer = (gpsTimer + 1) % 60;
+  const el = document.getElementById('gps-timer');
+  if (el) el.textContent = String(gpsTimer).padStart(2,'0') + ':' + String(Math.floor(Math.random()*60)).padStart(2,'0');
+}, 1000);
+
+// Client create preview
+['cc-fname','cc-lname','cc-email','cc-company','cc-country','cc-type'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', () => {
+    const fn = document.getElementById('cc-fname').value;
+    const ln = document.getElementById('cc-lname').value;
+    document.getElementById('cc-prev-name').textContent = (fn+' '+ln).trim() || '—';
+    document.getElementById('cc-avatar').textContent = ((fn[0]||'?') + (ln[0]||'')).toUpperCase();
+    document.getElementById('cc-prev-company').textContent = document.getElementById('cc-company').value || '—';
+    document.getElementById('cc-prev-email').textContent = document.getElementById('cc-email').value || '—';
+    document.getElementById('cc-prev-country').textContent = document.getElementById('cc-country').value || '—';
+    document.getElementById('cc-prev-type').textContent = document.getElementById('cc-type').value || '—';
+    document.getElementById('cc-prev-id').textContent = 'CL-' + String(clients.length+1).padStart(4,'0');
+  });
+});
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); }));
+
+// ===== INIT =====
+renderDashParcels();
+</script>
+</body>
+</html>
