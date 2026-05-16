@@ -1,11 +1,8 @@
 {
+  "buildCommand": "pnpm install --frozen-lockfile=false && BASE_PATH=/ PORT=3000 pnpm --filter @workspace/airpak-express run build",
+  "outputDirectory": "dist/public",
+  "framework": null,
   "rewrites": [
-    { "source": "/(.*)\\.html", "destination": "/$1.html" },
-    { "source": "/apps/(.*)", "destination": "/apps/$1" },
-    { "source": "/pages/(.*)", "destination": "/pages/$1" },
-    { "source": "/css/(.*)", "destination": "/css/$1" },
-    { "source": "/js/(.*)", "destination": "/js/$1" },
-    { "source": "/assets/(.*)", "destination": "/assets/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
@@ -14,17 +11,12 @@
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "X-XSS-Protection", "value": "1; mode=block" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
       ]
     },
     {
-      "source": "/apps/(.*)",
+      "source": "/assets/(.*)",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
-    },
-    {
-      "source": "/css/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
     }
   ]
 }
