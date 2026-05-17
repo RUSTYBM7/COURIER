@@ -10,6 +10,8 @@ import adminRouter from "./admin";
 import settingsRouter from "./settings";
 import contentRouter from "./content";
 import emailsRouter from "./emails";
+import chatRouter from "./chat";
+import documentsRouter from "./documents";
 
 const router: IRouter = Router();
 
@@ -24,5 +26,7 @@ router.use(adminRouter);
 router.use(settingsRouter);
 router.use(contentRouter);
 router.use(emailsRouter);
+router.use(chatRouter);
+router.use(documentsRouter);
 
 export default router;
