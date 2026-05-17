@@ -88,9 +88,12 @@
   background:#CD2727; box-shadow:0 0 0 3px rgba(205,39,39,.15);
 }
 
-/* Fallback when there's no header to mount into */
+/* Pinned top-right of viewport — always on the right side of the page */
 .ap-lang-switcher.ap-lang-floating{
-  position:fixed; top:14px; right:14px; z-index:2147483640; margin:0;
+  position:fixed; top:14px; right:18px; z-index:2147483640; margin:0;
+}
+@media(max-width:520px){
+  .ap-lang-switcher.ap-lang-floating{ top:10px; right:10px; }
 }
 
 /* Dark mode (for juju2 dark sections) */

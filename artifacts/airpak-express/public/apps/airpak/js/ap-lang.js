@@ -221,31 +221,10 @@
 
     updateButton(btn, getLang());
 
-    // Mount strategy: header order should be Logo | Translator | Menu (LTR)
-    // -> insert IMMEDIATELY BEFORE the menu/burger so we sit between logo and menu.
-    var burger =
-        document.querySelector(".burger-icon") ||
-        document.querySelector(".navbar-toggler") ||
-        document.querySelector(".menu-toggle") ||
-        document.querySelector(".hamburger") ||
-        document.querySelector("[class*='burger']") ||
-        document.querySelector("[class*='menu-toggle']");
-
-    var menu =
-        document.querySelector(".main-menu") ||
-        document.querySelector(".navbar-nav") ||
-        document.querySelector("nav .nav") ||
-        document.querySelector("header nav ul");
-
-    if (burger && burger.parentNode) {
-      burger.parentNode.insertBefore(wrap, burger);
-    } else if (menu && menu.parentNode) {
-      menu.parentNode.insertBefore(wrap, menu);
-    } else {
-      var header = document.querySelector("header") || document.querySelector(".header") || document.querySelector(".navbar");
-      if (header) header.appendChild(wrap);
-      else { wrap.classList.add("ap-lang-floating"); document.body.appendChild(wrap); }
-    }
+    // Pinned to the top-right of the viewport — guaranteed right-side placement
+    // regardless of header markup variations across scraped pages.
+    wrap.classList.add("ap-lang-floating");
+    document.body.appendChild(wrap);
 
     // Apply saved lang on load
     var saved = getLang();
