@@ -7,15 +7,15 @@
   "use strict";
 
   var LANGS = [
-    { code: "en", name: "English",            flag: "\uD83C\uDDEC\uD83C\uDDE7" },
-    { code: "zh", name: "中文",                flag: "\uD83C\uDDE8\uD83C\uDDF3" },
-    { code: "ms", name: "Bahasa Melayu",      flag: "\uD83C\uDDF2\uD83C\uDDFE" },
-    { code: "id", name: "Bahasa Indonesia",   flag: "\uD83C\uDDEE\uD83C\uDDE9" },
-    { code: "ta", name: "தமிழ்",                flag: "\uD83C\uDDEE\uD83C\uDDF3" },
-    { code: "th", name: "ไทย",                 flag: "\uD83C\uDDF9\uD83C\uDDED" },
-    { code: "ja", name: "日本語",               flag: "\uD83C\uDDEF\uD83C\uDDF5" },
-    { code: "ko", name: "한국어",               flag: "\uD83C\uDDF0\uD83C\uDDF7" },
-    { code: "vi", name: "Tiếng Việt",         flag: "\uD83C\uDDFB\uD83C\uDDF3" }
+    { code: "en", name: "English",                                                flag: "\uD83C\uDDEC\uD83C\uDDE7" },
+    { code: "zh", name: "\u4e2d\u6587",                                           flag: "\uD83C\uDDE8\uD83C\uDDF3" },
+    { code: "ms", name: "Bahasa Melayu",                                          flag: "\uD83C\uDDF2\uD83C\uDDFE" },
+    { code: "id", name: "Bahasa Indonesia",                                       flag: "\uD83C\uDDEE\uD83C\uDDE9" },
+    { code: "ta", name: "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd",                         flag: "\uD83C\uDDEE\uD83C\uDDF3" },
+    { code: "th", name: "\u0e44\u0e17\u0e22",                                     flag: "\uD83C\uDDF9\uD83C\uDDED" },
+    { code: "ja", name: "\u65e5\u672c\u8a9e",                                     flag: "\uD83C\uDDEF\uD83C\uDDF5" },
+    { code: "ko", name: "\ud55c\uad6d\uc5b4",                                     flag: "\uD83C\uDDF0\uD83C\uDDF7" },
+    { code: "vi", name: "Ti\u1ebfng Vi\u1ec7t",                                   flag: "\uD83C\uDDFB\uD83C\uDDF3" }
   ];
 
   var ENDPOINTS = [
@@ -25,8 +25,8 @@
     "https://lingva.ml/api/v1"
   ];
 
-  var LS_LANG = "ap_lang";        // chosen language code
-  var LS_SEEN = "ap_lang_seen";   // "1" once the user has picked or dismissed
+  var LS_LANG = "ap_lang";           // chosen language code
+  var LS_SEEN = "ap_lang_seen_v2";   // bumped so popup re-shows after re-enable
   var CACHE_PREFIX = "ap_tx_";
   var SRC = "en";
 
@@ -193,7 +193,7 @@
     var skip = document.createElement("button");
     skip.type = "button";
     skip.className = "ap-lang-modal-skip";
-    skip.textContent = "Skip — Continue in English";
+    skip.textContent = "Skip \u2014 Continue in English";
     skip.addEventListener("click", function () {
       markSeen();
       setLang("en");
@@ -237,9 +237,13 @@
     if (saved && saved !== "en") {
       setTimeout(function () { applyLang(saved); }, 250);
     }
-    // NO auto-popup. Users open the picker from the menu / Settings only.
-    // This silences the "popup that asks me about my preferences" complaint.
-    markSeen();
+    // Show the language picker on first visit (per browser).
+    // After the user picks or dismisses, hasSeen() returns true and it
+    // never auto-shows again — they can reopen it from the burger menu.
+    if (!hasSeen()) {
+      // Fire on next paint so the page is visible behind the modal
+      requestAnimationFrame(function () { buildModal(); });
+    }
     // Build the floating menu (burger) on every page.
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", buildMenu);

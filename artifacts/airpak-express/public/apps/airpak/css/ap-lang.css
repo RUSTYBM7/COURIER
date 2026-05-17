@@ -180,6 +180,121 @@ body.dark .ap-lang-menu-head, [data-theme="dark"] .ap-lang-menu-head{ color:#9a9
 }
 
 /* Visible close (X) on the one-time language modal */
+/* ============================================================
+ * One-time language picker modal (built by ap-lang.js buildModal)
+ * ============================================================ */
+.ap-lang-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 20, 24, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2147483646;
+  opacity: 0;
+  transition: opacity .22s ease;
+  padding: 16px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+.ap-lang-modal-overlay.ap-lang-modal-open { opacity: 1; }
+.ap-lang-modal-overlay.ap-lang-modal-closing { opacity: 0; }
+
+.ap-lang-modal-card {
+  position: relative;
+  background: #fff;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 480px;
+  padding: 32px 28px 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: scale(.96) translateY(8px);
+  transition: transform .22s ease;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+}
+.ap-lang-modal-open .ap-lang-modal-card { transform: scale(1) translateY(0); }
+
+.ap-lang-modal-icon {
+  display: block;
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 14px;
+  color: #CD2727;
+}
+
+.ap-lang-modal-head { text-align: center; margin-bottom: 22px; }
+.ap-lang-modal-title {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1c1c1e;
+  letter-spacing: -0.01em;
+}
+.ap-lang-modal-sub {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: #6b6b73;
+}
+
+.ap-lang-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.ap-lang-modal-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 8px;
+  background: #f6f6f8;
+  border: 1.5px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  font: 500 13px/1.2 'Inter', sans-serif;
+  color: #1c1c1e;
+  transition: background .12s ease, border-color .12s ease, transform .12s ease;
+  min-height: 76px;
+}
+.ap-lang-modal-option:hover {
+  background: rgba(205, 39, 39, 0.08);
+  border-color: #CD2727;
+}
+.ap-lang-modal-option:active { transform: scale(0.97); }
+.ap-lang-modal-flag { font-size: 26px; line-height: 1; }
+.ap-lang-modal-name { font-weight: 500; }
+
+.ap-lang-modal-foot {
+  display: flex;
+  justify-content: center;
+  padding-top: 4px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  margin-top: 8px;
+  padding-top: 16px;
+}
+
+@media (max-width: 480px) {
+  .ap-lang-modal-card { padding: 24px 18px 18px; }
+  .ap-lang-modal-grid { grid-template-columns: repeat(2, 1fr); }
+  .ap-lang-modal-title { font-size: 19px; }
+}
+
+@media (prefers-color-scheme: dark) {
+  .ap-lang-modal-card { background: #1c1c1e; }
+  .ap-lang-modal-title { color: #f2f2f7; }
+  .ap-lang-modal-sub { color: #a1a1a8; }
+  .ap-lang-modal-option {
+    background: rgba(255, 255, 255, 0.06);
+    color: #f2f2f7;
+  }
+  .ap-lang-modal-foot { border-top-color: rgba(255, 255, 255, 0.08); }
+}
+
 .ap-lang-modal-card { position: relative; }
 .ap-lang-modal-close {
   position: absolute;
