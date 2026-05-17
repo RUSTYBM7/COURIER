@@ -1,6 +1,6 @@
 # Airpak Express
 
-A merged web project combining juju1 (scraped airpak-express.com public site) and juju2 (iOS 26 Apple design interior app pages) into a single Vite-served artifact at `artifacts/airpak-express`.
+A merged web project combining juju1 (scraped airpak-express.site public site) and juju2 (iOS 26 Apple design interior app pages) into a single Vite-served artifact at `artifacts/airpak-express`.
 
 ## Run & Operate
 
@@ -18,7 +18,7 @@ A merged web project combining juju1 (scraped airpak-express.com public site) an
 
 ## Where things live
 
-- `artifacts/airpak-express/index.html` — Vite root (juju1's real homepage — airpak-express.com scraped)
+- `artifacts/airpak-express/index.html` — Vite root (juju1's real homepage — airpak-express.site scraped)
 - `artifacts/airpak-express/public/` — all static files served by Vite
   - `public/dashboard.html`, `public/signin.html`, etc. — juju2 iOS 26 Apple design pages
   - `public/apps/airpak/` — juju1's scraped app assets (CSS, JS, images, vendor libs)
@@ -33,7 +33,7 @@ A merged web project combining juju1 (scraped airpak-express.com public site) an
 - Root `index.html` is juju1's scraped homepage (not a React entry point) — Vite serves it as-is
 - juju2 HTML pages live in `public/` and are served directly as static files by Vite
 - Font Awesome 4.7.0, Font Awesome 5, LineIcons, and uicons fonts that weren't captured by the scraper are served from CDN (cdnjs.cloudflare.com, cdn.jsdelivr.net, cdn-uicons.flaticon.com)
-- All internal juju1 domain refs changed from `airpak-express.com` to `/` for relative-path serving
+- All internal juju1 domain refs changed from `airpak-express.site` to `/` for relative-path serving
 - DOCTYPE `prefix="og:..."` attribute removed from all juju1 HTML files (Vite parse5 doesn't support it)
 
 ## Product

@@ -57,7 +57,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-lg">Email</h3>
-                  <p className="text-muted-foreground mt-1">support@airpak-express.com</p>
+                  <p className="text-muted-foreground mt-1">support@airpak-express.site</p>
                 </div>
               </div>
 

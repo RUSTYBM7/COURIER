@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Code2, Webhook, Boxes } from "lucide-react";
 
-const SAMPLE_REST = `curl https://api.airpak-express.com/v1/shipments \\
+const SAMPLE_REST = `curl https://api.airpak-express.site/v1/shipments \\
   -H "Authorization: Bearer YOUR_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{

@@ -40,7 +40,7 @@ export default function Privacy() {
           <p>We take reasonable measures to help protect information about you from loss, theft, misuse, and unauthorized access, disclosure, alteration, and destruction.</p>
 
           <h2>5. Contact Us</h2>
-          <p>If you have any questions about this Privacy Policy, please contact us at privacy@airpak-express.com.</p>
+          <p>If you have any questions about this Privacy Policy, please contact us at privacy@airpak-express.site.</p>
         </div>
       </div>
     </PublicLayout>

@@ -35,7 +35,7 @@ export default function Careers() {
                       <span className="flex items-center gap-1"><Briefcase className="h-3.5 w-3.5" />{r.type}</span>
                     </div>
                   </div>
-                  <a href="mailto:careers@airpak-express.com" className="text-sm font-semibold text-[#E11D2A] hover:underline">Apply →</a>
+                  <a href="mailto:careers@airpak-express.site" className="text-sm font-semibold text-[#E11D2A] hover:underline">Apply →</a>
                 </div>
               ))}
             </div>

@@ -98,7 +98,7 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
               Cardiff Bay, CF10 5AL<br />
               United Kingdom<br /><br />
               +44 29 2011 3344<br />
-              support@airpak-express.com
+              support@airpak-express.site
             </p>
           </div>
           <div>

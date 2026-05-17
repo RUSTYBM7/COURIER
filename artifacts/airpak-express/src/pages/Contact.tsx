@@ -23,7 +23,7 @@ export default function Contact() {
               <ul className="space-y-5 text-gray-700">
                 <li className="flex gap-3"><MapPin className="h-5 w-5 text-[#E11D2A] mt-0.5" /><div><div className="font-semibold">Headquarters</div>5 Changi North Way, Singapore 498771</div></li>
                 <li className="flex gap-3"><Phone className="h-5 w-5 text-[#E11D2A] mt-0.5" /><div><div className="font-semibold">Customer Service</div><a href="tel:+6562508588" className="hover:text-[#E11D2A]">+65 6250 8588</a></div></li>
-                <li className="flex gap-3"><Mail className="h-5 w-5 text-[#E11D2A] mt-0.5" /><div><div className="font-semibold">General Enquiries</div><a href="mailto:enquiry@airpak-express.com" className="hover:text-[#E11D2A]">enquiry@airpak-express.com</a></div></li>
+                <li className="flex gap-3"><Mail className="h-5 w-5 text-[#E11D2A] mt-0.5" /><div><div className="font-semibold">General Enquiries</div><a href="mailto:enquiry@airpak-express.site" className="hover:text-[#E11D2A]">enquiry@airpak-express.site</a></div></li>
               </ul>
             </div>
             <div>

@@ -24,7 +24,7 @@ const TIERS = [
 ];
 
 export default function Refer() {
-  const link = "https://airpak-express.com/r/JANE-9F2C";
+  const link = "https://airpak-express.site/r/JANE-9F2C";
   const referrals = FRIENDS.filter((f) => f.status !== "invited").length;
   const goal = 10;
 

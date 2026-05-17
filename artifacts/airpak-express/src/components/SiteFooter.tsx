@@ -63,7 +63,7 @@ export function SiteFooter() {
             </li>
             <li className="flex items-center gap-3">
               <Mail className="h-4 w-4 text-[#E11D2A] flex-shrink-0" />
-              <a href="mailto:enquiry@airpak-express.com" className="hover:text-[#E11D2A]">enquiry@airpak-express.com</a>
+              <a href="mailto:enquiry@airpak-express.site" className="hover:text-[#E11D2A]">enquiry@airpak-express.site</a>
             </li>
           </ul>
         </div>

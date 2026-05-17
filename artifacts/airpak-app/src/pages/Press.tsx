@@ -29,7 +29,7 @@ export default function Press() {
         <Card>
           <CardHeader>
             <CardTitle>Recent releases</CardTitle>
-            <CardDescription>For interview requests, contact press@airpak-express.com</CardDescription>
+            <CardDescription>For interview requests, contact press@airpak-express.site</CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
