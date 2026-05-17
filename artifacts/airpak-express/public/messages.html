@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#f6f6f6">
+<title>Support — Airpak Express</title>
+<link rel="icon" href="/apps/airpak/img/logosmall.png">
+<link rel="stylesheet" href="/css/apple-tokens.css">
+<link rel="stylesheet" href="/css/glass-system.css">
+<link rel="stylesheet" href="/apps/airpak/css/ap-lang.css">
+<style>
+  :root{
+    --imsg-bg:#ffffff;
+    --imsg-bg-grouped:#f2f2f7;
+    --imsg-header-bg:rgba(248,248,248,.86);
+    --imsg-header-border:rgba(0,0,0,.12);
+    --imsg-text:#000;
+    --imsg-text-sec:#8e8e93;
+    --imsg-blue:#007aff;
+    --imsg-blue-grad:linear-gradient(180deg,#1ea1ff 0%,#0a84ff 100%);
+    --imsg-grey-bubble:#e9e9eb;
+    --imsg-grey-text:#000;
+    --imsg-tail:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M0 0 C5 10 15 14 20 14 L20 20 L0 20 Z'/></svg>");
+  }
+  @media(prefers-color-scheme:dark){
+    :root{
+      --imsg-bg:#000;
+      --imsg-bg-grouped:#000;
+      --imsg-header-bg:rgba(28,28,30,.84);
+      --imsg-header-border:rgba(255,255,255,.12);
+      --imsg-text:#fff;
+      --imsg-text-sec:#8e8e93;
+      --imsg-grey-bubble:#26252a;
+      --imsg-grey-text:#fff;
+    }
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ height:100%; margin:0; }
+  body{
+    font:-apple-system-body, system-ui, -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif;
+    color:var(--imsg-text); background:var(--imsg-bg);
+    overflow:hidden;
+    font-feature-settings:"kern" 1, "liga" 1;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+
+  /* app shell */
+  .imsg{
+    display:flex; flex-direction:column;
+    height:100dvh; width:100%; max-width:100%;
+    background:var(--imsg-bg);
+    position:relative;
+  }
+
+  /* === HEADER === */
+  .imsg-header{
+    position:sticky; top:0; z-index:10;
+    background:var(--imsg-header-bg);
+    backdrop-filter:saturate(180%) blur(20px);
+    -webkit-backdrop-filter:saturate(180%) blur(20px);
+    border-bottom:.5px solid var(--imsg-header-border);
+    padding:8px 12px calc(8px + env(safe-area-inset-top)) 12px;
+    padding-top:calc(8px + env(safe-area-inset-top));
+    display:grid;
+    grid-template-columns:60px 1fr 60px;
+    align-items:center;
+    min-height:54px;
+  }
+  .imsg-back{
+    background:transparent; border:0; cursor:pointer;
+    color:var(--imsg-blue); font:600 17px/1.2 -apple-system,system-ui,sans-serif;
+    display:inline-flex; align-items:center; gap:2px; padding:6px 4px;
+  }
+  .imsg-back svg{ width:12px; height:21px; }
+  .imsg-header-center{
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+    user-select:none;
+  }
+  .imsg-avatar{
+    width:34px; height:34px; border-radius:50%;
+    background:var(--imsg-blue-grad);
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font:700 14px/1 -apple-system,system-ui,sans-serif;
+    box-shadow:0 1px 2px rgba(0,0,0,.15);
+    overflow:hidden;
+  }
+  .imsg-avatar img{ width:100%; height:100%; object-fit:cover; }
+  .imsg-name{ font:600 11px/1.1 -apple-system,system-ui,sans-serif; color:var(--imsg-text); margin-top:2px; }
+  .imsg-name .chev{ color:var(--imsg-text-sec); font-size:9px; margin-left:1px; }
+  .imsg-actions{ display:flex; justify-content:flex-end; gap:14px; padding-right:6px; }
+  .imsg-actions button{
+    background:transparent; border:0; cursor:pointer; padding:4px;
+    color:var(--imsg-blue);
+  }
+  .imsg-actions svg{ width:24px; height:24px; }
+
+  /* === MESSAGES SCROLL === */
+  .imsg-scroll{
+    flex:1; overflow-y:auto;
+    padding:12px 12px 8px 12px;
+    -webkit-overflow-scrolling:touch;
+    scroll-behavior:smooth;
+  }
+  .imsg-day{
+    text-align:center; color:var(--imsg-text-sec);
+    font:600 11px/1.4 -apple-system,system-ui,sans-serif;
+    margin:8px 0 14px;
+  }
+  .imsg-day .imsg-day-time{ font-weight:400; margin-left:6px; }
+
+  .imsg-row{ display:flex; margin:1px 0; }
+  .imsg-row.in{ justify-content:flex-start; }
+  .imsg-row.out{ justify-content:flex-end; }
+
+  .imsg-bubble{
+    position:relative;
+    max-width:75%;
+    padding:8px 13px 9px;
+    border-radius:18px;
+    font:400 17px/1.32 -apple-system,system-ui,"SF Pro Text",sans-serif;
+    word-wrap:break-word; white-space:pre-wrap;
+    box-shadow:0 1px 0 rgba(0,0,0,.02);
+    letter-spacing:-.01em;
+    animation:imsgPop .26s cubic-bezier(.2,.9,.3,1.2);
+    transform-origin:bottom center;
+  }
+  @keyframes imsgPop{
+    0%  { transform:scale(.5) translateY(8px); opacity:0; }
+    60% { transform:scale(1.03) translateY(0); opacity:1; }
+    100%{ transform:scale(1) translateY(0); }
+  }
+  .imsg-row.in  .imsg-bubble{ background:var(--imsg-grey-bubble); color:var(--imsg-grey-text); border-bottom-left-radius:6px; }
+  .imsg-row.out .imsg-bubble{ background:var(--imsg-blue-grad); color:#fff; border-bottom-right-radius:6px; }
+
+  /* The classic iMessage tails */
+  .imsg-bubble.tail::after{
+    content:""; position:absolute; bottom:-1px; width:20px; height:20px;
+    background-repeat:no-repeat;
+    -webkit-mask-image:var(--imsg-tail); mask-image:var(--imsg-tail);
+    -webkit-mask-size:contain; mask-size:contain;
+  }
+  .imsg-row.in  .imsg-bubble.tail::after{ left:-6px;  background-color:var(--imsg-grey-bubble); transform:scaleX(1); }
+  .imsg-row.out .imsg-bubble.tail::after{ right:-6px; background-color:#0a84ff; transform:scaleX(-1); }
+
+  /* grouped consecutive */
+  .imsg-row + .imsg-row.same{ margin-top:2px; }
+  .imsg-row.same .imsg-bubble{ border-bottom-left-radius:18px; border-bottom-right-radius:18px; }
+  .imsg-row.same.in .imsg-bubble{ border-top-left-radius:6px; }
+  .imsg-row.same.out .imsg-bubble{ border-top-right-radius:6px; }
+
+  /* delivered / read receipts */
+  .imsg-meta{
+    text-align:right; color:var(--imsg-text-sec);
+    font:400 11px/1.2 -apple-system,system-ui,sans-serif;
+    margin:2px 4px 6px 0;
+  }
+
+  /* typing dots */
+  .imsg-typing-row{ display:flex; justify-content:flex-start; margin:4px 0; }
+  .imsg-typing{
+    background:var(--imsg-grey-bubble);
+    padding:11px 14px;
+    border-radius:18px; border-bottom-left-radius:6px;
+    display:flex; gap:4px; align-items:center;
+  }
+  .imsg-typing span{ width:7px; height:7px; border-radius:50%; background:#a0a0a8; opacity:.6; animation:imsgDots 1.3s infinite ease-in-out; }
+  .imsg-typing span:nth-child(2){ animation-delay:.16s; }
+  .imsg-typing span:nth-child(3){ animation-delay:.32s; }
+  @keyframes imsgDots{ 0%,80%,100%{ transform:scale(.7); opacity:.4;} 40%{ transform:scale(1); opacity:1;} }
+
+  /* === INPUT BAR === */
+  .imsg-input-wrap{
+    flex-shrink:0;
+    background:var(--imsg-header-bg);
+    backdrop-filter:saturate(180%) blur(20px);
+    -webkit-backdrop-filter:saturate(180%) blur(20px);
+    border-top:.5px solid var(--imsg-header-border);
+    padding:7px 8px calc(7px + env(safe-area-inset-bottom)) 8px;
+  }
+  .imsg-input{
+    display:flex; align-items:flex-end; gap:8px;
+  }
+  .imsg-plus{
+    width:32px; height:32px; flex:0 0 32px;
+    border:0; background:transparent;
+    color:var(--imsg-blue);
+    cursor:pointer; padding:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .imsg-plus svg{ width:30px; height:30px; }
+  .imsg-field{
+    flex:1; position:relative;
+    background:var(--imsg-bg);
+    border:.5px solid var(--imsg-header-border);
+    border-radius:18px;
+    min-height:34px;
+    display:flex; align-items:center;
+  }
+  .imsg-field textarea{
+    flex:1; resize:none; border:0; outline:0; background:transparent;
+    padding:7px 38px 7px 12px;
+    font:400 17px/1.3 -apple-system,system-ui,"SF Pro Text",sans-serif;
+    color:var(--imsg-text);
+    max-height:120px; overflow-y:auto;
+    width:100%;
+  }
+  .imsg-field textarea::placeholder{ color:var(--imsg-text-sec); }
+  .imsg-send{
+    position:absolute; right:3px; bottom:3px;
+    width:28px; height:28px; border-radius:50%;
+    background:var(--imsg-blue-grad);
+    border:0; cursor:pointer; color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    transform:scale(1); transition:transform .15s, opacity .15s;
+  }
+  .imsg-send:disabled{ opacity:0; transform:scale(.5); pointer-events:none; }
+  .imsg-send svg{ width:18px; height:18px; }
+
+  /* quick reply chips that surface on empty conversations */
+  .imsg-suggest{
+    display:flex; flex-wrap:wrap; gap:6px; padding:6px 12px 10px;
+    justify-content:center;
+  }
+  .imsg-suggest button{
+    background:var(--imsg-grey-bubble);
+    color:var(--imsg-text);
+    border:0; border-radius:14px;
+    padding:7px 12px;
+    font:500 14px/1.2 -apple-system,system-ui,sans-serif;
+    cursor:pointer;
+  }
+  .imsg-suggest button:active{ transform:scale(.97); }
+
+  /* error row */
+  .imsg-err{
+    text-align:center; color:#ff3b30;
+    font:500 12px/1.3 -apple-system,system-ui,sans-serif;
+    margin:8px 0;
+  }
+
+  /* desktop max-width frame so it doesn't stretch endlessly */
+  @media(min-width:760px){
+    body{ background:#e5e5e7; }
+    @media(prefers-color-scheme:dark){ body{ background:#0a0a0a; } }
+    .imsg{
+      max-width:480px; margin:0 auto; height:100dvh;
+      border-left:.5px solid rgba(0,0,0,.08);
+      border-right:.5px solid rgba(0,0,0,.08);
+    }
+  }
+</style>
+</head>
+<body>
+<div class="imsg" id="app">
+  <header class="imsg-header">
+    <button class="imsg-back" type="button" onclick="history.length>1?history.back():(location.href='/dashboard.html')">
+      <svg viewBox="0 0 12 21" fill="currentColor"><path d="M11.5 1.7 9.8 0 0 9.8a1 1 0 0 0 0 1.4L9.8 21l1.7-1.7L3 10.5z"/></svg>
+      <span>Back</span>
+    </button>
+    <div class="imsg-header-center">
+      <div class="imsg-avatar"><img src="/apps/airpak/img/logosmall.png" alt="A" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'A'}))"></div>
+      <div class="imsg-name">Airpak Support <span class="chev">›</span></div>
+    </div>
+    <div class="imsg-actions">
+      <button type="button" title="Audio" onclick="alert('Voice calls coming soon.')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 15.5a1 1 0 0 0-.7-.95l-3.5-1.2a1 1 0 0 0-1.15.36l-1.4 2a13.5 13.5 0 0 1-6.96-6.96l2-1.4a1 1 0 0 0 .36-1.15L7.45 2.7A1 1 0 0 0 6.5 2H4a2 2 0 0 0-2 2c0 9.4 8.6 18 18 18a2 2 0 0 0 2-2v-2.5Z"/></svg>
+      </button>
+      <button type="button" title="FaceTime" onclick="alert('Video calls coming soon.')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3.5l5 4.5V6z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="imsg-scroll" id="scroll">
+    <div class="imsg-day">iMessage<span class="imsg-day-time" id="dayTime"></span></div>
+  </main>
+
+  <div class="imsg-suggest" id="suggest">
+    <button data-q="How do I track my parcel?">Track a parcel</button>
+    <button data-q="What are your delivery service options?">Service options</button>
+    <button data-q="Where is the nearest Airpak branch?">Find a branch</button>
+    <button data-q="How can I get a shipping quote?">Get a quote</button>
+    <button data-q="I need help with my COD shipment.">COD help</button>
+  </div>
+
+  <div class="imsg-input-wrap">
+    <form class="imsg-input" id="form">
+      <button class="imsg-plus" type="button" title="More" onclick="alert('Attachments coming soon.')">
+        <svg viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="13" stroke="currentColor" stroke-width="1.5"/><path d="M15 9v12M9 15h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <div class="imsg-field">
+        <textarea id="input" rows="1" placeholder="iMessage" enterkeyhint="send" autocomplete="off"></textarea>
+        <button class="imsg-send" id="send" type="submit" disabled aria-label="Send">
+          <svg viewBox="0 0 18 18" fill="none"><path d="M9 14V4M4 9l5-5 5 5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+(function(){
+  var API = "/api/chat";
+  var STORAGE = "ap_imsg_history_v1";
+  var $ = function(id){ return document.getElementById(id); };
+  var scroll = $('scroll'), input = $('input'), send = $('send'), form = $('form'), suggest = $('suggest');
+  var history;
+  try { history = JSON.parse(localStorage.getItem(STORAGE) || "[]"); } catch(e){ history = []; }
+  function save(){ try{ localStorage.setItem(STORAGE, JSON.stringify(history.slice(-30))); }catch(e){} }
+
+  // header date "iMessage Today 2:14 PM"
+  (function(){
+    var d = new Date();
+    var h = d.getHours(), m = d.getMinutes();
+    var ap = h>=12?'PM':'AM'; var hh = ((h+11)%12)+1;
+    $('dayTime').textContent = ' Today ' + hh + ':' + (m<10?'0':'') + m + ' ' + ap;
+  })();
+
+  function lastRole(){
+    var rows = scroll.querySelectorAll('.imsg-row');
+    if (!rows.length) return null;
+    return rows[rows.length-1].classList.contains('out') ? 'user' : 'assistant';
+  }
+  function addBubble(role, text, skipAnim){
+    var row = document.createElement('div');
+    row.className = 'imsg-row ' + (role==='user' ? 'out' : 'in');
+    var same = lastRole() === (role==='user'?'user':'assistant');
+    if (same) row.classList.add('same');
+    var bub = document.createElement('div');
+    bub.className = 'imsg-bubble' + (same ? '' : ' tail');
+    bub.textContent = text;
+    if (skipAnim) bub.style.animation = 'none';
+    row.appendChild(bub);
+    scroll.appendChild(row);
+    scroll.scrollTop = scroll.scrollHeight;
+    return row;
+  }
+  function addReadReceipt(){
+    var prev = scroll.querySelector('.imsg-meta');
+    if (prev) prev.remove();
+    var m = document.createElement('div');
+    m.className = 'imsg-meta';
+    m.textContent = 'Delivered';
+    scroll.appendChild(m);
+  }
+  function addTyping(){
+    removeTyping();
+    var w = document.createElement('div'); w.className='imsg-typing-row'; w.id='typing';
+    w.innerHTML = '<div class="imsg-typing"><span></span><span></span><span></span></div>';
+    scroll.appendChild(w); scroll.scrollTop = scroll.scrollHeight;
+  }
+  function removeTyping(){ var t = document.getElementById('typing'); if(t) t.remove(); }
+  function addError(msg){
+    var e = document.createElement('div'); e.className='imsg-err'; e.textContent='Not Delivered • ' + msg;
+    scroll.appendChild(e); scroll.scrollTop = scroll.scrollHeight;
+  }
+
+  // render saved history
+  if (history.length === 0) {
+    addBubble('assistant', "Hi! I'm Airpak Support. Ask me anything about tracking, pricing, services or your account.", true);
+  } else {
+    suggest.style.display = 'none';
+    history.forEach(function(m){ addBubble(m.role==='user'?'user':'assistant', m.content, true); });
+  }
+
+  function autosize(){
+    input.style.height = 'auto';
+    input.style.height = Math.min(120, input.scrollHeight) + 'px';
+    send.disabled = input.value.trim().length === 0;
+  }
+  input.addEventListener('input', autosize);
+  input.addEventListener('keydown', function(e){
+    if (e.key==='Enter' && !e.shiftKey){ e.preventDefault(); form.requestSubmit(); }
+  });
+
+  var sending = false;
+  function sendMessage(text){
+    text = (text||'').trim(); if (!text || sending) return;
+    sending = true; suggest.style.display = 'none';
+    addBubble('user', text);
+    history.push({role:'user', content:text}); save();
+    addReadReceipt();
+    addTyping();
+    fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history})})
+      .then(function(r){ return r.ok ? r.json() : r.json().then(function(e){ throw new Error(e.error||'Server error'); }); })
+      .then(function(data){
+        removeTyping();
+        var reply = (data && data.reply) || "Sorry, I couldn't reach an answer. Try /contact.html.";
+        // split bot reply into bubble groups by double newline for iMessage feel
+        var chunks = reply.split(/\n\n+/).map(function(s){return s.trim();}).filter(Boolean);
+        if (chunks.length===0) chunks = [reply];
+        var i = 0;
+        function next(){
+          if (i >= chunks.length){ history.push({role:'assistant', content:reply}); save(); sending=false; return; }
+          addTyping();
+          setTimeout(function(){
+            removeTyping();
+            addBubble('assistant', chunks[i]);
+            i++; setTimeout(next, 220);
+          }, 280 + Math.min(900, chunks[i].length*4));
+        }
+        next();
+      })
+      .catch(function(err){
+        removeTyping(); addError(err.message||'Could not send'); sending=false;
+      })
+      .finally(function(){ input.value=''; autosize(); input.focus(); });
+  }
+
+  form.addEventListener('submit', function(e){ e.preventDefault(); sendMessage(input.value); });
+  suggest.addEventListener('click', function(e){
+    var b = e.target.closest('button[data-q]'); if(!b) return;
+    sendMessage(b.getAttribute('data-q'));
+  });
+
+  // Recompute viewport when iOS keyboard appears
+  if (window.visualViewport){
+    window.visualViewport.addEventListener('resize', function(){
+      scroll.scrollTop = scroll.scrollHeight;
+    });
+  }
+})();
+</script>
+<script src="/apps/airpak/js/ap-lang.js" defer></script>
+</body>
+</html>
