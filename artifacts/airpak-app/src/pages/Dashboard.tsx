@@ -1,4 +1,5 @@
 import { AppShell } from "@/components/AppShell";
+import { DashboardMenu } from "@/components/DashboardMenu";
 import { useGetDashboardSummary, useGetDashboardActivity, useListShipments } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Package, Activity, CreditCard, AlertCircle } from "lucide-react";
@@ -12,7 +13,10 @@ export default function Dashboard() {
   return (
     <AppShell>
       <div className="space-y-8">
-        <h1 className="text-3xl font-bold tracking-tight">Overview</h1>
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <h1 className="text-3xl font-bold tracking-tight">Overview</h1>
+          <DashboardMenu />
+        </div>
 
         {summary && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
