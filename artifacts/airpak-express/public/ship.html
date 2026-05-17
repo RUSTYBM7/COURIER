@@ -121,6 +121,16 @@ body::before {
 .demo-row strong { color: rgba(255,255,255,.7); font-family: monospace; }
 .fill-btn { background: rgba(205,39,39,.2); border: none; border-radius: 4px; color: #ff9999; font-size: 10px; padding: 2px 8px; cursor: pointer; }
 </style>
+  <link rel="stylesheet" href="/apps/airpak/css/ap-lang.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sarabun:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style id="ap-preset">
+  body, .form-group input, .form-group select, .login-btn, button { font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif !important; }
+  h1, h2, h3, h4, h5, h6, .login-top h1 { font-family: "Sarabun", "Inter", sans-serif !important; font-weight: 800 !important; letter-spacing: -0.01em; }
+  :root { --red: #CD2727; --red-deep: #9b1a1a; --dark: #0f0f14; --card: #1a1a24; }
+</style>
 </head>
 <body>
 <div class="orb orb-1"></div>
@@ -220,5 +230,6 @@ function doLogin() {
 
 document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 </script>
+  <script src="/apps/airpak/js/ap-lang.js" defer></script>
 </body>
 </html>

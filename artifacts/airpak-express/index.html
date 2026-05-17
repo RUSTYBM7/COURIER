@@ -260,7 +260,8 @@ a{color:#CD2727;}
             }
     </style>
         <link rel="alternate" href="https://airpak-express.site/" hreflang="en-sg" />        
-    </head>
+      <link rel="stylesheet" href="/apps/airpak/css/ap-lang.css">
+</head>
     
 <body>    
     <!-- Modal -->
@@ -454,27 +455,6 @@ a{color:#CD2727;}
     }
     /* Hero stacking — text/track-bar above video */
     #home > .container { position: relative; z-index: 2; }
-    /* Floating Google Translate widget */
-    #ap-translate {
-        position: fixed; right: 16px; bottom: 16px; z-index: 9999;
-        background: #fff; border: 1px solid #e5e7eb; border-radius: 999px;
-        padding: 6px 10px 6px 12px; box-shadow: 0 6px 22px rgba(0,0,0,.15);
-        font-family: 'Inter', sans-serif; font-size: 13px; color: #111827;
-        display: flex; align-items: center; gap: 8px;
-    }
-    #ap-translate::before {
-        content: "\f1ab"; font-family: 'FontAwesome'; color:#CD2727; font-size: 14px;
-    }
-    #ap-translate .goog-te-gadget { font-size: 0 !important; color: transparent !important; }
-    #ap-translate .goog-te-gadget > span, #ap-translate .goog-te-gadget > div > span { display: none !important; }
-    #ap-translate .goog-te-gadget .goog-te-combo {
-        margin: 0 !important; padding: 4px 6px !important;
-        font-family: 'Inter', sans-serif !important; font-size: 13px !important;
-        color: #111827 !important; background: transparent !important;
-        border: 0 !important; outline: none !important; cursor: pointer;
-    }
-    .goog-te-banner-frame.skiptranslate, .goog-tooltip, .goog-tooltip:hover,
-    #goog-gt-tt, .VIpgJd-yAWNEb-L7lbkb { display: none !important; }
     body { top: 0 !important; }
     h3.title{    font-size: 1.25rem;font-weight:700;}
     .ourservice h5,#ourservices h3.samesize{text-align:center;font-weight: 700;}
@@ -1632,18 +1612,10 @@ src="https://www.facebook.com/tr?id=503153045757252&ev=PageView&noscript=1"
 
 
 <!-- Floating Translator Widget (Google Translate, all languages) -->
-<div id="ap-translate" title="Translate this page"><div id="google_translate_element"></div></div>
-<script>
-  function googleTranslateElementInit(){
-    new google.translate.TranslateElement({
-      pageLanguage: 'en',
-      includedLanguages: '',
-      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-      autoDisplay: false
-    }, 'google_translate_element');
-  }
-</script>
-<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
+
+
+
+  <script src="/apps/airpak/js/ap-lang.js" defer></script>
 </body>
 
 </html>

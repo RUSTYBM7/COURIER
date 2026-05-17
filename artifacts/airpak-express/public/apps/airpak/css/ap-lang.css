@@ -1,0 +1,105 @@
+/* Airpak Express language switcher — sits in header next to menu/burger */
+.ap-lang-switcher {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 10px;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, sans-serif;
+  font-size: 13px;
+  z-index: 9998;
+}
+.ap-lang-switcher.ap-lang-floating {
+  position: fixed;
+  top: 14px;
+  right: 16px;
+}
+
+.ap-lang-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #fff;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  transition: border-color .15s, box-shadow .15s, background .15s;
+}
+.ap-lang-btn:hover {
+  border-color: #CD2727;
+  box-shadow: 0 4px 14px rgba(205,39,39,.18);
+}
+.ap-lang-btn .fa-globe { color: #CD2727; font-size: 14px; }
+.ap-lang-btn .ap-lang-flag { font-size: 14px; line-height: 1; }
+.ap-lang-btn .ap-lang-code { font-size: 12px; }
+.ap-lang-btn .ap-lang-caret {
+  font-size: 12px; color: #6b7280; margin-left: 2px;
+  transition: transform .15s;
+}
+.ap-lang-switcher.open .ap-lang-btn .ap-lang-caret { transform: rotate(180deg); }
+
+.ap-lang-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 200px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 14px 40px rgba(15,23,42,.14);
+  padding: 6px;
+  display: none;
+  max-height: 70vh;
+  overflow: auto;
+}
+.ap-lang-switcher.open .ap-lang-menu { display: block; }
+
+.ap-lang-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  background: transparent;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 8px;
+  color: #111827;
+  font: inherit;
+  font-size: 13px;
+}
+.ap-lang-item:hover { background: #fef2f2; color: #CD2727; }
+.ap-lang-item .ap-lang-flag { font-size: 16px; line-height: 1; }
+.ap-lang-item .ap-lang-name { font-weight: 500; }
+
+/* Dark-themed pages (admin, dashboards) */
+[data-theme="dark"] .ap-lang-btn,
+body.dark .ap-lang-btn {
+  background: rgba(255,255,255,.06);
+  color: #fff;
+  border-color: rgba(255,255,255,.12);
+}
+[data-theme="dark"] .ap-lang-menu,
+body.dark .ap-lang-menu {
+  background: #1a1a24;
+  border-color: rgba(255,255,255,.08);
+  color: #fff;
+}
+[data-theme="dark"] .ap-lang-item,
+body.dark .ap-lang-item { color: #fff; }
+[data-theme="dark"] .ap-lang-item:hover,
+body.dark .ap-lang-item:hover { background: rgba(205,39,39,.15); color: #ff9999; }
+
+@media (max-width: 640px) {
+  .ap-lang-switcher { margin: 0 6px; }
+  .ap-lang-btn { padding: 5px 9px; font-size: 12px; }
+  .ap-lang-btn .ap-lang-code { display: none; }
+}
