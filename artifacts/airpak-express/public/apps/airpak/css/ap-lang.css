@@ -121,13 +121,44 @@ header .header-bottom .header-wrap{ position:relative; min-height:48px; }
 header .header-bottom .header-action-icon-2:last-child{
   position:absolute; right:18px; top:50%; transform:translateY(-50%);
 }
-/* HIDE the duplicate small logo with the "Delivering Solutions" tagline
-   baked into the PNG — it sits in the bottom header row next to the burger.
-   The main "Airpak / Airpak Express" logo in .header-middle stays. */
-header .header-bottom .logo.logo-width-2{ display:none !important; }
+/* HIDE the entire bottom header row (duplicate logo + tagline + burger).
+   Burger is repositioned to sit on the SAME horizontal line as the
+   logo and translator (top row) — see ap-lang.js for the move. */
+header .header-bottom{ display:none !important; }
 
-/* Make the bottom header row a slim strip that just holds the burger */
-header .header-bottom{ min-height:0 !important; padding:6px 0 !important; }
+/* Make the top header row align logo (left) and burger (right) on one line */
+header .header-middle .header-wrap{
+  display:flex !important; align-items:center !important;
+  justify-content:space-between !important;
+  min-height:64px; position:relative;
+}
+header .header-middle .logo.logo-width-1{ flex:0 0 auto; margin:0; }
+header .header-middle .header-right{ display:flex !important; align-items:center; gap:10px; }
+
+/* Floating burger that mirrors the translator pill style — same row */
+.ap-burger-fab{
+  position:fixed; top:14px; right:18px; z-index:2147483641;
+  width:42px; height:38px; padding:0;
+  display:inline-flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.96);
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:999px; cursor:pointer; outline:none;
+  box-shadow:0 1px 2px rgba(0,0,0,.04), 0 4px 12px rgba(0,0,0,.06);
+  backdrop-filter:saturate(180%) blur(12px);
+  -webkit-backdrop-filter:saturate(180%) blur(12px);
+  transition:transform .15s, box-shadow .15s, border-color .15s;
+}
+.ap-burger-fab:hover{
+  transform:translateY(-1px); border-color:#CD2727;
+  box-shadow:0 2px 4px rgba(0,0,0,.06), 0 8px 18px rgba(205,39,39,.15);
+}
+.ap-burger-fab svg{ width:18px; height:18px; color:#1a1a24; }
+/* When the burger is present, slide the translator left to sit beside it */
+body.ap-has-burger .ap-lang-switcher.ap-lang-floating{ right:72px !important; }
+@media(max-width:520px){
+  .ap-burger-fab{ top:10px; right:10px; }
+  body.ap-has-burger .ap-lang-switcher.ap-lang-floating{ right:62px !important; }
+}
 
 /* Dark mode (for juju2 dark sections) */
 body.dark .ap-lang-btn, [data-theme="dark"] .ap-lang-btn{

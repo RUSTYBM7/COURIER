@@ -226,6 +226,31 @@
     wrap.classList.add("ap-lang-floating");
     document.body.appendChild(wrap);
 
+    // Add a matching pill-style burger so logo + translator + menu all sit
+    // on the SAME horizontal line in the top-right corner.
+    if (!document.getElementById("ap-burger-fab")) {
+      var bf = document.createElement("button");
+      bf.id = "ap-burger-fab";
+      bf.className = "ap-burger-fab";
+      bf.type = "button";
+      bf.setAttribute("aria-label", "Open menu");
+      bf.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+          '<path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+        '</svg>';
+      bf.addEventListener("click", function () {
+        // Trigger juju1's existing mobile menu (burger-icon triggers it)
+        var b = document.querySelector("header .burger-icon:not([style*='display:none'])")
+             || document.querySelector(".mobile-header-active .burger-icon")
+             || document.querySelector(".burger-icon");
+        if (b) { b.click(); return; }
+        // Fallback: toggle a generic body class for mobile menu wrappers
+        document.body.classList.toggle("mobile-menu-active");
+      });
+      document.body.appendChild(bf);
+      document.body.classList.add("ap-has-burger");
+    }
+
     // Apply saved lang on load
     var saved = getLang();
     if (saved && saved !== "en") {
