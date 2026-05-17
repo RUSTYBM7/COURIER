@@ -76,5 +76,6 @@
     "vite": "catalog:",
     "wouter": "^3.3.5",
     "zod": "catalog:"
-  }
+  },
+  "packageManager": "pnpm@10.33.4"
 }
