@@ -420,7 +420,7 @@ html, body { height: auto !important; overflow-y: auto !important; }
       </div>
       <div class="kpi-card">
         <div class="kpi-val" id="kpi-revenue">$0</div>
-        <div class="kpi-lbl">Revenue (SGD)</div>
+        <div class="kpi-lbl">Revenue (GBP)</div>
         <div class="kpi-change up">&#8593; 8.7% growth</div>
       </div>
       <div class="kpi-card">
@@ -481,13 +481,13 @@ html, body { height: auto !important; overflow-y: auto !important; }
         <div>
           <label class="ent-label">Origin Country</label>
           <select class="ent-select" id="est-origin">
-            <option>Singapore</option><option>Malaysia</option><option>USA</option><option>China</option><option>UK</option><option>Australia</option><option>Japan</option><option>Germany</option><option>India</option><option>UAE</option>
+            <option>United Kingdom</option><option>Malaysia</option><option>USA</option><option>China</option><option>UK</option><option>Australia</option><option>Japan</option><option>Germany</option><option>India</option><option>UAE</option>
           </select>
         </div>
         <div>
           <label class="ent-label">Destination Country</label>
           <select class="ent-select" id="est-dest">
-            <option>USA</option><option>UK</option><option>Australia</option><option>China</option><option>Japan</option><option>Germany</option><option>Singapore</option><option>Malaysia</option><option>India</option><option>UAE</option>
+            <option>USA</option><option>UK</option><option>Australia</option><option>China</option><option>Japan</option><option>Germany</option><option>United Kingdom</option><option>Malaysia</option><option>India</option><option>UAE</option>
           </select>
         </div>
       </div>
@@ -557,7 +557,7 @@ html, body { height: auto !important; overflow-y: auto !important; }
             <option value="de">Germany / EU (21% VAT)</option>
             <option value="jp">Japan (10% consumption tax)</option>
             <option value="in">India (18% GST + BCD)</option>
-            <option value="sg">Singapore (9% GST)</option>
+            <option value="sg">United Kingdom (9% GST)</option>
           </select>
         </div>
         <div>
@@ -657,14 +657,14 @@ html, body { height: auto !important; overflow-y: auto !important; }
           <div class="alert-icon">&#9888;&#65039;</div>
           <div class="alert-body">
             <h5>Customs Risk — AP-2024-88097 (Apple Asia)</h5>
-            <p>AI flagged mismatch between declared value and market price for 3 SKUs. Recommendation: pre-submit revised commercial invoice to Singapore Customs. Probability of hold: 78%.</p>
+            <p>AI flagged mismatch between declared value and market price for 3 SKUs. Recommendation: pre-submit revised commercial invoice to the United Kingdom Customs. Probability of hold: 78%.</p>
           </div>
         </div>
         <div class="ai-alert ok">
           <div class="alert-icon">&#9989;</div>
           <div class="alert-body">
             <h5>Route Optimized — SIN&#8594;LAX corridor</h5>
-            <p>AI rerouted 14 air freight shipments via Tokyo Narita to avoid JFK congestion. Estimated saving: $2,340 SGD and 6h transit time improvement.</p>
+            <p>AI rerouted 14 air freight shipments via Tokyo Narita to avoid JFK congestion. Estimated saving: $2,340 GBP and 6h transit time improvement.</p>
           </div>
         </div>
       </div>
@@ -704,7 +704,7 @@ let mapInstance = null;
 let allMarkers = [];
 
 const shipments = [
-  { lat: 1.35, lng: 103.82, type: 'air', status: 'ok', label: 'AP-88102 Singapore HUB' },
+  { lat: 1.35, lng: 103.82, type: 'air', status: 'ok', label: 'AP-88102 United Kingdom HUB' },
   { lat: 40.71, lng: -74.00, type: 'air', status: 'ok', label: 'AP-88085 New York — Delivered' },
   { lat: 51.50, lng: -0.12, type: 'air', status: 'ok', label: 'AP-88091 London — Transit' },
   { lat: 35.68, lng: 139.69, type: 'sea', status: 'ok', label: 'AP-88079 Tokyo — Transit' },
@@ -832,7 +832,7 @@ function calcEstimate() {
   const gst = (base + fuel + remote) * 0.09;
   const total = base + fuel + remote + gst;
 
-  const fmt = n => 'SGD $' + n.toFixed(2);
+  const fmt = n => 'GBP $' + n.toFixed(2);
   document.getElementById('er-base').textContent = fmt(base);
   document.getElementById('er-fuel').textContent = fmt(fuel);
   document.getElementById('er-remote').textContent = remote > 0 ? fmt(remote) : 'Not applicable';
@@ -878,7 +878,7 @@ function calcCustoms() {
 // ---- AI Chat ----
 const aiResponses = {
   'delay': 'Currently monitoring 3 delayed shipments. AP-88064 (Hong Kong) is most critical — typhoon disruption, 28h delay projected. Auto-escalation sent to Amazon SG.',
-  'route': 'I optimized the SIN→LAX corridor at 02:14 today — rerouted 14 shipments via Tokyo Narita, saving SGD $2,340 and 6h transit time. Want me to run a full corridor analysis?',
+  'route': 'I optimized the SIN→LAX corridor at 02:14 today — rerouted 14 shipments via Tokyo Narita, saving GBP $2,340 and 6h transit time. Want me to run a full corridor analysis?',
   'customs': 'AP-88097 (Apple Asia, Shanghai) has a 78% hold probability. I recommend submitting a revised commercial invoice before Customs pre-clearance window closes at 17:00 SGT.',
   'sla': 'SLA compliance is at 94.3% today. 1 breach: AP-88064. 1 at-risk: AP-88097. 5 shipments are on track against their SLA commitments.',
   'fleet': 'Fleet status: 4 of 6 vehicles on route. VH-002 is stationary (possible breakdown) — last GPS ping 18 min ago. VH-005 at Johor Bahru customs checkpoint.',

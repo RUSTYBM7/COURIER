@@ -378,7 +378,7 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
       <div style="margin-top:16px;display:flex;gap:10px;">
         <div style="flex:1;text-align:center;background:var(--card2);border-radius:8px;padding:10px;"><div style="font-size:1.4rem;font-weight:800;color:#4ade80;">98.4%</div><div style="font-size:10px;color:var(--sub);">On-Time Rate</div></div>
         <div style="flex:1;text-align:center;background:var(--card2);border-radius:8px;padding:10px;"><div style="font-size:1.4rem;font-weight:800;color:#fbbf24;">1.07%</div><div style="font-size:10px;color:var(--sub);">Delay Rate</div></div>
-        <div style="flex:1;text-align:center;background:var(--card2);border-radius:8px;padding:10px;"><div style="font-size:1.4rem;font-weight:800;color:#60a5fa;">SGD 4.2M</div><div style="font-size:10px;color:var(--sub);">Month Revenue</div></div>
+        <div style="flex:1;text-align:center;background:var(--card2);border-radius:8px;padding:10px;"><div style="font-size:1.4rem;font-weight:800;color:#60a5fa;">GBP 4.2M</div><div style="font-size:10px;color:var(--sub);">Month Revenue</div></div>
       </div>
     </div>
   </div>
@@ -420,8 +420,8 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
       <div class="alert-item danger"><span class="alert-icon">&#9889;</span><div class="alert-body"><h5>SLA Breach — AP-88064 (Amazon SG)</h5><p>28h delay due to Typhoon Hato. Auto-escalation triggered. Reroute via GZH evaluated.</p></div><div class="alert-actions"><button class="btn btn-sm btn-danger" onclick="dismissAlert(this)">Dismiss</button><button class="btn btn-sm btn-ghost" onclick="nav('reroute')">Reroute</button></div></div>
       <div class="alert-item warning"><span class="alert-icon">&#9888;&#65039;</span><div class="alert-body"><h5>Customs Risk — AP-88097 (Apple Asia)</h5><p>AI flagged 78% hold probability. Value mismatch on 3 SKUs. Submit revised invoice before 17:00 SGT.</p></div><div class="alert-actions"><button class="btn btn-sm btn-danger" onclick="dismissAlert(this)">Dismiss</button><button class="btn btn-sm btn-ghost" onclick="nav('customs-clear')">Resolve</button></div></div>
       <div class="alert-item warning"><span class="alert-icon">&#128683;</span><div class="alert-body"><h5>Fleet — VH-002 Signal Lost</h5><p>Vehicle last GPS ping 22 minutes ago. Last known: Tuas Checkpoint. Driver unresponsive.</p></div><div class="alert-actions"><button class="btn btn-sm btn-danger" onclick="dismissAlert(this)">Dismiss</button><button class="btn btn-sm btn-ghost" onclick="nav('route-monitor')">Monitor</button></div></div>
-      <div class="alert-item info"><span class="alert-icon">&#128196;</span><div class="alert-body"><h5>Invoice Overdue — INV-2024-1138</h5><p>Samsung SG — SGD $4,820 overdue by 14 days. 3rd reminder scheduled.</p></div><div class="alert-actions"><button class="btn btn-sm btn-danger" onclick="dismissAlert(this)">Dismiss</button><button class="btn btn-sm btn-ghost" onclick="nav('payments')">View</button></div></div>
-      <div class="alert-item ok"><span class="alert-icon">&#9989;</span><div class="alert-body"><h5>Route Optimised — SIN&#8594;LAX corridor</h5><p>14 air shipments rerouted via NRT. Saving: SGD $2,340 and 6h transit improvement.</p></div><div class="alert-actions"><button class="btn btn-sm btn-danger" onclick="dismissAlert(this)">Dismiss</button></div></div>
+      <div class="alert-item info"><span class="alert-icon">&#128196;</span><div class="alert-body"><h5>Invoice Overdue — INV-2024-1138</h5><p>Samsung SG — GBP $4,820 overdue by 14 days. 3rd reminder scheduled.</p></div><div class="alert-actions"><button class="btn btn-sm btn-danger" onclick="dismissAlert(this)">Dismiss</button><button class="btn btn-sm btn-ghost" onclick="nav('payments')">View</button></div></div>
+      <div class="alert-item ok"><span class="alert-icon">&#9989;</span><div class="alert-body"><h5>Route Optimised — SIN&#8594;LAX corridor</h5><p>14 air shipments rerouted via NRT. Saving: GBP $2,340 and 6h transit improvement.</p></div><div class="alert-actions"><button class="btn btn-sm btn-danger" onclick="dismissAlert(this)">Dismiss</button></div></div>
     </div>
     <div class="card">
       <div class="card-title">&#128200; Alert Statistics</div>
@@ -469,14 +469,14 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
         <div class="card-title">Personal Details</div>
         <div class="f-row"><div><label class="f-label">First Name</label><input class="f-input" id="cc-fname" placeholder="John"/></div><div><label class="f-label">Last Name</label><input class="f-input" id="cc-lname" placeholder="Smith"/></div></div>
         <div class="f-group"><label class="f-label">Email Address</label><input class="f-input" id="cc-email" placeholder="john@company.com" type="email"/></div>
-        <div class="f-group"><label class="f-label">Phone Number</label><input class="f-input" id="cc-phone" placeholder="+65 9000 0000"/></div>
+        <div class="f-group"><label class="f-label">Phone Number</label><input class="f-input" id="cc-phone" placeholder="+44 9000 0000"/></div>
         <div class="f-group"><label class="f-label">Company Name</label><input class="f-input" id="cc-company" placeholder="Company Pte Ltd"/></div>
       </div>
       <div class="card">
         <div class="card-title">Address & Classification</div>
-        <div class="f-group"><label class="f-label">Country</label><select class="f-select" id="cc-country"><option>Singapore</option><option>Malaysia</option><option>USA</option><option>China</option><option>UK</option><option>Australia</option><option>Japan</option><option>UAE</option></select></div>
+        <div class="f-group"><label class="f-label">Country</label><select class="f-select" id="cc-country"><option>United Kingdom</option><option>Malaysia</option><option>USA</option><option>China</option><option>UK</option><option>Australia</option><option>Japan</option><option>UAE</option></select></div>
         <div class="f-group"><label class="f-label">Address</label><textarea class="f-textarea" id="cc-addr" rows="2" placeholder="Street address..."></textarea></div>
-        <div class="f-row"><div><label class="f-label">Account Type</label><select class="f-select" id="cc-type"><option>Enterprise</option><option>SME</option><option>Individual</option></select></div><div><label class="f-label">Credit Limit (SGD)</label><input class="f-input" id="cc-credit" type="number" placeholder="5000"/></div></div>
+        <div class="f-row"><div><label class="f-label">Account Type</label><select class="f-select" id="cc-type"><option>Enterprise</option><option>SME</option><option>Individual</option></select></div><div><label class="f-label">Credit Limit (GBP)</label><input class="f-input" id="cc-credit" type="number" placeholder="5000"/></div></div>
         <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="createClient()">&#10133; Create Account</button>
       </div>
     </div>
@@ -598,10 +598,10 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
       <div class="card" style="margin-bottom:18px;">
         <div class="card-title">Shipment Details</div>
         <div class="f-group"><label class="f-label">Client Account</label><select class="f-select" id="pc-client"><option>Amazon SG — CL-0001</option><option>Samsung SG — CL-0002</option><option>Apple Asia — CL-0003</option><option>Walmart SG — CL-0004</option><option>Google APAC — CL-0005</option></select></div>
-        <div class="f-row"><div><label class="f-label">Origin</label><select class="f-select" id="pc-origin"><option>Singapore</option><option>Malaysia</option><option>China</option><option>USA</option></select></div><div><label class="f-label">Destination</label><select class="f-select" id="pc-dest"><option>USA</option><option>UK</option><option>Australia</option><option>Japan</option><option>Germany</option></select></div></div>
+        <div class="f-row"><div><label class="f-label">Origin</label><select class="f-select" id="pc-origin"><option>United Kingdom</option><option>Malaysia</option><option>China</option><option>USA</option></select></div><div><label class="f-label">Destination</label><select class="f-select" id="pc-dest"><option>USA</option><option>UK</option><option>Australia</option><option>Japan</option><option>Germany</option></select></div></div>
         <div class="f-row"><div><label class="f-label">Service Type</label><select class="f-select" id="pc-service"><option>Express 3-day</option><option>Air Freight</option><option>Sea Freight</option><option>Road Freight</option></select></div><div><label class="f-label">Weight (kg)</label><input class="f-input" id="pc-weight" type="number" placeholder="5.0" value="5"/></div></div>
         <div class="f-row f3"><div><label class="f-label">Length (cm)</label><input class="f-input" id="pc-l" type="number" value="30"/></div><div><label class="f-label">Width (cm)</label><input class="f-input" id="pc-w" type="number" value="20"/></div><div><label class="f-label">Height (cm)</label><input class="f-input" id="pc-h" type="number" value="15"/></div></div>
-        <div class="f-group"><label class="f-label">Declared Value (SGD)</label><input class="f-input" id="pc-value" type="number" placeholder="500"/></div>
+        <div class="f-group"><label class="f-label">Declared Value (GBP)</label><input class="f-input" id="pc-value" type="number" placeholder="500"/></div>
         <div class="f-group"><label class="f-label">Description</label><textarea class="f-textarea" id="pc-desc" placeholder="Contents description (required for customs)..."></textarea></div>
       </div>
     </div>
@@ -615,10 +615,10 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
       </div>
       <div class="card">
         <div class="card-title">Rate Preview</div>
-        <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid var(--border);"><span style="color:var(--sub);">Base Rate</span><strong>SGD $87.50</strong></div>
-        <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid var(--border);"><span style="color:var(--sub);">Fuel Surcharge</span><strong>SGD $15.75</strong></div>
-        <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid var(--border);"><span style="color:var(--sub);">GST (9%)</span><strong>SGD $9.29</strong></div>
-        <div style="display:flex;justify-content:space-between;font-size:14px;padding:10px 0;"><span>Total</span><strong style="color:var(--red);">SGD $112.54</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid var(--border);"><span style="color:var(--sub);">Base Rate</span><strong>GBP $87.50</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid var(--border);"><span style="color:var(--sub);">Fuel Surcharge</span><strong>GBP $15.75</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid var(--border);"><span style="color:var(--sub);">GST (9%)</span><strong>GBP $9.29</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;padding:10px 0;"><span>Total</span><strong style="color:var(--red);">GBP $112.54</strong></div>
         <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="createParcel()">&#128230; Create Parcel & Generate AWB</button>
       </div>
     </div>
@@ -639,7 +639,7 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
         <option>Delivery Attempted</option><option>Delivered</option><option>Exception — Delay</option>
         <option>Exception — Customs Hold</option><option>Returned</option>
       </select></div>
-      <div class="f-group"><label class="f-label">Location</label><input class="f-input" id="ps-location" placeholder="e.g. Singapore Hub, T1"/></div>
+      <div class="f-group"><label class="f-label">Location</label><input class="f-input" id="ps-location" placeholder="e.g. United Kingdom Hub, T1"/></div>
       <div class="f-group"><label class="f-label">Timestamp</label><input class="f-input" id="ps-time" type="datetime-local"/></div>
       <div class="f-group"><label class="f-label">Admin Note (internal)</label><textarea class="f-textarea" id="ps-note" placeholder="Internal note — not visible to customer..."></textarea></div>
       <div class="f-group"><label class="f-label">Notify Customer?</label><select class="f-select" id="ps-notify"><option value="yes">Yes — send status email</option><option value="no">No — silent update</option></select></div>
@@ -693,7 +693,7 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
       <div class="f-group"><label class="f-label">Primary Carrier</label><select class="f-select"><option>Airpak Express (Direct)</option><option>FedEx</option><option>DHL Express</option><option>UPS</option><option>Maersk (Sea)</option><option>DP World (Sea)</option></select></div>
       <div class="f-group"><label class="f-label">Route Waypoints</label>
         <div style="display:flex;flex-direction:column;gap:6px;">
-          <input class="f-input" placeholder="Origin: Singapore Changi"/>
+          <input class="f-input" placeholder="Origin: United Kingdom Changi"/>
           <input class="f-input" placeholder="Hub 1: Tokyo Narita (optional)"/>
           <input class="f-input" placeholder="Destination: Los Angeles LAX"/>
         </div>
@@ -737,7 +737,7 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
           Typhoon Hato expected to clear Hong Kong airspace by <strong>May 14, 06:00 SGT</strong>.<br/>
           <strong>Recommended:</strong> Reroute via Tokyo Narita (NRT).<br/>
           ETA improvement: <strong style="color:#4ade80;">14h faster</strong><br/>
-          Cost difference: <strong style="color:#fbbf24;">+SGD $48 fuel</strong><br/>
+          Cost difference: <strong style="color:#fbbf24;">+GBP $48 fuel</strong><br/>
           Probability of success: <strong style="color:#4ade80;">94%</strong>
         </div>
       </div>
@@ -805,7 +805,7 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
       <div class="card-title">Clearance Tool</div>
       <div class="f-group"><label class="f-label">AWB Number</label><input class="f-input" placeholder="AP-2024-88097" value="AP-2024-88097"/></div>
       <div class="f-group"><label class="f-label">Customs Status</label><select class="f-select"><option>Under Review</option><option>Documents Submitted</option><option>Duty Assessed</option><option>Payment Received</option><option>Cleared</option><option>Rejected — Return</option></select></div>
-      <div class="f-group"><label class="f-label">Duty Amount (SGD)</label><input class="f-input" type="number" placeholder="0.00"/></div>
+      <div class="f-group"><label class="f-label">Duty Amount (GBP)</label><input class="f-input" type="number" placeholder="0.00"/></div>
       <div class="f-group"><label class="f-label">Reference Number</label><input class="f-input" placeholder="Customs ref / permit no."/></div>
       <div class="f-group"><label class="f-label">Notes</label><textarea class="f-textarea" placeholder="Customs officer notes or requirements..."></textarea></div>
       <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="toast('Customs status updated. Client notified.','&#128203;')">Update Customs Status</button>
@@ -936,7 +936,7 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
   <div class="section-hdr"><div><h2>&#128204; Checkpoint Injection</h2><p>Manually inject tracking checkpoints into parcel history</p></div></div>
   <div class="card">
     <div class="f-row"><div><label class="f-label">AWB Number</label><input class="f-input" placeholder="AP-2024-XXXXX"/></div><div><label class="f-label">Checkpoint Type</label><select class="f-select"><option>Facility Scan</option><option>Vehicle Loaded</option><option>Departed Facility</option><option>Arrived at Hub</option><option>Customs Entry</option><option>Customs Exit</option><option>Out for Delivery</option><option>Delivery Attempted</option></select></div></div>
-    <div class="f-row"><div><label class="f-label">Location</label><input class="f-input" placeholder="e.g. Singapore Hub Terminal 1"/></div><div><label class="f-label">Date &amp; Time</label><input class="f-input" type="datetime-local"/></div></div>
+    <div class="f-row"><div><label class="f-label">Location</label><input class="f-input" placeholder="e.g. United Kingdom Hub Terminal 1"/></div><div><label class="f-label">Date &amp; Time</label><input class="f-input" type="datetime-local"/></div></div>
     <div class="f-group"><label class="f-label">Scan Code / Reference</label><input class="f-input" placeholder="Auto-generated or manual code"/></div>
     <div class="f-group"><label class="f-label">Staff ID</label><input class="f-input" placeholder="Facility staff ID (optional)"/></div>
     <div style="display:flex;gap:8px;">
@@ -954,7 +954,7 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
       <div class="card-title">Scan Simulator</div>
       <div class="f-group"><label class="f-label">AWB / Barcode</label><input class="f-input" id="scan-awb" placeholder="Scan or type barcode..."/></div>
       <div class="f-group"><label class="f-label">Scan Type</label><select class="f-select"><option>Inbound Scan</option><option>Outbound Scan</option><option>Sort Scan</option><option>Exception Scan</option><option>Delivery Scan</option></select></div>
-      <div class="f-group"><label class="f-label">Scanner Location</label><select class="f-select"><option>Singapore Hub — Gate A</option><option>Singapore Hub — Customs</option><option>Changi Airport T5</option><option>JB Customs Checkpoint</option><option>Delivery Vehicle — VH-001</option></select></div>
+      <div class="f-group"><label class="f-label">Scanner Location</label><select class="f-select"><option>United Kingdom Hub — Gate A</option><option>United Kingdom Hub — Customs</option><option>Changi Airport T5</option><option>JB Customs Checkpoint</option><option>Delivery Vehicle — VH-001</option></select></div>
       <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="doScan()">&#128247; Simulate Scan</button>
       <div style="margin-top:14px;" id="scan-log">
         <div style="font-size:11px;color:var(--sub);margin-bottom:6px;">Scan Log</div>
@@ -1099,13 +1099,13 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
   <div class="g2">
     <div class="card">
       <div class="card-title">Send SMS</div>
-      <div class="f-group"><label class="f-label">Recipient Phone</label><input class="f-input" placeholder="+65 9000 0000"/></div>
+      <div class="f-group"><label class="f-label">Recipient Phone</label><input class="f-input" placeholder="+44 9000 0000"/></div>
       <div class="f-group"><label class="f-label">Message Template</label><select class="f-select" onchange="fillSms(this.value)">
         <option value="">Custom message</option>
         <option value="out">Your Airpak Express parcel [AWB] is out for delivery today. Track at airpak-express.site</option>
         <option value="del">Your Airpak Express parcel [AWB] has been delivered. Thank you for choosing us!</option>
         <option value="delay">Your parcel [AWB] is delayed due to [REASON]. New ETA: [DATE]. Apologies for the inconvenience.</option>
-        <option value="cust">Action required: Customs documents needed for parcel [AWB]. Contact us: +65 6XXX XXXX</option>
+        <option value="cust">Action required: Customs documents needed for parcel [AWB]. Contact us: +44 6XXX XXXX</option>
       </select></div>
       <div class="f-group"><label class="f-label">Message (160 chars max)</label><textarea class="f-textarea" id="sms-body" rows="3" placeholder="Type your SMS message..." maxlength="160"></textarea></div>
       <div style="font-size:11px;color:var(--sub);margin-top:-8px;margin-bottom:12px;"><span id="sms-count">0</span>/160 characters</div>
@@ -1181,8 +1181,8 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
       <div class="f-group"><label class="f-label">Client</label><select class="f-select"><option>Amazon SG — CL-0001</option><option>Samsung SG — CL-0002</option><option>Apple Asia — CL-0003</option></select></div>
       <div class="f-row"><div><label class="f-label">Invoice Date</label><input class="f-input" type="date"/></div><div><label class="f-label">Due Date</label><input class="f-input" type="date"/></div></div>
       <div class="f-group"><label class="f-label">Shipments (AWBs)</label><textarea class="f-textarea" rows="2" placeholder="AP-88102, AP-88097, AP-88085..."></textarea></div>
-      <div class="f-row"><div><label class="f-label">Subtotal (SGD)</label><input class="f-input" type="number" id="inv-sub" placeholder="0.00" oninput="calcInv()"/></div><div><label class="f-label">GST (9%)</label><input class="f-input" type="number" id="inv-gst" readonly placeholder="0.00"/></div></div>
-      <div class="f-group"><label class="f-label">Total</label><input class="f-input" id="inv-total" readonly style="font-weight:700;color:#CD2727;" placeholder="SGD $0.00"/></div>
+      <div class="f-row"><div><label class="f-label">Subtotal (GBP)</label><input class="f-input" type="number" id="inv-sub" placeholder="0.00" oninput="calcInv()"/></div><div><label class="f-label">GST (9%)</label><input class="f-input" type="number" id="inv-gst" readonly placeholder="0.00"/></div></div>
+      <div class="f-group"><label class="f-label">Total</label><input class="f-input" id="inv-total" readonly style="font-weight:700;color:#CD2727;" placeholder="GBP $0.00"/></div>
       <div style="display:flex;gap:8px;">
         <button class="btn btn-primary" style="flex:1;justify-content:center;" onclick="toast('Invoice generated and emailed to client','&#128196;')">Generate &amp; Send</button>
         <button class="btn btn-ghost" onclick="toast('PDF saved','&#11123;')">&#11123; PDF</button>
@@ -1196,14 +1196,14 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
           <div style="text-align:right;"><strong style="color:#CD2727;font-size:18px;">INVOICE</strong><br/>INV-2024-<span id="inv-num">1142</span></div>
         </div>
         <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
-          <div><strong>Bill To:</strong><br/>Client Name<br/>Company Pte Ltd<br/>Singapore</div>
-          <div style="text-align:right;"><strong>Airpak Express Pte Ltd</strong><br/>Changi Business Park<br/>Singapore 486038<br/>GST Reg: M2-XXXXXX-X</div>
+          <div><strong>Bill To:</strong><br/>Client Name<br/>Company Pte Ltd<br/>United Kingdom</div>
+          <div style="text-align:right;"><strong>Airpak Express Pte Ltd</strong><br/>Changi Business Park<br/>Cardiff CF10 5AL, United Kingdom<br/>GST Reg: M2-XXXXXX-X</div>
         </div>
         <table style="width:100%;border-collapse:collapse;font-size:11px;">
           <tr style="background:#f5f5f5;"><th style="padding:6px;text-align:left;">Description</th><th style="padding:6px;text-align:right;">Amount</th></tr>
           <tr><td style="padding:6px;">Freight Services — See AWB refs</td><td style="padding:6px;text-align:right;">$0.00</td></tr>
           <tr><td style="padding:6px;">GST (9%)</td><td style="padding:6px;text-align:right;" id="inv-prev-gst">$0.00</td></tr>
-          <tr style="font-weight:700;"><td style="padding:6px;color:#CD2727;">TOTAL DUE</td><td style="padding:6px;text-align:right;color:#CD2727;" id="inv-prev-total">SGD $0.00</td></tr>
+          <tr style="font-weight:700;"><td style="padding:6px;color:#CD2727;">TOTAL DUE</td><td style="padding:6px;text-align:right;color:#CD2727;" id="inv-prev-total">GBP $0.00</td></tr>
         </table>
         <div style="margin-top:12px;font-size:10px;color:#888;">Payment terms: 30 days from invoice date. Bank transfer: DBS Bank, Account 0XX-XXXXXX-X, Swift: DBSSSGSG</div>
       </div>
@@ -1219,7 +1219,7 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
       <div class="card-title">Adjustment Tool</div>
       <div class="f-group"><label class="f-label">Client Account</label><input class="f-input" placeholder="CL-XXXX or email"/></div>
       <div class="f-group"><label class="f-label">Adjustment Type</label><select class="f-select"><option>Credit Note</option><option>Refund</option><option>Goodwill Adjustment</option><option>Billing Correction</option><option>Write-Off</option></select></div>
-      <div class="f-row"><div><label class="f-label">Amount (SGD)</label><input class="f-input" type="number" placeholder="0.00"/></div><div><label class="f-label">Reference Invoice</label><input class="f-input" placeholder="INV-2024-XXXX"/></div></div>
+      <div class="f-row"><div><label class="f-label">Amount (GBP)</label><input class="f-input" type="number" placeholder="0.00"/></div><div><label class="f-label">Reference Invoice</label><input class="f-input" placeholder="INV-2024-XXXX"/></div></div>
       <div class="f-group"><label class="f-label">Justification (Required)</label><textarea class="f-textarea" placeholder="Reason for adjustment — mandatory for audit..."></textarea></div>
       <div class="f-group"><label class="f-label">Approver Sign-Off</label><input class="f-input" type="password" placeholder="Enter approver password"/></div>
       <button class="btn btn-warning" style="width:100%;justify-content:center;" onclick="toast('Balance adjustment applied and logged','&#9878;')">Apply Adjustment</button>
@@ -1244,7 +1244,7 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
     <div class="card">
       <div class="card-title">Verify Payment</div>
       <div class="f-group"><label class="f-label">Invoice Number</label><input class="f-input" placeholder="INV-2024-XXXX"/></div>
-      <div class="f-row"><div><label class="f-label">Amount Received (SGD)</label><input class="f-input" type="number" placeholder="0.00"/></div><div><label class="f-label">Payment Date</label><input class="f-input" type="date"/></div></div>
+      <div class="f-row"><div><label class="f-label">Amount Received (GBP)</label><input class="f-input" type="number" placeholder="0.00"/></div><div><label class="f-label">Payment Date</label><input class="f-input" type="date"/></div></div>
       <div class="f-group"><label class="f-label">Payment Method</label><select class="f-select"><option>Bank Transfer (DBS)</option><option>PayNow</option><option>SWIFT (International)</option><option>Cheque</option><option>Credit Card</option></select></div>
       <div class="f-group"><label class="f-label">Transaction Reference</label><input class="f-input" placeholder="Bank ref or transaction ID"/></div>
       <button class="btn btn-success" style="width:100%;justify-content:center;" onclick="toast('Payment verified. Invoice marked as paid.','&#128274;')">&#9989; Verify &amp; Mark Paid</button>
@@ -1254,8 +1254,8 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
       <table class="ent-table">
         <thead><tr><th>Invoice</th><th>Client</th><th>Amount</th><th>Submitted</th><th>Action</th></tr></thead>
         <tbody>
-          <tr><td><strong>INV-1139</strong></td><td>Samsung SG</td><td>SGD $8,240</td><td>May 12</td><td><button class="btn btn-sm btn-success" onclick="toast('Verified','&#9989;')">Verify</button></td></tr>
-          <tr><td><strong>INV-1135</strong></td><td>Apple Asia</td><td>SGD $3,180</td><td>May 11</td><td><button class="btn btn-sm btn-success" onclick="toast('Verified','&#9989;')">Verify</button></td></tr>
+          <tr><td><strong>INV-1139</strong></td><td>Samsung SG</td><td>GBP $8,240</td><td>May 12</td><td><button class="btn btn-sm btn-success" onclick="toast('Verified','&#9989;')">Verify</button></td></tr>
+          <tr><td><strong>INV-1135</strong></td><td>Apple Asia</td><td>GBP $3,180</td><td>May 11</td><td><button class="btn btn-sm btn-success" onclick="toast('Verified','&#9989;')">Verify</button></td></tr>
         </tbody>
       </table>
     </div>
@@ -1307,10 +1307,10 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
     <div class="card">
       <div class="card-title">Revenue by Service</div>
       <div style="display:flex;flex-direction:column;gap:8px;">
-        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Air Freight</span><strong>SGD $1.76M (42%)</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:42%;background:var(--red);"></div></div></div>
-        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Sea Freight</span><strong>SGD $1.30M (31%)</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:31%;background:var(--blue);"></div></div></div>
-        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Road</span><strong>SGD $672K (16%)</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:16%;background:var(--amber);"></div></div></div>
-        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Express</span><strong>SGD $462K (11%)</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:11%;background:var(--green);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Air Freight</span><strong>GBP $1.76M (42%)</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:42%;background:var(--red);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Sea Freight</span><strong>GBP $1.30M (31%)</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:31%;background:var(--blue);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Road</span><strong>GBP $672K (16%)</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:16%;background:var(--amber);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Express</span><strong>GBP $462K (11%)</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:11%;background:var(--green);"></div></div></div>
       </div>
     </div>
   </div>
@@ -1352,7 +1352,7 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
           <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center;"><div style="font-size:1.6rem;font-weight:800;color:#4ade80;">94%</div><div style="font-size:11px;color:var(--sub);">Prediction Accuracy</div></div>
           <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center;"><div style="font-size:1.6rem;font-weight:800;color:#a78bfa;">2,147</div><div style="font-size:11px;color:var(--sub);">Parcels Monitored</div></div>
           <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center;"><div style="font-size:1.6rem;font-weight:800;color:#fbbf24;">14</div><div style="font-size:11px;color:var(--sub);">Auto-Optimisations</div></div>
-          <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center;"><div style="font-size:1.6rem;font-weight:800;color:#60a5fa;">SGD $2.3K</div><div style="font-size:11px;color:var(--sub);">Saved Today</div></div>
+          <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center;"><div style="font-size:1.6rem;font-weight:800;color:#60a5fa;">GBP $2.3K</div><div style="font-size:11px;color:var(--sub);">Saved Today</div></div>
         </div>
       </div>
       <div class="card">
@@ -1401,7 +1401,7 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
     </div>
     <div class="card">
       <div class="card-title">Add / Edit Routing Rule</div>
-      <div class="f-group"><label class="f-label">Corridor</label><div style="display:flex;gap:6px;"><select class="f-select"><option>Singapore</option><option>Malaysia</option></select><span style="line-height:38px;">→</span><select class="f-select"><option>USA</option><option>UK</option><option>Australia</option></select></div></div>
+      <div class="f-group"><label class="f-label">Corridor</label><div style="display:flex;gap:6px;"><select class="f-select"><option>United Kingdom</option><option>Malaysia</option></select><span style="line-height:38px;">→</span><select class="f-select"><option>USA</option><option>UK</option><option>Australia</option></select></div></div>
       <div class="f-group"><label class="f-label">Primary Carrier</label><select class="f-select"><option>Airpak Express</option><option>FedEx</option><option>DHL Express</option><option>UPS</option><option>Maersk</option></select></div>
       <div class="f-group"><label class="f-label">Fallback Carrier</label><select class="f-select"><option>FedEx</option><option>DHL Express</option><option>UPS</option><option>Airpak Express</option></select></div>
       <div class="f-group"><label class="f-label">Condition</label><input class="f-input" placeholder="e.g. Weight &lt; 50kg or All"/></div>
@@ -1498,14 +1498,14 @@ if (session) {
 
 // ===== SAMPLE DATA =====
 let clients = [
-  {id:'CL-0001',name:'Amazon SG',email:'ops@amazon.sg',country:'Singapore',shipments:3842,status:'Active'},
-  {id:'CL-0002',name:'Samsung SG',email:'logistics@samsung.sg',country:'Singapore',shipments:2311,status:'Active'},
-  {id:'CL-0003',name:'Apple Asia',email:'supply@apple.asia',country:'Singapore',shipments:1944,status:'Active'},
-  {id:'CL-0004',name:'Walmart SG',email:'freight@walmart.sg',country:'Singapore',shipments:1588,status:'Active'},
-  {id:'CL-0005',name:'Google APAC',email:'logistics@google.apac',country:'Singapore',shipments:1204,status:'Active'},
+  {id:'CL-0001',name:'Amazon SG',email:'ops@amazon.sg',country:'United Kingdom',shipments:3842,status:'Active'},
+  {id:'CL-0002',name:'Samsung SG',email:'logistics@samsung.sg',country:'United Kingdom',shipments:2311,status:'Active'},
+  {id:'CL-0003',name:'Apple Asia',email:'supply@apple.asia',country:'United Kingdom',shipments:1944,status:'Active'},
+  {id:'CL-0004',name:'Walmart SG',email:'freight@walmart.sg',country:'United Kingdom',shipments:1588,status:'Active'},
+  {id:'CL-0005',name:'Google APAC',email:'logistics@google.apac',country:'United Kingdom',shipments:1204,status:'Active'},
   {id:'CL-0006',name:'Tan H. Wei',email:'tanwei@email.com',country:'Malaysia',shipments:24,status:'Suspended'},
   {id:'CL-0007',name:'Pacific Imports',email:'info@pacificimports.com',country:'Malaysia',shipments:342,status:'Suspended'},
-  {id:'CL-0008',name:'FreshGrocer SG',email:'ceo@freshgrocer.sg',country:'Singapore',shipments:0,status:'Pending'},
+  {id:'CL-0008',name:'FreshGrocer SG',email:'ceo@freshgrocer.sg',country:'United Kingdom',shipments:0,status:'Pending'},
 ];
 
 let parcels = [
@@ -1520,12 +1520,12 @@ let parcels = [
 ];
 
 let payments = [
-  {inv:'INV-1142',client:'Amazon SG',amount:'SGD $24,880',due:'May 20',status:'Unpaid'},
-  {inv:'INV-1141',client:'Samsung SG',amount:'SGD $8,240',due:'May 18',status:'Pending'},
-  {inv:'INV-1139',client:'Apple Asia',amount:'SGD $7,420',due:'May 16',status:'Pending'},
-  {inv:'INV-1138',client:'Samsung SG',amount:'SGD $4,820',due:'Apr 30',status:'Overdue'},
-  {inv:'INV-1137',client:'Google APAC',amount:'SGD $6,100',due:'May 14',status:'Paid'},
-  {inv:'INV-1136',client:'Walmart SG',amount:'SGD $9,340',due:'May 19',status:'Paid'},
+  {inv:'INV-1142',client:'Amazon SG',amount:'GBP $24,880',due:'May 20',status:'Unpaid'},
+  {inv:'INV-1141',client:'Samsung SG',amount:'GBP $8,240',due:'May 18',status:'Pending'},
+  {inv:'INV-1139',client:'Apple Asia',amount:'GBP $7,420',due:'May 16',status:'Pending'},
+  {inv:'INV-1138',client:'Samsung SG',amount:'GBP $4,820',due:'Apr 30',status:'Overdue'},
+  {inv:'INV-1137',client:'Google APAC',amount:'GBP $6,100',due:'May 14',status:'Paid'},
+  {inv:'INV-1136',client:'Walmart SG',amount:'GBP $9,340',due:'May 19',status:'Paid'},
 ];
 
 let verifyQueue = [
@@ -1547,7 +1547,7 @@ let auditLog = [
   {time:'09:44:22',user:'manager',action:'Customs status updated: AP-88097 → Under Review',tag:'parcel',tagc:'b-red'},
   {time:'09:31:08',user:'support',action:'Client message sent to Amazon SG (CL-0001)',tag:'comm',tagc:'b-amber'},
   {time:'09:14:56',user:'manager',action:'Route rule updated: SIN→CHN via SF Express',tag:'system',tagc:'b-green'},
-  {time:'08:58:33',user:'admin',action:'Payment INV-1137 verified: Google APAC SGD $6,100',tag:'payment',tagc:'b-blue'},
+  {time:'08:58:33',user:'admin',action:'Payment INV-1137 verified: Google APAC GBP $6,100',tag:'payment',tagc:'b-blue'},
   {time:'08:41:12',user:'support',action:'Parcel created: AP-88102 for Amazon SG',tag:'parcel',tagc:'b-red'},
   {time:'08:30:00',user:'system',action:'Daily billing cycle run: 1,284 accounts processed',tag:'system',tagc:'b-green'},
   {time:'08:15:44',user:'admin',action:'New client created: FreshGrocer SG (CL-0008)',tag:'client',tagc:'b-purple'},
@@ -1566,10 +1566,10 @@ let convMessages = {
 };
 
 const simSteps = [
-  {icon:'&#128230;',title:'Shipment Booked',loc:'Airpak Singapore HQ',done:true},
+  {icon:'&#128230;',title:'Shipment Booked',loc:'Airpak United Kingdom HQ',done:true},
   {icon:'&#128665;',title:'Picked Up',loc:'Client premises — Woodlands',done:true},
-  {icon:'&#127968;',title:'Arrived at Origin Facility',loc:'Singapore Hub, Terminal 1',done:true},
-  {icon:'&#9992;',title:'Departed Origin',loc:'Singapore Changi Airport, T5',done:false},
+  {icon:'&#127968;',title:'Arrived at Origin Facility',loc:'United Kingdom Hub, Terminal 1',done:true},
+  {icon:'&#9992;',title:'Departed Origin',loc:'United Kingdom Changi Airport, T5',done:false},
   {icon:'&#128681;',title:'In Transit — Hub Transfer',loc:'Tokyo Narita Airport',done:false},
   {icon:'&#128203;',title:'Customs Clearance',loc:'Los Angeles Customs, LAX',done:false},
   {icon:'&#128230;',title:'Arrived at Destination Facility',loc:'FedEx Hub, Compton CA',done:false},
@@ -1820,7 +1820,7 @@ function addCheckpoint() {
 let liveFeedInterval;
 function startLiveFeed() {
   const feed = document.getElementById('live-feed'); if (!feed) return;
-  const items = ['AP-88102 — Singapore Hub → Departed', 'AP-88079 — In Transit — Sydney approach', 'AP-88091 — Customs cleared London', 'AP-88055 — Out for delivery Tokyo', 'AP-88064 — DELAYED — Reroute in progress'];
+  const items = ['AP-88102 — United Kingdom Hub → Departed', 'AP-88079 — In Transit — Sydney approach', 'AP-88091 — Customs cleared London', 'AP-88055 — Out for delivery Tokyo', 'AP-88064 — DELAYED — Reroute in progress'];
   feed.innerHTML = items.map(i => `<div style="background:var(--card2);border-radius:6px;padding:8px 10px;font-size:12px;display:flex;gap:6px;align-items:center;"><span style="width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0;"></span>${i}</div>`).join('');
   clearInterval(liveFeedInterval);
   liveFeedInterval = setInterval(() => {
@@ -1845,7 +1845,7 @@ function startScanFeed() {
     const type = scanPhrases[Math.floor(Math.random()*scanPhrases.length)];
     const awb = awbs[Math.floor(Math.random()*awbs.length)];
     const t = new Date().toLocaleTimeString();
-    feed.innerHTML += `<span style="color:${scanColors[type]}">[${t}] ${type} — ${awb} — Singapore Hub</span>\n`;
+    feed.innerHTML += `<span style="color:${scanColors[type]}">[${t}] ${type} — ${awb} — United Kingdom Hub</span>\n`;
     feed.scrollTop = feed.scrollHeight;
   }, 1400);
 }
@@ -1975,7 +1975,7 @@ function openClientEdit(id) {
   document.getElementById('me-fname').value = fn;
   document.getElementById('me-lname').value = ln.join(' ');
   document.getElementById('me-email').value = c.email;
-  document.getElementById('me-phone').value = '+65 9000 0000';
+  document.getElementById('me-phone').value = '+44 9000 0000';
   document.getElementById('me-company').value = c.name;
   document.getElementById('me-status').value = c.status;
   document.getElementById('modal-client-edit').classList.add('open');
@@ -1995,9 +1995,9 @@ function calcInv() {
   const gst = sub * 0.09;
   const total = sub + gst;
   document.getElementById('inv-gst').value = gst.toFixed(2);
-  document.getElementById('inv-total').value = 'SGD $' + total.toFixed(2);
+  document.getElementById('inv-total').value = 'GBP $' + total.toFixed(2);
   document.getElementById('inv-prev-gst').textContent = '$' + gst.toFixed(2);
-  document.getElementById('inv-prev-total').textContent = 'SGD $' + total.toFixed(2);
+  document.getElementById('inv-prev-total').textContent = 'GBP $' + total.toFixed(2);
   document.getElementById('inv-num').textContent = '' + (1142 + Math.floor(Math.random()*5));
 }
 
@@ -2019,7 +2019,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const aiAdminResponses = {
   delay: 'Current delays: AP-88064 (28h — Amazon SG, Typhoon HKG), AP-88097 (Customs Hold — Apple Asia). I have initiated reroute for AP-88064 via NRT. Probability of SLA recovery: 62%.',
-  route: 'SIN→LAX optimised via NRT: +14h speed, +SGD $48 cost. SIN→LHR via DXB transship: -SGD $120 but +6h. SIN→SYD direct via AP Express is optimal this week. Recommend activating NRT corridor.',
+  route: 'SIN→LAX optimised via NRT: +14h speed, +GBP $48 cost. SIN→LHR via DXB transship: -GBP $120 but +6h. SIN→SYD direct via AP Express is optimal this week. Recommend activating NRT corridor.',
   customs: 'AP-88097 (Apple Asia) — 78% hold probability. Suggest: submit revised commercial invoice and HS code 8471.30.00 for laptop units. Pre-clearance window: before 17:00 SGT today.',
   sla: 'SLA compliance: 94.3%. 1 breach (AP-88064), 1 at-risk (AP-88097). 5 shipments on track. Recommend client escalation for AP-88064 if reroute ETA &gt; 48h.',
   default: 'I\'m monitoring all 2,147 shipments and 6 fleet vehicles. Ask me about delays, route optimisation, customs risk, SLA, fleet status, or revenue forecasts.',
