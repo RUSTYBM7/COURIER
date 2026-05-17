@@ -1,690 +1,147 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Airpak Express — Loading</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23007AFF'/%3E%3Cpath d='M8 16h16M16 8v16' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" href="/apps/airpak/img/icon-airpak.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/apple-tokens.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --apple-bg: #000000;
-      --apple-bg-secondary: #1C1C1E;
-      --apple-blue: #007AFF;
-      --apple-green: #34C759;
-      --apple-purple: #AF52DE;
-      --apple-cyan: #5AC8FA;
+      --ap-red: #CD2727;
+      --ap-red-dark: #9b1a1a;
+      --ap-ink: #1a1a1a;
+      --ap-muted: #6b6b6b;
     }
 
     html, body {
       height: 100%;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #ffffff;
+      color: var(--ap-ink);
     }
 
     body {
-      background: linear-gradient(135deg, #0A0A1A 0%, #0D1A2D 50%, #0A1628 100%);
-      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-    }
-
-    /* Particle Background */
-    .particles {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
       overflow: hidden;
     }
 
-    .particle {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background: rgba(0, 122, 255, 0.3);
-      border-radius: 50%;
-      animation: float 15s infinite ease-in-out;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
-    }
-
-    /* Main Loading Container */
-    .loading-container {
-      position: relative;
-      z-index: 10;
+    .preloader {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 48px;
-      padding: 40px;
-    }
-
-    /* Logo */
-    .loading-logo {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      text-decoration: none;
-    }
-
-    .logo-icon {
-      width: 72px;
-      height: 72px;
-      background: linear-gradient(135deg, var(--apple-blue), var(--apple-purple));
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 20px 60px rgba(0, 122, 255, 0.3);
-      animation: pulse-glow 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse-glow {
-      0%, 100% { box-shadow: 0 20px 60px rgba(0, 122, 255, 0.3); }
-      50% { box-shadow: 0 20px 80px rgba(0, 122, 255, 0.5), 0 0 40px rgba(0, 122, 255, 0.2); }
-    }
-
-    .logo-text {
-      font-size: 24px;
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: -0.5px;
-    }
-
-    /* Card Container */
-    .cards-container {
-      display: flex;
-      gap: 24px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    /* Card 1: Square Animation Loader (adamgiebl style) */
-    .loader-card {
-      width: 260px;
-      background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 30px;
+      gap: 28px;
       padding: 32px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 
-        20px 20px 40px rgba(0, 0, 0, 0.3),
-        -20px -20px 40px rgba(255, 255, 255, 0.02);
+    }
+
+    .brand {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 24px;
+      gap: 6px;
+      margin-bottom: 8px;
     }
 
-    .loader-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: rgba(255, 255, 255, 0.6);
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    .brand img {
+      height: 56px;
+      width: auto;
+      display: block;
     }
 
-    /* Square Loader Animation */
-    .loader {
-      position: relative;
-      width: 96px;
-      height: 96px;
-      transform: rotate(45deg);
-    }
-
-    .loader-square {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 28px;
-      height: 28px;
-      margin: 2px;
-      border-radius: 6px;
-      background: linear-gradient(135deg, var(--apple-blue), var(--apple-purple));
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-      animation: square-animation 10s ease-in-out infinite both;
-      box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4);
-    }
-
-    .loader-square:nth-of-type(0) { animation-delay: 0s; }
-    .loader-square:nth-of-type(1) { animation-delay: -1.4285714286s; }
-    .loader-square:nth-of-type(2) { animation-delay: -2.8571428571s; }
-    .loader-square:nth-of-type(3) { animation-delay: -4.2857142857s; }
-    .loader-square:nth-of-type(4) { animation-delay: -5.7142857143s; }
-    .loader-square:nth-of-type(5) { animation-delay: -7.1428571429s; }
-    .loader-square:nth-of-type(6) { animation-delay: -8.5714285714s; }
-    .loader-square:nth-of-type(7) { animation-delay: -10s; }
-
-    @keyframes square-animation {
-      0% { left: 0; top: 0; }
-      10.5% { left: 0; top: 0; }
-      12.5% { left: 32px; top: 0; }
-      23% { left: 32px; top: 0; }
-      25% { left: 64px; top: 0; }
-      35.5% { left: 64px; top: 0; }
-      37.5% { left: 64px; top: 32px; }
-      48% { left: 64px; top: 32px; }
-      50% { left: 32px; top: 32px; }
-      60.5% { left: 32px; top: 32px; }
-      62.5% { left: 32px; top: 64px; }
-      73% { left: 32px; top: 64px; }
-      75% { left: 0; top: 64px; }
-      85.5% { left: 0; top: 64px; }
-      87.5% { left: 0; top: 32px; }
-      98% { left: 0; top: 32px; }
-      100% { left: 0; top: 0; }
-    }
-
-    /* Card 2: Progress Card (satyamchaudharydev style) */
-    .progress-card {
-      --border-radius: 0.75rem;
-      --primary-color: #007AFF;
-      --secondary-color: #8E8E93;
-      width: 260px;
-      padding: 24px;
-      cursor: pointer;
-      border-radius: var(--border-radius);
-      background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .progress-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.2);
-    }
-
-    .progress-card > * + * {
-      margin-top: 1.1em;
-    }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .card-icon {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, var(--apple-blue), var(--apple-cyan));
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .card-title {
+    .brand-name {
       font-size: 18px;
       font-weight: 700;
-      color: #fff;
+      color: var(--ap-ink);
+      letter-spacing: -0.2px;
     }
 
-    .card-content {
-      color: var(--secondary-color);
-      font-size: 13px;
-      line-height: 1.5;
+    /* Red circular spinner — brand red ring rotating */
+    .spinner {
+      width: 88px;
+      height: 88px;
+      position: relative;
     }
 
-    .progress-bar {
-      width: 100%;
-      height: 6px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 3px;
-      overflow: hidden;
-      margin-top: 8px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--apple-blue), var(--apple-cyan));
-      border-radius: 3px;
-      transition: width 0.3s ease;
-    }
-
-    .progress-stats {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 8px;
-    }
-
-    .progress-label {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.5);
-    }
-
-    .progress-value {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--apple-blue);
-    }
-
-    .card-arrow {
+    .spinner::before,
+    .spinner::after {
+      content: "";
       position: absolute;
-      background: var(--primary-color);
-      padding: 8px;
-      border-top-left-radius: var(--border-radius);
-      border-bottom-right-radius: var(--border-radius);
-      bottom: 0;
-      right: 0;
-      transition: background 0.2s;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .progress-card:hover .card-arrow {
-      background: #fff;
-    }
-
-    .progress-card:hover .card-arrow svg {
-      transform: translateX(3px);
-    }
-
-    .progress-card:hover .card-title {
-      color: var(--primary-color);
-    }
-
-    /* Card 3: Status Card */
-    .status-card {
-      width: 260px;
-      background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 24px;
-      padding: 24px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 
-        15px 15px 30px rgba(0, 0, 0, 0.2),
-        -15px -15px 30px rgba(255, 255, 255, 0.02);
-    }
-
-    .status-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--apple-green);
-      border-radius: 50%;
-      animation: blink 1.5s ease-in-out infinite;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
-    .status-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: rgba(255, 255, 255, 0.6);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .status-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .status-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.8);
-    }
-
-    .status-check {
-      width: 20px;
-      height: 20px;
-      background: rgba(52, 199, 89, 0.15);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .status-check svg {
-      width: 12px;
-      height: 12px;
-      color: var(--apple-green);
-    }
-
-    /* Step Text */
-    .step-container {
-      text-align: center;
-      min-height: 60px;
-    }
-
-    .step-text {
-      font-size: 16px;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.9);
-      margin-bottom: 8px;
-      animation: fadeInOut 0.5s ease-in-out;
-    }
-
-    @keyframes fadeInOut {
-      0% { opacity: 0; transform: translateY(10px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
-    .step-progress {
-      font-size: 13px;
-      color: var(--apple-blue);
-      font-weight: 600;
-    }
-
-    /* Percentage Display */
-    .percentage {
-      font-size: 48px;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--apple-blue), var(--apple-cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: countUp 1s ease-out;
-    }
-
-    @keyframes countUp {
-      0% { opacity: 0; transform: scale(0.5); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
-    /* Footer */
-    .loading-footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      color: rgba(255, 255, 255, 0.4);
-      padding: 14px 20px;
-      text-align: center;
-      font-size: 11px;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .cards-container {
-        flex-direction: column;
-        gap: 20px;
-      }
-      
-      .loader-card,
-      .progress-card,
-      .status-card {
-        width: 100%;
-        max-width: 300px;
-      }
-    }
-
-    /* Transition overlay */
-    .transition-overlay {
-      position: fixed;
       inset: 0;
-      background: #000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s ease;
-      z-index: 100;
+      border-radius: 50%;
+      border: 6px solid transparent;
     }
 
-    .transition-overlay.active {
-      opacity: 1;
-      pointer-events: all;
+    .spinner::before {
+      border-color: rgba(205, 39, 39, 0.12);
+    }
+
+    .spinner::after {
+      border-top-color: var(--ap-red);
+      border-right-color: var(--ap-red-dark);
+      animation: ap-spin 0.9s linear infinite;
+      box-shadow: 0 0 24px rgba(205, 39, 39, 0.25);
+    }
+
+    @keyframes ap-spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .status {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ap-muted);
+      letter-spacing: 0.2px;
+    }
+
+    .dots::after {
+      content: "";
+      display: inline-block;
+      width: 1ch;
+      text-align: left;
+      animation: ap-dots 1.4s steps(4, end) infinite;
+    }
+
+    @keyframes ap-dots {
+      0%   { content: ""; }
+      25%  { content: "."; }
+      50%  { content: ".."; }
+      75%  { content: "..."; }
+      100% { content: ""; }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      html, body { background: #0e0e0e; color: #f4f4f4; }
+      .brand-name { color: #f4f4f4; }
+      .status { color: #9a9a9a; }
+      .spinner::before { border-color: rgba(205, 39, 39, 0.18); }
     }
   </style>
-  <link rel="stylesheet" href="/css/brand-airpak.css">
-  <link rel="stylesheet" href="/apps/airpak/css/ap-lang.css">
 </head>
 <body>
-  <!-- Particle Background -->
-  <div class="particles" id="particles"></div>
-
-  <!-- Main Loading Container -->
-  <div class="loading-container">
-    <!-- Logo -->
-    <a href="index.html" class="loading-logo">
-      <div class="logo-icon">
-        <img src="/brand/logo.png" alt="Airpak Express" class="ap-brand-logo" />
-      </div>
-      <span class="logo-text">Airpak Express</span>
-    </a>
-
-    <!-- Cards Container -->
-    <div class="cards-container">
-      <!-- Card 1: Square Animation Loader -->
-      <div class="loader-card">
-        <span class="loader-title">Processing</span>
-        <div class="loader">
-          <div class="loader-square"></div>
-          <div class="loader-square"></div>
-          <div class="loader-square"></div>
-          <div class="loader-square"></div>
-          <div class="loader-square"></div>
-          <div class="loader-square"></div>
-          <div class="loader-square"></div>
-          <div class="loader-square"></div>
-          <div class="loader-square"></div>
-        </div>
-      </div>
-
-      <!-- Card 2: Progress Card -->
-      <div class="progress-card">
-        <div class="card-header">
-          <div class="card-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-            </svg>
-          </div>
-          <span class="card-title">Loading</span>
-        </div>
-        <p class="card-content">Initializing your logistics dashboard</p>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
-        </div>
-        <div class="progress-stats">
-          <span class="progress-label">Status</span>
-          <span class="progress-value" id="progress-percent">0%</span>
-        </div>
-        <div class="card-arrow">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
-        </div>
-      </div>
-
-      <!-- Card 3: Status Card -->
-      <div class="status-card">
-        <div class="status-header">
-          <span class="status-dot"></span>
-          <span class="status-title">System Check</span>
-        </div>
-        <ul class="status-list" id="status-list">
-          <li class="status-item">
-            <span class="status-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            Auth verified
-          </li>
-          <li class="status-item">
-            <span class="status-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            Network connected
-          </li>
-          <li class="status-item" id="status-routes">
-            <span class="status-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            Loading routes
-          </li>
-        </ul>
-      </div>
+  <div class="preloader" role="status" aria-live="polite" aria-label="Signing you in">
+    <div class="brand">
+      <img src="/apps/airpak/img/icon-airpak.png" alt="Airpak Express" onerror="this.style.display='none'">
+      <div class="brand-name">Airpak Express</div>
     </div>
 
-    <!-- Step Text -->
-    <div class="step-container">
-      <div class="step-text" id="step-text">Initializing systems...</div>
-      <div class="percentage" id="percentage">0%</div>
-    </div>
-  </div>
+    <div class="spinner" aria-hidden="true"></div>
 
-  <!-- Transition Overlay -->
-  <div class="transition-overlay" id="transition-overlay"></div>
-
-  <!-- Footer -->
-  <div class="loading-footer">
-    Unit 7, Wales International Hub, Cardiff Bay, Wales CF10 5AL, United Kingdom &nbsp;|&nbsp; © 2026 Airpak Express
+    <div class="status">Signing you in<span class="dots"></span></div>
   </div>
 
   <script>
-    // Create particles
-    const particlesContainer = document.getElementById('particles');
-    for (let i = 0; i < 30; i++) {
-      const particle = document.createElement('div');
-      particle.className = 'particle';
-      particle.style.left = Math.random() * 100 + '%';
-      particle.style.top = Math.random() * 100 + '%';
-      particle.style.animationDelay = Math.random() * 15 + 's';
-      particle.style.width = (Math.random() * 4 + 2) + 'px';
-      particle.style.height = particle.style.width;
-      particlesContainer.appendChild(particle);
-    }
-
-    // Loading steps
-    const steps = [
-      'Initializing systems...',
-      'Loading logistics network...',
-      'Connecting to global routes...',
-      'Verifying credentials...',
-      'Preparing dashboard...',
-      'Almost ready...'
-    ];
-
-    const statusItems = [
-      'Auth verified',
-      'Network connected',
-      'Loading routes',
-      'Security check',
-      'Data sync'
-    ];
-
-    let progress = 0;
-    let currentStep = 0;
-    let currentStatus = 0;
-    const progressFill = document.getElementById('progress-fill');
-    const progressPercent = document.getElementById('progress-percent');
-    const stepText = document.getElementById('step-text');
-    const percentageEl = document.getElementById('percentage');
-    const statusList = document.getElementById('status-list');
-    const overlay = document.getElementById('transition-overlay');
-
-    function updateProgress() {
-      if (progress < 100) {
-        progress += Math.random() * 5 + 2;
-        if (progress > 100) progress = 100;
-
-        progressFill.style.width = progress + '%';
-        progressPercent.textContent = Math.round(progress) + '%';
-        percentageEl.textContent = Math.round(progress) + '%';
-
-        // Update step
-        const stepIndex = Math.min(
-          Math.floor(progress / (100 / steps.length)),
-          steps.length - 1
-        );
-        if (stepIndex !== currentStep) {
-          currentStep = stepIndex;
-          stepText.textContent = steps[stepIndex];
-          stepText.style.animation = 'none';
-          stepText.offsetHeight; // Trigger reflow
-          stepText.style.animation = 'fadeInOut 0.5s ease-in-out';
-        }
-
-        // Update status
-        const statusIndex = Math.min(
-          Math.floor(progress / (100 / statusItems.length)),
-          statusItems.length - 1
-        );
-        if (statusIndex !== currentStatus) {
-          currentStatus = statusIndex;
-          updateStatusList();
-        }
-
-        setTimeout(updateProgress, 100 + Math.random() * 100);
-      } else {
-        stepText.textContent = 'Welcome aboard!';
-        percentageEl.textContent = '100%';
-        progressPercent.textContent = 'Complete';
-        progressFill.style.width = '100%';
-        
-        setTimeout(() => {
-          overlay.classList.add('active');
-          setTimeout(() => {
-            window.location.href = 'dashboard.html';
-          }, 500);
-        }, 800);
-      }
-    }
-
-    function updateStatusList() {
-      let html = '';
-      for (let i = 0; i <= currentStatus; i++) {
-        html += `
-          <li class="status-item">
-            <span class="status-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            ${statusItems[i]}
-          </li>
-        `;
-      }
-      for (let i = currentStatus + 1; i < statusItems.length; i++) {
-        html += `
-          <li class="status-item" style="opacity: 0.4;">
-            <span class="status-check" style="background: rgba(255,255,255,0.1);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0;"><polyline points="20 6 9 17 4 12"/></svg></span>
-            ${statusItems[i]}
-          </li>
-        `;
-      }
-      statusList.innerHTML = html;
-    }
-
-    // Start after 500ms
-    setTimeout(updateProgress, 500);
+    // Auto-redirect to dashboard after sign-in completes
+    setTimeout(function () {
+      var next = new URLSearchParams(window.location.search).get('next') || '/dashboard.html';
+      window.location.replace(next);
+    }, 1800);
   </script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script>lucide.createIcons();</script>
-  <script src="/apps/airpak/js/ap-lang.js" defer></script>
 </body>
 </html>

@@ -55,18 +55,131 @@
 
   <!-- Dashboard Layout -->
   <div class="dashboard-layout" style="padding-top: var(--nav-height);">
-    <!-- Sidebar -->
-    <aside class="dashboard-sidebar">
-      <a href="dashboard.html" class="dashboard-sidebar-item active"><span><i data-lucide="bar-chart-2"></i></span> Overview</a>
-      <a href="tracking.html" class="dashboard-sidebar-item"><span><i data-lucide="package"></i></span> My Packages</a>
-      <a href="tracking.html" class="dashboard-sidebar-item"><span><i data-lucide="zap"></i></span> Express Shipments</a>
-      <a href="tracking.html" class="dashboard-sidebar-item"><span><i data-lucide="globe"></i></span> International</a>
-      <a href="tracking.html" class="dashboard-sidebar-item"><span><i data-lucide="clipboard"></i></span> Order History</a>
-      <a href="payment.html" class="dashboard-sidebar-item"><span><i data-lucide="credit-card"></i></span> Billing</a>
-      <a href="/messages.html" class="dashboard-sidebar-item"><span><i data-lucide="file-text"></i></span> Documents</a>
+    <!-- Sidebar — grouped sections (shadcn DropdownMenu pattern) -->
+    <aside class="dashboard-sidebar ds-grouped">
+      <!-- File group -->
+      <div class="ds-group">
+        <div class="ds-label">File</div>
+        <a href="shipnow-new-shipment.html" class="ds-item">
+          <i data-lucide="file-plus"></i><span>New Shipment</span>
+          <span class="ds-shortcut">⌘N</span>
+        </a>
+        <a href="tracking.html" class="ds-item">
+          <i data-lucide="folder"></i><span>My Packages</span>
+          <span class="ds-shortcut">⇧⌘N</span>
+        </a>
+        <button type="button" class="ds-item ds-sub-trigger" data-sub="recent">
+          <i data-lucide="folder-open"></i><span>Open Recent</span>
+          <i data-lucide="chevron-right" class="ds-chev"></i>
+        </button>
+        <div class="ds-sub" id="ds-sub-recent">
+          <div class="ds-label">Recent Shipments</div>
+          <a href="tracking.html" class="ds-item"><i data-lucide="file-text"></i><span>AP-2026-04-1842</span></a>
+          <a href="tracking.html" class="ds-item"><i data-lucide="file-text"></i><span>AP-2026-04-1839</span></a>
+          <a href="tracking.html" class="ds-item"><i data-lucide="file-text"></i><span>AP-2026-04-1821</span></a>
+          <div class="ds-sep"></div>
+          <a href="tracking.html" class="ds-item"><i data-lucide="search"></i><span>Browse all…</span></a>
+        </div>
+        <div class="ds-sep"></div>
+        <a href="dashboard.html" class="ds-item active">
+          <i data-lucide="bar-chart-2"></i><span>Overview</span>
+          <span class="ds-shortcut">⌘D</span>
+        </a>
+        <a href="#" class="ds-item" onclick="window.print();return false;">
+          <i data-lucide="download"></i><span>Export Report</span>
+          <span class="ds-shortcut">⇧⌘E</span>
+        </a>
+      </div>
+
+      <div class="ds-sep"></div>
+
+      <!-- View group -->
+      <div class="ds-group">
+        <div class="ds-label">View</div>
+        <label class="ds-item ds-check">
+          <i data-lucide="eye"></i><span>Show Sidebar</span>
+          <input type="checkbox" checked data-toggle="sidebar">
+          <span class="ds-tick"></span>
+        </label>
+        <label class="ds-item ds-check">
+          <i data-lucide="layout"></i><span>Show Status Bar</span>
+          <input type="checkbox" data-toggle="statusbar">
+          <span class="ds-tick"></span>
+        </label>
+        <button type="button" class="ds-item ds-sub-trigger" data-sub="theme">
+          <i data-lucide="palette"></i><span>Theme</span>
+          <i data-lucide="chevron-right" class="ds-chev"></i>
+        </button>
+        <div class="ds-sub" id="ds-sub-theme">
+          <div class="ds-label">Appearance</div>
+          <label class="ds-item ds-radio">
+            <i data-lucide="sun"></i><span>Light</span>
+            <input type="radio" name="ds-theme" value="light" checked>
+            <span class="ds-dot"></span>
+          </label>
+          <label class="ds-item ds-radio">
+            <i data-lucide="moon"></i><span>Dark</span>
+            <input type="radio" name="ds-theme" value="dark">
+            <span class="ds-dot"></span>
+          </label>
+          <label class="ds-item ds-radio">
+            <i data-lucide="monitor"></i><span>System</span>
+            <input type="radio" name="ds-theme" value="system">
+            <span class="ds-dot"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="ds-sep"></div>
+
+      <!-- Account group -->
+      <div class="ds-group">
+        <div class="ds-label">Account</div>
+        <a href="settings.html" class="ds-item">
+          <i data-lucide="user"></i><span>Profile</span>
+          <span class="ds-shortcut">⇧⌘P</span>
+        </a>
+        <a href="payment.html" class="ds-item">
+          <i data-lucide="credit-card"></i><span>Billing</span>
+        </a>
+        <button type="button" class="ds-item ds-sub-trigger" data-sub="settings">
+          <i data-lucide="settings"></i><span>Settings</span>
+          <i data-lucide="chevron-right" class="ds-chev"></i>
+        </button>
+        <div class="ds-sub" id="ds-sub-settings">
+          <div class="ds-label">Preferences</div>
+          <a href="settings.html" class="ds-item"><i data-lucide="keyboard"></i><span>Keyboard Shortcuts</span></a>
+          <a href="#" class="ds-item" onclick="if(window.AirpakLang)AirpakLang.open();return false;">
+            <i data-lucide="languages"></i><span>Language</span>
+          </a>
+          <a href="settings.html" class="ds-item"><i data-lucide="bell"></i><span>Notifications</span></a>
+          <div class="ds-sep"></div>
+          <a href="privacy.html" class="ds-item"><i data-lucide="shield"></i><span>Privacy &amp; Security</span></a>
+        </div>
+      </div>
+
+      <div class="ds-sep"></div>
+
+      <!-- Help group -->
+      <div class="ds-group">
+        <a href="/messages.html" class="ds-item">
+          <i data-lucide="help-circle"></i><span>Help &amp; Support</span>
+        </a>
+        <a href="faq.html" class="ds-item">
+          <i data-lucide="file-text"></i><span>Documentation</span>
+        </a>
+      </div>
+
       <div style="flex: 1;"></div>
-      <a href="/messages.html" class="dashboard-sidebar-item"><span><i data-lucide="message-circle"></i></span> Support Chat</a>
-      <a href="index.html" class="dashboard-sidebar-item"><span><i data-lucide="arrow-left"></i></span> Back to Site</a>
+      <div class="ds-sep"></div>
+
+      <!-- Sign Out -->
+      <div class="ds-group">
+        <a href="signin.html" class="ds-item ds-destructive">
+          <i data-lucide="log-out"></i><span>Sign Out</span>
+          <span class="ds-shortcut">⇧⌘Q</span>
+        </a>
+      </div>
     </aside>
 
     <!-- Main Content -->
@@ -303,3 +416,35 @@
   <script src="/apps/airpak/js/ap-lang.js" defer></script>
 </body>
 </html>
+<script>
+(function () {
+  // Sidebar sub-menu expand/collapse
+  document.querySelectorAll('.ds-grouped .ds-sub-trigger').forEach(function (trig) {
+    trig.setAttribute('aria-expanded', 'false');
+    trig.addEventListener('click', function (e) {
+      e.preventDefault();
+      var id = 'ds-sub-' + trig.getAttribute('data-sub');
+      var sub = document.getElementById(id);
+      if (!sub) return;
+      var open = sub.classList.toggle('open');
+      trig.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+  // Theme radio → toggles dark on the html element
+  var html = document.documentElement;
+  document.querySelectorAll('input[name="ds-theme"]').forEach(function (r) {
+    r.addEventListener('change', function () {
+      if (!r.checked) return;
+      var v = r.value;
+      if (v === 'dark') html.setAttribute('data-theme', 'dark');
+      else if (v === 'light') html.setAttribute('data-theme', 'light');
+      else html.removeAttribute('data-theme');
+      try { localStorage.setItem('ap_theme', v); } catch (e) {}
+    });
+  });
+  // Re-render lucide icons for the new sidebar markup
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    setTimeout(function () { window.lucide.createIcons(); }, 0);
+  }
+})();
+</script>
