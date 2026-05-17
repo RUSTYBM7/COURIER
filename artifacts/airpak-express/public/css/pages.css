@@ -2021,3 +2021,157 @@
   .ap-lang-modal-skip { color: #9a9a9a; }
   .ap-lang-modal-skip:hover { background: rgba(255,255,255,0.06); color: #f4f4f4; }
 }
+
+/* ==================== RESPONSIVE — juju2 pages ==================== */
+
+/* Tablet: 1024px and below */
+@media (max-width: 1024px) {
+  .dashboard-layout {
+    grid-template-columns: 200px 1fr !important;
+  }
+  .dashboard-sidebar.ds-grouped {
+    padding: 10px 6px !important;
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Mobile: 768px and below */
+@media (max-width: 768px) {
+  /* Collapse the dashboard sidebar into a horizontally scrolling top bar */
+  .dashboard-layout {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto 1fr !important;
+  }
+  .dashboard-sidebar,
+  .dashboard-sidebar.ds-grouped {
+    position: sticky;
+    top: var(--nav-height, 56px);
+    z-index: 50;
+    flex-direction: row !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+    border-right: 0 !important;
+    border-bottom: 1px solid var(--apple-separator, rgba(0,0,0,0.08)) !important;
+    padding: 8px 10px !important;
+    gap: 4px !important;
+    scrollbar-width: none;
+  }
+  .dashboard-sidebar::-webkit-scrollbar { display: none; }
+  .ds-grouped .ds-group {
+    flex-direction: row !important;
+    flex: 0 0 auto;
+    gap: 4px;
+    padding: 0 !important;
+    align-items: center;
+  }
+  .ds-grouped .ds-label,
+  .ds-grouped .ds-sep,
+  .ds-grouped .ds-sub,
+  .ds-grouped .ds-shortcut,
+  .ds-grouped .ds-chev,
+  .ds-grouped .ds-check,
+  .ds-grouped .ds-radio,
+  .ds-grouped .ds-sub-trigger,
+  .ds-grouped .ds-item.ds-destructive { display: none !important; }
+  .ds-grouped .ds-item {
+    grid-template-columns: 16px auto !important;
+    padding: 6px 10px !important;
+    font-size: 12.5px !important;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  .ds-grouped .ds-item > span { overflow: visible !important; }
+
+  /* Main content padding */
+  .dashboard-main {
+    padding: 16px !important;
+  }
+  .dashboard-header {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 12px;
+    margin-bottom: 20px !important;
+  }
+  .dashboard-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .dashboard-actions .btn-primary,
+  .dashboard-actions .btn-secondary {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+  .dashboard-title { font-size: 1.5rem !important; }
+
+  /* Stats grid → single column on phone */
+  .dashboard-stats {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  .dashboard-stat-card { padding: 16px !important; }
+
+  /* Charts/cards stack */
+  .chart-card, .dashboard-grid > * {
+    min-width: 0 !important;
+  }
+  .chart-area { height: 200px !important; }
+
+  /* Nav: hide secondary items, keep logo + burger + signin */
+  .nav-links, .nav-search {
+    display: none !important;
+  }
+  .nav-mobile-toggle {
+    display: inline-flex !important;
+  }
+
+  /* Sign-in / sign-up / payment cards */
+  .auth-card, .signin-card, .signup-card, .payment-card,
+  .glass-card-lg, .glass-card-xl {
+    width: calc(100% - 32px) !important;
+    max-width: 100% !important;
+    margin: 16px !important;
+    padding: 24px 20px !important;
+  }
+
+  /* Settings, faq, privacy, terms — generic body padding */
+  .page-container, .container, .content-wrap {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  /* Messages page */
+  .messages-layout {
+    grid-template-columns: 1fr !important;
+  }
+  .messages-sidebar { display: none; }
+  .messages-sidebar.open { display: block; position: fixed; inset: 56px 0 0 0; z-index: 90; }
+
+  /* Generic typography down-scale */
+  h1 { font-size: 1.6rem !important; }
+  h2 { font-size: 1.3rem !important; }
+  h3 { font-size: 1.1rem !important; }
+}
+
+/* Small phones: 480px and below */
+@media (max-width: 480px) {
+  .dashboard-main { padding: 12px !important; }
+  .dashboard-stat-value { font-size: 1.5rem !important; }
+  .nav-signin span { display: none; }
+  .tracking-page-title { display: none; }
+}
+
+/* Touch-friendly tap targets across the board */
+@media (hover: none) and (pointer: coarse) {
+  .ds-grouped .ds-item,
+  .nav-icon,
+  .btn-primary,
+  .btn-secondary,
+  .lang-pill,
+  .theme-toggle {
+    min-height: 40px;
+  }
+}

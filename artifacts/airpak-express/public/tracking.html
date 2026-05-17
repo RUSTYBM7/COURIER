@@ -178,6 +178,48 @@
       overflow: hidden;
     }
 
+    /* ===== RESPONSIVE — tablet & mobile ===== */
+    @media (max-width: 1024px) {
+      :root { --tracking-sidebar-width: 240px; }
+    }
+    @media (max-width: 768px) {
+      body { overflow: auto !important; height: auto !important; min-height: 100vh; }
+      .tracking-app { height: auto; min-height: 100vh; }
+      .tracking-header {
+        padding: 0 12px;
+        flex-wrap: wrap;
+        height: auto;
+        min-height: var(--tracking-header-height);
+        gap: 8px;
+      }
+      .tracking-page-title { display: none; }
+      .tracking-header-left { gap: 10px; }
+      .tracking-header-right { gap: 6px; }
+      .tracking-layout {
+        flex-direction: column;
+        overflow: visible;
+      }
+      .tracking-sidebar {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-right: 0 !important;
+        border-bottom: 1px solid var(--apple-separator);
+      }
+      .tracking-content, .tracking-main {
+        width: 100%;
+        padding: 12px !important;
+      }
+      .tracking-map, #tracking-map, .leaflet-container {
+        height: 280px !important;
+        min-height: 280px !important;
+      }
+      .lang-dropdown { right: 12px !important; left: 12px; min-width: 0; }
+    }
+    @media (max-width: 480px) {
+      .tracking-logo-text { display: none; }
+      .tracking-map, #tracking-map, .leaflet-container { height: 220px !important; }
+    }
+
     /* ===== SIDEBAR ===== */
     .tracking-sidebar {
       width: var(--tracking-sidebar-width);

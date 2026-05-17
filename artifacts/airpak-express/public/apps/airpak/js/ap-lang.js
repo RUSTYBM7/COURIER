@@ -146,6 +146,22 @@
         '<path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>' +
       '</svg>';
 
+    // Visible close button (top-right) — fixes the "can't exit" complaint
+    var closeBtn = document.createElement("button");
+    closeBtn.type = "button";
+    closeBtn.className = "ap-lang-modal-close";
+    closeBtn.setAttribute("aria-label", "Close");
+    closeBtn.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+        '<path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+      '</svg>';
+    closeBtn.addEventListener("click", function () {
+      markSeen();
+      setLang("en");
+      close();
+    });
+    card.appendChild(closeBtn);
+
     var head = document.createElement("div");
     head.className = "ap-lang-modal-head";
     head.innerHTML =
@@ -177,7 +193,7 @@
     var skip = document.createElement("button");
     skip.type = "button";
     skip.className = "ap-lang-modal-skip";
-    skip.textContent = "Continue in English";
+    skip.textContent = "Skip — Continue in English";
     skip.addEventListener("click", function () {
       markSeen();
       setLang("en");

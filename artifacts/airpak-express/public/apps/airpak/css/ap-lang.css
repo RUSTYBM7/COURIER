@@ -178,3 +178,50 @@ body.dark .ap-lang-menu-head, [data-theme="dark"] .ap-lang-menu-head{ color:#9a9
   .ap-lang-btn .ap-lang-code{ display:none; }
   .ap-lang-menu{ right:-30px; min-width:210px; }
 }
+
+/* Visible close (X) on the one-time language modal */
+.ap-lang-modal-card { position: relative; }
+.ap-lang-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  color: #4a4a4a;
+  cursor: pointer;
+  padding: 0;
+  z-index: 2;
+  transition: background .12s ease, color .12s ease, transform .12s ease;
+}
+.ap-lang-modal-close:hover {
+  background: rgba(205, 39, 39, 0.10);
+  color: #CD2727;
+  transform: scale(1.05);
+}
+.ap-lang-modal-close svg { width: 18px; height: 18px; }
+
+/* Make the skip button more obvious so users see they can exit */
+.ap-lang-modal-skip {
+  border: 1px solid rgba(0,0,0,0.08) !important;
+  background: rgba(0,0,0,0.02) !important;
+  font-weight: 600 !important;
+  padding: 10px 18px !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ap-lang-modal-close {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.10);
+    color: #d4d4d4;
+  }
+  .ap-lang-modal-skip {
+    border-color: rgba(255,255,255,0.12) !important;
+    background: rgba(255,255,255,0.04) !important;
+  }
+}
