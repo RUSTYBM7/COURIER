@@ -4,17 +4,5 @@ Disallow: /admin
 Disallow: /admin.html
 Disallow: /admin-login.html
 Disallow: /api/
-Disallow: /reset-password.html
-Disallow: /shipnow-dashboard.html
-Disallow: /shipnow-new-shipment.html
-Disallow: /getonline-dashboard.html
 
-# Block AI scrapers from training on our content
-User-agent: GPTBot
-Disallow: /
-User-agent: ClaudeBot
-Disallow: /
-User-agent: CCBot
-Disallow: /
-
-Sitemap: https://airpak-express.com/sitemap.xml
+Sitemap: https://airpak-express.site/sitemap.xml
