@@ -344,6 +344,122 @@ export interface Faq {
   answer: string;
 }
 
+export type EmailTemplate = typeof EmailTemplate[keyof typeof EmailTemplate];
+
+
+export const EmailTemplate = {
+  invoice: 'invoice',
+  receipt: 'receipt',
+  status: 'status',
+  newsletter: 'newsletter',
+} as const;
+
+export interface EmailRenderOutput {
+  subject: string;
+  html: string;
+  text: string;
+}
+
+export interface EmailSendOutput {
+  accepted: boolean;
+  provider: string;
+  messageId: string;
+}
+
+export interface InvoiceLineItem {
+  description: string;
+  /** @minimum 0 */
+  quantity: number;
+  /** @minimum 0 */
+  unitPriceGbp: number;
+}
+
+export interface InvoiceData {
+  invoiceNumber: string;
+  issuedAt: string;
+  dueAt?: string;
+  customerName: string;
+  customerEmail: string;
+  items: InvoiceLineItem[];
+  subtotalGbp?: number;
+  taxGbp?: number;
+  totalGbp: number;
+  notes?: string;
+}
+
+export type ReceiptDataMethod = typeof ReceiptDataMethod[keyof typeof ReceiptDataMethod];
+
+
+export const ReceiptDataMethod = {
+  card: 'card',
+  applepay: 'applepay',
+  googlepay: 'googlepay',
+  bank: 'bank',
+} as const;
+
+export interface ReceiptData {
+  reference: string;
+  paidAt: string;
+  customerName: string;
+  customerEmail: string;
+  /** @minimum 0 */
+  amountGbp: number;
+  method: ReceiptDataMethod;
+  shipmentNumber?: string;
+  last4?: string;
+}
+
+export interface StatusEmailData {
+  trackingNumber: string;
+  customerName: string;
+  customerEmail: string;
+  status: ShipmentStatus;
+  statusLabel: string;
+  location?: string;
+  occurredAt: string;
+  etaAt?: string;
+  trackingUrl?: string;
+}
+
+export interface NewsletterArticle {
+  title: string;
+  summary: string;
+  url: string;
+  imageUrl?: string;
+}
+
+export interface NewsletterData {
+  headline: string;
+  intro: string;
+  articles: NewsletterArticle[];
+  ctaLabel?: string;
+  ctaUrl?: string;
+}
+
+/**
+ * Template-specific payload (InvoiceData, ReceiptData, StatusEmailData, or NewsletterData)
+ */
+export type EmailRenderInputData = { [key: string]: unknown };
+
+export interface EmailRenderInput {
+  template: EmailTemplate;
+  /** Template-specific payload (InvoiceData, ReceiptData, StatusEmailData, or NewsletterData) */
+  data: EmailRenderInputData;
+}
+
+/**
+ * Template-specific payload
+ */
+export type EmailSendInputData = { [key: string]: unknown };
+
+export interface EmailSendInput {
+  template: EmailTemplate;
+  /** Template-specific payload */
+  data: EmailSendInputData;
+  to: string;
+  from?: string;
+}
+
 export type ListShipmentsParams = {
 status?: ShipmentStatus;
 };

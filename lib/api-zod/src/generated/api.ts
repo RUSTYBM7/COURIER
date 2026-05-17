@@ -462,3 +462,41 @@ export const ListFaqsResponseItem = zod.object({
 export const ListFaqsResponse = zod.array(ListFaqsResponseItem)
 
 
+/**
+ * @summary Render a branded HTML email (no send)
+ */
+export const RenderEmailBody = zod.object({
+  "template": zod.enum(['invoice', 'receipt', 'status', 'newsletter']),
+  "data": zod.object({
+
+}).passthrough().describe('Template-specific payload (InvoiceData, ReceiptData, StatusEmailData, or NewsletterData)')
+})
+
+export const RenderEmailResponse = zod.object({
+  "subject": zod.string(),
+  "html": zod.string(),
+  "text": zod.string()
+})
+
+
+/**
+ * @summary Preview a rendered email in the browser using sample data
+ */
+export const PreviewEmailParams = zod.object({
+  "template": zod.enum(['invoice', 'receipt', 'status', 'newsletter'])
+})
+
+
+/**
+ * @summary Render and send a branded email (requires EMAIL_PROVIDER)
+ */
+export const SendEmailBody = zod.object({
+  "template": zod.enum(['invoice', 'receipt', 'status', 'newsletter']),
+  "data": zod.object({
+
+}).passthrough().describe('Template-specific payload'),
+  "to": zod.string().email(),
+  "from": zod.string().email().optional()
+})
+
+

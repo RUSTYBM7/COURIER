@@ -18,6 +18,7 @@ tags:
   - name: admin
   - name: settings
   - name: content
+  - name: emails
 paths:
   /healthz:
     get:
@@ -287,6 +288,61 @@ paths:
             application/json:
               schema: { type: array, items: { $ref: "#/components/schemas/Faq" } }
 
+  /emails/render:
+    post:
+      operationId: renderEmail
+      tags: [emails]
+      summary: Render a branded HTML email (no send)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EmailRenderInput" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EmailRenderOutput" }
+        "400":
+          description: Bad input
+          content: { application/json: { schema: { $ref: "#/components/schemas/ErrorBody" } } }
+  /emails/preview/{template}:
+    get:
+      operationId: previewEmail
+      tags: [emails]
+      summary: Preview a rendered email in the browser using sample data
+      parameters:
+        - in: path
+          name: template
+          required: true
+          schema: { $ref: "#/components/schemas/EmailTemplate" }
+      responses:
+        "200":
+          description: HTML preview (text/html)
+  /emails/send:
+    post:
+      operationId: sendEmail
+      tags: [emails]
+      summary: Render and send a branded email (requires EMAIL_PROVIDER)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EmailSendInput" }
+      responses:
+        "202":
+          description: Accepted for delivery
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EmailSendOutput" }
+        "400":
+          description: Bad input
+          content: { application/json: { schema: { $ref: "#/components/schemas/ErrorBody" } } }
+        "503":
+          description: Email provider not configured
+          content: { application/json: { schema: { $ref: "#/components/schemas/ErrorBody" } } }
+
 components:
   schemas:
     HealthStatus:
@@ -538,3 +594,117 @@ components:
         category: { type: string }
         question: { type: string }
         answer:   { type: string }
+
+
+    EmailTemplate:
+      type: string
+      enum: [invoice, receipt, status, newsletter]
+
+    EmailRenderOutput:
+      type: object
+      required: [subject, html, text]
+      properties:
+        subject: { type: string }
+        html:    { type: string }
+        text:    { type: string }
+
+    EmailSendOutput:
+      type: object
+      required: [accepted, provider, messageId]
+      properties:
+        accepted:  { type: boolean }
+        provider:  { type: string }
+        messageId: { type: string }
+
+    InvoiceLineItem:
+      type: object
+      required: [description, quantity, unitPriceGbp]
+      properties:
+        description:   { type: string }
+        quantity:      { type: number, minimum: 0 }
+        unitPriceGbp:  { type: number, minimum: 0 }
+
+    InvoiceData:
+      type: object
+      required: [invoiceNumber, issuedAt, customerName, customerEmail, items, totalGbp]
+      properties:
+        invoiceNumber: { type: string }
+        issuedAt:      { type: string, format: date-time }
+        dueAt:         { type: string, format: date-time }
+        customerName:  { type: string }
+        customerEmail: { type: string, format: email }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/InvoiceLineItem" }
+        subtotalGbp: { type: number }
+        taxGbp:      { type: number }
+        totalGbp:    { type: number }
+        notes:       { type: string }
+
+    ReceiptData:
+      type: object
+      required: [reference, paidAt, customerName, customerEmail, amountGbp, method]
+      properties:
+        reference:     { type: string }
+        paidAt:        { type: string, format: date-time }
+        customerName:  { type: string }
+        customerEmail: { type: string, format: email }
+        amountGbp:     { type: number, minimum: 0 }
+        method:        { type: string, enum: [card, applepay, googlepay, bank] }
+        shipmentNumber: { type: string }
+        last4:         { type: string }
+
+    StatusEmailData:
+      type: object
+      required: [trackingNumber, customerName, customerEmail, status, statusLabel, occurredAt]
+      properties:
+        trackingNumber: { type: string }
+        customerName:   { type: string }
+        customerEmail:  { type: string, format: email }
+        status:         { $ref: "#/components/schemas/ShipmentStatus" }
+        statusLabel:    { type: string }
+        location:       { type: string }
+        occurredAt:     { type: string, format: date-time }
+        etaAt:          { type: string, format: date-time }
+        trackingUrl:    { type: string }
+
+    NewsletterArticle:
+      type: object
+      required: [title, summary, url]
+      properties:
+        title:       { type: string }
+        summary:     { type: string }
+        url:         { type: string }
+        imageUrl:    { type: string }
+
+    NewsletterData:
+      type: object
+      required: [headline, intro, articles]
+      properties:
+        headline:    { type: string }
+        intro:       { type: string }
+        articles:
+          type: array
+          items: { $ref: "#/components/schemas/NewsletterArticle" }
+        ctaLabel:    { type: string }
+        ctaUrl:      { type: string }
+
+    EmailRenderInput:
+      type: object
+      required: [template, data]
+      properties:
+        template: { $ref: "#/components/schemas/EmailTemplate" }
+        data:
+          type: object
+          description: Template-specific payload (InvoiceData, ReceiptData, StatusEmailData, or NewsletterData)
+
+    EmailSendInput:
+      type: object
+      required: [template, data, to]
+      properties:
+        template: { $ref: "#/components/schemas/EmailTemplate" }
+        data:
+          type: object
+          description: Template-specific payload
+        to:   { type: string, format: email }
+        from: { type: string, format: email }

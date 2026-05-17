@@ -44,6 +44,16 @@ A merged web project combining juju1 (scraped airpak-express.com public site) an
 - `/tracking.html`, `/shipments.html`, etc. — other juju2 app pages
 - `/aboutus.html`, `/contact.html`, etc. — juju1 scraped inner pages
 
+## Branded email API (api-server)
+
+Renders juju1-branded HTML emails (invoice, receipt, shipment status, newsletter). Logo + brand palette baked in; logo URL resolves through `PUBLIC_BASE_URL` or `REPLIT_DOMAINS`.
+
+- `GET  /api/emails/preview/:template` — quick visual QA in the browser (uses sample data)
+- `POST /api/emails/render` — `{ template, data }` → `{ subject, html, text }`
+- `POST /api/emails/send` — gated by `EMAIL_PROVIDER` env var; returns 503 until configured
+
+Templates live in `artifacts/api-server/src/lib/emails/`; schemas in `lib/api-spec/openapi.yaml` (re-run `pnpm --filter @workspace/api-spec run codegen` after edits).
+
 ## User preferences
 
 - Both juju1 and juju2 sources must be preserved exactly as-is (byte-faithful for juju1, exact HTML/CSS/JS for juju2)

@@ -9,6 +9,7 @@ import dashboardRouter from "./dashboard";
 import adminRouter from "./admin";
 import settingsRouter from "./settings";
 import contentRouter from "./content";
+import emailsRouter from "./emails";
 
 const router: IRouter = Router();
 
@@ -22,5 +23,6 @@ router.use(dashboardRouter);
 router.use(adminRouter);
 router.use(settingsRouter);
 router.use(contentRouter);
+router.use(emailsRouter);
 
 export default router;

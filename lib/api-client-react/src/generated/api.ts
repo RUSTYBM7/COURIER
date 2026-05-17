@@ -26,6 +26,11 @@ import type {
   AuthSession,
   ChatMessage,
   DashboardSummary,
+  EmailRenderInput,
+  EmailRenderOutput,
+  EmailSendInput,
+  EmailSendOutput,
+  EmailTemplate,
   ErrorBody,
   Faq,
   HealthStatus,
@@ -1903,4 +1908,223 @@ export function useListFaqs<TData = Awaited<ReturnType<typeof listFaqs>>, TError
 
 
 
+
+export const getRenderEmailUrl = () => {
+
+
+
+
+  return `/api/emails/render`
+}
+
+/**
+ * @summary Render a branded HTML email (no send)
+ */
+export const renderEmail = async (emailRenderInput: EmailRenderInput, options?: RequestInit): Promise<EmailRenderOutput> => {
+
+  return customFetch<EmailRenderOutput>(getRenderEmailUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      emailRenderInput,)
+  }
+);}
+
+
+
+
+export const getRenderEmailMutationOptions = <TError = ErrorType<ErrorBody>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof renderEmail>>, TError,{data: BodyType<EmailRenderInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof renderEmail>>, TError,{data: BodyType<EmailRenderInput>}, TContext> => {
+
+const mutationKey = ['renderEmail'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof renderEmail>>, {data: BodyType<EmailRenderInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  renderEmail(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RenderEmailMutationResult = NonNullable<Awaited<ReturnType<typeof renderEmail>>>
+    export type RenderEmailMutationBody = BodyType<EmailRenderInput>
+    export type RenderEmailMutationError = ErrorType<ErrorBody>
+
+    /**
+ * @summary Render a branded HTML email (no send)
+ */
+export const useRenderEmail = <TError = ErrorType<ErrorBody>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof renderEmail>>, TError,{data: BodyType<EmailRenderInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof renderEmail>>,
+        TError,
+        {data: BodyType<EmailRenderInput>},
+        TContext
+      > => {
+      return useMutation(getRenderEmailMutationOptions(options));
+    }
+
+export const getPreviewEmailUrl = (template: EmailTemplate,) => {
+
+
+
+
+  return `/api/emails/preview/${template}`
+}
+
+/**
+ * @summary Preview a rendered email in the browser using sample data
+ */
+export const previewEmail = async (template: EmailTemplate, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getPreviewEmailUrl(template),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getPreviewEmailQueryKey = (template: EmailTemplate,) => {
+    return [
+    `/api/emails/preview/${template}`
+    ] as const;
+    }
+
+
+export const getPreviewEmailQueryOptions = <TData = Awaited<ReturnType<typeof previewEmail>>, TError = ErrorType<unknown>>(template: EmailTemplate, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof previewEmail>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getPreviewEmailQueryKey(template);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof previewEmail>>> = ({ signal }) => previewEmail(template, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(template), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof previewEmail>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type PreviewEmailQueryResult = NonNullable<Awaited<ReturnType<typeof previewEmail>>>
+export type PreviewEmailQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Preview a rendered email in the browser using sample data
+ */
+
+export function usePreviewEmail<TData = Awaited<ReturnType<typeof previewEmail>>, TError = ErrorType<unknown>>(
+ template: EmailTemplate, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof previewEmail>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getPreviewEmailQueryOptions(template,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getSendEmailUrl = () => {
+
+
+
+
+  return `/api/emails/send`
+}
+
+/**
+ * @summary Render and send a branded email (requires EMAIL_PROVIDER)
+ */
+export const sendEmail = async (emailSendInput: EmailSendInput, options?: RequestInit): Promise<EmailSendOutput> => {
+
+  return customFetch<EmailSendOutput>(getSendEmailUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      emailSendInput,)
+  }
+);}
+
+
+
+
+export const getSendEmailMutationOptions = <TError = ErrorType<ErrorBody>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendEmail>>, TError,{data: BodyType<EmailSendInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof sendEmail>>, TError,{data: BodyType<EmailSendInput>}, TContext> => {
+
+const mutationKey = ['sendEmail'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof sendEmail>>, {data: BodyType<EmailSendInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  sendEmail(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SendEmailMutationResult = NonNullable<Awaited<ReturnType<typeof sendEmail>>>
+    export type SendEmailMutationBody = BodyType<EmailSendInput>
+    export type SendEmailMutationError = ErrorType<ErrorBody>
+
+    /**
+ * @summary Render and send a branded email (requires EMAIL_PROVIDER)
+ */
+export const useSendEmail = <TError = ErrorType<ErrorBody>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendEmail>>, TError,{data: BodyType<EmailSendInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof sendEmail>>,
+        TError,
+        {data: BodyType<EmailSendInput>},
+        TContext
+      > => {
+      return useMutation(getSendEmailMutationOptions(options));
+    }
 
