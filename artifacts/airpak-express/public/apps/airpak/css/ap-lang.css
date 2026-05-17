@@ -1,105 +1,113 @@
-/* Airpak Express language switcher — sits in header next to menu/burger */
-.ap-lang-switcher {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  vertical-align: middle;
-  margin: 0 10px;
-  font-family: 'Inter', system-ui, -apple-system, Segoe UI, sans-serif;
-  font-size: 13px;
-  z-index: 9998;
+/* Airpak Express — sleek language switcher (replaces Google Translate) */
+.ap-lang-switcher{ position:relative; display:inline-block; vertical-align:middle; margin:0 10px; z-index:9990; }
+.ap-lang-switcher *{ box-sizing:border-box; }
+
+/* Pill button with sleek translate icon */
+.ap-lang-btn{
+  display:inline-flex; align-items:center; gap:7px;
+  height:38px; padding:0 14px;
+  font:600 13px/1 'Inter','Segoe UI',system-ui,sans-serif;
+  color:#1a1a24;
+  background:rgba(255,255,255,.96);
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:999px;
+  cursor:pointer; outline:none;
+  box-shadow:0 1px 2px rgba(0,0,0,.04), 0 4px 12px rgba(0,0,0,.06);
+  backdrop-filter:saturate(180%) blur(12px);
+  -webkit-backdrop-filter:saturate(180%) blur(12px);
+  transition:transform .15s, box-shadow .15s, border-color .15s;
+  white-space:nowrap;
+  user-select:none;
 }
-.ap-lang-switcher.ap-lang-floating {
-  position: fixed;
-  top: 14px;
-  right: 16px;
+.ap-lang-btn:hover{
+  transform:translateY(-1px);
+  border-color:#CD2727;
+  box-shadow:0 2px 4px rgba(0,0,0,.06), 0 8px 18px rgba(205,39,39,.15);
+}
+.ap-lang-btn:active{ transform:translateY(0); }
+.ap-lang-btn .ap-lang-icon{
+  width:18px; height:18px; flex:0 0 18px;
+  color:#CD2727;
+}
+.ap-lang-btn .ap-lang-flag{ font-size:16px; line-height:1; }
+.ap-lang-btn .ap-lang-code{
+  font-weight:700; letter-spacing:.04em; font-size:12px;
+  color:#373F41;
+}
+.ap-lang-btn .ap-lang-caret{
+  width:10px; height:10px; flex:0 0 10px;
+  margin-left:1px;
+  color:#8a8a93;
+  transition:transform .2s;
+}
+.ap-lang-switcher.open .ap-lang-btn{ border-color:#CD2727; box-shadow:0 0 0 3px rgba(205,39,39,.12), 0 8px 18px rgba(205,39,39,.15); }
+.ap-lang-switcher.open .ap-lang-caret{ transform:rotate(180deg); }
+
+/* Glassy dropdown menu */
+.ap-lang-menu{
+  position:absolute; top:calc(100% + 8px); right:0;
+  min-width:220px;
+  background:rgba(255,255,255,.98);
+  border:1px solid rgba(0,0,0,.06);
+  border-radius:14px;
+  box-shadow:
+    0 1px 2px rgba(0,0,0,.04),
+    0 10px 32px rgba(0,0,0,.14),
+    0 4px 12px rgba(0,0,0,.08);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  padding:6px;
+  opacity:0; transform:translateY(-8px) scale(.96); transform-origin:top right;
+  pointer-events:none;
+  transition:opacity .18s, transform .18s;
+  max-height:60vh; overflow-y:auto;
+  z-index:10000;
+}
+.ap-lang-switcher.open .ap-lang-menu{ opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
+
+.ap-lang-menu-head{
+  font:600 10px/1.3 'Inter',sans-serif;
+  color:#8a8a93; text-transform:uppercase; letter-spacing:.08em;
+  padding:8px 10px 6px;
 }
 
-.ap-lang-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  background: #fff;
-  color: #111827;
-  border: 1px solid #e5e7eb;
-  border-radius: 999px;
-  cursor: pointer;
-  font: inherit;
-  font-weight: 600;
-  letter-spacing: 0.2px;
-  line-height: 1;
-  box-shadow: 0 1px 2px rgba(0,0,0,.04);
-  transition: border-color .15s, box-shadow .15s, background .15s;
+.ap-lang-item{
+  display:flex; align-items:center; gap:10px;
+  width:100%; padding:9px 10px; margin:1px 0;
+  background:transparent; border:0; border-radius:9px;
+  font:500 13.5px/1.2 'Inter','Segoe UI',system-ui,sans-serif;
+  color:#1a1a24; cursor:pointer; text-align:left;
+  transition:background .12s;
 }
-.ap-lang-btn:hover {
-  border-color: #CD2727;
-  box-shadow: 0 4px 14px rgba(205,39,39,.18);
+.ap-lang-item:hover{ background:#f3f3f7; }
+.ap-lang-item .ap-lang-flag{ font-size:18px; line-height:1; }
+.ap-lang-item .ap-lang-name{ flex:1; }
+.ap-lang-item.active{ background:linear-gradient(135deg,rgba(205,39,39,.08),rgba(205,39,39,.04)); color:#CD2727; font-weight:600; }
+.ap-lang-item.active::after{
+  content:""; width:8px; height:8px; border-radius:50%;
+  background:#CD2727; box-shadow:0 0 0 3px rgba(205,39,39,.15);
 }
-.ap-lang-btn .fa-globe { color: #CD2727; font-size: 14px; }
-.ap-lang-btn .ap-lang-flag { font-size: 14px; line-height: 1; }
-.ap-lang-btn .ap-lang-code { font-size: 12px; }
-.ap-lang-btn .ap-lang-caret {
-  font-size: 12px; color: #6b7280; margin-left: 2px;
-  transition: transform .15s;
-}
-.ap-lang-switcher.open .ap-lang-btn .ap-lang-caret { transform: rotate(180deg); }
 
-.ap-lang-menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  min-width: 200px;
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  box-shadow: 0 14px 40px rgba(15,23,42,.14);
-  padding: 6px;
-  display: none;
-  max-height: 70vh;
-  overflow: auto;
+/* Fallback when there's no header to mount into */
+.ap-lang-switcher.ap-lang-floating{
+  position:fixed; top:14px; right:14px; z-index:2147483640; margin:0;
 }
-.ap-lang-switcher.open .ap-lang-menu { display: block; }
 
-.ap-lang-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 9px 12px;
-  background: transparent;
-  border: 0;
-  text-align: left;
-  cursor: pointer;
-  border-radius: 8px;
-  color: #111827;
-  font: inherit;
-  font-size: 13px;
+/* Dark mode (for juju2 dark sections) */
+body.dark .ap-lang-btn, [data-theme="dark"] .ap-lang-btn{
+  background:rgba(26,26,36,.85); color:#fff; border-color:rgba(255,255,255,.08);
 }
-.ap-lang-item:hover { background: #fef2f2; color: #CD2727; }
-.ap-lang-item .ap-lang-flag { font-size: 16px; line-height: 1; }
-.ap-lang-item .ap-lang-name { font-weight: 500; }
+body.dark .ap-lang-btn .ap-lang-code, [data-theme="dark"] .ap-lang-btn .ap-lang-code{ color:#e8e8ec; }
+body.dark .ap-lang-menu, [data-theme="dark"] .ap-lang-menu{
+  background:rgba(28,28,32,.96); border-color:rgba(255,255,255,.08);
+}
+body.dark .ap-lang-item, [data-theme="dark"] .ap-lang-item{ color:#fff; }
+body.dark .ap-lang-item:hover, [data-theme="dark"] .ap-lang-item:hover{ background:rgba(255,255,255,.08); }
+body.dark .ap-lang-menu-head, [data-theme="dark"] .ap-lang-menu-head{ color:#9a9aa3; }
 
-/* Dark-themed pages (admin, dashboards) */
-[data-theme="dark"] .ap-lang-btn,
-body.dark .ap-lang-btn {
-  background: rgba(255,255,255,.06);
-  color: #fff;
-  border-color: rgba(255,255,255,.12);
-}
-[data-theme="dark"] .ap-lang-menu,
-body.dark .ap-lang-menu {
-  background: #1a1a24;
-  border-color: rgba(255,255,255,.08);
-  color: #fff;
-}
-[data-theme="dark"] .ap-lang-item,
-body.dark .ap-lang-item { color: #fff; }
-[data-theme="dark"] .ap-lang-item:hover,
-body.dark .ap-lang-item:hover { background: rgba(205,39,39,.15); color: #ff9999; }
-
-@media (max-width: 640px) {
-  .ap-lang-switcher { margin: 0 6px; }
-  .ap-lang-btn { padding: 5px 9px; font-size: 12px; }
-  .ap-lang-btn .ap-lang-code { display: none; }
+@media(max-width:520px){
+  .ap-lang-switcher{ margin:0 6px; }
+  .ap-lang-btn{ height:34px; padding:0 10px; }
+  .ap-lang-btn .ap-lang-code{ display:none; }
+  .ap-lang-menu{ right:-30px; min-width:210px; }
 }

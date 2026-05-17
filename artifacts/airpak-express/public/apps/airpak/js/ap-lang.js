@@ -145,13 +145,23 @@
     return LANGS[0];
   }
 
+  var SWIFT_TRANSLATE_ICON =
+    '<svg class="ap-lang-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+      '<path d="M3 5h10M8 3v2M11.5 12.5C9.5 11 7.5 8 7 5M4 13c2-1 5-3 6-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<path d="M13 21l5-11 5 11M14.5 17h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '</svg>';
+  var CARET_ICON =
+    '<svg class="ap-lang-caret" viewBox="0 0 10 10" fill="none" aria-hidden="true">' +
+      '<path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '</svg>';
+
   function updateButton(btn, code) {
     var l = langByCode(code);
     btn.innerHTML =
-      '<i class="fa fa-globe" aria-hidden="true"></i>' +
+      SWIFT_TRANSLATE_ICON +
       '<span class="ap-lang-flag">' + l.flag + '</span>' +
       '<span class="ap-lang-code">' + l.code.toUpperCase() + '</span>' +
-      '<i class="fa fa-angle-down ap-lang-caret" aria-hidden="true"></i>';
+      CARET_ICON;
     btn.setAttribute("aria-label", "Language: " + l.name);
   }
 
@@ -171,15 +181,22 @@
     var menu = document.createElement("div");
     menu.className = "ap-lang-menu";
     menu.setAttribute("role", "menu");
+    var head = document.createElement("div");
+    head.className = "ap-lang-menu-head";
+    head.textContent = "Select language";
+    menu.appendChild(head);
+    var currentCode = getLang();
     LANGS.forEach(function (l) {
       var item = document.createElement("button");
       item.type = "button";
-      item.className = "ap-lang-item";
+      item.className = "ap-lang-item" + (l.code === currentCode ? " active" : "");
       item.setAttribute("role", "menuitem");
       item.setAttribute("data-lang", l.code);
       item.innerHTML = '<span class="ap-lang-flag">' + l.flag + '</span>' +
                        '<span class="ap-lang-name">' + l.name + '</span>';
       item.addEventListener("click", function () {
+        menu.querySelectorAll(".ap-lang-item").forEach(function(x){ x.classList.remove("active"); });
+        item.classList.add("active");
         applyLang(l.code, btn);
         close();
       });
@@ -204,25 +221,30 @@
 
     updateButton(btn, getLang());
 
-    // Mount: try header button area first, else floating top-right
-    var mount =
+    // Mount strategy: header order should be Logo | Translator | Menu (LTR)
+    // -> insert IMMEDIATELY BEFORE the menu/burger so we sit between logo and menu.
+    var burger =
         document.querySelector(".burger-icon") ||
-        document.querySelector(".main-menu") ||
-        document.querySelector(".header-right") ||
-        document.querySelector("header") ||
-        document.body;
+        document.querySelector(".navbar-toggler") ||
+        document.querySelector(".menu-toggle") ||
+        document.querySelector(".hamburger") ||
+        document.querySelector("[class*='burger']") ||
+        document.querySelector("[class*='menu-toggle']");
 
-    if (mount === document.body) {
-      wrap.classList.add("ap-lang-floating");
-      document.body.appendChild(wrap);
+    var menu =
+        document.querySelector(".main-menu") ||
+        document.querySelector(".navbar-nav") ||
+        document.querySelector("nav .nav") ||
+        document.querySelector("header nav ul");
+
+    if (burger && burger.parentNode) {
+      burger.parentNode.insertBefore(wrap, burger);
+    } else if (menu && menu.parentNode) {
+      menu.parentNode.insertBefore(wrap, menu);
     } else {
-      // Insert just before the burger / right after main-menu, in the header bar
-      if (mount.classList && mount.classList.contains("burger-icon")) {
-        mount.parentNode.insertBefore(wrap, mount);
-      } else {
-        mount.parentNode ? mount.parentNode.insertBefore(wrap, mount.nextSibling)
-                         : mount.appendChild(wrap);
-      }
+      var header = document.querySelector("header") || document.querySelector(".header") || document.querySelector(".navbar");
+      if (header) header.appendChild(wrap);
+      else { wrap.classList.add("ap-lang-floating"); document.body.appendChild(wrap); }
     }
 
     // Apply saved lang on load
