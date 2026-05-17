@@ -90,11 +90,44 @@
 
 /* Pinned top-right of viewport — always on the right side of the page */
 .ap-lang-switcher.ap-lang-floating{
-  position:fixed; top:14px; right:18px; z-index:2147483640; margin:0;
+  position:fixed; top:14px; right:72px; z-index:2147483640; margin:0;
 }
 @media(max-width:520px){
-  .ap-lang-switcher.ap-lang-floating{ top:10px; right:10px; }
+  .ap-lang-switcher.ap-lang-floating{ top:10px; right:64px; }
 }
+
+/* ===== HEADER LAYOUT FIX ============================================
+   Collapse the cluttered desktop nav into the burger so the header
+   reads cleanly: [Logo]  ............  [Translator] [Menu burger]
+   This removes the 8-item horizontal nav that was eating all the
+   space and overlapping the translator. */
+.main-menu.main-menu-padding-1.d-none.d-lg-block,
+header .main-menu{ display:none !important; }
+
+/* Force the burger menu visible on all sizes (not just mobile) */
+header .header-action-icon-2.d-block.d-lg-none{ display:block !important; }
+header .header-bottom .header-action-icon-2:last-child .burger-icon{
+  display:inline-block !important;
+}
+header .header-bottom .burger-icon-white .burger-icon-top,
+header .header-bottom .burger-icon-white .burger-icon-mid,
+header .header-bottom .burger-icon-white .burger-icon-bottom{
+  background-color:#1a1a24 !important;
+}
+
+/* Pin the burger to the far right of the header so translator sits
+   immediately to its left, giving Logo · Translator · Menu order */
+header .header-bottom .header-wrap{ position:relative; min-height:48px; }
+header .header-bottom .header-action-icon-2:last-child{
+  position:absolute; right:18px; top:50%; transform:translateY(-50%);
+}
+/* HIDE the duplicate small logo with the "Delivering Solutions" tagline
+   baked into the PNG — it sits in the bottom header row next to the burger.
+   The main "Airpak / Airpak Express" logo in .header-middle stays. */
+header .header-bottom .logo.logo-width-2{ display:none !important; }
+
+/* Make the bottom header row a slim strip that just holds the burger */
+header .header-bottom{ min-height:0 !important; padding:6px 0 !important; }
 
 /* Dark mode (for juju2 dark sections) */
 body.dark .ap-lang-btn, [data-theme="dark"] .ap-lang-btn{
