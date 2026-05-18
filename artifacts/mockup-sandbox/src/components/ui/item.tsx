@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
-ibbbbbbbbbbmport { cva, type VariantProps } from "class-variance-authority"
-bbbbbbbb
+import { cva, type VariantProps } from "class-variance-authority"
+
 import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 
