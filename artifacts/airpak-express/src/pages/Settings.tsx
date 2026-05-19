@@ -2,6 +2,10 @@ import { useState } from "react";
 import { AppNav } from "@/components/AppNav";
 import { useTheme } from "@/hooks/useTheme";
 import { useLanguage, LANGUAGES, Lang } from "@/hooks/useLanguage";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
 import {
   User, Bell, Lock, Palette, Globe, CreditCard,
   ChevronRight, Check, Moon, Sun, Monitor

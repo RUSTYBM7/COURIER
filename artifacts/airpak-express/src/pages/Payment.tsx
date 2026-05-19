@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { AppNav } from "@/components/AppNav";
 import { AppSidebar } from "@/components/AppSidebar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   Plus, ArrowUpRight, ArrowDownLeft, CreditCard,
   TrendingUp, TrendingDown, Filter, Download, ChevronRight

@@ -3,6 +3,11 @@ import { Link, useLocation } from "wouter";
 import { AirpakLogo } from "@/components/AirpakLogo";
 import { useTheme } from "@/hooks/useTheme";
 import { Moon, Sun, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 
 function GoogleIcon() {
   return (
@@ -58,12 +63,12 @@ export default function SignIn() {
 
       <main className="auth-page">
         <div className="auth-bg-overlay" style={{ background: "linear-gradient(135deg, rgba(0,122,255,0.3) 0%, rgba(88,86,214,0.3) 100%)" }} aria-hidden="true" />
-        <div className="auth-card" style={{ maxWidth: 420 }}>
-          <div className="auth-header">
+        <Card className="auth-card" style={{ maxWidth: 420 }}>
+          <CardContent className="auth-header">
             <Link href="/" className="auth-logo" aria-label="Airpak Express"><AirpakLogo size={40} /></Link>
             <h1 className="auth-title">Welcome Back</h1>
             <p className="auth-subtitle">Sign in to manage your shipments</p>
-          </div>
+          </CardContent>
 
           <form className="auth-form" onSubmit={handleSubmit} noValidate>
             {error && (
@@ -72,35 +77,35 @@ export default function SignIn() {
               </div>
             )}
             <div className="field">
-              <label className="field-label" htmlFor="email">Email address</label>
-              <input
-                type="email" id="email" className="input" placeholder="you@company.com"
+              <Label htmlFor="email">Email address</Label>
+              <Input
+                type="email" id="email" placeholder="you@company.com"
                 value={email} onChange={e => setEmail(e.target.value)}
                 required autoComplete="email" aria-required="true"
               />
             </div>
             <div className="field">
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <label className="field-label" htmlFor="password">Password</label>
+                <Label htmlFor="password">Password</Label>
                 <Link href="/reset-password" className="btn-ghost" style={{ fontSize: "var(--text-sm)" }}>Forgot password?</Link>
               </div>
-              <input
-                type="password" id="password" className="input" placeholder="••••••••"
+              <Input
+                type="password" id="password" placeholder="••••••••"
                 value={password} onChange={e => setPassword(e.target.value)}
                 required autoComplete="current-password" aria-required="true"
               />
             </div>
             <div className="checkbox">
-              <input type="checkbox" id="remember" checked={remember} onChange={e => setRemember(e.target.checked)} />
-              <label className="label-text" htmlFor="remember">Remember me for 30 days</label>
+              <Checkbox id="remember" checked={remember} onCheckedChange={(checked) => setRemember(Boolean(checked))} />
+              <Label htmlFor="remember">Remember me for 30 days</Label>
             </div>
-            <button type="submit" className="btn-primary btn-block btn-lg" disabled={loading} aria-busy={loading}>
+            <Button type="submit" variant="default" className="w-full" size="lg" disabled={loading} aria-busy={loading}>
               {loading ? "Signing in…" : <><ArrowRight size={16} aria-hidden="true" /> Sign In</>}
-            </button>
+            </Button>
             <div className="auth-divider"><span>or continue with</span></div>
             <div className="auth-social">
-              <button type="button" className="btn-social" onClick={() => alert("Google auth coming soon")} aria-label="Sign in with Google"><GoogleIcon /> Google</button>
-              <button type="button" className="btn-social" onClick={() => alert("Apple auth coming soon")} aria-label="Sign in with Apple"><AppleIcon /> Apple</button>
+              <Button type="button" variant="outline" size="lg" className="flex-1" onClick={() => alert("Google auth coming soon")} aria-label="Sign in with Google"><GoogleIcon /> Google</Button>
+              <Button type="button" variant="outline" size="lg" className="flex-1" onClick={() => alert("Apple auth coming soon")} aria-label="Sign in with Apple"><AppleIcon /> Apple</Button>
             </div>
           </form>
 
@@ -108,7 +113,7 @@ export default function SignIn() {
             Don't have an account?{" "}
             <Link href="/signup" style={{ color: "var(--apple-blue)", fontWeight: 600 }}>Sign up</Link>
           </p>
-        </div>
+        </Card>
       </main>
     </div>
   );

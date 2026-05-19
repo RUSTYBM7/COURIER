@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { AppNav } from "@/components/AppNav";
 import { AppSidebar } from "@/components/AppSidebar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Send, Paperclip, Smile, Search, MoreHorizontal, Phone, Video } from "lucide-react";
 
 interface Message {
