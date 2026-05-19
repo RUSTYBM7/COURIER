@@ -4,112 +4,181 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up — Airpak Express</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23007AFF'/%3E%3Cpath d='M8 16h16M16 8v16' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23CD2727'/%3E%3Cpath d='M8 16h16M16 8v16' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Sarabun:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/apple-tokens.css">
   <link rel="stylesheet" href="css/glass-system.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/pages.css">
   <link rel="stylesheet" href="css/brand-airpak.css">
-  <link rel="stylesheet" href="/apps/airpak/css/ap-lang.css">
+  <style>
+    :root {
+      --ap-red: #CD2727;
+      --ap-red-dark: #A81F1F;
+      --ap-dark: #1a1a2e;
+      --ap-gray: #6B7280;
+    }
+    body { margin: 0; font-family: 'Inter', sans-serif; background: var(--ap-dark); }
+    .signup-container { display: flex; min-height: 100vh; }
+    .signup-left { flex: 1; padding: 60px; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(135deg, #1a1a2e 0%, #2d1f3d 100%); position: relative; overflow: hidden; }
+    .signup-left::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(205,39,39,0.1) 0%, transparent 50%); animation: pulse 8s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 0.8; } }
+    .signup-brand { margin-bottom: 40px; }
+    .signup-brand svg { width: 48px; height: 48px; }
+    .signup-headline { font-family: 'Sarabun', sans-serif; font-size: 42px; font-weight: 700; color: #fff; line-height: 1.2; margin-bottom: 20px; }
+    .signup-headline span { color: var(--ap-red); }
+    .signup-features { margin-top: 40px; }
+    .signup-feature { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; color: rgba(255,255,255,0.8); font-size: 15px; }
+    .signup-feature-icon { width: 40px; height: 40px; background: rgba(205,39,39,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--ap-red); flex-shrink: 0; }
+    .signup-feature-text strong { display: block; color: #fff; margin-bottom: 2px; }
+    .signup-globe { position: absolute; bottom: 80px; right: -100px; width: 300px; height: 300px; opacity: 0.1; }
+    .signup-right { flex: 1; padding: 60px; display: flex; flex-direction: column; justify-content: center; background: #fff; }
+    .signup-form-container { max-width: 420px; margin: 0 auto; width: 100%; }
+    .signup-form-title { font-family: 'Sarabun', sans-serif; font-size: 28px; font-weight: 700; color: var(--ap-dark); margin-bottom: 8px; }
+    .signup-form-subtitle { color: var(--ap-gray); margin-bottom: 32px; }
+    .field { margin-bottom: 20px; }
+    .field-label { display: block; font-size: 14px; font-weight: 600; color: var(--ap-dark); margin-bottom: 8px; }
+    .input { width: 100%; padding: 14px 16px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 15px; transition: all 0.2s; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    .input:focus { outline: none; border-color: var(--ap-red); box-shadow: 0 0 0 3px rgba(205,39,39,0.1); }
+    .field-hint { font-size: 12px; color: var(--ap-gray); margin-top: 6px; display: block; }
+    .checkbox { display: flex; align-items: flex-start; gap: 12px; margin: 24px 0; }
+    .checkbox input { width: 20px; height: 20px; accent-color: var(--ap-red); margin-top: 2px; }
+    .checkbox label { font-size: 14px; color: var(--ap-gray); line-height: 1.5; }
+    .checkbox a { color: var(--ap-red); text-decoration: none; }
+    .btn-primary { width: 100%; padding: 16px; background: var(--ap-red); color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-primary:hover { background: var(--ap-red-dark); transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+    .auth-divider { display: flex; align-items: center; margin: 28px 0; }
+    .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: #e5e7eb; }
+    .auth-divider span { padding: 0 16px; color: var(--ap-gray); font-size: 14px; }
+    .auth-social { display: flex; gap: 12px; }
+    .btn-social { flex: 1; padding: 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; background: #fff; cursor: pointer; font-size: 15px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; }
+    .btn-social:hover { border-color: var(--ap-red); background: #fef2f2; }
+    .auth-footer { text-align: center; margin-top: 28px; color: var(--ap-gray); font-size: 14px; }
+    .auth-footer a { color: var(--ap-red); font-weight: 600; text-decoration: none; }
+    .nav-mini { position: fixed; top: 20px; left: 60px; z-index: 100; }
+    .nav-mini a { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; font-weight: 600; }
+    @media (max-width: 900px) { .signup-container { flex-direction: column; } .signup-left { display: none; } .signup-right { padding: 40px 24px; } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite; }
+  </style>
 </head>
 <body>
-  <!-- Unified Top Nav Bar -->
-  <nav class="nav-bar" style="position: relative; z-index: 100;">
-    <div class="nav-left">
-      <a href="index.html" class="nav-logo">
-        <img src="/brand/logo.png" alt="Airpak Express" class="ap-brand-logo" />
-        <span class="nav-logo-text">Airpak Express</span>
-      </a>
-      <div class="nav-links">
-        <a href="index.html" class="nav-link">Home</a>
-        <a href="signup.html" class="nav-link active">Sign Up</a>
-        <a href="signin.html" class="nav-link">Sign In</a>
-        <a href="tracking.html" class="nav-link">Tracking</a>
-        <a href="faq.html" class="nav-link">FAQ</a>
-      </div>
-    </div>
-    <div class="nav-right">
-      <button class="theme-toggle"><i data-lucide="moon"></i></button>
-      <a href="signin.html" class="lang-pill"><span class="flag">EN</span> English</a>
-      <a href="signin.html" class="nav-signin">Sign In</a>
-    </div>
-  </nav>
-  <!-- Auth Page with Video Background -->
-  <div class="auth-page" style="padding-top: var(--nav-height, 56px);">
-    <!-- Video Background -->
-    <div class="auth-bg-video">
-      <video autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=1920&h=1080&fit=crop">
-        <!-- Placeholder - in production, replace with actual cargo/ship video -->
-        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-      </video>
-      <!-- Particle Overlay -->
-      <div class="particle-container" id="particles"></div>
-    </div>
-    <div class="auth-bg-overlay"></div>
-
-    <!-- Auth Card -->
-    <div class="auth-card">
-      <div class="auth-header">
-        <a href="index.html" class="auth-logo">
-          <svg width="40" height="40" viewBox="0 0 32 32" fill="none">
-            <rect width="32" height="32" rx="6" fill="#007AFF"/>
+  <div class="signup-container">
+    <!-- Left Panel - Branding -->
+    <div class="signup-left">
+      <nav class="nav-mini">
+        <a href="index.html">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="6" fill="#CD2727"/>
             <path d="M8 16h16M16 8v16" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-            <circle cx="16" cy="16" r="6" fill="none" stroke="white" stroke-width="2"/>
+            <circle cx="16" cy="16" r="4" fill="white"/>
           </svg>
+          Airpak Express
         </a>
-        <h1 class="auth-title" data-i18n="auth.signupTitle">Create Account</h1>
-        <p class="auth-subtitle" data-i18n="auth.signupSubtitle">Join 50,000+ businesses shipping with Airpak</p>
+      </nav>
+      
+      <div class="signup-brand">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <rect width="48" height="48" rx="12" fill="#CD2727"/>
+          <path d="M12 24h24M24 12v24" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="24" cy="24" r="8" fill="none" stroke="white" stroke-width="2.5"/>
+        </svg>
       </div>
-
-      <form class="auth-form" id="signup-form" onsubmit="handleSignup(event)">
-        <!-- Name -->
-        <div class="field">
-          <label class="field-label" for="name">Full Name</label>
-          <input type="text" id="name" class="input" placeholder="Enter your full name" required>
+      
+      <h1 class="signup-headline">
+        Your Global<br>Logistics Partner<br><span>Worldwide</span>
+      </h1>
+      
+      <div class="signup-features">
+        <div class="signup-feature">
+          <div class="signup-feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <div class="signup-feature-text">
+            <strong>Express Delivery</strong>
+            220+ countries, 44 global branches
+          </div>
         </div>
-
-        <!-- Email -->
-        <div class="field">
-          <label class="field-label" for="email" data-i18n="auth.email">Email address</label>
-          <input type="email" id="email" class="input" placeholder="you@company.com" required>
+        <div class="signup-feature">
+          <div class="signup-feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div class="signup-feature-text">
+            <strong>Real-Time Tracking</strong>
+            Live shipment map & notifications
+          </div>
         </div>
-
-        <!-- Password -->
-        <div class="field">
-          <label class="field-label" for="password">Password</label>
-          <input type="password" id="password" class="input" placeholder="Create a strong password" required minlength="8">
-          <span class="field-hint">Must be at least 8 characters</span>
+        <div class="signup-feature">
+          <div class="signup-feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <div class="signup-feature-text">
+            <strong>Freight Forwarding</strong>
+            Air, ocean, and road logistics
+          </div>
         </div>
-
-        <!-- Confirm Password -->
-        <div class="field">
-          <label class="field-label" for="confirm-password">Confirm Password</label>
-          <input type="password" id="confirm-password" class="input" placeholder="Confirm your password" required>
-        </div>
-
-        <!-- Terms -->
-        <div class="checkbox">
-          <input type="checkbox" id="terms" required>
-          <label class="label-text" for="terms">
-            I agree to the <a href="terms.html" style="color: var(--apple-blue);">Terms of Service</a> and <a href="privacy.html" style="color: var(--apple-blue);">Privacy Policy</a>
-          </label>
-        </div>
-
-        <!-- Submit -->
-        <button type="submit" class="btn-primary btn-block btn-lg"><i data-lucide="rocket"></i> Create Account</button>
-
-        <!-- Divider -->
-        <div class="auth-divider">
-          <span data-i18n="auth.divider">or continue with</span>
-        </div>
-
-        <!-- Social Login -->
+      </div>
+      
+      <!-- Globe SVG -->
+      <svg class="signup-globe" viewBox="0 0 200 200" fill="none" stroke="white" stroke-width="0.5">
+        <circle cx="100" cy="100" r="80"/>
+        <ellipse cx="100" cy="100" rx="80" ry="30"/>
+        <ellipse cx="100" cy="100" rx="30" ry="80"/>
+        <path d="M20 100 H180 M100 20 V180"/>
+      </svg>
+    </div>
+    
+    <!-- Right Panel - Form -->
+    <div class="signup-right">
+      <div class="signup-form-container">
+        <h2 class="signup-form-title">Create Account</h2>
+        <p class="signup-form-subtitle">Join 50,000+ businesses shipping with Airpak Express</p>
+        
+        <form id="signup-form" onsubmit="handleSignup(event)">
+          <div class="field">
+            <label class="field-label" for="name">Full Name</label>
+            <input type="text" id="name" class="input" placeholder="Enter your full name" required>
+          </div>
+          
+          <div class="field">
+            <label class="field-label" for="company">Company Name <span style="color: var(--ap-gray); font-weight: 400;">(Optional)</span></label>
+            <input type="text" id="company" class="input" placeholder="Your business name">
+          </div>
+          
+          <div class="field">
+            <label class="field-label" for="email">Email Address</label>
+            <input type="email" id="email" class="input" placeholder="you@company.com" required>
+          </div>
+          
+          <div class="field">
+            <label class="field-label" for="password">Password</label>
+            <input type="password" id="password" class="input" placeholder="Create a strong password" required minlength="8">
+            <span class="field-hint">Minimum 8 characters</span>
+          </div>
+          
+          <div class="field">
+            <label class="field-label" for="confirm-password">Confirm Password</label>
+            <input type="password" id="confirm-password" class="input" placeholder="Confirm your password" required>
+          </div>
+          
+          <div class="checkbox">
+            <input type="checkbox" id="terms" required>
+            <label for="terms">I agree to the <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a></label>
+          </div>
+          
+          <button type="submit" class="btn-primary" id="signup-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Create Account
+          </button>
+        </form>
+        
+        <div class="auth-divider"><span>or continue with</span></div>
+        
         <div class="auth-social">
-          <button type="button" class="btn-social" onclick="socialLogin('google')">
+          <button type="button" class="btn-social" onclick="socialLogin('google', this)">
             <svg viewBox="0 0 24 24" width="20" height="20">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -118,65 +187,64 @@
             </svg>
             Google
           </button>
-          <button type="button" class="btn-social" onclick="socialLogin('apple')">
-            <svg viewBox="0 0 24 24" width="20" height="20">
-              <path fill="currentColor" d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-            </svg>
+          <button type="button" class="btn-social" onclick="socialLogin('apple', this)">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
             Apple
           </button>
         </div>
-      </form>
-
-      <div class="auth-footer">
-        <span data-i18n="auth.hasAccount">Already have an account?</span>
-        <a href="signin.html" data-i18n="auth.signinLink">Sign in</a>
+        
+        <div class="auth-footer">
+          Already have an account? <a href="signin.html">Sign in</a>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Particle Animation Script -->
+  <script src="js/main.js"></script>
   <script>
-    // Create floating particles
-    const particleContainer = document.getElementById('particles');
-    for (let i = 0; i < 30; i++) {
-      const particle = document.createElement('div');
-      particle.className = 'particle';
-      const size = Math.random() * 6 + 2;
-      particle.style.cssText = `
-        width: ${size}px;
-        height: ${size}px;
-        left: ${Math.random() * 100}%;
-        top: ${Math.random() * 100}%;
-        animation-duration: ${Math.random() * 15 + 10}s;
-        animation-delay: ${Math.random() * 5}s;
-        opacity: ${Math.random() * 0.5 + 0.1};
-      `;
-      particleContainer.appendChild(particle);
-    }
-
     function handleSignup(e) {
       e.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const company = document.getElementById('company').value;
       const password = document.getElementById('password').value;
       const confirm = document.getElementById('confirm-password').value;
+      const btn = document.getElementById('signup-btn');
+      
+      if (!name || !email || !password) {
+        AIRPAK.Toast.error('Please fill in all required fields');
+        return;
+      }
       if (password !== confirm) {
         AIRPAK.Toast.error('Passwords do not match');
         return;
       }
-      // Simulate signup
-      AIRPAK.Toast.success('Account created! Redirecting...');
-      setTimeout(() => window.location.href = 'loading-screen.html', 1500);
+      if (password.length < 8) {
+        AIRPAK.Toast.error('Password must be at least 8 characters');
+        return;
+      }
+      
+      btn.innerHTML = '<span class="loading"></span> Creating account...';
+      btn.disabled = true;
+      
+      sessionStorage.setItem('airpak_user', JSON.stringify({ name: name, email: email, company: company, provider: 'email' }));
+      AIRPAK.Toast.success('Account created successfully!');
+      setTimeout(() => window.location.href = 'dashboard.html', 1200);
     }
 
-    function socialLogin(provider) {
-      AIRPAK.Toast.info(`Signing up with ${provider}...`);
+    function socialLogin(provider, btn) {
+      btn.innerHTML = '<span class="loading" style="border-color:rgba(0,0,0,0.2);border-top-color:#333;"></span> Connecting...';
+      btn.disabled = true;
+      
+      setTimeout(() => {
+        const user = provider === 'google' 
+          ? { name: 'Alex Morgan', email: 'alex.morgan@gmail.com', company: 'Morgan Logistics Ltd', provider: 'google' }
+          : { name: 'Alex Johnson', email: 'alex.johnson@icloud.com', company: 'Johnson Express', provider: 'apple' };
+        sessionStorage.setItem('airpak_user', JSON.stringify(user));
+        AIRPAK.Toast.success(`Signed up with ${provider === 'google' ? 'Google' : 'Apple'}!`);
+        setTimeout(() => window.location.href = 'dashboard.html', 1000);
+      }, 1500);
     }
   </script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="js/main.js"></script>
-  <script>lucide.createIcons();</script>
-  <footer style="background: #1a1a2e; color: rgba(255,255,255,0.5); padding: 20px; text-align: center; font-size: 12px; margin-top: 40px;">
-    Unit 7, Wales International Hub, Cardiff Bay, Wales CF10 5AL, United Kingdom &nbsp;|&nbsp; © 2026 Airpak Express. All rights reserved.
-  </footer>
-  <script src="/apps/airpak/js/ap-lang.js" defer></script>
 </body>
 </html>

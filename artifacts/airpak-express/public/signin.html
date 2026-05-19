@@ -4,104 +4,211 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign In — Airpak Express</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23007AFF'/%3E%3Cpath d='M8 16h16M16 8v16' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23CD2727'/%3E%3Cpath d='M8 16h16M16 8v16' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Sarabun:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/apple-tokens.css">
   <link rel="stylesheet" href="css/glass-system.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/pages.css">
   <link rel="stylesheet" href="css/brand-airpak.css">
-  <link rel="stylesheet" href="/apps/airpak/css/ap-lang.css">
+  <style>
+    :root {
+      --ap-red: #CD2727;
+      --ap-red-dark: #A81F1F;
+      --ap-dark: #1a1a2e;
+      --ap-gray: #6B7280;
+    }
+    body { margin: 0; font-family: 'Inter', sans-serif; background: var(--ap-dark); }
+    .signin-container { display: flex; min-height: 100vh; }
+    .signin-left { flex: 1; padding: 60px; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(135deg, #1a1a2e 0%, #2d1f3d 100%); position: relative; overflow: hidden; }
+    .signin-left::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(205,39,39,0.1) 0%, transparent 50%); animation: pulse 8s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 0.8; } }
+    .signin-brand { margin-bottom: 40px; }
+    .signin-brand svg { width: 48px; height: 48px; }
+    .signin-headline { font-family: 'Sarabun', sans-serif; font-size: 42px; font-weight: 700; color: #fff; line-height: 1.2; margin-bottom: 20px; }
+    .signin-headline span { color: var(--ap-red); }
+    .signin-stats { display: flex; gap: 40px; margin-top: 50px; }
+    .signin-stat { text-align: left; }
+    .signin-stat-value { font-size: 36px; font-weight: 700; color: #fff; }
+    .signin-stat-label { font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+    .signin-globe { position: absolute; bottom: 80px; right: -100px; width: 300px; height: 300px; opacity: 0.1; }
+    .signin-right { flex: 1; padding: 60px; display: flex; flex-direction: column; justify-content: center; background: #fff; }
+    .signin-form-container { max-width: 420px; margin: 0 auto; width: 100%; }
+    .signin-form-title { font-family: 'Sarabun', sans-serif; font-size: 28px; font-weight: 700; color: var(--ap-dark); margin-bottom: 8px; }
+    .signin-form-subtitle { color: var(--ap-gray); margin-bottom: 32px; }
+    .field { margin-bottom: 20px; }
+    .field-label { display: block; font-size: 14px; font-weight: 600; color: var(--ap-dark); margin-bottom: 8px; }
+    .input { width: 100%; padding: 14px 16px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 15px; transition: all 0.2s; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    .input:focus { outline: none; border-color: var(--ap-red); box-shadow: 0 0 0 3px rgba(205,39,39,0.1); }
+    .forgot-link { float: right; font-size: 13px; color: var(--ap-red); text-decoration: none; margin-top: -4px; margin-bottom: 8px; }
+    .checkbox { display: flex; align-items: center; gap: 12px; margin: 24px 0; }
+    .checkbox input { width: 18px; height: 18px; accent-color: var(--ap-red); }
+    .checkbox label { font-size: 14px; color: var(--ap-gray); }
+    .btn-primary { width: 100%; padding: 16px; background: var(--ap-red); color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-primary:hover { background: var(--ap-red-dark); transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+    .auth-divider { display: flex; align-items: center; margin: 28px 0; }
+    .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: #e5e7eb; }
+    .auth-divider span { padding: 0 16px; color: var(--ap-gray); font-size: 14px; }
+    .auth-social { display: flex; gap: 12px; }
+    .btn-social { flex: 1; padding: 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; background: #fff; cursor: pointer; font-size: 15px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; }
+    .btn-social:hover { border-color: var(--ap-red); background: #fef2f2; }
+    .auth-footer { text-align: center; margin-top: 28px; color: var(--ap-gray); font-size: 14px; }
+    .auth-footer a { color: var(--ap-red); font-weight: 600; text-decoration: none; }
+    .nav-mini { position: fixed; top: 20px; left: 60px; z-index: 100; }
+    .nav-mini a { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; font-weight: 600; }
+    @media (max-width: 900px) { .signin-container { flex-direction: column; } .signin-left { display: none; } .signin-right { padding: 40px 24px; } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite; }
+  </style>
 </head>
 <body>
-  <!-- Navigation Bar -->
-  <nav class="nav-bar">
-    <div class="nav-left">
-      <a href="index.html" class="nav-logo">
-        <img src="/brand/logo.png" alt="Airpak Express" class="ap-brand-logo" />
-        <span class="nav-logo-text">Airpak Express</span>
-      </a>
-    </div>
-    <div class="nav-right">
-      <button class="theme-toggle" aria-label="Toggle theme"><i data-lucide="moon"></i></button>
-      <a href="signup.html" class="lang-pill"><span class="flag">EN</span> English</a>
-    </div>
-  </nav>
-
-  <!-- Auth Page -->
-  <div class="auth-page">
-    <div class="auth-bg-overlay" style="background: linear-gradient(135deg, rgba(0,122,255,0.3) 0%, rgba(88,86,214,0.3) 100%);"></div>
-
-    <!-- Auth Card -->
-    <div class="auth-card" style="max-width: 420px;">
-      <div class="auth-header">
-        <a href="index.html" class="auth-logo">
-          <svg width="40" height="40" viewBox="0 0 32 32" fill="none">
-            <rect width="32" height="32" rx="6" fill="#007AFF"/>
+  <div class="signin-container">
+    <!-- Left Panel - Branding -->
+    <div class="signin-left">
+      <nav class="nav-mini">
+        <a href="index.html">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="6" fill="#CD2727"/>
             <path d="M8 16h16M16 8v16" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-            <circle cx="16" cy="16" r="6" fill="none" stroke="white" stroke-width="2"/>
+            <circle cx="16" cy="16" r="4" fill="white"/>
           </svg>
+          Airpak Express
         </a>
-        <h1 class="auth-title" data-i18n="auth.signinTitle">Welcome Back</h1>
-        <p class="auth-subtitle" data-i18n="auth.signinSubtitle">Sign in to manage your shipments</p>
+      </nav>
+      
+      <div class="signin-brand">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <rect width="48" height="48" rx="12" fill="#CD2727"/>
+          <path d="M12 24h24M24 12v24" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="24" cy="24" r="8" fill="none" stroke="white" stroke-width="2.5"/>
+        </svg>
       </div>
-
-      <form class="auth-form" onsubmit="handleSignin(event)">
-        <div class="field">
-          <label class="field-label" for="email">Email address</label>
-          <input type="email" id="email" class="input" placeholder="you@company.com" required>
+      
+      <h1 class="signin-headline">
+        Welcome Back<br>to <span>Airpak Express</span>
+      </h1>
+      
+      <div class="signin-stats">
+        <div class="signin-stat">
+          <div class="signin-stat-value">44</div>
+          <div class="signin-stat-label">Global Branches</div>
         </div>
-        <div class="field">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <label class="field-label" for="password">Password</label>
-            <a href="reset-password.html" class="btn-ghost" style="font-size: var(--text-sm);">Forgot password?</a>
+        <div class="signin-stat">
+          <div class="signin-stat-value">220+</div>
+          <div class="signin-stat-label">Countries</div>
+        </div>
+        <div class="signin-stat">
+          <div class="signin-stat-value">50K+</div>
+          <div class="signin-stat-label">Businesses</div>
+        </div>
+      </div>
+      
+      <!-- Globe SVG -->
+      <svg class="signin-globe" viewBox="0 0 200 200" fill="none" stroke="white" stroke-width="0.5">
+        <circle cx="100" cy="100" r="80"/>
+        <ellipse cx="100" cy="100" rx="80" ry="30"/>
+        <ellipse cx="100" cy="100" rx="30" ry="80"/>
+        <path d="M20 100 H180 M100 20 V180"/>
+      </svg>
+    </div>
+    
+    <!-- Right Panel - Form -->
+    <div class="signin-right">
+      <div class="signin-form-container">
+        <h2 class="signin-form-title">Sign In</h2>
+        <p class="signin-form-subtitle">Manage your shipments and track packages</p>
+        
+        <form id="signin-form" onsubmit="handleSignin(event)">
+          <div class="field">
+            <label class="field-label" for="email">Email Address</label>
+            <input type="email" id="email" class="input" placeholder="you@company.com" required>
           </div>
-          <input type="password" id="password" class="input" placeholder="••••••••" required>
-        </div>
-        <div class="checkbox">
-          <input type="checkbox" id="remember">
-          <label class="label-text" for="remember">Remember me for 30 days</label>
-        </div>
-        <button type="submit" class="btn-primary btn-block btn-lg"><i data-lucide="arrow-right"></i> Sign In</button>
+          
+          <div class="field">
+            <label class="field-label" for="password">Password</label>
+            <a href="reset-password.html" class="forgot-link">Forgot password?</a>
+            <input type="password" id="password" class="input" placeholder="Enter your password" required style="margin-top: 0;">
+          </div>
+          
+          <div class="checkbox">
+            <input type="checkbox" id="remember">
+            <label for="remember">Remember me for 30 days</label>
+          </div>
+          
+          <button type="submit" class="btn-primary" id="signin-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Sign In
+          </button>
+        </form>
+        
         <div class="auth-divider"><span>or continue with</span></div>
+        
         <div class="auth-social">
-          <button type="button" class="btn-social" onclick="socialLogin('google')">
-            <svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          <button type="button" class="btn-social" onclick="socialLogin('google', this)">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
             Google
           </button>
-          <button type="button" class="btn-social" onclick="socialLogin('apple')">
+          <button type="button" class="btn-social" onclick="socialLogin('apple', this)">
             <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
             Apple
           </button>
         </div>
-      </form>
-
-      <div class="auth-footer">
-        <span>Don't have an account?</span>
-        <a href="signup.html">Sign up</a>
+        
+        <div class="auth-footer">
+          Don't have an account? <a href="signup.html">Sign up</a>
+        </div>
       </div>
     </div>
   </div>
 
   <script src="js/main.js"></script>
   <script>
+    // Mock auth state
+    const MOCK_USERS = {
+      google: { name: 'Alex Morgan', email: 'alex.morgan@gmail.com', company: 'Morgan Logistics Ltd', provider: 'google' },
+      apple: { name: 'Alex Johnson', email: 'alex.johnson@icloud.com', company: 'Johnson Express', provider: 'apple' }
+    };
+
     function handleSignin(e) {
       e.preventDefault();
-      AIRPAK.Toast.success('Welcome back! Redirecting...');
-      setTimeout(() => window.location.href = 'dashboard.html', 1500);
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const btn = document.getElementById('signin-btn');
+      
+      if (!email || !password) {
+        AIRPAK.Toast.error('Please fill in all fields');
+        return;
+      }
+      
+      btn.innerHTML = '<span class="loading"></span> Signing in...';
+      btn.disabled = true;
+      
+      setTimeout(() => {
+        sessionStorage.setItem('airpak_user', JSON.stringify({ name: 'Alex Morgan', email: email, provider: 'email' }));
+        AIRPAK.Toast.success('Welcome back! Redirecting...');
+        setTimeout(() => window.location.href = 'dashboard.html', 1000);
+      }, 800);
     }
-    function socialLogin(provider) {
-      AIRPAK.Toast.info(`Signing in with ${provider}...`);
+    
+    function socialLogin(provider, btn) {
+      btn.innerHTML = '<span class="loading" style="border-color:rgba(0,0,0,0.2);border-top-color:#333;"></span> Connecting...';
+      btn.disabled = true;
+      
+      setTimeout(() => {
+        const user = MOCK_USERS[provider];
+        sessionStorage.setItem('airpak_user', JSON.stringify(user));
+        AIRPAK.Toast.success(`Signed in with ${provider === 'google' ? 'Google' : 'Apple'}!`);
+        setTimeout(() => window.location.href = 'dashboard.html', 1000);
+      }, 1500);
     }
   </script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script>lucide.createIcons();</script>
-  <footer style="background: #1a1a2e; color: rgba(255,255,255,0.5); padding: 20px; text-align: center; font-size: 12px; margin-top: 40px;">
-    Unit 7, Wales International Hub, Cardiff Bay, Wales CF10 5AL, United Kingdom &nbsp;|&nbsp; © 2026 Airpak Express. All rights reserved.
-  </footer>
-  <script src="/apps/airpak/js/ap-lang.js" defer></script>
 </body>
 </html>
