@@ -71,6 +71,18 @@
     .nav-mini { position: fixed; top: 20px; left: 60px; z-index: 100; }
     .nav-mini a { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; font-weight: 600; }
     @media (max-width: 900px) { .signup-container { flex-direction: column; } .signup-left { display: none; } .signup-right { padding: 40px 24px; } }
+    .logistics-overlay { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .lf-icon { width: 64px; height: 64px; animation: floatIcon 6s ease-in-out infinite; }
+    .lf-1 { animation-delay: 0s; }
+    .lf-2 { animation-delay: 1s; }
+    .lf-3 { animation-delay: 2s; }
+    .lf-4 { animation-delay: 3s; }
+    .lf-5 { animation-delay: 4s; }
+    .lf-6 { animation-delay: 5s; }
+    @keyframes floatIcon {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite; }
   </style>
@@ -79,7 +91,21 @@
 <body>
   <div class="signup-container">
     <!-- Left Panel - Branding -->
+    <!-- Left Panel - Enhanced Logistics Visual -->
     <div class="signup-left">
+      <!-- Animated background canvas -->
+      <canvas id="logisticsCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.4;"></canvas>
+      
+      <!-- Floating logistics icons -->
+      <div class="logistics-overlay">
+        <svg class="lf-icon lf-1" viewBox="0 0 48 48" fill="none" style="position:absolute;top:15%;left:10%;opacity:0.15;"><rect x="4" y="14" width="40" height="24" rx="4" stroke="white" stroke-width="2"/><path d="M14 14V10l8-4v4M34 14V10l-8-4v4" stroke="white" stroke-width="2"/><circle cx="16" cy="38" r="6" stroke="white" stroke-width="2"/><circle cx="36" cy="38" r="6" stroke="white" stroke-width="2"/></svg>
+        <svg class="lf-icon lf-2" viewBox="0 0 48 48" fill="none" style="position:absolute;top:25%;right:8%;opacity:0.12;"><rect x="6" y="6" width="36" height="36" rx="6" stroke="white" stroke-width="2"/><path d="M16 24h16M24 16v16" stroke="white" stroke-width="2.5"/><circle cx="24" cy="24" r="6" stroke="white" stroke-width="2"/></svg>
+        <svg class="lf-icon lf-3" viewBox="0 0 48 48" fill="none" style="position:absolute;bottom:20%;left:15%;opacity:0.1;"><path d="M4 40h40M12 40V28l12-12 12 12v12" stroke="white" stroke-width="2.5" stroke-linejoin="round"/><path d="M20 40V30h8v10" stroke="white" stroke-width="2"/></svg>
+        <svg class="lf-icon lf-4" viewBox="0 0 48 48" fill="none" style="position:absolute;bottom:30%;right:12%;opacity:0.13;"><circle cx="24" cy="24" r="20" stroke="white" stroke-width="2"/><path d="M24 12v12l8 4" stroke="white" stroke-width="2"/><path d="M8 24h32" stroke="white" stroke-width="1" stroke-dasharray="4 4"/></svg>
+        <svg class="lf-icon lf-5" viewBox="0 0 48 48" fill="none" style="position:absolute;top:45%;left:5%;opacity:0.1;"><rect x="4" y="4" width="40" height="40" rx="8" stroke="white" stroke-width="2"/><path d="M14 24h20M24 14v20" stroke="white" stroke-width="2"/></svg>
+        <svg class="lf-icon lf-6" viewBox="0 0 48 48" fill="none" style="position:absolute;top:10%;right:25%;opacity:0.08;"><rect x="4" y="16" width="40" height="20" rx="4" stroke="white" stroke-width="2"/><circle cx="14" cy="36" r="5" stroke="white" stroke-width="2"/><circle cx="38" cy="36" r="5" stroke="white" stroke-width="2"/></svg>
+      </div>
+
       <nav class="nav-mini">
         <a href="index.html">
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
