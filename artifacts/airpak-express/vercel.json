@@ -3,7 +3,21 @@
   "installCommand": "pnpm install",
   "outputDirectory": "dist/public",
   "framework": null,
-  "cleanUrls": true,
+  "cleanUrls": false,
+  "rewrites": [
+    { "source": "/signin", "destination": "/signin.html" },
+    { "source": "/signup", "destination": "/signup.html" },
+    { "source": "/dashboard", "destination": "/dashboard.html" },
+    { "source": "/tracking", "destination": "/tracking.html" },
+    { "source": "/settings", "destination": "/settings.html" },
+    { "source": "/payment", "destination": "/payment.html" },
+    { "source": "/chat", "destination": "/chat.html" },
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/faq", "destination": "/faq.html" },
+    { "source": "/terms", "destination": "/terms.html" },
+    { "source": "/privacy", "destination": "/privacy.html" },
+    { "source": "/reset-password", "destination": "/reset-password.html" }
+  ],
   "headers": [
     {
       "source": "/(.*)",
