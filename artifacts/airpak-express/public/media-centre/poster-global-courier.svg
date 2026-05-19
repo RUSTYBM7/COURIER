@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1100">
+  <defs><linearGradient id="b3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#f5f5f5"/></linearGradient><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#CD2727"/><stop offset="100%" stop-color="#9b1a1a"/></linearGradient></defs>
+  <rect width="800" height="1100" fill="url(#b3)"/>
+  <rect x="40" y="40" width="720" height="1020" rx="20" fill="none" stroke="#CD2727" stroke-width="2"/>
+  <!-- World map simplified -->
+  <circle cx="400" cy="380" r="200" fill="none" stroke="#eee" stroke-width="1"/>
+  <!-- Continents -->
+  <ellipse cx="280" cy="320" rx="80" ry="60" fill="#CD2727" opacity="0.15" stroke="#CD2727" stroke-width="2"/>
+  <ellipse cx="500" cy="300" rx="100" ry="70" fill="#CD2727" opacity="0.15" stroke="#CD2727" stroke-width="2"/>
+  <ellipse cx="450" cy="480" rx="120" ry="80" fill="#CD2727" opacity="0.15" stroke="#CD2727" stroke-width="2"/>
+  <ellipse cx="580" cy="520" rx="60" ry="50" fill="#CD2727" opacity="0.15" stroke="#CD2727" stroke-width="2"/>
+  <!-- Trucks -->
+  <rect x="180" y="380" width="80" height="40" rx="8" fill="#CD2727"/>
+  <rect x="260" y="390" width="30" height="30" rx="4" fill="#9b1a1a"/>
+  <circle cx="200" cy="420" r="12" fill="#373F41"/><circle cx="240" cy="420" r="12" fill="#373F41"/>
+  <rect x="540" y="340" width="80" height="40" rx="8" fill="#373F41"/>
+  <rect x="620" y="350" width="30" height="30" rx="4" fill="#222"/>
+  <circle cx="560" cy="380" r="12" fill="#CD2727"/><circle cx="600" cy="380" r="12" fill="#CD2727"/>
+  <rect x="460" y="500" width="80" height="40" rx="8" fill="#CD2727"/>
+  <rect x="540" y="510" width="30" height="30" rx="4" fill="#9b1a1a"/>
+  <circle cx="480" cy="540" r="12" fill="#373F41"/><circle cx="520" cy="540" r="12" fill="#373F41"/>
+  <!-- Route lines -->
+  <path d="M220 400 Q400 250 560 360" stroke="#CD2727" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
+  <path d="M500 520 Q400 600 320 500" stroke="#CD2727" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
+  <!-- Title -->
+  <rect x="100" y="680" width="600" height="80" rx="12" fill="url(#g3)"/>
+  <text x="400" y="738" font-family="Arial,sans-serif" font-size="38" font-weight="bold" fill="white" text-anchor="middle">GLOBAL COURIER</text>
+  <text x="400" y="810" font-family="Arial,sans-serif" font-size="28" fill="#373F41" text-anchor="middle">Door-to-door worldwide</text>
+  <text x="400" y="870" font-family="Arial,sans-serif" font-size="22" fill="#999" text-anchor="middle">44 branches • 220+ countries</text>
+  <rect x="280" y="950" width="240" height="60" rx="30" fill="#CD2727"/>
+  <text x="400" y="990" font-family="Arial,sans-serif" font-size="16" font-weight="bold" fill="white" text-anchor="middle">AIRPAK EXPRESS</text>
+</svg>

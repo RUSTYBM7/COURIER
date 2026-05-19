@@ -1306,34 +1306,73 @@ Fax: 848-54491666</p>
                 <div style="background-color:#F3F4F8;padding:20px;">
                 <h5>Get in touch</h5>
                 <p>We are always here to help you.</p>
-                <form class="widget-contact-form" novalidate action="contact" role="form" method="post">
+                <form class="widget-contact-form ap-modern-form" novalidate action="contact" role="form" method="post">
                                 <input type="hidden" value="sendcontactus" name="action">
                                 <input type="hidden" value="" name="websitekey">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <label>Your Name * </label>
-                                        <input type="text" aria-required="true" name="name" required class="form-control required name" placeholder="Enter your Name">
+                                <style>
+                                  .ap-modern-form .form-group{margin-bottom:18px;}
+                                  .ap-modern-form .form-control{width:100%;padding:12px 16px;border:1.5px solid #D1D1D6;border-radius:10px;font-family:'Inter',sans-serif;font-size:.95rem;color:#1a1a1a;background:#fff;transition:border-color .2s,box-shadow .2s;outline:none;}
+                                  .ap-modern-form .form-control:focus{border-color:#CD2727;box-shadow:0 0 0 3px rgba(205,39,39,.15);}
+                                  .ap-modern-form label{font-family:'Inter',sans-serif;font-size:.8rem;font-weight:600;color:#373F41;margin-bottom:6px;display:block;}
+                                  .ap-modern-form textarea.form-control{resize:vertical;min-height:120px;}
+                                  .ap-modern-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+                                  .ap-modern-form .submit-btn{width:100%;padding:14px;background:linear-gradient(135deg,#CD2727,#9b1a1a);color:#fff;border:none;border-radius:10px;font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(205,39,39,.3);}
+                                  .ap-modern-form .submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(205,39,39,.4);}
+                                  .ap-modern-form .submit-btn:active{transform:scale(.98);}
+                                  .ap-modern-form .recaptcha-wrap{margin-bottom:16px;}
+                                  .ap-modern-form .success-msg{display:none;padding:16px;background:rgba(52,199,89,.1);border:1px solid #34C759;border-radius:10px;color:#1a6b30;font-family:'Inter',sans-serif;font-size:.9rem;text-align:center;}
+                                  @media(max-width:480px){.ap-modern-form .form-row{grid-template-columns:1fr;}}
+                                </style>
+                                <div class="success-msg" id="formSuccess">&#10004; Thank you! Your message has been sent. We will be in touch shortly.</div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="contact-name">Your Name *</label>
+                                        <input type="text" aria-required="true" name="name" id="contact-name" required class="form-control required name" placeholder="Full name" autocomplete="name">
                                     </div>
-                                    <div class="col-lg-12">
-                                        <label for="email">Your Email *</label>
-                                        <input type="email" aria-required="true" name="email" required class="form-control required email" placeholder="Enter your Email">
+                                    <div class="form-group">
+                                        <label for="contact-company">Company</label>
+                                        <input type="text" name="company" id="contact-company" class="form-control" placeholder="Company name" autocomplete="organization">
                                     </div>
-                                <div class="col-lg-12">
-                                    <label for="message">Message</label>
-                                    <textarea type="text" name="message" required rows="5" class="form-control required" placeholder="Enter your Message"></textarea>
                                 </div>
-                                    <div class="col-lg-12">
-										<script src='https://www.google.com/recaptcha/api.js'></script>
-                            <div class="g-recaptcha" data-sitekey="6Lc_260oAAAAAIrouSsU6VvIs2sv_Hx1vaN-ONtF"></div>
-                        </div>
-                                <!--  <div class="form-group">
-                            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-                            <div class="g-recaptcha" data-sitekey="6LddCxAUAAAAAKOg0-U6IprqOZ7vTfiMNSyQT2-M"></div>
-                        </div>  -->
-                    <div class="col-lg-12" style="text-align:right;">
-                                <button class="btn button btn-rounded red-btn btn-hvr-red btn-xs" type="submit" id="form-submit"><i class="fa fa-paper-plane"></i>&nbsp;Submit</button>
-                        </div>
-                                    </div>
+                                <div class="form-group">
+                                    <label for="contact-email">Email Address *</label>
+                                    <input type="email" aria-required="true" name="email" id="contact-email" required class="form-control required email" placeholder="your@email.com" autocomplete="email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-phone">Phone Number</label>
+                                    <input type="tel" name="phone" id="contact-phone" class="form-control" placeholder="+44 — — — — — — —" autocomplete="tel">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-service">Service Interest</label>
+                                    <select name="service" id="contact-service" class="form-control">
+                                        <option value="">Select a service...</option>
+                                        <option>Worldwide Express & Domestic Express</option>
+                                        <option>Warehousing & Fulfillment</option>
+                                        <option>Worldwide Freight Forwarding</option>
+                                        <option>International Logistics Solutions</option>
+                                        <option>International Shipping</option>
+                                        <option>Customs Clearance</option>
+                                        <option>Enterprise / GETOnline</option>
+                                        <option>ShipLite Employee Portal</option>
+                                        <option>Other / General Enquiry</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-country">Country</label>
+                                    <input type="text" name="country" id="contact-country" class="form-control" placeholder="Country" autocomplete="country-name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-message">Message *</label>
+                                    <textarea name="message" id="contact-message" required rows="5" class="form-control required" placeholder="Tell us about your logistics requirements, shipment volume, or any specific needs..."></textarea>
+                                </div>
+                                <div class="recaptcha-wrap">
+                                    <div class="g-recaptcha" data-sitekey="6Lc_260oAAAAAIrouSsU6VvIs2sv_Hx1vaN-ONtF"></div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <button class="submit-btn" type="submit" id="form-submit">
+                                        <i class="fa fa-paper-plane"></i>&nbsp;Send Message
+                                    </button>
+                                </div>
                             </form>
                 </div>
             </div>
@@ -1383,10 +1422,9 @@ Fax: 848-54491666</p>
                         <div class="col-lg-3">
                             <span class="aph3">Get in Touch</span>
                         <ul>
-                            <li><a href="/contact.html"><i class="fa fa-map"></i> 45 Changi South Ave 2 #01-01
-<br />Cardiff CF10 5AL, United Kingdom</a></li>
-                            <li><a href="tel:+44 67439200"><i class="fa fa-phone"></i> +65 - 6743 9200</a></li>
-                            <li><a href="mailto:CS_SIN@AIRPAK-EXPRESS.COM"><i class="fa fa-envelope"></i> CS_SIN@AIRPAK-EXPRESS.COM</a></li>
+                            <li><a href="/contact.html"><i class="fa fa-map"></i> Unit 7, Wales International Hub, Cardiff Bay, Wales CF10 5AL, United Kingdom</a></li>
+                            <li><a href="tel:+44 300 123 4567"><i class="fa fa-phone"></i> +44 (0) 300 123 4567</a></li>
+                            <li><a href="mailto:info@airpak-express.com"><i class="fa fa-envelope"></i> info@airpak-express.com</a></li>
                         </ul>
                         </div>
                         <div class="col-lg-3">

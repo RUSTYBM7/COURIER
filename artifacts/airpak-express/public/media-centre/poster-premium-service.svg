@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1100">
+  <defs><linearGradient id="b5" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#f5f5f5"/></linearGradient><linearGradient id="g5" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#CD2727"/><stop offset="100%" stop-color="#9b1a1a"/></linearGradient></defs>
+  <rect width="800" height="1100" fill="url(#b5)"/>
+  <rect x="40" y="40" width="720" height="1020" rx="20" fill="none" stroke="#CD2727" stroke-width="2"/>
+  <!-- Star badge -->
+  <circle cx="400" cy="380" r="160" fill="none" stroke="#CD2727" stroke-width="4"/>
+  <circle cx="400" cy="380" r="145" fill="rgba(205,39,39,0.08)"/>
+  <polygon points="400,240 420,330 515,330 435,390 460,480 400,425 340,480 365,390 285,330 380,330" fill="#CD2727"/>
+  <text x="400" y="560" font-family="Arial,sans-serif" font-size="24" font-weight="bold" fill="#CD2727" text-anchor="middle">&#9733; PREMIUM SERVICE &#9733;</text>
+  <!-- Title -->
+  <rect x="100" y="680" width="600" height="80" rx="12" fill="url(#g5)"/>
+  <text x="400" y="728" font-family="Arial,sans-serif" font-size="42" font-weight="bold" fill="white" text-anchor="middle">PREMIUM SERVICE</text>
+  <text x="400" y="810" font-family="Arial,sans-serif" font-size="26" fill="#373F41" text-anchor="middle">Excellence in every delivery</text>
+  <text x="400" y="860" font-family="Arial,sans-serif" font-size="20" fill="#999" text-anchor="middle">Dedicated support • Priority handling</text>
+  <rect x="280" y="950" width="240" height="60" rx="30" fill="#CD2727"/>
+  <text x="400" y="990" font-family="Arial,sans-serif" font-size="16" font-weight="bold" fill="white" text-anchor="middle">AIRPAK EXPRESS</text>
+</svg>
