@@ -1141,8 +1141,345 @@ a{color:#CD2727;}
        </section>
 
        
--->
-       <script>
+<!-- ===== POWERFUL GLOBAL BUSINESS SECTION ===== -->
+<style>
+  .ap-powerful-section { background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%); padding:80px 0; position:relative; overflow:hidden; }
+  .ap-powerful-section::before { content:''; position:absolute; top:-50%; right:-20%; width:600px; height:600px; background:radial-gradient(circle,rgba(205,39,39,.15) 0%,transparent 70%); border-radius:50%; }
+  .ap-powerful-section .ap-container { max-width:1200px; margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+  .ap-powerful-header { text-align:center; margin-bottom:60px; }
+  .ap-powerful-header h2 { font-family:'Sarabun',sans-serif; font-size:clamp(28px,5vw,48px); font-weight:800; color:#fff; margin-bottom:16px; line-height:1.2; }
+  .ap-powerful-header h2 span { color:#e63946; }
+  .ap-powerful-header p { font-family:'Inter',sans-serif; font-size:18px; color:rgba(255,255,255,.7); max-width:600px; margin:0 auto; }
+  .ap-powerful-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; margin-bottom:60px; }
+  .ap-powerful-card { background:rgba(255,255,255,.06); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,.1); border-radius:20px; padding:32px 24px; text-align:center; transition:all .35s; }
+  .ap-powerful-card:hover { background:rgba(255,255,255,.1); border-color:rgba(230,57,70,.4); transform:translateY(-6px); box-shadow:0 20px 40px rgba(0,0,0,.3); }
+  .ap-powerful-icon { width:64px; height:64px; margin:0 auto 20px; background:linear-gradient(135deg,#e63946,#cd2727); border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:28px; }
+  .ap-powerful-card h3 { font-family:'Sarabun',sans-serif; font-size:20px; font-weight:700; color:#fff; margin-bottom:8px; }
+  .ap-powerful-card p { font-family:'Inter',sans-serif; font-size:14px; color:rgba(255,255,255,.6); line-height:1.6; }
+  .ap-powerful-cta { text-align:center; }
+  .ap-powerful-cta a { display:inline-flex; align-items:center; gap:8px; background:#e63946; color:#fff; font-family:'Inter',sans-serif; font-size:16px; font-weight:600; padding:16px 36px; border-radius:50px; text-decoration:none; transition:all .3s; }
+  .ap-powerful-cta a:hover { background:#fff; color:#e63946; transform:scale(1.05); }
+  @media (max-width: 1024px) { .ap-powerful-grid { grid-template-columns:repeat(2,1fr); } }
+  @media (max-width: 600px) {
+    .ap-powerful-section { padding:50px 0; }
+    .ap-powerful-grid { grid-template-columns:1fr; gap:16px; }
+    .ap-powerful-card { padding:24px 20px; }
+    .ap-powerful-cta a { padding:14px 28px; font-size:15px; }
+  }
+</style>
+<section class="ap-powerful-section">
+  <div class="ap-container">
+    <div class="ap-powerful-header">
+      <h2>A <span>Powerful Global</span> Business Platform</h2>
+      <p>End-to-end logistics solutions trusted by 10,000+ businesses across 220+ countries</p>
+    </div>
+    <div class="ap-powerful-grid">
+      <div class="ap-powerful-card">
+        <div class="ap-powerful-icon">&#128230;</div>
+        <h3>Express Delivery</h3>
+        <p>Next-day and same-day delivery to 220+ countries worldwide</p>
+      </div>
+      <div class="ap-powerful-card">
+        <div class="ap-powerful-icon">&#128756;</div>
+        <h3>Warehousing</h3>
+        <p>Omnichannel fulfillment & storage across UK & international hubs</p>
+      </div>
+      <div class="ap-powerful-card">
+        <div class="ap-powerful-icon">&#9992;</div>
+        <h3>Freight Forwarding</h3>
+        <p>Air, ocean & road freight with real-time tracking & customs clearance</p>
+      </div>
+      <div class="ap-powerful-card">
+        <div class="ap-powerful-icon">&#128274;</div>
+        <h3>Enterprise Security</h3>
+        <p>Bank-grade encryption & compliance for sensitive shipments</p>
+      </div>
+    </div>
+    <div class="ap-powerful-cta">
+      <a href="/enterprise-tools.html">Explore Enterprise Tools &#8594;</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS — MD Remarks Auto-Scroll ===== -->
+<style>
+  .ap-testimonials { background:#fff; padding:80px 0; overflow:hidden; }
+  .ap-testimonials .ap-container { max-width:1200px; margin:0 auto; padding:0 24px; }
+  .ap-testimonials-header { text-align:center; margin-bottom:48px; }
+  .ap-testimonials-header h2 { font-family:'Sarabun',sans-serif; font-size:clamp(26px,4vw,40px); font-weight:800; color:#373F41; margin-bottom:12px; }
+  .ap-testimonials-header p { font-family:'Inter',sans-serif; font-size:16px; color:#666; }
+  .ap-testimonials-track { display:flex; gap:24px; width:max-content; animation:scroll-testimonials 40s linear infinite; }
+  .ap-testimonials-track:hover { animation-play-state:paused; }
+  @keyframes scroll-testimonials {
+    0% { transform:translateX(0); }
+    100% { transform:translateX(calc(-50% - 12px)); }
+  }
+  .ap-testimonial-card { width:380px; flex-shrink:0; background:#fff; border-radius:20px; padding:36px; border:1.5px solid #eee; transition:all .3s; position:relative; overflow:hidden; }
+  .ap-testimonial-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,#CD2727,#e63946); }
+  .ap-testimonial-card:hover { border-color:#CD2727; box-shadow:0 12px 32px rgba(0,0,0,.08); transform:translateY(-4px); }
+  .ap-testimonial-quote { font-size:48px; color:#CD2727; font-family:Georgia,serif; line-height:1; margin-bottom:16px; }
+  .ap-testimonial-text { font-family:'Inter',sans-serif; font-size:15px; color:#444; line-height:1.7; margin-bottom:24px; }
+  .ap-testimonial-author { display:flex; align-items:center; gap:14px; }
+  .ap-testimonial-avatar { width:52px; height:52px; border-radius:50%; background:linear-gradient(135deg,#CD2727,#e63946); display:flex; align-items:center; justify-content:center; color:#fff; font-family:'Sarabun',sans-serif; font-size:20px; font-weight:700; flex-shrink:0; }
+  .ap-testimonial-info h4 { font-family:'Sarabun',sans-serif; font-size:16px; font-weight:700; color:#222; margin-bottom:2px; }
+  .ap-testimonial-info span { font-family:'Inter',sans-serif; font-size:13px; color:#888; }
+  .ap-testimonials-track-inner { display:flex; }
+  @media (max-width: 600px) {
+    .ap-testimonials { padding:50px 0; }
+    .ap-testimonial-card { width:300px; padding:24px; }
+    .ap-testimonials-track { gap:16px; }
+  }
+</style>
+<section class="ap-testimonials">
+  <div class="ap-container">
+    <div class="ap-testimonials-header">
+      <h2>What Our Clients Say</h2>
+      <p>Trusted by industry leaders across the United Kingdom</p>
+    </div>
+  </div>
+  <!-- Auto-scrolling testimonials - duplicated for seamless loop -->
+  <div class="ap-testimonials-track" id="testimonialTrack">
+    <div class="ap-testimonials-track-inner">
+      <!-- Card 1 -->
+      <div class="ap-testimonial-card">
+        <div class="ap-testimonial-quote">"</div>
+        <p class="ap-testimonial-text">Airpak Express transformed our supply chain. Their next-day delivery across Europe has reduced our fulfilment time by 40% and our clients consistently praise the reliability.</p>
+        <div class="ap-testimonial-author">
+          <div class="ap-testimonial-avatar">JW</div>
+          <div class="ap-testimonial-info">
+            <h4>James Whitmore</h4>
+            <span>Managing Director, Meridian Logistics Ltd</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="ap-testimonial-card">
+        <div class="ap-testimonial-quote">"</div>
+        <p class="ap-testimonial-text">Their customs clearance expertise is unmatched. We've eliminated compliance bottlenecks entirely. The API integration was seamless and our team was operational within days.</p>
+        <div class="ap-testimonial-author">
+          <div class="ap-testimonial-avatar">SC</div>
+          <div class="ap-testimonial-info">
+            <h4>Sarah Chen</h4>
+            <span>CEO, Pacific Rim Exports UK</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div class="ap-testimonial-card">
+        <div class="ap-testimonial-quote">"</div>
+        <p class="ap-testimonial-text">We process 5,000+ shipments monthly through Airpak's warehouse network. The omnichannel fulfillment handles our B2B and B2C channels simultaneously with zero errors.</p>
+        <div class="ap-testimonial-author">
+          <div class="ap-testimonial-avatar">MK</div>
+          <div class="ap-testimonial-info">
+            <h4>Michael Kelly</h4>
+            <span>Operations Director, Kelso & Hart Trading</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 4 -->
+      <div class="ap-testimonial-card">
+        <div class="ap-testimonial-quote">"</div>
+        <p class="ap-testimonial-text">Airpak's real-time tracking dashboard gives us complete visibility across our entire fleet. Their API returns real-time data in milliseconds — exactly what we needed.</p>
+        <div class="ap-testimonial-author">
+          <div class="ap-testimonial-avatar">AP</div>
+          <div class="ap-testimonial-info">
+            <h4>Anita Patel</h4>
+            <span>Head of Logistics, Nordic Retail Group UK</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 5 -->
+      <div class="ap-testimonial-card">
+        <div class="ap-testimonial-quote">"</div>
+        <p class="ap-testimonial-text">Switching to Airpak cut our international shipping costs by 28%. The dedicated account manager understands our business and proactively suggests cost-saving routes.</p>
+        <div class="ap-testimonial-author">
+          <div class="ap-testimonial-avatar">RB</div>
+          <div class="ap-testimonial-info">
+            <h4>Robert Bennett</h4>
+            <span>Founder, Bennett & Sons E-Commerce</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 6 -->
+      <div class="ap-testimonial-card">
+        <div class="ap-testimonial-quote">"</div>
+        <p class="ap-testimonial-text">Their 24/7 support team resolved a critical customs hold within 3 hours on a Sunday evening. This level of dedication is why we trust them with our most sensitive pharmaceutical shipments.</p>
+        <div class="ap-testimonial-author">
+          <div class="ap-testimonial-avatar">LF</div>
+          <div class="ap-testimonial-info">
+            <h4>Dr. Lisa Forsythe</h4>
+            <span>Supply Chain Manager, MedPharm UK</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- DUPLICATE for seamless loop -->
+    <div class="ap-testimonials-track-inner">
+      <!-- Card 1 -->
+      <div class="ap-testimonial-card">
+        <div class="ap-testimonial-quote">"</div>
+        <p class="ap-testimonial-text">Airpak Express transformed our supply chain. Their next-day delivery across Europe has reduced our fulfilment time by 40% and our clients consistently praise the reliability.</p>
+        <div class="ap-testimonial-author">
+          <div class="ap-testimonial-avatar">JW</div>
+          <div class="ap-testimonial-info">
+            <h4>James Whitmore</h4>
+            <span>Managing Director, Meridian Logistics Ltd</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="ap-testimonial-card">
+        <div class="ap-testimonial-quote">"</div>
+        <p class="ap-testimonial-text">Their customs clearance expertise is unmatched. We've eliminated compliance bottlenecks entirely. The API integration was seamless and our team was operational within days.</p>
+        <div class="ap-testimonial-author">
+          <div class="ap-testimonial-avatar">SC</div>
+          <div class="ap-testimonial-info">
+            <h4>Sarah Chen</h4>
+            <span>CEO, Pacific Rim Exports UK</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div class="ap-testimonial-card">
+        <div class="ap-testimonial-quote">"</div>
+        <p class="ap-testimonial-text">We process 5,000+ shipments monthly through Airpak's warehouse network. The omnichannel fulfillment handles our B2B and B2C channels simultaneously with zero errors.</p>
+        <div class="ap-testimonial-author">
+          <div class="ap-testimonial-avatar">MK</div>
+          <div class="ap-testimonial-info">
+            <h4>Michael Kelly</h4>
+            <span>Operations Director, Kelso & Hart Trading</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 4 -->
+      <div class="ap-testimonial-card">
+        <div class="ap-testimonial-quote">"</div>
+        <p class="ap-testimonial-text">Airpak's real-time tracking dashboard gives us complete visibility across our entire fleet. Their API returns real-time data in milliseconds — exactly what we needed.</p>
+        <div class="ap-testimonial-author">
+          <div class="ap-testimonial-avatar">AP</div>
+          <div class="ap-testimonial-info">
+            <h4>Anita Patel</h4>
+            <span>Head of Logistics, Nordic Retail Group UK</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 5 -->
+      <div class="ap-testimonial-card">
+        <div class="ap-testimonial-quote">"</div>
+        <p class="ap-testimonial-text">Switching to Airpak cut our international shipping costs by 28%. The dedicated account manager understands our business and proactively suggests cost-saving routes.</p>
+        <div class="ap-testimonial-author">
+          <div class="ap-testimonial-avatar">RB</div>
+          <div class="ap-testimonial-info">
+            <h4>Robert Bennett</h4>
+            <span>Founder, Bennett & Sons E-Commerce</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 6 -->
+      <div class="ap-testimonial-card">
+        <div class="ap-testimonial-quote">"</div>
+        <p class="ap-testimonial-text">Their 24/7 support team resolved a critical customs hold within 3 hours on a Sunday evening. This level of dedication is why we trust them with our most sensitive pharmaceutical shipments.</p>
+        <div class="ap-testimonial-author">
+          <div class="ap-testimonial-avatar">LF</div>
+          <div class="ap-testimonial-info">
+            <h4>Dr. Lisa Forsythe</h4>
+            <span>Supply Chain Manager, MedPharm UK</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== WHY CHOOSE US — Rectified professional redesign ===== -->
+<style>
+  .ap-why-section { background:#F3F4F8; padding:80px 0; }
+  .ap-why-section .ap-container { max-width:1200px; margin:0 auto; padding:0 24px; }
+  .ap-why-header { text-align:center; margin-bottom:56px; }
+  .ap-why-header h2 { font-family:'Sarabun',sans-serif; font-size:clamp(26px,4vw,40px); font-weight:800; color:#373F41; margin-bottom:12px; }
+  .ap-why-header p { font-family:'Inter',sans-serif; font-size:16px; color:#666; max-width:560px; margin:0 auto; }
+  .ap-why-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; }
+  .ap-why-card { background:#fff; border-radius:16px; padding:36px 28px; border:1.5px solid #eee; transition:all .35s; position:relative; overflow:hidden; }
+  .ap-why-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:0; background:linear-gradient(180deg,transparent,#CD2727); transition:height .35s; }
+  .ap-why-card:hover { border-color:#CD2727; box-shadow:0 12px 32px rgba(205,39,39,.12); transform:translateY(-6px); }
+  .ap-why-card:hover::after { height:4px; }
+  .ap-why-icon { width:56px; height:56px; background:#F3F4F8; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:26px; margin-bottom:20px; }
+  .ap-why-card:hover .ap-why-icon { background:#CD2727; color:#fff; }
+  .ap-why-card h3 { font-family:'Sarabun',sans-serif; font-size:19px; font-weight:700; color:#222; margin-bottom:10px; }
+  .ap-why-card p { font-family:'Inter',sans-serif; font-size:14px; color:#666; line-height:1.6; }
+  .ap-why-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; margin-top:56px; background:#fff; border-radius:16px; padding:40px 32px; border:1.5px solid #eee; }
+  .ap-why-stat { text-align:center; }
+  .ap-why-stat .ap-stat-num { font-family:'Sarabun',sans-serif; font-size:36px; font-weight:800; color:#CD2727; }
+  .ap-why-stat .ap-stat-label { font-family:'Inter',sans-serif; font-size:13px; color:#888; margin-top:4px; text-transform:uppercase; letter-spacing:1px; }
+  @media (max-width: 1024px) {
+    .ap-why-grid { grid-template-columns:repeat(2,1fr); }
+    .ap-why-stats { grid-template-columns:repeat(2,1fr); gap:24px; }
+  }
+  @media (max-width: 600px) {
+    .ap-why-section { padding:50px 0; }
+    .ap-why-grid { grid-template-columns:1fr; }
+    .ap-why-stats { grid-template-columns:repeat(2,1fr); padding:24px 20px; }
+    .ap-why-stat .ap-stat-num { font-size:28px; }
+  }
+</style>
+<section class="ap-why-section">
+  <div class="ap-container">
+    <div class="ap-why-header">
+      <h2>Why Leading Businesses Choose Airpak Express</h2>
+      <p>Delivering excellence across every mile, every shipment, every time</p>
+    </div>
+    <div class="ap-why-grid">
+      <div class="ap-why-card">
+        <div class="ap-why-icon">&#128273;</div>
+        <h3>Real-Time Tracking</h3>
+        <p>End-to-end visibility with live updates at every milestone. Know exactly where your shipment is, from collection to delivery.</p>
+      </div>
+      <div class="ap-why-card">
+        <div class="ap-why-icon">&#127758;</div>
+        <h3>220+ Country Network</h3>
+        <p>One of the most extensive global logistics networks covering every major market. Reach your customers wherever they are.</p>
+      </div>
+      <div class="ap-why-card">
+        <div class="ap-why-icon">&#128176;</div>
+        <h3>Competitive Pricing</h3>
+        <p>Volume discounts and transparent pricing with no hidden fees. Save up to 35% compared to industry-standard rates.</p>
+      </div>
+      <div class="ap-why-card">
+        <div class="ap-why-icon">&#128241;</div>
+        <h3>Seamless API Integration</h3>
+        <p>Connect your store, ERP, or WMS in minutes. RESTful API with webhooks for real-time event notifications.</p>
+      </div>
+      <div class="ap-why-card">
+        <div class="ap-why-icon">&#128222;</div>
+        <h3>Dedicated Account Manager</h3>
+        <p>A personal point of contact who understands your business and proactively optimises your logistics strategy.</p>
+      </div>
+      <div class="ap-why-card">
+        <div class="ap-why-icon">&#128736;</div>
+        <h3>Customs Clearance Expertise</h3>
+        <p>In-house experts handle complex documentation, ensuring zero delays at borders across 220+ countries.</p>
+      </div>
+    </div>
+    <div class="ap-why-stats">
+      <div class="ap-why-stat">
+        <div class="ap-stat-num">220+</div>
+        <div class="ap-stat-label">Countries Served</div>
+      </div>
+      <div class="ap-why-stat">
+        <div class="ap-stat-num">10,000+</div>
+        <div class="ap-stat-label">Business Clients</div>
+      </div>
+      <div class="ap-why-stat">
+        <div class="ap-stat-num">99.7%</div>
+        <div class="ap-stat-label">On-Time Delivery</div>
+      </div>
+      <div class="ap-why-stat">
+        <div class="ap-stat-num">24/7</div>
+        <div class="ap-stat-label">Customer Support</div>
+      </div>
+    </div>
+  </div>
+</section>
            function gettrack() {
                if ($("#trackentry").val() == "") { return false;}
                window.open("https://tracking.airpak-express.site/tracking_search.aspx?stid=airpak&cn=" + $("#trackentry").val());

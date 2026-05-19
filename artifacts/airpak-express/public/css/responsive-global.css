@@ -11,43 +11,10 @@ html {
   text-size-adjust: 100%;
 }
 
-/* iOS safe areas — notch, Dynamic Island, home indicator */
-@supports (padding: env(safe-area-inset-top)) {
-  :root {
-    --safe-top: env(safe-area-inset-top);
-    --safe-bottom: env(safe-area-inset-bottom);
-    --safe-left: env(safe-area-inset-left);
-    --safe-right: env(safe-area-inset-right);
-  }
-
-  body {
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-  }
-
-  /* Safe area aware nav bar */
-  .nav-bar {
-    top: env(safe-area-inset-top);
-  }
-
-  /* Safe area aware bottom fixed elements */
-  .bottom-nav,
-  .bottom-action,
-  .chat-send-btn,
-  .floating-cta,
-  .mobile-nav-bar {
-    bottom: env(safe-area-inset-bottom);
-  }
-}
-
-/* Fallback for browsers without safe-area support */
-:root {
-  --safe-top: 0px;
-  --safe-bottom: 0px;
-  --safe-left: 0px;
-  --safe-right: 0px;
+/* iOS safe areas — notch, Dynamic Island, home indicator — only on shadcn app pages */
+/* Exclude landing page by scoping to .app-page class */
+.app-page body {
+  /* No safe-area padding on landing page — it has its own fixed header */
 }
 
 /* ===== GLOBAL BOX SIZING ===== */
@@ -926,4 +893,41 @@ body {
     padding: 10px 16px !important;
     font-size: 14px !important;
   }
+}
+
+/* ===== SAFE AREA — Shadcn App Pages Only (NOT landing page) ===== */
+.app-page @supports (padding: env(safe-area-inset-top)) {
+  :root {
+    --safe-top: env(safe-area-inset-top);
+    --safe-bottom: env(safe-area-inset-bottom);
+    --safe-left: env(safe-area-inset-left);
+    --safe-right: env(safe-area-inset-right);
+  }
+
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  .nav-bar {
+    top: env(safe-area-inset-top);
+  }
+
+  .bottom-nav,
+  .bottom-action,
+  .chat-send-btn,
+  .floating-cta,
+  .mobile-nav-bar {
+    bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Fallback for browsers without safe-area support */
+:root {
+  --safe-top: 0px;
+  --safe-bottom: 0px;
+  --safe-left: 0px;
+  --safe-right: 0px;
 }
