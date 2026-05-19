@@ -1067,8 +1067,8 @@
   </footer>
 </div>
 
-<!-- Proof of Delivery Modal (hidden by default, only shows after tracking) -->
-<div class="modal-overlay" id="podModal" style="z-index: 1000; display: none;">
+<!-- Proof of Delivery Modal (hidden by default, only shows when tracking is complete) -->
+<div class="modal-overlay" id="podModal" style="display: none; visibility: hidden; z-index: 1000;">
   <div class="modal-box" style="width:480px;">
     <div class="modal-header" style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px 0;">
       <h2 class="modal-title" style="font-size:18px;font-weight:700;">Proof of Delivery</h2>
@@ -1373,11 +1373,15 @@
 
   // ===== PROOF OF DELIVERY =====
   function showProofOfDelivery() {
-    document.getElementById('podModal').classList.add('active');
+    const modal = document.getElementById('podModal');
+    modal.style.display = 'flex';
+    modal.style.visibility = 'visible';
   }
 
   function closePodModal() {
-    document.getElementById('podModal').classList.remove('active');
+    const modal = document.getElementById('podModal');
+    modal.style.display = 'none';
+    modal.style.visibility = 'hidden';
   }
 
   // ===== EVENT LISTENERS =====
@@ -1396,9 +1400,12 @@
   });
 
   // Modal close on overlay click
-  document.getElementById('podModal').addEventListener('click', (e) => {
-    if (e.target === document.getElementById('podModal')) closePodModal();
-  });
+  const podModal = document.getElementById('podModal');
+  if (podModal) {
+    podModal.addEventListener('click', (e) => {
+      if (e.target === podModal) closePodModal();
+    });
+  }
 
   // ===== INITIALIZE =====
   document.addEventListener('DOMContentLoaded', () => {
