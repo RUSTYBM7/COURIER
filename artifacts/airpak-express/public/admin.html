@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="robots" content="index, follow">
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Airpak Express Employee Portal — manage shipments, track deliveries, and access operational tools.">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#CD2727">
+    <meta name="color-scheme" content="light">
     <link rel="canonical" href="https://airpak-express.site/admin.html" />
-    <meta name="description" content="Page description - update this with relevant content.">
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Admin Portal | Airpak Express Operations</title>
-<link rel="shortcut icon" type="image/x-icon" href="/apps/airpak/images/icon.png"/>
+    <title>Admin Portal | Airpak Express Operations</title>
+    <meta property="og:title" content="Admin Portal | Airpak Express Operations">
+    <meta property="og:description" content="Airpak Express Employee Portal.">
+    <meta property="og:type" content="website">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-icon" href="/apps/airpak/img/apple-touch-icon.png" />
+    <meta name="msapplication-TileColor" content="#CD2727" />
+    <link rel="icon" type="image/svg+xml" href="/apps/airpak/img/favicon.svg" />
+    <link rel="shortcut icon" type="image/svg+xml" href="/apps/airpak/img/favicon.svg" />
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -244,14 +254,62 @@ html,body{height:100%;overflow:hidden;font-family:'Segoe UI',sans-serif;backgrou
 }
 #toast.show{transform:translateY(0);opacity:1;}
 #toast .toast-icon{font-size:16px;}
+
+/* ===== RESPONSIVE ADMIN ===== */
+@media (max-width: 1024px) {
+  :root { --sidebar-w: 220px; }
+  .topbar { left: var(--sidebar-w); padding: 0 16px; }
+  .topbar-title { font-size: 14px; }
+  .user-name { display: none; }
+}
+
+@media (max-width: 768px) {
+  :root { --sidebar-w: 0px; }
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform .3s ease;
+    width: 260px !important;
+  }
+  .sidebar.open { transform: translateX(0); }
+  .topbar { left: 0; }
+  .topbar-title { display: none; }
+  .topbar-stat { display: none; }
+  .tbar-sep { display: none; }
+  .topbar-breadcrumb { display: none; }
+
+  /* Mobile overlay */
+  .sidebar-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 250;
+  }
+  .sidebar-overlay.active { display: block; }
+
+  /* Cards stack */
+  .kpi-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+  .dash-row { flex-direction: column; }
+  .dash-row .dash-card { width: 100% !important; min-width: 0 !important; }
+  .dash-card canvas { height: 180px !important; }
+}
+
+@media (max-width: 480px) {
+  .kpi-grid { grid-template-columns: 1fr 1fr !important; }
+  .topbar { padding: 0 12px; }
+  .user-chip { padding: 4px 10px 4px 4px; }
+  .logout-btn { padding: 5px 10px; font-size: 11px; }
+}
 </style>
   <link rel="stylesheet" href="/apps/airpak/css/ap-lang.css">
   <link rel="stylesheet" href="/apps/airpak/css/ap-chat.css">
 </head>
 <body>
 
+<!-- Sidebar overlay for mobile -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
 <!-- SIDEBAR -->
-<div class="sidebar">
+<div class="sidebar" id="adminSidebar">
   <div class="sidebar-header">
     <img src="/apps/airpak/img/logo.png" class="sidebar-logo" alt=""/>
     <div class="sidebar-brand">Airpak Express<span>&#128274; Admin Portal</span></div>
@@ -2101,6 +2159,16 @@ setInterval(() => {
 
 // Close modals on overlay click
 document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); }));
+
+// Mobile sidebar toggle
+const sidebar = document.getElementById('adminSidebar');
+const overlay = document.getElementById('sidebarOverlay');
+if (overlay) {
+  overlay.addEventListener('click', () => {
+    sidebar?.classList.remove('open');
+    overlay.classList.remove('active');
+  });
+}
 
 // ===== INIT =====
 renderDashParcels();

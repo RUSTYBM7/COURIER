@@ -2,7 +2,18 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#007AFF">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Track your Airpak Express shipment in real-time. Enter your tracking number to see live delivery status, route, and estimated arrival.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Track Package — Airpak Express">
+  <meta property="og:description" content="Track your Airpak Express shipment in real-time.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Airpak Express">
   <title>Track Package — Airpak Express</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23007AFF'/%3E%3Cpath d='M8 16h16M16 8v16' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -838,6 +849,7 @@
     }
   </style>
   <link rel="stylesheet" href="/apps/airpak/css/ap-lang.css">
+  <link rel="stylesheet" href="css/responsive-global.css">
 </head>
 <body>
 
@@ -1424,5 +1436,22 @@
   });
 </script>
   <script src="/apps/airpak/js/ap-lang.js" defer></script>
+<script>
+(function(){
+  // Platform detection — auto-understands device
+  var ua = navigator.userAgent.toLowerCase();
+  var os = 'desktop';
+  if (/iphone|ipad|ipod/.test(ua)) os = 'ios';
+  else if (/android/.test(ua)) os = 'android';
+  var w = window.innerWidth;
+  if (w < 480) os += '-phone';
+  else if (w < 768) os += '-tablet';
+  else if (w >= 1024) os += '-desktop';
+  var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  document.body.className = [os, isDark ? 'dark' : 'light', 'loaded'].join(' ');
+  // Prevent iOS Safari text inflation
+  document.documentElement.style.setProperty('--text-base', '16px');
+})();
+</script>
 </body>
 </html>

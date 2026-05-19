@@ -2,8 +2,18 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard — Airpak Express</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#007AFF">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Your Airpak Express dashboard — manage shipments, track packages, view wallet, and access all your logistics tools.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta property="og:title" content="Dashboard — Airpak Express">
+  <meta property="og:description" content="Your Airpak Express dashboard — manage shipments, track packages, and access logistics tools.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Airpak Express">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23007AFF'/%3E%3Cpath d='M8 16h16M16 8v16' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,6 +25,7 @@
   <link rel="stylesheet" href="css/pages.css">
   <link rel="stylesheet" href="css/brand-airpak.css">
   <link rel="stylesheet" href="/apps/airpak/css/ap-lang.css">
+  <link rel="stylesheet" href="css/responsive-global.css">
 </head>
 <body>
   <!-- Navigation Bar -->
@@ -186,12 +197,12 @@
     <main class="dashboard-main">
       <div class="dashboard-header">
         <div>
-          <h1 class="dashboard-title" data-i18n="dashboard.welcome">Welcome back, Alex</h1>
+          <h1 class="dashboard-title" data-i18n="dashboard.welcome">Welcome to Your Dashboard</h1>
           <p style="color: var(--apple-label-secondary); margin-top: var(--space-1);">Unit 7, Wales International Hub, Cardiff Bay, Wales CF10 5AL, United Kingdom</p>
         </div>
         <div class="dashboard-actions">
-          <button class="btn-secondary"><i data-lucide="download"></i> Export Report</button>
-          <a href="shipnow-new-shipment.html" class="btn-primary"><i data-lucide="plus"></i> New Shipment</a>
+          <a href="contact.html" class="btn-secondary"><i data-lucide="download"></i> Get Support</a>
+          <a href="contact.html" class="btn-primary"><i data-lucide="plus"></i> Create Shipment</a>
         </div>
       </div>
 
@@ -202,31 +213,31 @@
             <div class="dashboard-stat-icon" style="background: rgba(0,122,255,0.1); color: var(--apple-blue);"><i data-lucide="truck"></i></div>
             <span class="dashboard-stat-badge badge-blue">Active</span>
           </div>
-          <div class="dashboard-stat-value">347</div>
+          <div class="dashboard-stat-value">—</div>
           <div class="dashboard-stat-label">Active Shipments</div>
         </div>
         <div class="dashboard-stat-card">
           <div class="dashboard-stat-header">
             <div class="dashboard-stat-icon" style="background: rgba(52,199,89,0.1); color: var(--apple-green);"><i data-lucide="check-circle"></i></div>
-            <span class="dashboard-stat-badge badge-green">+18</span>
+            <span class="dashboard-stat-badge badge-green">Track</span>
           </div>
-          <div class="dashboard-stat-value">89</div>
-          <div class="dashboard-stat-label">Delivered Today</div>
+          <div class="dashboard-stat-value">—</div>
+          <div class="dashboard-stat-label">Completed</div>
         </div>
         <div class="dashboard-stat-card">
           <div class="dashboard-stat-header">
             <div class="dashboard-stat-icon" style="background: rgba(255,149,0,0.1); color: var(--apple-orange);"><i data-lucide="clock"></i></div>
-            <span class="dashboard-stat-badge badge-orange">Pending</span>
+            <span class="dashboard-stat-badge badge-orange">New</span>
           </div>
-          <div class="dashboard-stat-value">42</div>
+          <div class="dashboard-stat-value">—</div>
           <div class="dashboard-stat-label">Pending Pickups</div>
         </div>
         <div class="dashboard-stat-card">
           <div class="dashboard-stat-header">
             <div class="dashboard-stat-icon" style="background: rgba(88,86,214,0.1); color: var(--apple-indigo);"><i data-lucide="sterling-sign"></i></div>
-            <span class="dashboard-stat-badge badge-green">+31%</span>
+            <span class="dashboard-stat-badge badge-green">Est.</span>
           </div>
-          <div class="dashboard-stat-value">£31,240</div>
+          <div class="dashboard-stat-value">£—</div>
           <div class="dashboard-stat-label">Revenue MTD</div>
         </div>
       </div>
@@ -242,15 +253,10 @@
               <button class="tab">Year</button>
             </div>
           </div>
-          <div class="chart-area">
-            <div class="chart-bars" style="display: flex; align-items: flex-end; gap: 8px; height: 100%; padding: 0 8px;">
-              <div class="chart-bar" style="height: 45%; background: var(--apple-blue); opacity: 0.7;"></div>
-              <div class="chart-bar" style="height: 60%; background: var(--apple-blue); opacity: 0.75;"></div>
-              <div class="chart-bar" style="height: 55%; background: var(--apple-blue); opacity: 0.7;"></div>
-              <div class="chart-bar" style="height: 80%; background: var(--apple-blue); opacity: 0.85;"></div>
-              <div class="chart-bar" style="height: 70%; background: var(--apple-blue); opacity: 0.8;"></div>
-              <div class="chart-bar" style="height: 95%; background: var(--apple-blue); opacity: 1;"></div>
-              <div class="chart-bar" style="height: 65%; background: var(--apple-blue); opacity: 0.75;"></div>
+          <div class="chart-area" style="display: flex; align-items: center; justify-content: center; color: var(--apple-label-tertiary); font-size: 14px; text-align: center; padding: 40px;">
+            <div>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto 12px; display: block; opacity: 0.5;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              No shipment data yet.<br>Create your first shipment to see analytics.
             </div>
           </div>
         </div>
@@ -258,12 +264,12 @@
         <div class="quick-actions-panel">
           <h3 class="chart-title" style="padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--apple-separator);">Quick Actions</h3>
           <div class="quick-actions-list">
-            <a href="shipnow-new-shipment.html" class="quick-action-item"><span><i data-lucide="plus-circle"></i></span> New Shipment</a>
+            <a href="contact.html" class="quick-action-item"><span><i data-lucide="plus-circle"></i></span> New Shipment</a>
             <a href="tracking.html" class="quick-action-item"><span><i data-lucide="scan-barcode"></i></span> Track Package</a>
-            <a href="#" class="quick-action-item" onclick="window.print();return false;"><span><i data-lucide="printer"></i></span> Print Label</a>
-            <a href="shipnow-new-shipment.html" class="quick-action-item"><span><i data-lucide="file-plus"></i></span> Request Pickup</a>
+            <a href="contact.html" class="quick-action-item"><span><i data-lucide="printer"></i></span> Get Labels</a>
+            <a href="contact.html" class="quick-action-item"><span><i data-lucide="file-plus"></i></span> Request Pickup</a>
             <a href="chat.html" class="quick-action-item"><span><i data-lucide="message-square"></i></span> Contact Support</a>
-            <a href="payment.html" class="quick-action-item"><span><i data-lucide="receipt"></i></span> View Invoices</a>
+            <a href="payment.html" class="quick-action-item"><span><i data-lucide="receipt"></i></span> Manage Payments</a>
           </div>
         </div>
 
@@ -272,42 +278,9 @@
             <h3 class="chart-title">Recent Activity</h3>
             <a href="tracking.html" class="btn-ghost">View All</a>
           </div>
-          <div class="activity-list">
-            <div class="activity-item">
-              <div class="activity-icon" style="background: rgba(52,199,89,0.1); color: var(--apple-green);"><i data-lucide="check-circle"></i></div>
-              <div class="activity-content">
-                <div class="activity-title">APK992841 delivered to Bristol</div>
-                <div class="activity-time">3 minutes ago</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon" style="background: rgba(0,122,255,0.1); color: var(--apple-blue);"><i data-lucide="truck"></i></div>
-              <div class="activity-content">
-                <div class="activity-title">APK773210 departed Cardiff Hub</div>
-                <div class="activity-time">18 minutes ago</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon" style="background: rgba(88,86,214,0.1); color: var(--apple-indigo);"><i data-lucide="package"></i></div>
-              <div class="activity-content">
-                <div class="activity-title">New shipment created: APK441902</div>
-                <div class="activity-time">45 minutes ago</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon" style="background: rgba(255,149,0,0.1); color: var(--apple-orange);"><i data-lucide="map-pin"></i></div>
-              <div class="activity-content">
-                <div class="activity-title">APK229381 arrived at Edinburgh Hub</div>
-                <div class="activity-time">1 hour ago</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon" style="background: rgba(255,59,48,0.1); color: var(--apple-red);"><i data-lucide="alert-triangle"></i></div>
-              <div class="activity-content">
-                <div class="activity-title">Delivery exception for APK881200</div>
-                <div class="activity-time">2 hours ago</div>
-              </div>
-            </div>
+          <div class="activity-list" style="padding: 40px; text-align: center; color: var(--apple-label-tertiary);">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto 12px; display: block; opacity: 0.5;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            No activity yet.<br>Your shipments will appear here once created.
           </div>
         </div>
       </div>
@@ -323,85 +296,11 @@
             <button class="tab">Pending</button>
           </div>
         </div>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Tracking</th>
-              <th>Route</th>
-              <th>Service</th>
-              <th>Status</th>
-              <th>ETA</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code style="background: var(--apple-fill); padding: 2px 8px; border-radius: 4px; font-size: var(--text-sm);">APK992841</code></td>
-              <td>London → Bristol</td>
-              <td><span class="badge badge-express">Express</span></td>
-              <td><span class="badge badge-delivered">Delivered</span></td>
-              <td>Delivered</td>
-              <td>
-                <div class="table-actions">
-                  <button class="btn-icon" title="View"><i data-lucide="eye"></i></button>
-                  <button class="btn-icon" title="Download"><i data-lucide="download"></i></button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td><code style="background: var(--apple-fill); padding: 2px 8px; border-radius: 4px; font-size: var(--text-sm);">APK773210</code></td>
-              <td>Cardiff → Edinburgh</td>
-              <td><span class="badge badge-economy">Economy</span></td>
-              <td><span class="badge badge-processing">In Transit</span></td>
-              <td>Tomorrow 2:00 PM</td>
-              <td>
-                <div class="table-actions">
-                  <button class="btn-icon" title="View"><i data-lucide="eye"></i></button>
-                  <button class="btn-icon" title="Track"><i data-lucide="map-pin"></i></button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td><code style="background: var(--apple-fill); padding: 2px 8px; border-radius: 4px; font-size: var(--text-sm);">APK441902</code></td>
-              <td>Manchester → Birmingham</td>
-              <td><span class="badge badge-blue">Standard</span></td>
-              <td><span class="badge badge-pending">Pending</span></td>
-              <td>3 days</td>
-              <td>
-                <div class="table-actions">
-                  <button class="btn-icon" title="View"><i data-lucide="eye"></i></button>
-                  <button class="btn-icon" title="Edit"><i data-lucide="pencil"></i></button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td><code style="background: var(--apple-fill); padding: 2px 8px; border-radius: 4px; font-size: var(--text-sm);">APK229381</code></td>
-              <td>London → Paris (Intl)</td>
-              <td><span class="badge badge-express">Express</span></td>
-              <td><span class="badge badge-processing">In Transit</span></td>
-              <td>2 days</td>
-              <td>
-                <div class="table-actions">
-                  <button class="btn-icon" title="View"><i data-lucide="eye"></i></button>
-                  <button class="btn-icon" title="Support"><i data-lucide="message-circle"></i></button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td><code style="background: var(--apple-fill); padding: 2px 8px; border-radius: 4px; font-size: var(--text-sm);">APK881200</code></td>
-              <td>Belfast → Glasgow</td>
-              <td><span class="badge badge-blue">Standard</span></td>
-              <td><span class="badge badge-delay">Delayed</span></td>
-              <td>Pending</td>
-              <td>
-                <div class="table-actions">
-                  <button class="btn-icon" title="View"><i data-lucide="eye"></i></button>
-                  <button class="btn-icon" title="Support"><i data-lucide="help-circle"></i></button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div style="padding: 60px; text-align: center; color: var(--apple-label-tertiary);">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto 16px; display: block; opacity: 0.5;"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          <p style="margin-bottom: 8px;">No shipments yet</p>
+          <a href="contact.html" class="btn-primary" style="display: inline-flex; width: auto; padding: 12px 24px;">Create Your First Shipment</a>
+        </div>
       </div>
     </main>
   </div>
@@ -414,6 +313,23 @@
     });
   </script>
   <script src="/apps/airpak/js/ap-lang.js" defer></script>
+<script>
+(function(){
+  // Platform detection — auto-understands device
+  var ua = navigator.userAgent.toLowerCase();
+  var os = 'desktop';
+  if (/iphone|ipad|ipod/.test(ua)) os = 'ios';
+  else if (/android/.test(ua)) os = 'android';
+  var w = window.innerWidth;
+  if (w < 480) os += '-phone';
+  else if (w < 768) os += '-tablet';
+  else if (w >= 1024) os += '-desktop';
+  var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  document.body.className = [os, isDark ? 'dark' : 'light', 'loaded'].join(' ');
+  // Prevent iOS Safari text inflation
+  document.documentElement.style.setProperty('--text-base', '16px');
+})();
+</script>
 </body>
 </html>
 <script>

@@ -161,6 +161,7 @@
     })();
   </script>
   <link rel="stylesheet" href="/apps/airpak/css/ap-lang.css">
+  <link rel="stylesheet" href="css/responsive-global.css">
 </head>
 <body>
   <nav class="nav-bar">
@@ -774,5 +775,22 @@
     Unit 7, Wales International Hub, Cardiff Bay, Wales CF10 5AL, United Kingdom &nbsp;|&nbsp; © 2026 Airpak Express. All rights reserved.
   </footer>
   <script src="/apps/airpak/js/ap-lang.js" defer></script>
+<script>
+(function(){
+  // Platform detection — auto-understands device
+  var ua = navigator.userAgent.toLowerCase();
+  var os = 'desktop';
+  if (/iphone|ipad|ipod/.test(ua)) os = 'ios';
+  else if (/android/.test(ua)) os = 'android';
+  var w = window.innerWidth;
+  if (w < 480) os += '-phone';
+  else if (w < 768) os += '-tablet';
+  else if (w >= 1024) os += '-desktop';
+  var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  document.body.className = [os, isDark ? 'dark' : 'light', 'loaded'].join(' ');
+  // Prevent iOS Safari text inflation
+  document.documentElement.style.setProperty('--text-base', '16px');
+})();
+</script>
 </body>
 </html>
