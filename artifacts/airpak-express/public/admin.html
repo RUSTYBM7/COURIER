@@ -9,10 +9,12 @@
     <meta name="color-scheme" content="light">
     <link rel="canonical" href="https://airpak-express.site/admin.html" />
     <title>Admin Portal | Airpak Express</title>
-    <link rel="icon" type="image/svg+xml" href="/apps/airpak/img/favicon.svg" />
+    <link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/svg+xml" href="/apps/airpak/img/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Sarabun:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="/sw-advanced.js" defer></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -23,9 +25,13 @@
   --sidebar-w:260px;
 }
 html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);}
+body{overflow-x:hidden}
 
 /* === TOPBAR === */
 .topbar{position:fixed;top:0;left:var(--sidebar-w);right:0;height:60px;background:var(--sidebar);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:200;gap:16px;}
+.hamburger-btn{display:none;width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.07);border:none;color:#fff;cursor:pointer;flex-shrink:0;align-items:center;justify-content:center;transition:background .2s;padding:0;}
+.hamburger-btn:hover{background:rgba(255,255,255,.12)}
+.hamburger-btn svg{width:20px;height:20px;display:block}
 .topbar-left{display:flex;align-items:center;gap:12px;}
 .topbar-title{font-size:15px;font-weight:800;color:#fff;font-family:'Sarabun',sans-serif;}
 .topbar-breadcrumb{font-size:12px;color:var(--sub);}
@@ -41,6 +47,11 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:
 .notif-btn{position:relative;background:none;border:none;color:var(--sub);cursor:pointer;padding:6px;border-radius:8px;transition:all .2s;}
 .notif-btn:hover{background:rgba(255,255,255,.06);color:#fff;}
 .notif-dot{position:absolute;top:4px;right:4px;width:8px;height:8px;border-radius:50%;background:var(--red);border:2px solid var(--sidebar);}
+
+/* Mobile topbar: compact avatar + settings only */
+.mobile-profile-dot{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--red-d));display:none;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;cursor:pointer;border:none;flex-shrink:0;}
+.mobile-settings-btn{display:none;width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.06);border:none;cursor:pointer;align-items:center;justify-content:center;color:rgba(255,255,255,.7);transition:background .2s;padding:0;}
+.mobile-settings-btn:hover{background:rgba(255,255,255,.12);color:#fff;}
 
 /* === SIDEBAR === */
 .sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;z-index:300;}
@@ -319,28 +330,86 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:
 /* === RESPONSIVE === */
 @media(max-width:1024px){:root{--sidebar-w:220px}.topbar{left:var(--sidebar-w);padding:0 16px}.topbar-title{font-size:14px}.user-name{display:none}}
 @media(max-width:768px){
-  :root{--sidebar-w:0px}
-  .sidebar{transform:translateX(-100%);transition:transform .3s;width:260px!important}
-  .sidebar.open{transform:translateX(0)}
-  .topbar{left:0}
-  .topbar-title{display:none}
-  .topbar-stat{display:none}
-  .tbar-sep{display:none}
-  .topbar-breadcrumb{display:none}
-  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:250;}
+  .hamburger-btn{display:flex!important}
+  .topbar{left:0!important;padding:0 16px!important}
+  .topbar-title{font-size:14px!important}
+  /* Hide desktop stats/chip/logout on mobile */
+  .topbar-stat,.tbar-sep,.topbar-breadcrumb,.notif-dot,.user-chip,.topbar .btn.btn-ghost{display:none!important}
+  /* Show mobile profile dot and settings */
+  .mobile-profile-dot{display:flex!important}
+  .mobile-settings-btn{display:flex!important}
+  body{overflow-x:hidden!important}
+  .sidebar{transform:translateX(-100%)!important;transition:transform .3s;width:280px!important}
+  .sidebar.open{transform:translateX(0)!important}
+  .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:250;display:none}
   .sidebar-overlay.active{display:block}
-  .ai-automation-grid{grid-template-columns:1fr;}
+  /* Fix main content - no left offset on mobile */
+  .main{left:0!important;padding:16px!important}
+  .panel{padding:16px!important}
+  .card{padding:14px!important}
+  .ent-table{font-size:12px}
+  .ent-table th,.ent-table td{padding:8px 10px}
+  .modal{max-width:calc(100vw - 32px)!important;margin:16px;border-radius:16px}
+  .modal-body{padding:16px!important}
+  .stat-box{padding:16px!important}
+  .stat-val{font-size:1.8rem!important}
+  .ai-automation-grid{grid-template-columns:1fr!important}
+  .g2,.g3,.g4,.g14{grid-template-columns:1fr!important;gap:12px!important}
+  .f-row{grid-template-columns:1fr!important}
+  .role-card{flex-wrap:wrap!important}
+  .role-actions{margin-top:8px!important}
+  .card-sm{padding:12px 14px!important}
+  .chart-container{overflow-x:auto}
+  .tl-item{padding-bottom:14px!important}
+  .chat-wrap{margin-bottom:16px}
+  .chat-msgs{max-height:240px!important}
+  .stay-paid-hero{padding:20px!important}
+  .sph-greeting{font-size:28px!important}
 }
 @media(max-width:480px){
   .stay-paid-hero{padding:24px 20px}
   .ai-auto-card{padding:16px}
+  .topbar{padding:0 12px!important}
+  .topbar-title{font-size:12px!important}
+  .sidebar{width:260px!important}
+  .main{padding:12px!important}
+  .panel{padding:12px!important}
+  .card-title{font-size:12px!important}
+  .btn{padding:6px 12px!important;font-size:11px!important}
+  .btn-lg{padding:10px 20px!important;font-size:13px!important}
 }
+
+/* === PRELOADER === */
+.ap-preloader{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#CD2727 0%,#9b1a1a 100%);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease,visibility .6s ease}
+.ap-preloader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.ap-preloader-logo{width:80px;height:80px;margin-bottom:24px;animation:preLogoPulse 1.5s ease-in-out infinite}
+.ap-preloader-title{font-family:"Sarabun",sans-serif;font-size:32px;font-weight:800;color:#fff;margin-bottom:8px}
+.ap-preloader-sub{font-family:"Inter",sans-serif;font-size:14px;color:rgba(255,255,255,.7);margin-bottom:40px;letter-spacing:.5px}
+.ap-preloader-bar-wrap{width:280px;height:4px;background:rgba(255,255,255,.2);border-radius:4px;overflow:hidden;margin-bottom:16px}
+.ap-preloader-bar{height:100%;background:#fff;border-radius:4px;animation:preBar 1.8s ease-in-out infinite;width:0}
+.ap-preloader-dots{display:flex;gap:8px}
+.ap-preloader-dot{width:8px;height:8px;background:rgba(255,255,255,.4);border-radius:50%;animation:preDot 1.2s ease-in-out infinite}
+.ap-preloader-dot:nth-child(2){animation-delay:.2s}
+.ap-preloader-dot:nth-child(3){animation-delay:.4s}
+@keyframes preLogoPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes preBar{0%{width:0}50%{width:70%}100%{width:100%}}
+@keyframes preDot{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+
 </style>
 </head>
 <body>
 
-<!-- Sidebar overlay for mobile -->
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<!-- Sidebar overlay for mobile - tap to close -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<script>
+function closeSidebar() {
+  var sb = document.getElementById('adminSidebar');
+  var ov = document.getElementById('sidebarOverlay');
+  if (sb) sb.classList.remove('open');
+  if (ov) ov.classList.remove('active');
+}
+</script>
 
 <!-- SIDEBAR -->
 <aside class="sidebar" id="adminSidebar">
@@ -561,6 +630,9 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:
 <!-- TOP BAR -->
 <div class="topbar">
   <div class="topbar-left">
+    <button class="hamburger-btn" onclick="toggleMobileNav()" aria-label="Open menu">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
+    </button>
     <div>
       <div class="topbar-title" id="topbar-title">Operations Dashboard</div>
       <div class="topbar-breadcrumb">Admin Portal / <span id="topbar-sub">Overview</span></div>
@@ -577,6 +649,7 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:
       <svg viewBox="0 0 16 16" fill="currentColor" style="width:18px;height:18px"><path d="M8 1a5 5 0 00-5 5v4l-1.5 1.5a.5.5 0 00.35.85h10.3a.5.5 0 00.35-.85L13 10V6a5 5 0 00-5-5zm0 1.5a3.5 3.5 0 110 7 3.5 3.5 0 010-7z"/></svg>
       <div class="notif-dot"></div>
     </button>
+    <!-- Desktop user chip -->
     <div class="user-chip">
       <div class="user-avatar" id="userAvatarTop">SA</div>
       <div><div class="user-name" id="userName">Administrator</div><div class="user-role" id="userRole">Super Admin</div></div>
@@ -584,6 +657,12 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:
     <button class="btn btn-ghost btn-sm" onclick="doLogout()" style="border-color:rgba(205,39,39,.3);color:#ff9999">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 14H3a1 1 0 01-1-1V3a1 1 0 011-1h3M11 11l3-3-3-3M14 8H6"/></svg>
       Logout
+    </button>
+    <!-- Mobile: profile dot -->
+    <button class="mobile-profile-dot" onclick="nav('roles')" title="Profile">SA</button>
+    <!-- Mobile: settings icon -->
+    <button class="mobile-settings-btn" onclick="nav('settings')" title="Settings">
+      <svg viewBox="0 0 16 16" fill="currentColor" style="width:18px;height:18px"><path d="M8 10a2 2 0 100-4 2 2 0 000 4zm6.32-1.906l-1.04-.16a5.5 5.5 0 00-.63-1.19l.68-.84a.375.375 0 00-.083-.548l-1.21-1.21a.375.375 0 00-.548-.083l-.84.68c-.42-.25-.85-.47-1.19-.63l-.16-1.04a.375.375 0 00-.368-.316H7.49a.375.375 0 00-.368.316l-.16 1.04c-.34.16-.77.38-1.19.63l-.84-.68a.375.375 0 00-.548.083L3.37 4.91a.375.375 0 00-.083.548l.68.84c-.24.41-.46.8-.63 1.19l-1.04.16a.375.375 0 00-.316.368v1.11c0 .207.168.375.375.375h1.11c.1 0 .207-.05.279-.13l.92-.9c.4.62.87 1.19 1.4 1.69l-.45 1.41a.375.375 0 00.083.393l.86.86c.15.15.39.17.548.083l1.04-.33c.31.35.66.67 1.04.95l.15.21v.09l.21-.15c.38-.28.73-.6 1.04-.95l1.04.33a.375.375 0 00.548-.083l.86-.86a.375.375 0 00.083-.393l-.45-1.41c.53-.5 1-.98 1.4-1.69l.92.9c.072.08.179.13.279.13h1.11a.375.375 0 00.375-.375v-1.11a.375.375 0 00-.316-.368z"/></svg>
     </button>
   </div>
 </div>
@@ -1804,7 +1883,7 @@ function nav(id) {
     'send-update':'Customer Update', 'email-auto':'Email Automation', 'email-manual':'Manual Email',
     'sms-control':'SMS', payments:'Payments', 'invoice-gen':'Invoice', 'pay-verify':'Payment Verify',
     analytics:'Analytics', 'ai-control':'AI Centre', 'route-intel':'Route Intel', 'workflow-auto':'Workflows',
-    roles:'Role Management', manual:'Admin Manual'
+    roles:'Role Management', manual:'Admin Manual', settings:'Settings'
   };
   var title = document.getElementById('topbar-title');
   var sub = document.getElementById('topbar-sub');
@@ -1931,12 +2010,58 @@ function updateStatus() {
   toast('Status updated' + (notify==='yes'?' + Customer notified':' (internal only)'), '<svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/></svg>');
 }
 
+function createParcel() {
+  toast('Parcel creation form opened', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M5 7h6M5 10h4"/></svg>');
+  var f = document.getElementById('parcel-form');
+  if (f) f.scrollIntoView({behavior:'smooth'});
+}
+
+function updateStatus() {
+  toast('Status updated successfully', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>');
+  renderParcels();
+}
+
 function verifyClient(id) {
-  var idx = verifyQueue.findIndex(v => v.id === id);
-  if (idx > -1) verifyQueue.splice(idx, 1);
-  addAuditEntry('admin', 'Account verified: '+id, 'Client', 'b-purple');
-  toast(id + ' verified and activated', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>');
+  var v = verifyQueue.find(x => x.id === id);
+  if (v) { v.status = 'Verified'; addAuditEntry('admin', 'Client verified: '+id, 'Verify', 'b-green'); }
+  toast(id + ' verified', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>');
   renderVerify();
+}
+
+function rejectClient(id) {
+  var v = verifyQueue.find(x => x.id === id);
+  if (v) { v.status = 'Rejected'; addAuditEntry('admin', 'Client rejected: '+id, 'Reject', 'b-red'); }
+  toast(id + ' rejected', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5"/><path d="M5.5 5.5l5 5M10.5 5.5l-5 5"/></svg>');
+  renderVerify();
+}
+
+function doSuspend() {
+  toast('Account suspended successfully', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 4v4M8 10v.5"/><circle cx="8" cy="8" r="6"/></svg>');
+  addAuditEntry('admin', 'Account suspended', 'Suspend', 'b-red');
+}
+
+function sendBulkUpdate() {
+  toast('Bulk update sent to 47 clients', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h12M10 4l4 4-4 4"/></svg>');
+}
+
+function scheduleMessage() {
+  toast('Message scheduled for delivery', '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a5 5 0 015 5v5H3V6a5 5 0 015-5z"/></svg>');
+}
+
+function exportMessages() {
+  toast('Messages exported to CSV', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8M5 7l3 3 3-3M3 12h10"/></svg>');
+}
+
+function openClientEdit(id) {
+  toast('Editing client: ' + id, '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M11 2l3 3-8 8H3v-3l8-8z"/></svg>');
+}
+
+function markPaid(inv) {
+  var p = payments.find(x => x.inv === inv);
+  if (p) p.status = 'Paid';
+  addAuditEntry('admin', 'Payment marked as paid: '+inv, 'Payment', 'b-blue');
+  toast(inv + ' marked as paid', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>');
+  renderPayments();
 }
 
 function rejectClient(id) {
@@ -2025,6 +2150,15 @@ function toast(msg, icon) {
   setTimeout(() => el.classList.remove('show'), 3000);
 }
 
+function toggleMobileNav() {
+  var sb = document.getElementById('adminSidebar');
+  var ov = document.getElementById('sidebarOverlay');
+  if (sb && ov) {
+    sb.classList.toggle('open');
+    ov.classList.toggle('active');
+  }
+}
+
 function confirmDelivery() {
   toast('Delivery confirmed and client notified', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>');
 }
@@ -2032,5 +2166,155 @@ function confirmDelivery() {
 
 </div><!-- end main -->
 <div id="toast"></div>
+
+<!-- Preloader -->
+<div class="ap-preloader" id="apPreloader">
+  <svg class="ap-preloader-logo" viewBox="0 0 80 80" fill="none">
+    <rect width="80" height="80" rx="16" fill="rgba(255,255,255,.15)"/>
+    <path d="M20 40h40M40 20v40" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="40" cy="40" r="12" fill="none" stroke="white" stroke-width="3"/>
+  </svg>
+  <div class="ap-preloader-title">Airpak Express</div>
+  <div class="ap-preloader-sub" id="apPreloaderGreeting">Loading your experience...</div>
+  <div class="ap-preloader-bar-wrap"><div class="ap-preloader-bar"></div></div>
+  <div class="ap-preloader-dots">
+    <div class="ap-preloader-dot"></div>
+    <div class="ap-preloader-dot"></div>
+    <div class="ap-preloader-dot"></div>
+  </div>
+</div>
+
+<script>
+// Preloader with dynamic greeting
+(function(){
+  var h = new Date().getHours();
+  var greeting = 'Good morning';
+  if (h >= 12 && h < 17) greeting = 'Good afternoon';
+  else if (h >= 17 && h < 21) greeting = 'Good evening';
+  else if (h >= 21) greeting = 'Good night';
+  var el = document.getElementById('apPreloaderGreeting');
+  if (el) el.textContent = greeting + ' — preparing your experience...';
+  
+  // Hide preloader once page is fully loaded
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      var pl = document.getElementById('apPreloader');
+      if (pl) pl.classList.add('hidden');
+      setTimeout(function(){ if(pl) pl.style.display='none'; }, 700);
+    }, 1200);
+  });
+})();
+</script>
+
+
+<!-- PWA Registration -->
+<script>
+(function(){
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').then(function(reg) {
+        console.log('[PWA] SW registered:', reg.scope);
+      }).catch(function(err) {
+        console.warn('[PWA] SW registration failed:', err);
+      });
+    });
+  }
+
+  // Install prompt
+  var installPrompt = null;
+  var installBtn = null;
+  
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    installPrompt = e;
+    window.showInstallPrompt && window.showInstallPrompt();
+    
+    // Auto-show after 5 seconds
+    setTimeout(function() {
+      if (installPrompt && !localStorage.getItem('ap_pwa_installed')) {
+        var banner = document.createElement('div');
+        banner.id = 'pwa-install-banner';
+        banner.innerHTML = '<div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#CD2727,#9b1a1a);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;z-index:99999;box-shadow:0 -4px 20px rgba(0,0,0,.3)"><div style="flex:1"><div style="font-family:Sarabun,sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:2px">Install Airpak Express App</div><div style="font-size:12px;color:rgba(255,255,255,.7)">Get the full app experience — works offline!</div></div><button id="pwa-install-btn" style="background:#fff;color:#CD2727;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;margin-left:12px;flex-shrink:0">Install</button><button onclick="this.parentElement.style.display='none'" style="background:transparent;border:none;color:rgba(255,255,255,.7);font-size:20px;cursor:pointer;padding:4px 8px;margin-left:4px">×</button></div>';
+        document.body.appendChild(banner);
+        
+        document.getElementById('pwa-install-btn').addEventListener('click', function() {
+          installPrompt.prompt();
+          installPrompt.userChoice.then(function(result) {
+            if (result.outcome === 'accepted') {
+              localStorage.setItem('ap_pwa_installed', '1');
+            }
+            installPrompt = null;
+            banner.style.display = 'none';
+          });
+        });
+      }
+    }, 5000);
+  });
+
+  window.addEventListener('appinstalled', function() {
+    installPrompt = null;
+    localStorage.setItem('ap_pwa_installed', '1');
+    console.log('[PWA] App installed!');
+    // Show toast
+    var toast = document.createElement('div');
+    toast.textContent = 'Airpak Express installed successfully!';
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1C1C1E;color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:500;z-index:99999;box-shadow:0 8px 32px rgba(0,0,0,.3)';
+    document.body.appendChild(toast);
+    setTimeout(function(){ toast.style.display='none'; }, 4000);
+  });
+
+  // Push notification subscription
+  if ('Notification' in window && navigator.serviceWorker) {
+    window.subscribePush = function() {
+      Notification.requestPermission().then(function(perm) {
+        if (perm === 'granted') {
+          navigator.serviceWorker.ready.then(function(reg) {
+            reg.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: 'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3M8NrXYu1Vwvfrwcsjk0s'
+            }).then(function(sub) {
+              console.log('[PWA] Push subscribed:', sub.endpoint);
+              localStorage.setItem('ap_push_sub', JSON.stringify(sub));
+            });
+          });
+        }
+      });
+    };
+    
+    // Auto-prompt after 10s if not subscribed
+    setTimeout(function() {
+      if (Notification.permission === 'default' && !localStorage.getItem('ap_push_sub')) {
+        window.subscribePush && window.subscribePush();
+      }
+    }, 10000);
+  }
+
+  // Check online/offline status
+  window.addEventListener('online', function() {
+    document.body.classList.remove('offline-mode');
+    console.log('[PWA] Back online');
+  });
+  window.addEventListener('offline', function() {
+    document.body.classList.add('offline-mode');
+    console.log('[PWA] Offline mode');
+  });
+
+  // Version check
+  window.apVersion = '1.0.0';
+})();
+</script>
+<script>
+window.addEventListener('load', function() {
+  if (typeof AirpakPWA !== 'undefined') {
+    AirpakPWA.init();
+  } else {
+    var s = document.createElement('script');
+    s.src = '/pwa-features.js';
+    document.head.appendChild(s);
+  }
+});
+</script>
+
 </body>
 </html>

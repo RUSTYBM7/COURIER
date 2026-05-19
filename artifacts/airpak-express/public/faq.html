@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FAQ — Airpak Express</title>
-  <link rel="icon" type="image/x-icon" href="/apps/airpak/images/icon.png" />
+  <link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/x-icon" href="/apps/airpak/images/icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -1584,5 +1585,45 @@
   <footer style="background:var(--apple-bg-secondary,#F2F2F7);color:var(--apple-label-secondary,#3C3C43);padding:20px;text-align:center;font-size:12px;border-top:1px solid var(--apple-separator,#C6C6C8);">
     Unit 7, Wales International Hub, Cardiff Bay, Wales CF10 5AL, United Kingdom &nbsp;|&nbsp; © 2026 Airpak Express. All rights reserved.
   </footer>
+
+<!-- Preloader -->
+<div class="ap-preloader" id="apPreloader">
+  <svg class="ap-preloader-logo" viewBox="0 0 80 80" fill="none">
+    <rect width="80" height="80" rx="16" fill="rgba(255,255,255,.15)"/>
+    <path d="M20 40h40M40 20v40" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="40" cy="40" r="12" fill="none" stroke="white" stroke-width="3"/>
+  </svg>
+  <div class="ap-preloader-title">Airpak Express</div>
+  <div class="ap-preloader-sub" id="apPreloaderGreeting">Loading your experience...</div>
+  <div class="ap-preloader-bar-wrap"><div class="ap-preloader-bar"></div></div>
+  <div class="ap-preloader-dots">
+    <div class="ap-preloader-dot"></div>
+    <div class="ap-preloader-dot"></div>
+    <div class="ap-preloader-dot"></div>
+  </div>
+</div>
+
+<script>
+// Preloader with dynamic greeting
+(function(){
+  var h = new Date().getHours();
+  var greeting = 'Good morning';
+  if (h >= 12 && h < 17) greeting = 'Good afternoon';
+  else if (h >= 17 && h < 21) greeting = 'Good evening';
+  else if (h >= 21) greeting = 'Good night';
+  var el = document.getElementById('apPreloaderGreeting');
+  if (el) el.textContent = greeting + ' — preparing your experience...';
+  
+  // Hide preloader once page is fully loaded
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      var pl = document.getElementById('apPreloader');
+      if (pl) pl.classList.add('hidden');
+      setTimeout(function(){ if(pl) pl.style.display='none'; }, 700);
+    }, 1200);
+  });
+})();
+</script>
+
 </body>
 </html>

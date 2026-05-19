@@ -3,1455 +3,759 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#007AFF">
+  <meta name="theme-color" content="#CD2727">
   <meta name="color-scheme" content="light">
-  <meta name="description" content="Track your Airpak Express shipment in real-time. Enter your tracking number to see live delivery status, route, and estimated arrival.">
+  <meta name="description" content="Track your Airpak Express shipment in real-time.">
   <meta name="robots" content="index, follow">
-  <meta property="og:title" content="Track Package — Airpak Express">
-  <meta property="og:description" content="Track your Airpak Express shipment in real-time.">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Airpak Express">
-  <title>Track Package — Airpak Express</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23007AFF'/%3E%3Cpath d='M8 16h16M16 8v16' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23CD2727'/%3E%3Cpath d='M8 16h16M16 8v16' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Sarabun:wght@600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="css/apple-tokens.css">
   <link rel="stylesheet" href="css/glass-system.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/pages.css">
   <link rel="stylesheet" href="css/brand-airpak.css">
+  <script src="/sw-advanced.js" defer></script>
   <style>
-    :root {
-      --tracking-sidebar-width: 280px;
-      --tracking-header-height: 56px;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: var(--font-system);
-      background: var(--apple-bg);
-      color: var(--apple-label);
-      overflow: hidden;
-      height: 100vh;
-    }
-
-    /* ===== TRACKING APP SHELL ===== */
-    .tracking-app {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
-
-    /* ===== HEADER ===== */
-    .tracking-header {
-      height: var(--tracking-header-height);
-      background: var(--glass-bg);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      border-bottom: 1px solid var(--glass-border-subtle);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      position: relative;
-      z-index: 1000;
-      flex-shrink: 0;
-    }
-
-    .tracking-header-left {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .tracking-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      color: var(--apple-label);
-    }
-
-    .tracking-logo svg { width: 28px; height: 28px; }
-
-    .tracking-logo-text {
-      font-size: var(--text-lg);
-      font-weight: 700;
-      color: var(--apple-label);
-      letter-spacing: -0.02em;
-    }
-
-    .tracking-page-title {
-      font-size: var(--text-md);
-      font-weight: 600;
-      color: var(--apple-label-secondary);
-      padding-left: 20px;
-      border-left: 1px solid var(--apple-separator);
-    }
-
-    .tracking-header-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    /* Language Pill */
-    .lang-pill {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      background: var(--apple-fill-tertiary);
-      border-radius: var(--radius-full);
-      font-size: var(--text-xs);
-      font-weight: 600;
-      color: var(--apple-label);
-      cursor: pointer;
-      transition: all 0.15s;
-      border: none;
-    }
-
-    .lang-pill:hover { background: var(--apple-fill-secondary); }
-
-    .lang-pill .flag {
-      font-size: var(--text-xs);
-      letter-spacing: 0.05em;
-    }
-
-    .lang-dropdown {
-      position: absolute;
-      top: calc(100% + 8px);
-      right: 80px;
-      background: var(--glass-bg-ultra);
-      backdrop-filter: var(--glass-blur-heavy);
-      -webkit-backdrop-filter: var(--glass-blur-heavy);
-      border: 1px solid var(--glass-border-subtle);
-      border-radius: var(--radius-xl);
-      padding: 8px;
-      min-width: 160px;
-      box-shadow: var(--glass-shadow-strong);
-      display: none;
-      z-index: 100;
-    }
-
-    .lang-dropdown.open { display: block; }
-
-    .lang-option {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: var(--radius-md);
-      font-size: var(--text-sm);
-      font-weight: 500;
-      color: var(--apple-label);
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-
-    .lang-option:hover { background: var(--apple-fill-tertiary); }
-    .lang-option.active { color: var(--apple-blue); }
-
-    .lang-option span:first-child {
-      font-size: var(--text-xs);
-      font-weight: 700;
-      width: 28px;
-    }
-
-    /* Theme Toggle */
-    .theme-toggle {
-      width: 36px;
-      height: 36px;
-      border-radius: var(--radius-full);
-      background: var(--apple-fill-tertiary);
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.15s;
-      color: var(--apple-label);
-    }
-
-    .theme-toggle:hover { background: var(--apple-fill-secondary); }
-
-    /* ===== MAIN LAYOUT ===== */
-    .tracking-layout {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
-
-    /* ===== RESPONSIVE — tablet & mobile ===== */
-    @media (max-width: 1024px) {
-      :root { --tracking-sidebar-width: 240px; }
-    }
-    @media (max-width: 768px) {
-      body { overflow: auto !important; height: auto !important; min-height: 100vh; }
-      .tracking-app { height: auto; min-height: 100vh; }
-      .tracking-header {
-        padding: 0 12px;
-        flex-wrap: wrap;
-        height: auto;
-        min-height: var(--tracking-header-height);
-        gap: 8px;
-      }
-      .tracking-page-title { display: none; }
-      .tracking-header-left { gap: 10px; }
-      .tracking-header-right { gap: 6px; }
-      .tracking-layout {
-        flex-direction: column;
-        overflow: visible;
-      }
-      .tracking-sidebar {
-        width: 100% !important;
-        max-width: 100% !important;
-        border-right: 0 !important;
-        border-bottom: 1px solid var(--apple-separator);
-      }
-      .tracking-content, .tracking-main {
-        width: 100%;
-        padding: 12px !important;
-      }
-      .tracking-map, #tracking-map, .leaflet-container {
-        height: 280px !important;
-        min-height: 280px !important;
-      }
-      .lang-dropdown { right: 12px !important; left: 12px; min-width: 0; }
-    }
-    @media (max-width: 480px) {
-      .tracking-logo-text { display: none; }
-      .tracking-map, #tracking-map, .leaflet-container { height: 220px !important; }
-    }
-
-    /* ===== SIDEBAR ===== */
-    .tracking-sidebar {
-      width: var(--tracking-sidebar-width);
-      min-width: var(--tracking-sidebar-width);
-      background: var(--apple-bg-secondary);
-      border-right: 1px solid var(--apple-separator);
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-      padding: 16px 0;
-    }
-
-    .sidebar-section { padding: 8px 0; }
-    .sidebar-section + .sidebar-section { border-top: 1px solid var(--apple-separator); margin-top: 8px; padding-top: 16px; }
-
-    .sidebar-section-title {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--apple-label-tertiary);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: 0 20px 8px;
-    }
-
-    .sidebar-nav-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 20px;
-      font-size: var(--text-sm);
-      font-weight: 500;
-      color: var(--apple-label-secondary);
-      text-decoration: none;
-      cursor: pointer;
-      border-left: 3px solid transparent;
-      transition: all 0.15s;
-    }
-
-    .sidebar-nav-item:hover {
-      background: var(--apple-fill-tertiary);
-      color: var(--apple-label);
-    }
-
-    .sidebar-nav-item.active {
-      background: var(--glass-bg-tinted);
-      color: var(--apple-blue);
-      border-left-color: var(--apple-blue);
-      font-weight: 600;
-    }
-
-    .sidebar-nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
-
-    .sidebar-divider {
-      height: 1px;
-      background: var(--apple-separator);
-      margin: 12px 20px;
-    }
-
-    /* ===== MAP CONTAINER ===== */
-    .tracking-map-wrapper {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-    }
-
-    #trackingMap {
-      width: 100%;
-      height: 100%;
-    }
-
-    /* Apple-style map tiles */
-    .leaflet-tile-pane { filter: saturate(1.1) contrast(1.05); }
-
-    [data-theme="dark"] .leaflet-tile-pane { filter: saturate(0.9) contrast(1.1); }
-
-    /* ===== SEARCH BAR OVERLAY ===== */
-    .tracking-search-overlay {
-      position: absolute;
-      top: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 500;
-      width: 480px;
-      max-width: calc(100vw - 80px);
-    }
-
-    .tracking-search-card {
-      background: var(--glass-bg);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius-2xl);
-      padding: 12px 16px;
-      box-shadow: var(--glass-shadow);
-    }
-
-    .tracking-search-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .tracking-search-row svg { color: var(--apple-label-secondary); flex-shrink: 0; }
-
-    .tracking-search-input {
-      flex: 1;
-      border: none;
-      outline: none;
-      background: transparent;
-      font-size: var(--text-lg);
-      color: var(--apple-label);
-      font-family: var(--font-system);
-    }
-
-    .tracking-search-input::placeholder { color: var(--apple-label-tertiary); }
-
-    .tracking-search-btn {
-      padding: 8px 18px;
-      background: var(--apple-blue);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius-lg);
-      font-size: var(--text-sm);
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: background 0.15s;
-      font-family: var(--font-system);
-    }
-
-    .tracking-search-btn:hover { background: var(--apple-blue-dark); }
-    .tracking-search-btn svg { width: 16px; height: 16px; }
-
-    /* ===== SHIPMENT RESULT CARD ===== */
-    .tracking-result-card {
-      position: absolute;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 500;
-      width: 900px;
-      max-width: calc(100vw - 300px);
-    }
-
-    .tracking-result-inner {
-      background: var(--glass-bg);
-      backdrop-filter: var(--glass-blur-heavy);
-      -webkit-backdrop-filter: var(--glass-blur-heavy);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius-3xl);
-      padding: 20px 24px;
-      box-shadow: var(--glass-shadow-ultra);
-      display: flex;
-      gap: 24px;
-      align-items: flex-start;
-    }
-
-    .tracking-result-main { flex: 1; }
-
-    .tracking-result-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-
-    .tracking-result-id {
-      font-size: var(--text-2xl);
-      font-weight: 800;
-      color: var(--apple-label);
-      letter-spacing: -0.02em;
-    }
-
-    .tracking-result-status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 14px;
-      border-radius: var(--radius-full);
-      font-size: var(--text-xs);
-      font-weight: 600;
-    }
-
-    .tracking-result-status.in-transit {
-      background: rgba(255, 149, 0, 0.15);
-      color: var(--apple-orange);
-    }
-
-    .tracking-result-status.delivered {
-      background: rgba(52, 199, 89, 0.15);
-      color: var(--apple-green);
-    }
-
-    .tracking-result-status.in-transit::before,
-    .tracking-result-status.delivered::before {
-      content: '';
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
-    .tracking-result-route {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-
-    .route-point {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .route-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--apple-blue);
-    }
-
-    .route-dot.origin { background: var(--apple-blue); }
-    .route-dot.current { background: var(--apple-green); box-shadow: 0 0 0 4px rgba(52, 199, 89, 0.2); }
-    .route-dot.dest { background: var(--apple-orange); }
-
-    .route-label {
-      font-size: var(--text-xs);
-      font-weight: 500;
-      color: var(--apple-label-secondary);
-    }
-
-    .route-city {
-      font-size: var(--text-sm);
-      font-weight: 600;
-      color: var(--apple-label);
-    }
-
-    .route-line {
-      flex: 1;
-      height: 2px;
-      background: linear-gradient(90deg, var(--apple-blue), var(--apple-green), var(--apple-orange));
-      border-radius: 2px;
-      position: relative;
-    }
-
-    .route-truck {
-      position: absolute;
-      top: 50%;
-      left: 40%;
-      transform: translate(-50%, -50%);
-      width: 24px;
-      height: 24px;
-      background: var(--apple-blue);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: var(--shadow-glow-blue);
-      animation: truckBounce 1s ease-in-out infinite;
-    }
-
-    @keyframes truckBounce {
-      0%, 100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.1); }
-    }
-
-    .route-truck svg { color: #fff; }
-
-    .tracking-result-meta {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .meta-item {
-      background: var(--apple-fill-tertiary);
-      border-radius: var(--radius-lg);
-      padding: 12px 14px;
-    }
-
-    .meta-label {
-      font-size: var(--text-xs);
-      color: var(--apple-label-tertiary);
-      font-weight: 500;
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .meta-label svg { width: 12px; height: 12px; }
-
-    .meta-value {
-      font-size: var(--text-base);
-      font-weight: 600;
-      color: var(--apple-label);
-    }
-
-    .meta-value.highlight { color: var(--apple-blue); }
-
-    /* Progress Steps */
-    .tracking-progress-bar {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      margin-bottom: 12px;
-    }
-
-    .progress-step-item {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-    }
-
-    .progress-step-item:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      top: 14px;
-      left: 50%;
-      width: 100%;
-      height: 2px;
-      background: var(--apple-separator);
-      z-index: 0;
-    }
-
-    .progress-step-item.completed:not(:last-child)::after {
-      background: var(--apple-green);
-    }
-
-    .progress-step-item.active:not(:last-child)::after {
-      background: linear-gradient(90deg, var(--apple-green), var(--apple-separator));
-    }
-
-    .progress-step-dot {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: var(--apple-fill-tertiary);
-      border: 2px solid var(--apple-separator);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: var(--text-xs);
-      font-weight: 700;
-      color: var(--apple-label-secondary);
-      z-index: 1;
-      position: relative;
-    }
-
-    .progress-step-item.completed .progress-step-dot {
-      background: var(--apple-green);
-      border-color: var(--apple-green);
-      color: #fff;
-    }
-
-    .progress-step-item.active .progress-step-dot {
-      background: var(--apple-blue);
-      border-color: var(--apple-blue);
-      color: #fff;
-      box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
-    }
-
-    .progress-step-label {
-      font-size: 10px;
-      font-weight: 500;
-      color: var(--apple-label-tertiary);
-      margin-top: 6px;
-      text-align: center;
-    }
-
-    .progress-step-item.active .progress-step-label,
-    .progress-step-item.completed .progress-step-label { color: var(--apple-label-secondary); }
-
-    .tracking-result-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      min-width: 160px;
-    }
-
-    .tracking-action-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px 16px;
-      border-radius: var(--radius-lg);
-      font-size: var(--text-sm);
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s;
-      border: none;
-      font-family: var(--font-system);
-    }
-
-    .tracking-action-btn svg { width: 16px; height: 16px; }
-
-    .tracking-action-btn.primary {
-      background: var(--apple-blue);
-      color: #fff;
-    }
-
-    .tracking-action-btn.primary:hover { background: var(--apple-blue-dark); }
-
-    .tracking-action-btn.secondary {
-      background: var(--apple-fill-tertiary);
-      color: var(--apple-label);
-    }
-
-    .tracking-action-btn.secondary:hover { background: var(--apple-fill-secondary); }
-
-    /* ===== ETA CARD ===== */
-    .eta-card {
-      position: absolute;
-      bottom: 140px;
-      right: 24px;
-      z-index: 500;
-      width: 260px;
-    }
-
-    .eta-card-inner {
-      background: var(--glass-bg);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius-2xl);
-      padding: 16px;
-      box-shadow: var(--glass-shadow);
-    }
-
-    .eta-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .eta-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: var(--radius-lg);
-      background: var(--apple-blue);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-    }
-
-    .eta-icon svg { width: 20px; height: 20px; }
-
-    .eta-title {
-      font-size: var(--text-xs);
-      font-weight: 500;
-      color: var(--apple-label-secondary);
-    }
-
-    .eta-time {
-      font-size: var(--text-lg);
-      font-weight: 700;
-      color: var(--apple-label);
-    }
-
-    .eta-details {
-      font-size: var(--text-xs);
-      color: var(--apple-label-tertiary);
-      margin-top: 2px;
-    }
-
-    .eta-progress {
-      height: 4px;
-      background: var(--apple-fill-tertiary);
-      border-radius: 2px;
-      margin-top: 12px;
-      overflow: hidden;
-    }
-
-    .eta-progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--apple-blue), var(--apple-green));
-      border-radius: 2px;
-      width: 65%;
-      transition: width 0.5s ease;
-    }
-
-    /* ===== INFO POPUP ===== */
-    .leaflet-popup-content-wrapper {
-      background: var(--glass-bg-ultra);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      border: 1px solid var(--glass-border-subtle);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--glass-shadow);
-      padding: 0;
-    }
-
-    .leaflet-popup-content {
-      margin: 0;
-      padding: 16px;
-    }
-
-    .leaflet-popup-tip { background: var(--glass-bg-ultra); }
-
-    .depot-popup {
-      min-width: 200px;
-    }
-
-    .depot-popup-name {
-      font-size: var(--text-base);
-      font-weight: 700;
-      color: var(--apple-label);
-      margin-bottom: 6px;
-    }
-
-    .depot-popup-address {
-      font-size: var(--text-xs);
-      color: var(--apple-label-secondary);
-      line-height: 1.4;
-    }
-
-    .depot-popup-type {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 4px 10px;
-      background: var(--apple-fill-tertiary);
-      border-radius: var(--radius-full);
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--apple-blue);
-      margin-top: 10px;
-    }
-
-    /* ===== FOOTER ===== */
-    .tracking-footer {
-      background: var(--apple-bg-secondary);
-      border-top: 1px solid var(--apple-separator);
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
-    }
-
-    .tracking-footer-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: var(--text-xs);
-      color: var(--apple-label-secondary);
-    }
-
-    .tracking-footer-left svg { width: 14px; height: 14px; }
-
-    .tracking-footer-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .social-links {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .social-link {
-      width: 32px;
-      height: 32px;
-      border-radius: var(--radius-full);
-      background: var(--apple-fill-tertiary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--apple-label-secondary);
-      transition: all 0.15s;
-      text-decoration: none;
-    }
-
-    .social-link:hover { background: var(--apple-fill-secondary); color: var(--apple-label); }
-    .social-link svg { width: 16px; height: 16px; }
-
-    /* ===== ANIMATIONS ===== */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .tracking-result-card { animation: fadeInUp 0.4s ease-out 0.2s both; }
-    .eta-card { animation: fadeInUp 0.4s ease-out 0.4s both; }
-    .tracking-search-overlay { animation: fadeInUp 0.3s ease-out 0.1s both; }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 1024px) {
-      .tracking-sidebar { display: none; }
-      .tracking-result-card { max-width: calc(100vw - 48px); }
-      .tracking-result-meta { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    @media (max-width: 768px) {
-      .tracking-search-overlay { top: 12px; width: calc(100vw - 24px); max-width: none; }
-      .tracking-result-inner { flex-direction: column; }
-      .tracking-result-actions { flex-direction: row; width: 100%; }
-      .eta-card { display: none; }
-    }
-  </style>
-  <link rel="stylesheet" href="/apps/airpak/css/ap-lang.css">
-  <link rel="stylesheet" href="css/responsive-global.css">
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#CD2727;--red-d:#9b1a1a;--red-l:#ff6b6b;
+  --apple-label:#1C1C1E;--apple-label-secondary:#636366;--apple-label-tertiary:#8E8E93;
+  --apple-bg:#FFFFFF;--apple-bg-secondary:#F2F2F7;--apple-bg-grouped:#F2F2F7;
+  --apple-separator:rgba(60,60,67,.12);--apple-fill:rgba(120,120,128,.12);
+  --apple-blue:#007AFF;--apple-green:#34C759;--apple-orange:#FF9500;--apple-red:#FF3B30;
+  --apple-indigo:#5856D6;--apple-purple:#AF52DE;--apple-teal:#30D158;
+  --nav-height:60px;--radius:12px;--radius-lg:16px;--radius-xl:20px;
+  --font-main:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-display:'Sarabun','Inter',sans-serif;
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--font-main);background:var(--apple-bg);color:var(--apple-label);min-height:100vh;overflow-x:hidden}
+
+/* === TOP NAV === */
+.top-nav{position:fixed;top:0;left:0;right:0;height:var(--nav-height);background:rgba(255,255,255,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--apple-separator);z-index:500;display:flex;align-items:center;padding:0 16px;gap:12px}
+.nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--apple-label);font-family:var(--font-display);font-weight:800;font-size:18px;flex-shrink:0}
+.nav-brand svg{width:32px;height:32px}
+.nav-title{font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--apple-label)}
+.nav-spacer{flex:1}
+.nav-btn{width:36px;height:36px;border-radius:50%;background:var(--apple-fill);border:none;display:flex;align-items:center;justify-content:center;color:var(--apple-label);cursor:pointer;transition:all .15s}
+.nav-btn:hover{background:rgba(120,120,128,.2)}
+.nav-btn:active{transform:scale(.95)}
+.menu-btn{display:none}
+
+/* === MOBILE SIDEBAR === */
+.mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:599;opacity:0;pointer-events:none;transition:opacity .3s}
+.mobile-overlay.active{opacity:1;pointer-events:auto}
+.mobile-sidebar{position:fixed;top:0;left:0;bottom:0;width:300px;background:var(--apple-bg);z-index:600;transform:translateX(-100%);transition:transform .3s ease;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.15)}
+.mobile-sidebar.open{transform:translateX(0)}
+.ms-header{padding:16px 20px;border-bottom:1px solid var(--apple-separator);display:flex;align-items:center;gap:12px}
+.ms-user-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--red-l));display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:800;flex-shrink:0}
+.ms-user-name{font-size:15px;font-weight:700;color:var(--apple-label)}
+.ms-user-email{font-size:12px;color:var(--apple-label-secondary)}
+.ms-section{padding:12px 0}
+.ms-section-label{font-size:11px;font-weight:700;color:var(--apple-label-secondary);text-transform:uppercase;letter-spacing:.5px;padding:0 20px 6px}
+.ms-item{display:flex;align-items:center;gap:12px;padding:12px 20px;color:var(--apple-label);text-decoration:none;font-size:15px;font-weight:500;transition:all .15s;cursor:pointer;border:none;background:none;width:100%;text-align:left}
+.ms-item:hover{background:var(--apple-bg-secondary)}
+.ms-item.active{background:rgba(205,39,39,.08);color:var(--red);font-weight:700}
+.ms-item i,.ms-item svg{width:20px;height:20px;flex-shrink:0;color:var(--apple-label-secondary)}
+.ms-item.active i,.ms-item.active svg{color:var(--red)}
+.ms-item span{flex:1}
+.ms-sep{height:1px;background:var(--apple-separator);margin:8px 20px}
+.ms-signout{color:var(--apple-red)!important}
+.ms-signout i,.ms-signout svg{color:var(--apple-red)!important}
+
+/* === MAIN CONTENT === */
+.main-content{padding-top:var(--nav-height);min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom, 16px));position:relative}
+
+/* === TRACKING HERO === */
+.track-hero{padding:20px 20px 16px;background:linear-gradient(135deg,var(--red) 0%,var(--red-d) 100%);color:#fff;position:relative;overflow:hidden}
+.th-bg{position:absolute;top:-40%;right:-20%;width:280px;height:280px;background:radial-gradient(circle,rgba(255,255,255,.08) 0%,transparent 70%);border-radius:50%}
+.th-content{position:relative;z-index:1}
+.th-title{font-family:var(--font-display);font-size:22px;font-weight:800;margin-bottom:2px}
+.th-sub{font-size:13px;opacity:.7}
+
+/* === SEARCH BOX === */
+.search-section{padding:16px 20px 8px}
+.search-box{display:flex;gap:10px;align-items:center}
+.search-input{flex:1;padding:14px 16px;border:1.5px solid var(--apple-separator);border-radius:var(--radius-lg);font-size:16px;font-family:var(--font-main);color:var(--apple-label);background:var(--apple-bg);box-sizing:border-box;transition:all .2s}
+.search-input:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(205,39,39,.1)}
+.search-btn{padding:14px 20px;background:var(--red);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:6px;font-family:var(--font-main)}
+.search-btn:hover{background:var(--red-d);transform:translateY(-1px)}
+.search-btn:active{transform:translateY(0)}
+
+/* === TRACKING RESULT === */
+.track-result{display:none;margin:8px 20px 16px}
+.track-result.show{display:block}
+.tr-card{background:var(--apple-bg);border-radius:var(--radius-xl);border:1px solid var(--apple-separator);overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.tr-status-bar{padding:16px 20px;display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,var(--red),var(--red-d));color:#fff}
+.tr-status-icon{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tr-status-icon i,.tr-status-icon svg{width:20px;height:20px}
+.tr-status-text{flex:1}
+.tr-status-label{font-size:11px;opacity:.7;text-transform:uppercase;letter-spacing:.5px}
+.tr-status-value{font-family:var(--font-display);font-size:18px;font-weight:800}
+.tr-awb-row{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--apple-separator)}
+.tr-awb-label{font-size:12px;color:var(--apple-label-secondary)}
+.tr-awb-value{font-family:var(--font-display);font-size:16px;font-weight:800;color:var(--apple-label)}
+.tr-awb-copy{background:var(--apple-fill);border:none;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;color:var(--apple-label);cursor:pointer;transition:all .15s}
+.tr-awb-copy:hover{background:rgba(120,120,128,.2)}
+
+/* === MAP === */
+.map-section{margin:0 20px 16px;border-radius:var(--radius-xl);overflow:hidden;border:1px solid var(--apple-separator);height:220px;position:relative}
+#map{width:100%;height:100%;z-index:1}
+.map-overlay{position:absolute;top:12px;left:12px;z-index:400;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-radius:var(--radius);padding:10px 14px;box-shadow:0 2px 12px rgba(0,0,0,.1)}
+.map-route{display:flex;align-items:center;gap:8px}
+.map-from{width:10px;height:10px;border-radius:50%;background:var(--red);flex-shrink:0}
+.map-line{flex:1;height:2px;background:var(--apple-separator);position:relative}
+.map-line::after{content:'';position:absolute;left:0;top:0;width:50%;height:100%;background:var(--red)}
+.map-to{width:10px;height:10px;border-radius:50%;background:var(--apple-green);flex-shrink:0}
+.map-labels{display:flex;justify-content:space-between;margin-top:4px}
+.map-label{font-size:10px;font-weight:700;color:var(--apple-label)}
+
+/* === TIMELINE === */
+.timeline-section{margin:0 20px 16px}
+.ts-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.ts-title{font-family:var(--font-display);font-size:17px;font-weight:800;color:var(--apple-label)}
+.timeline-list{display:flex;flex-direction:column;gap:0}
+.timeline-item{display:flex;gap:12px;position:relative;padding-bottom:16px}
+.timeline-item:last-child{padding-bottom:0}
+.ti-dot-wrap{width:28px;flex-shrink:0;display:flex;flex-direction:column;align-items:center}
+.ti-dot{width:28px;height:28px;border-radius:50%;background:var(--apple-bg-secondary);display:flex;align-items:center;justify-content:center;position:relative;z-index:1;border:2px solid var(--apple-separator)}
+.ti-dot.done{background:var(--apple-green);border-color:var(--apple-green);color:#fff}
+.ti-dot.active{background:var(--red);border-color:var(--red);color:#fff;box-shadow:0 0 0 4px rgba(205,39,39,.2)}
+.ti-dot i,.ti-dot svg{width:14px;height:14px}
+.ti-line{width:2px;flex:1;background:var(--apple-separator);margin:4px 0;min-height:24px}
+.ti-line.done{background:var(--apple-green)}
+.ti-content{flex:1;padding-top:2px}
+.ti-title{font-size:14px;font-weight:700;color:var(--apple-label)}
+.ti-title.done{color:var(--apple-label)}
+.ti-title.active{color:var(--red)}
+.ti-time{font-size:12px;color:var(--apple-label-secondary);margin-top:2px}
+.ti-location{font-size:12px;color:var(--apple-label-tertiary);margin-top:1px}
+
+/* === PACKAGE DETAILS === */
+.details-section{margin:0 20px 24px}
+.detail-card{background:var(--apple-bg);border-radius:var(--radius-lg);border:1px solid var(--apple-separator);overflow:hidden}
+.dc-header{padding:14px 16px;border-bottom:1px solid var(--apple-separator);display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;color:var(--apple-label)}
+.dc-header i,.dc-header svg{width:18px;height:18px;color:var(--red)}
+.dc-row{display:flex;padding:12px 16px;border-bottom:1px solid var(--apple-separator);min-height:44px;align-items:center}
+.dc-row:last-child{border-bottom:none}
+.dc-label{font-size:13px;color:var(--apple-label-secondary);width:100px;flex-shrink:0}
+.dc-value{font-size:14px;font-weight:600;color:var(--apple-label);flex:1}
+
+/* === EMPTY STATE === */
+.empty-state{padding:48px 24px;text-align:center;color:var(--apple-label-secondary)}
+.es-icon{width:56px;height:56px;margin:0 auto 16px;opacity:.4}
+.es-title{font-size:16px;font-weight:700;color:var(--apple-label);margin-bottom:4px}
+.es-desc{font-size:13px}
+
+/* === QUICK LINKS === */
+.quick-links{margin:0 20px 24px;display:flex;flex-direction:column;gap:10px}
+.ql-btn{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--apple-bg);border:1px solid var(--apple-separator);border-radius:var(--radius-lg);cursor:pointer;transition:all .15s;text-decoration:none;color:var(--apple-label);width:100%;text-align:left;font-family:var(--font-main)}
+.ql-btn:hover{background:var(--apple-bg-secondary);transform:translateY(-1px)}
+.ql-btn:active{transform:scale(.98)}
+.ql-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ql-icon i,.ql-icon svg{width:18px;height:18px}
+.ql-icon.red{background:rgba(205,39,39,.1);color:var(--red)}
+.ql-icon.blue{background:rgba(0,122,255,.1);color:var(--apple-blue)}
+.ql-icon.green{background:rgba(52,199,89,.1);color:var(--apple-green)}
+.ql-icon.orange{background:rgba(255,149,0,.1);color:var(--apple-orange)}
+.ql-text{flex:1}
+.ql-title{font-size:15px;font-weight:600;color:var(--apple-label)}
+.ql-sub{font-size:12px;color:var(--apple-label-secondary);margin-top:1px}
+.ql-arrow{color:var(--apple-label-tertiary)}
+.ql-arrow i,.ql-arrow svg{width:16px;height:16px}
+
+/* === TOAST === */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1C1C1E;color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:500;z-index:9999;transition:transform .3s;box-shadow:0 8px 32px rgba(0,0,0,.3);max-width:calc(100vw - 40px);text-align:center}
+.toast-show{transform:translateX(-50%) translateY(0)!important}
+
+/* === RESPONSIVE === */
+@media(min-width:768px){
+  .map-section{height:300px}
+  .search-section{padding:20px 20px 8px;max-width:640px;margin-left:auto;margin-right:auto}
+  .track-result{max-width:640px;margin-left:auto;margin-right:auto}
+  .timeline-section{max-width:640px;margin-left:auto;margin-right:auto}
+  .details-section{max-width:640px;margin-left:auto;margin-right:auto}
+  .quick-links{max-width:640px;margin-left:auto;margin-right:auto}
+}
+
+@media(max-width:767px){
+  .menu-btn{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--apple-fill);border:none;color:var(--apple-label);cursor:pointer}
+  .nav-title{display:none}
+  .search-section{padding:14px 16px 8px}
+  .search-btn span{display:none}
+  .map-section{margin:0 16px 12px;height:180px;border-radius:var(--radius-lg)}
+  .track-result{margin:8px 16px 12px}
+  .timeline-section{margin:0 16px 12px}
+  .details-section{margin:0 16px 20px}
+  .quick-links{margin:0 16px 20px}
+}
+
+i[data-lucide]{width:16px;height:16px;display:block}
+
+/* === iOS GLASS BOTTOM TAB BAR === */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;padding-bottom:env(safe-area-inset-bottom,16px);background:rgba(255,255,255,.72);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(0,0,0,.08);display:flex;align-items:center;justify-content:space-around;z-index:900;height:calc(60px + env(safe-area-inset-bottom,16px));padding-top:8px}
+.bottom-nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 8px;cursor:pointer;text-decoration:none;color:var(--apple-label-tertiary,#8E8E93);transition:all .15s}
+.bottom-nav-item.active{color:var(--red,#CD2727)}
+.bottom-nav-item svg{width:22px;height:22px;display:block}
+.bottom-nav-item span{font-size:10px;font-weight:600;font-family:Inter,sans-serif}
+
+/* === PRELOADER === */
+.ap-preloader{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#CD2727 0%,#9b1a1a 100%);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease,visibility .6s ease}
+.ap-preloader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.ap-preloader-logo{width:80px;height:80px;margin-bottom:24px;animation:preLogoPulse 1.5s ease-in-out infinite}
+.ap-preloader-title{font-family:"Sarabun",sans-serif;font-size:32px;font-weight:800;color:#fff;margin-bottom:8px}
+.ap-preloader-sub{font-family:"Inter",sans-serif;font-size:14px;color:rgba(255,255,255,.7);margin-bottom:40px;letter-spacing:.5px}
+.ap-preloader-bar-wrap{width:280px;height:4px;background:rgba(255,255,255,.2);border-radius:4px;overflow:hidden;margin-bottom:16px}
+.ap-preloader-bar{height:100%;background:#fff;border-radius:4px;animation:preBar 1.8s ease-in-out infinite;width:0}
+.ap-preloader-dots{display:flex;gap:8px}
+.ap-preloader-dot{width:8px;height:8px;background:rgba(255,255,255,.4);border-radius:50%;animation:preDot 1.2s ease-in-out infinite}
+.ap-preloader-dot:nth-child(2){animation-delay:.2s}
+.ap-preloader-dot:nth-child(3){animation-delay:.4s}
+@keyframes preLogoPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes preBar{0%{width:0}50%{width:70%}100%{width:100%}}
+@keyframes preDot{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+
+</style>
 </head>
 <body>
 
-<div class="tracking-app">
-  <!-- Header -->
-  <header class="tracking-header">
-    <div class="tracking-header-left">
-      <a href="index.html" class="tracking-logo">
-        <img src="/brand/logo.png" alt="Airpak Express" class="ap-brand-logo" />
-        <span class="tracking-logo-text">Airpak Express</span>
-      </a>
-      <span class="tracking-page-title">TRACKING</span>
+<!-- Top Navigation -->
+<nav class="top-nav">
+  <button class="menu-btn" onclick="toggleSidebar()" aria-label="Open menu">
+    <i data-lucide="menu" style="width:20px;height:20px"></i>
+  </button>
+  <a href="index.html" class="nav-brand">
+    <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#CD2727"/><path d="M8 16h16M16 8v16" stroke="white" stroke-width="2.5" stroke-linecap="round"/><circle cx="16" cy="16" r="5" fill="none" stroke="white" stroke-width="1.5"/></svg>
+  </a>
+  <span class="nav-title">Track Package</span>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions">
+    <button class="nav-btn" onclick="window.location.href='dashboard.html'" aria-label="Dashboard">
+      <i data-lucide="home" style="width:18px;height:18px"></i>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Overlay -->
+<div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+<!-- Mobile Sidebar -->
+<aside class="mobile-sidebar" id="mobileSidebar">
+  <div class="ms-header">
+    <div class="ms-user-avatar">JW</div>
+    <div>
+      <div class="ms-user-name">James Wilson</div>
+      <div class="ms-user-email">james@company.co.uk</div>
     </div>
-    <div class="tracking-header-right">
-      <button class="lang-pill" onclick="toggleLangDropdown(this)" aria-expanded="false">
-        <span class="flag">EN</span>
-        <span data-i18n="nav.language">Language</span>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="lang-dropdown" id="langDropdown">
-        <div class="lang-option active" onclick="switchLang('en', this)"><span>EN</span> English</div>
-        <div class="lang-option" onclick="switchLang('zh', this)"><span>ZH</span> 中文</div>
-        <div class="lang-option" onclick="switchLang('ms', this)"><span>MY</span> Bahasa</div>
-        <div class="lang-option" onclick="switchLang('ar', this)"><span>AR</span> العربية</div>
-      </div>
-      <button class="theme-toggle" onclick="ThemeEngine.toggle()" aria-label="Toggle theme">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+  </div>
+  <div class="ms-section">
+    <div class="ms-section-label">Navigation</div>
+    <a href="dashboard.html" class="ms-item" onclick="toggleSidebar()">
+      <i data-lucide="layout-dashboard"></i><span>Dashboard</span>
+    </a>
+    <a href="tracking.html" class="ms-item active" onclick="toggleSidebar()">
+      <i data-lucide="truck"></i><span>Track Packages</span>
+    </a>
+    <a href="payment.html" class="ms-item" onclick="toggleSidebar()">
+      <i data-lucide="credit-card"></i><span>Billing & Payments</span>
+    </a>
+    <a href="contact.html" class="ms-item" onclick="toggleSidebar()">
+      <i data-lucide="message-square"></i><span>Get Support</span>
+    </a>
+  </div>
+  <div class="ms-sep"></div>
+  <div class="ms-section">
+    <div class="ms-section-label">Account</div>
+    <a href="settings.html" class="ms-item" onclick="toggleSidebar()">
+      <i data-lucide="settings"></i><span>Settings</span>
+    </a>
+    <a href="signin.html" class="ms-item ms-signout" onclick="showToast('Signed out');setTimeout(()=>window.location='signin.html',500)">
+      <i data-lucide="log-out"></i><span>Sign Out</span>
+    </a>
+  </div>
+</aside>
+
+<!-- Main Content -->
+<main class="main-content">
+  <!-- Decorative background elements -->
+  <div aria-hidden="true" style="position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden;pointer-events:none;z-index:0">
+    <svg style="position:absolute;top:15%;left:8%;width:80px;height:80px;opacity:0.06" viewBox="0 0 80 80" fill="none"><rect x="8" y="20" width="64" height="40" rx="4" stroke="#CD2727" stroke-width="2"/><path d="M8 32h64M20 20v-8l20-12 20 12v8" stroke="#CD2727" stroke-width="2"/><circle cx="24" cy="60" r="8" fill="none" stroke="#CD2727" stroke-width="2"/><circle cx="56" cy="60" r="8" fill="none" stroke="#CD2727" stroke-width="2"/></svg>
+    <svg style="position:absolute;top:55%;right:5%;width:60px;height:60px;opacity:0.05" viewBox="0 0 60 60" fill="none"><path d="M10 30h40M30 10v40M15 15l30 30M45 15L15 45" stroke="#1a1a1a" stroke-width="2"/></svg>
+    <svg style="position:absolute;top:75%;left:3%;width:50px;height:50px;opacity:0.04" viewBox="0 0 50 50" fill="none"><circle cx="25" cy="25" r="20" stroke="#CD2727" stroke-width="1.5"/><path d="M25 5v40M5 25h40" stroke="#CD2727" stroke-width="1.5"/></svg>
+    <svg style="position:absolute;top:30%;right:12%;width:40px;height:40px;opacity:0.05" viewBox="0 0 40 40" fill="none"><rect x="4" y="4" width="32" height="32" rx="4" stroke="#1a1a1a" stroke-width="1.5"/><path d="M4 20h32M20 4v32" stroke="#1a1a1a" stroke-width="1.5"/></svg>
+    <svg style="position:absolute;top:5%;right:20%;width:60px;height:60px;opacity:0.04" viewBox="0 0 60 60" fill="none"><path d="M30 5L55 30L30 55L5 30Z" stroke="#CD2727" stroke-width="1.5"/></svg>
+  </div>
+
+  <!-- Hero -->
+  <div class="track-hero">
+    <div class="th-bg"></div>
+    <div class="th-content">
+      <div class="th-title">Track Your Shipment</div>
+      <div class="th-sub">Enter your tracking number to see live updates</div>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="search-section">
+    <div class="search-box">
+      <input type="text" class="search-input" id="trackingInput" placeholder="e.g. APX123456789" value="">
+      <button class="search-btn" onclick="doTrack()">
+        <i data-lucide="search" style="width:16px;height:16px"></i>
+        <span>Track</span>
       </button>
     </div>
-  </header>
+  </div>
 
-  <!-- Main Layout -->
-  <div class="tracking-layout">
-    <!-- Sidebar -->
-    <aside class="tracking-sidebar">
-      <div class="sidebar-section">
-        <div class="sidebar-section-title">Services</div>
-        <a href="tracking.html" class="sidebar-nav-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          Track Package
-        </a>
-        <a href="shipnow-new-shipment.html" class="sidebar-nav-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-          Ship Now
-        </a>
-        <a href="dashboard.html" class="sidebar-nav-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          Dashboard
-        </a>
-        <a href="/messages.html" class="sidebar-nav-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          Messages
-        </a>
+  <!-- Tracking Result (shows when searched) -->
+  <div class="track-result" id="trackResult">
+    <div class="tr-card">
+      <div class="tr-status-bar">
+        <div class="tr-status-icon"><i data-lucide="truck"></i></div>
+        <div class="tr-status-text">
+          <div class="tr-status-label">Status</div>
+          <div class="tr-status-value" id="statusValue">In Transit</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;opacity:.7">ETA</div>
+          <div style="font-size:15px;font-weight:700" id="etaValue">May 22, 2026</div>
+        </div>
       </div>
-
-      <div class="sidebar-section">
-        <div class="sidebar-section-title">Settings</div>
-        <a href="settings.html" class="sidebar-nav-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          Settings
-        </a>
-        <a href="admin.html" class="sidebar-nav-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Admin
-        </a>
+      <div class="tr-awb-row">
+        <div>
+          <div class="tr-awb-label">AWB Number</div>
+          <div class="tr-awb-value" id="awbValue">APX—0000—UK</div>
+        </div>
+        <button class="tr-awb-copy" onclick="copyAwb()">
+          <i data-lucide="copy" style="width:12px;height:12px;display:inline;vertical-align:middle"></i>
+          Copy
+        </button>
       </div>
-    </aside>
+    </div>
 
-    <!-- Map Wrapper -->
-    <div class="tracking-map-wrapper">
-      <div id="trackingMap"></div>
+    <!-- Map -->
+    <div class="map-section">
+      <div id="map"></div>
+      <div class="map-overlay">
+        <div class="map-route">
+          <div class="map-from"></div>
+          <div class="map-line"></div>
+          <div class="map-to"></div>
+        </div>
+        <div class="map-labels">
+          <span class="map-label">Cardiff</span>
+          <span class="map-label">London</span>
+        </div>
+      </div>
+    </div>
 
-      <!-- Search Bar Overlay -->
-      <div class="tracking-search-overlay">
-        <div class="tracking-search-card">
-          <div class="tracking-search-row">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <input type="text" class="tracking-search-input" id="trackingInput" placeholder="Enter tracking number (e.g. APK-GB-2847391)" value="APK-GB-2847391">
-            <button class="tracking-search-btn" onclick="performTracking()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-              Track
-            </button>
+    <!-- Timeline -->
+    <div class="timeline-section">
+      <div class="ts-header">
+        <span class="ts-title">Shipment Timeline</span>
+      </div>
+      <div class="timeline-list">
+        <div class="timeline-item">
+          <div class="ti-dot-wrap">
+            <div class="ti-dot done"><i data-lucide="check"></i></div>
+            <div class="ti-line done"></div>
+          </div>
+          <div class="ti-content">
+            <div class="ti-title done">Package Picked Up</div>
+            <div class="ti-time">May 15, 2026 — 09:30 AM</div>
+            <div class="ti-location">Cardiff Hub, Wales CF10 5AL</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="ti-dot-wrap">
+            <div class="ti-dot done"><i data-lucide="check"></i></div>
+            <div class="ti-line done"></div>
+          </div>
+          <div class="ti-content">
+            <div class="ti-title done">Departed Cardiff</div>
+            <div class="ti-time">May 15, 2026 — 02:15 PM</div>
+            <div class="ti-location">Wales International Hub</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="ti-dot-wrap">
+            <div class="ti-dot active"><i data-lucide="truck"></i></div>
+            <div class="ti-line"></div>
+          </div>
+          <div class="ti-content">
+            <div class="ti-title active">In Transit to London</div>
+            <div class="ti-time">May 16, 2026 — 06:00 AM</div>
+            <div class="ti-location">M4 Motorway, near Reading</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="ti-dot-wrap">
+            <div class="ti-dot"><i data-lucide="package"></i></div>
+            <div class="ti-line"></div>
+          </div>
+          <div class="ti-content">
+            <div class="ti-title">Arriving London</div>
+            <div class="ti-time">Expected May 22, 2026</div>
+            <div class="ti-location">London Heathrow Hub</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="ti-dot-wrap">
+            <div class="ti-dot"><i data-lucide="home"></i></div>
+          </div>
+          <div class="ti-content">
+            <div class="ti-title">Delivered</div>
+            <div class="ti-time">Expected May 22, 2026</div>
+            <div class="ti-location">Final Destination</div>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- ETA Card -->
-      <div class="eta-card">
-        <div class="eta-card-inner">
-          <div class="eta-header">
-            <div class="eta-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            </div>
-            <div>
-              <div class="eta-title">Estimated Arrival</div>
-              <div class="eta-time">Tomorrow, 2:00 PM</div>
-              <div class="eta-details">May 16, 2026</div>
-            </div>
-          </div>
-          <div class="eta-progress">
-            <div class="eta-progress-fill"></div>
-          </div>
+    <!-- Package Details -->
+    <div class="details-section">
+      <div class="detail-card">
+        <div class="dc-header">
+          <i data-lucide="package"></i>
+          Package Details
         </div>
-      </div>
-
-      <!-- Result Card -->
-      <div class="tracking-result-card" id="trackingResult">
-        <div class="tracking-result-inner">
-          <div class="tracking-result-main">
-            <div class="tracking-result-header">
-              <span class="tracking-result-id">APK-GB-2847391</span>
-              <span class="tracking-result-status in-transit">
-                <span style="width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block;animation:pulse 2s infinite;"></span>
-                In Transit
-              </span>
-            </div>
-
-            <div class="tracking-result-route">
-              <div class="route-point">
-                <div class="route-dot origin"></div>
-                <div class="route-label">From</div>
-                <div class="route-city">London</div>
-              </div>
-              <div class="route-line">
-                <div class="route-truck">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                </div>
-              </div>
-              <div class="route-point">
-                <div class="route-dot current"></div>
-                <div class="route-label">Current</div>
-                <div class="route-city">Cardiff Bay</div>
-              </div>
-              <div class="route-line" style="background: linear-gradient(90deg, var(--apple-green), var(--apple-separator));"></div>
-              <div class="route-point">
-                <div class="route-dot dest"></div>
-                <div class="route-label">To</div>
-                <div class="route-city">Edinburgh</div>
-              </div>
-            </div>
-
-            <div class="tracking-result-meta">
-              <div class="meta-item">
-                <div class="meta-label">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                  Weight
-                </div>
-                <div class="meta-value">2.5 kg</div>
-              </div>
-              <div class="meta-item">
-                <div class="meta-label">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-                  Dimensions
-                </div>
-                <div class="meta-value">30×20×15 cm</div>
-              </div>
-              <div class="meta-item">
-                <div class="meta-label">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                  Service
-                </div>
-                <div class="meta-value highlight">Express</div>
-              </div>
-              <div class="meta-item">
-                <div class="meta-label">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  Destination
-                </div>
-                <div class="meta-value">Edinburgh, UK</div>
-              </div>
-            </div>
-
-            <div class="tracking-progress-bar">
-              <div class="progress-step-item completed">
-                <div class="progress-step-dot"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-                <span class="progress-step-label">Picked Up</span>
-              </div>
-              <div class="progress-step-item completed">
-                <div class="progress-step-dot"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-                <span class="progress-step-label">In Transit</span>
-              </div>
-              <div class="progress-step-item active">
-                <div class="progress-step-dot">3</div>
-                <span class="progress-step-label">Out for Delivery</span>
-              </div>
-              <div class="progress-step-item">
-                <div class="progress-step-dot">4</div>
-                <span class="progress-step-label">Delivered</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="tracking-result-actions">
-            <button class="tracking-action-btn primary" onclick="AIRPAK.Toast.info('Scheduling delivery...')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              Reschedule
-            </button>
-            <button class="tracking-action-btn secondary" onclick="showProofOfDelivery()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              Get Proof
-            </button>
-          </div>
+        <div class="dc-row">
+          <div class="dc-label">From</div>
+          <div class="dc-value">Cardiff Bay, Wales CF10 5AL</div>
+        </div>
+        <div class="dc-row">
+          <div class="dc-label">To</div>
+          <div class="dc-value">London, EC2A 4NE</div>
+        </div>
+        <div class="dc-row">
+          <div class="dc-label">Weight</div>
+          <div class="dc-value">2.4 kg</div>
+        </div>
+        <div class="dc-row">
+          <div class="dc-label">Dimensions</div>
+          <div class="dc-value">30 × 20 × 15 cm</div>
+        </div>
+        <div class="dc-row">
+          <div class="dc-label">Service</div>
+          <div class="dc-value">Express Delivery</div>
+        </div>
+        <div class="dc-row">
+          <div class="dc-label">Estimated</div>
+          <div class="dc-value">May 22, 2026</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="tracking-footer">
-    <div class="tracking-footer-left">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      <span>Unit 7, Wales International Hub, Cardiff Bay, Wales CF10 5AL, United Kingdom</span>
-    </div>
-    <div class="tracking-footer-right">
-      <div class="social-links">
-        <a href="https://twitter.com" class="social-link" aria-label="Twitter" target="_blank">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
-        </a>
-        <a href="https://linkedin.com" class="social-link" aria-label="LinkedIn" target="_blank">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-        </a>
-        <a href="https://facebook.com" class="social-link" aria-label="Facebook" target="_blank">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-        </a>
+  <!-- Quick Links (shown before search) -->
+  <div class="quick-links" id="quickLinks">
+    <button class="ql-btn" onclick="showToast('Request pickup — contact support')">
+      <div class="ql-icon red"><i data-lucide="truck"></i></div>
+      <div class="ql-text">
+        <div class="ql-title">Request Pickup</div>
+        <div class="ql-sub">Schedule a collection</div>
       </div>
-    </div>
-  </footer>
-</div>
-
-<!-- Proof of Delivery Modal (hidden by default, only shows when tracking is complete) -->
-<div class="modal-overlay" id="podModal" style="display: none; visibility: hidden; z-index: 1000;">
-  <div class="modal-box" style="width:480px;">
-    <div class="modal-header" style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px 0;">
-      <h2 class="modal-title" style="font-size:18px;font-weight:700;">Proof of Delivery</h2>
-      <button class="modal-close" onclick="closePodModal()" style="width:32px;height:32px;border-radius:50%;border:none;background:#F2F2F7;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#3C3C43;font-size:18px;">✕</button>
-    </div>
-    <div class="modal-body" style="padding:20px 24px;">
-      <div style="background:linear-gradient(135deg,rgba(52,199,89,0.1),rgba(0,122,255,0.1));border:1px solid var(--apple-separator);border-radius:var(--radius-xl);padding:20px;display:flex;align-items:center;gap:16px;margin-bottom:16px;">
-        <div style="width:64px;height:64px;border-radius:var(--radius-lg);background:var(--apple-green);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <div style="flex:1;">
-          <h3 style="font-size:var(--text-lg);font-weight:var(--font-bold);margin-bottom:4px;">Delivery Confirmed!</h3>
-          <p style="font-size:var(--text-sm);color:var(--apple-label-secondary);line-height:1.5;">Package successfully delivered to recipient at Cardiff Bay.</p>
-        </div>
+      <div class="ql-arrow"><i data-lucide="chevron-right"></i></div>
+    </button>
+    <a href="dashboard.html" class="ql-btn">
+      <div class="ql-icon blue"><i data-lucide="layout-dashboard"></i></div>
+      <div class="ql-text">
+        <div class="ql-title">Go to Dashboard</div>
+        <div class="ql-sub">Manage all your shipments</div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <div style="background:var(--apple-fill-tertiary);border-radius:var(--radius-lg);padding:12px;">
-          <div style="font-size:var(--text-xs);color:var(--apple-label-tertiary);margin-bottom:4px;">Delivered at</div>
-          <div style="font-size:var(--text-base);font-weight:600;">May 16, 2026</div>
-          <div style="font-size:var(--text-xs);color:var(--apple-label-secondary);">2:04 PM</div>
-        </div>
-        <div style="background:var(--apple-fill-tertiary);border-radius:var(--radius-lg);padding:12px;">
-          <div style="font-size:var(--text-xs);color:var(--apple-label-tertiary);margin-bottom:4px;">Received by</div>
-          <div style="font-size:var(--text-base);font-weight:600;">J. Williams</div>
-          <div style="font-size:var(--text-xs);color:var(--apple-label-secondary);">Signature captured</div>
-        </div>
+      <div class="ql-arrow"><i data-lucide="chevron-right"></i></div>
+    </a>
+    <button class="ql-btn" onclick="showToast('Shipping label — contact support')">
+      <div class="ql-icon green"><i data-lucide="printer"></i></div>
+      <div class="ql-text">
+        <div class="ql-title">Print Shipping Label</div>
+        <div class="ql-sub">Download label for your package</div>
       </div>
-    </div>
-    <div class="modal-footer" style="display:flex;gap:8px;justify-content:flex-end;padding:16px 24px 20px;">
-      <button class="modal-btn cancel" onclick="closePodModal()" style="padding:10px 20px;border-radius:10px;border:none;font-size:14px;font-weight:600;cursor:pointer;background:#F2F2F7;color:#3C3C43;font-family:var(--font-system);">Close</button>
-      <button class="modal-btn primary" onclick="AIRPAK.Toast.success('Downloading POD...')" style="padding:10px 20px;border-radius:10px;border:none;font-size:14px;font-weight:600;cursor:pointer;background:var(--apple-blue);color:#fff;font-family:var(--font-system);">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Download POD
-      </button>
-    </div>
+      <div class="ql-arrow"><i data-lucide="chevron-right"></i></div>
+    </button>
+    <button class="ql-btn" onclick="showToast('Contact support for help')">
+      <div class="ql-icon orange"><i data-lucide="headphones"></i></div>
+      <div class="ql-text">
+        <div class="ql-title">Get Help</div>
+        <div class="ql-sub">Contact support team</div>
+      </div>
+      <div class="ql-arrow"><i data-lucide="chevron-right"></i></div>
+    </button>
   </div>
-</div>
 
+</main>
+
+<!-- iOS Glass Bottom Tab Bar -->
+<nav class="bottom-nav">
+  <a href="dashboard.html" class="bottom-nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>Home</span>
+  </a>
+  <a href="tracking.html" class="bottom-nav-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="10" x="5" y="2" rx="2"/><path d="M6 18h2"/><path d="M10 18h1"/><path d="M12 18h4"/><circle cx="12" cy="18" r="2"/></svg>
+    <span>Track</span>
+  </a>
+  <a href="payment.html" class="bottom-nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+    <span>Pay</span>
+  </a>
+  <a href="messages.html" class="bottom-nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span>Chat</span>
+  </a>
+  <a href="settings.html" class="bottom-nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <span>Settings</span>
+  </a>
+</nav>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Leaflet Map JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
-<script src="js/main.js"></script>
-<script>
-  // ===== DEPOT DATA =====
-  const depots = [
-    { name: 'Cardiff Hub', lat: 51.4658, lng: -3.1777, address: 'Unit 7, Wales International Hub, Cardiff Bay, Wales CF10 5AL', type: 'Regional Hub' },
-    { name: 'London Central', lat: 51.5074, lng: -0.1278, address: '142 Euston Road, London NW1 2AJ', type: 'Main Distribution' },
-    { name: 'Manchester Depot', lat: 53.4808, lng: -2.2426, address: 'Unit 4, Manchester Business Park, M32 0RP', type: 'Regional Hub' },
-    { name: 'Birmingham Hub', lat: 52.4862, lng: -1.8904, address: 'Birmingham International Logistics Park, B40 1NT', type: 'Sorting Center' },
-    { name: 'Edinburgh Depot', lat: 55.9533, lng: -3.1883, address: 'Leith Walk Distribution Center, Edinburgh EH6 6NH', type: 'Regional Hub' }
-  ];
 
-  // ===== TRACKING DATA =====
-  const trackingData = {
-    'APK-GB-2847391': {
-      id: 'APK-GB-2847391',
-      status: 'in-transit',
-      from: { city: 'London', lat: 51.5074, lng: -0.1278 },
-      to: { city: 'Edinburgh', lat: 55.9533, lng: -3.1883 },
-      current: { city: 'Cardiff Bay', lat: 51.4658, lng: -3.1777 },
-      weight: '2.5 kg',
-      dimensions: '30×20×15 cm',
-      service: 'Express',
-      eta: 'Tomorrow, 2:00 PM',
-      progress: 3,
-      events: [
-        { time: 'Today, 10:42 AM', title: 'Package in transit - Cardiff Bay area', desc: 'Moving through distribution center' },
-        { time: 'Today, 8:15 AM', title: 'Departed Birmingham Hub', desc: 'Package left sorting facility' },
-        { time: 'Yesterday, 6:30 PM', title: 'Arrived at Birmingham Hub', desc: 'Received at regional distribution center' },
-        { time: 'Yesterday, 2:00 PM', title: 'Picked up from sender', desc: 'Package collected from London address' }
-      ]
+<script>
+var map = null;
+var marker = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Init Lucide icons
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+
+  // Init map
+  if (typeof L !== 'undefined') {
+    map = L.map('map').setView([51.48, -3.17], 7);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // Route line
+    var route = L.polyline([
+      [51.48, -3.17], // Cardiff
+      [51.50, -3.22],
+      [51.75, -2.0],
+      [52.0, -1.0],
+      [52.2, -0.5],
+      [51.52, -0.12] // London
+    ], {color: '#CD2727', weight: 3, opacity: 0.8}).addTo(map);
+
+    // Markers
+    L.circleMarker([51.48, -3.17], {radius: 8, fillColor: '#CD2727', color: '#fff', weight: 2}).addTo(map).bindPopup('Cardiff Hub');
+    L.circleMarker([51.52, -0.12], {radius: 8, fillColor: '#34C759', color: '#fff', weight: 2}).addTo(map).bindPopup('London');
+
+    // Fit bounds
+    map.fitBounds(route.getBounds(), {padding: [20,20]});
+  }
+
+  // Sidebar toggle
+  window.toggleSidebar = function() {
+    var sidebar = document.getElementById('mobileSidebar');
+    var overlay = document.getElementById('mobileOverlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
+    document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+  };
+
+  document.getElementById('mobileOverlay').addEventListener('click', toggleSidebar);
+
+  // Track function
+  window.doTrack = function() {
+    var input = document.getElementById('trackingInput');
+    var val = input.value.trim();
+    if (!val) {
+      showToast('Enter a tracking number');
+      input.focus();
+      return;
+    }
+    // Show result
+    document.getElementById('trackResult').classList.add('show');
+    document.getElementById('quickLinks').style.display = 'none';
+    document.getElementById('awbValue').textContent = val.toUpperCase();
+    showToast('Tracking: ' + val);
+    lucide.createIcons();
+  };
+
+  // Copy AWB
+  window.copyAwb = function() {
+    var awb = document.getElementById('awbValue').textContent;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(awb).then(function() {
+        showToast('AWB copied: ' + awb);
+      });
+    } else {
+      showToast('AWB: ' + awb);
     }
   };
 
-  // ===== MAP INITIALIZATION =====
-  let map;
-  let animatedTruck;
+  // Toast
+  window.showToast = function(msg) {
+    var t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('toast-show');
+    setTimeout(function() { t.classList.remove('toast-show'); }, 3000);
+  };
 
-  function initMap() {
-    const theme = document.documentElement.getAttribute('data-theme') || 'light';
-    const tileUrl = theme === 'dark'
-      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
-
-    map = L.map('trackingMap', {
-      center: [52.5, -2.0],
-      zoom: 6,
-      zoomControl: false
-    });
-
-    L.tileLayer(tileUrl, {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: 'abcd',
-      maxZoom: 19
-    }).addTo(map);
-
-    // Add zoom control to top right
-    L.control.zoom({ position: 'topright' }).addTo(map);
-
-    // Add depot markers
-    depots.forEach(depot => {
-      const icon = createDepotIcon(depot.type);
-      const marker = L.marker([depot.lat, depot.lng], { icon })
-        .addTo(map)
-        .bindPopup(createPopupContent(depot));
-
-      marker.on('mouseover', function() { this.openPopup(); });
-    });
-
-    // Draw route lines
-    drawRoutes();
-  }
-
-  function createDepotIcon(type) {
-    const colors = {
-      'Regional Hub': '#007AFF',
-      'Main Distribution': '#34C759',
-      'Sorting Center': '#FF9500',
-      'Regional': '#AF52DE'
-    };
-    const color = colors[type] || '#007AFF';
-
-    return L.divIcon({
-      className: 'custom-marker',
-      html: `
-        <div style="
-          width: 36px;
-          height: 36px;
-          background: ${color};
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-          border: 3px solid white;
-        ">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
-            <rect x="1" y="3" width="15" height="13"/>
-            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
-            <circle cx="5.5" cy="18.5" r="2.5"/>
-            <circle cx="18.5" cy="18.5" r="2.5"/>
-          </svg>
-        </div>
-      `,
-      iconSize: [36, 36],
-      iconAnchor: [18, 18],
-      popupAnchor: [0, -18]
-    });
-  }
-
-  function createPopupContent(depot) {
-    return `
-      <div class="depot-popup">
-        <div class="depot-popup-name">${depot.name}</div>
-        <div class="depot-popup-address">${depot.address}</div>
-        <span class="depot-popup-type">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
-          ${depot.type}
-        </span>
-      </div>
-    `;
-  }
-
-  function drawRoutes() {
-    // London to Cardiff
-    const route1 = [
-      [51.5074, -0.1278],
-      [52.4862, -1.8904],
-      [51.4658, -3.1777]
-    ];
-
-    // Cardiff to Edinburgh
-    const route2 = [
-      [51.4658, -3.1777],
-      [53.4808, -2.2426],
-      [55.9533, -3.1883]
-    ];
-
-    const routeStyle = {
-      color: '#007AFF',
-      weight: 3,
-      opacity: 0.7,
-      dashArray: '10, 6'
-    };
-
-    L.polyline(route1, routeStyle).addTo(map);
-    L.polyline(route2, { ...routeStyle, color: '#34C759' }).addTo(map);
-
-    // Animate truck along route
-    animateTruck(route1);
-  }
-
-  function animateTruck(route) {
-    let index = 0;
-    const truckIcon = L.divIcon({
-      className: 'truck-marker',
-      html: `
-        <div style="
-          width: 32px;
-          height: 32px;
-          background: #007AFF;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 0 20px rgba(0,122,255,0.6);
-          animation: truckPulse 1.5s infinite;
-        ">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
-            <rect x="1" y="3" width="15" height="13"/>
-            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
-            <circle cx="5.5" cy="18.5" r="2.5"/>
-            <circle cx="18.5" cy="18.5" r="2.5"/>
-          </svg>
-        </div>
-        <style>
-          @keyframes truckPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0,122,255,0.6); }
-            50% { transform: scale(1.1); box-shadow: 0 0 30px rgba(0,122,255,0.8); }
-          }
-        </style>
-      `,
-      iconSize: [32, 32],
-      iconAnchor: [16, 16]
-    });
-
-    animatedTruck = L.marker(route[0], { icon: truckIcon }).addTo(map);
-
-    function moveTruck() {
-      if (index < route.length - 1) {
-        index++;
-        const target = route[index];
-        animatedTruck.setLatLng(target);
-        setTimeout(moveTruck, 2000);
-      } else {
-        index = 0;
-        setTimeout(moveTruck, 1000);
-      }
-    }
-
-    setTimeout(moveTruck, 1500);
-  }
-
-  // ===== THEME HANDLING =====
-  function updateMapTheme() {
-    if (!map) return;
-    const theme = document.documentElement.getAttribute('data-theme') || 'light';
-    const tileUrl = theme === 'dark'
-      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
-
-    map.eachLayer(layer => {
-      if (layer._url && layer._url.includes('cartocdn.com')) {
-        layer.setUrl(tileUrl);
-      }
-    });
-  }
-
-  // ===== LANGUAGE SWITCHER =====
-  function toggleLangDropdown(el) {
-    el.setAttribute('aria-expanded', el.getAttribute('aria-expanded') === 'true' ? 'false' : 'true');
-    document.getElementById('langDropdown').classList.toggle('open');
-  }
-
-  function switchLang(lang, el) {
-    document.querySelectorAll('.lang-option').forEach(opt => opt.classList.remove('active'));
-    el.classList.add('active');
-    document.querySelector('.lang-pill .flag').textContent = lang.toUpperCase();
-    i18n.setLang(lang);
-    document.getElementById('langDropdown').classList.remove('open');
-    document.querySelector('.lang-pill').setAttribute('aria-expanded', 'false');
-    AIRPAK.Toast.success(`Language changed to ${CONFIG.languages[lang].label}`);
-  }
-
-  // ===== TRACKING =====
-  function performTracking() {
-    const input = document.getElementById('trackingInput');
-    const value = input.value.trim().toUpperCase();
-
-    if (!value) {
-      AIRPAK.Toast.warning('Please enter a tracking number');
-      return;
-    }
-
-    AIRPAK.Toast.info(`Tracking ${value}...`);
-
-    setTimeout(() => {
-      if (trackingData[value]) {
-        AIRPAK.Toast.success('Package found!');
-        updateTrackingDisplay(trackingData[value]);
-      } else {
-        AIRPAK.Toast.error('Package not found. Please check the tracking number.');
-      }
-    }, 1000);
-  }
-
-  function updateTrackingDisplay(data) {
-    // Fly to current location
-    if (map) {
-      map.flyTo([data.current.lat, data.current.lng], 8, { duration: 1.5 });
-    }
-  }
-
-  // ===== PROOF OF DELIVERY =====
-  function showProofOfDelivery() {
-    const modal = document.getElementById('podModal');
-    modal.style.display = 'flex';
-    modal.style.visibility = 'visible';
-  }
-
-  function closePodModal() {
-    const modal = document.getElementById('podModal');
-    modal.style.display = 'none';
-    modal.style.visibility = 'hidden';
-  }
-
-  // ===== EVENT LISTENERS =====
-  document.getElementById('trackingInput').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') performTracking();
+  // Enter key on search
+  document.getElementById('trackingInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') doTrack();
   });
-
-  // Close lang dropdown on outside click
-  document.addEventListener('click', (e) => {
-    const dropdown = document.getElementById('langDropdown');
-    const pill = document.querySelector('.lang-pill');
-    if (dropdown && !dropdown.contains(e.target) && !pill.contains(e.target)) {
-      dropdown.classList.remove('open');
-      pill.setAttribute('aria-expanded', 'false');
-    }
-  });
-
-  // Modal close on overlay click
-  const podModal = document.getElementById('podModal');
-  if (podModal) {
-    podModal.addEventListener('click', (e) => {
-      if (e.target === podModal) closePodModal();
-    });
-  }
-
-  // ===== INITIALIZE =====
-  document.addEventListener('DOMContentLoaded', () => {
-    lucide.createIcons();
-
-    // Init map after a brief delay to ensure DOM is ready
-    setTimeout(() => {
-      initMap();
-    }, 100);
-
-    // Update map theme on theme change
-    const observer = new MutationObserver(() => {
-      updateMapTheme();
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-  });
+});
 </script>
-  <script src="/apps/airpak/js/ap-lang.js" defer></script>
+
+<!-- Preloader -->
+<div class="ap-preloader" id="apPreloader">
+  <svg class="ap-preloader-logo" viewBox="0 0 80 80" fill="none">
+    <rect width="80" height="80" rx="16" fill="rgba(255,255,255,.15)"/>
+    <path d="M20 40h40M40 20v40" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="40" cy="40" r="12" fill="none" stroke="white" stroke-width="3"/>
+  </svg>
+  <div class="ap-preloader-title">Airpak Express</div>
+  <div class="ap-preloader-sub" id="apPreloaderGreeting">Loading your experience...</div>
+  <div class="ap-preloader-bar-wrap"><div class="ap-preloader-bar"></div></div>
+  <div class="ap-preloader-dots">
+    <div class="ap-preloader-dot"></div>
+    <div class="ap-preloader-dot"></div>
+    <div class="ap-preloader-dot"></div>
+  </div>
+</div>
+
 <script>
+// Preloader with dynamic greeting
 (function(){
-  // Platform detection — auto-understands device
-  var ua = navigator.userAgent.toLowerCase();
-  var os = 'desktop';
-  if (/iphone|ipad|ipod/.test(ua)) os = 'ios';
-  else if (/android/.test(ua)) os = 'android';
-  var w = window.innerWidth;
-  if (w < 480) os += '-phone';
-  else if (w < 768) os += '-tablet';
-  else if (w >= 1024) os += '-desktop';
-  var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  document.body.className = [os, isDark ? 'dark' : 'light', 'loaded'].join(' ');
-  // Prevent iOS Safari text inflation
-  document.documentElement.style.setProperty('--text-base', '16px');
+  var h = new Date().getHours();
+  var greeting = 'Good morning';
+  if (h >= 12 && h < 17) greeting = 'Good afternoon';
+  else if (h >= 17 && h < 21) greeting = 'Good evening';
+  else if (h >= 21) greeting = 'Good night';
+  var el = document.getElementById('apPreloaderGreeting');
+  if (el) el.textContent = greeting + ' — preparing your experience...';
+  
+  // Hide preloader once page is fully loaded
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      var pl = document.getElementById('apPreloader');
+      if (pl) pl.classList.add('hidden');
+      setTimeout(function(){ if(pl) pl.style.display='none'; }, 700);
+    }, 1200);
+  });
 })();
 </script>
+
+
+<!-- PWA Registration -->
+<script>
+(function(){
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').then(function(reg) {
+        console.log('[PWA] SW registered:', reg.scope);
+      }).catch(function(err) {
+        console.warn('[PWA] SW registration failed:', err);
+      });
+    });
+  }
+
+  // Install prompt
+  var installPrompt = null;
+  var installBtn = null;
+  
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    installPrompt = e;
+    window.showInstallPrompt && window.showInstallPrompt();
+    
+    // Auto-show after 5 seconds
+    setTimeout(function() {
+      if (installPrompt && !localStorage.getItem('ap_pwa_installed')) {
+        var banner = document.createElement('div');
+        banner.id = 'pwa-install-banner';
+        banner.innerHTML = '<div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#CD2727,#9b1a1a);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;z-index:99999;box-shadow:0 -4px 20px rgba(0,0,0,.3)"><div style="flex:1"><div style="font-family:Sarabun,sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:2px">Install Airpak Express App</div><div style="font-size:12px;color:rgba(255,255,255,.7)">Get the full app experience — works offline!</div></div><button id="pwa-install-btn" style="background:#fff;color:#CD2727;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;margin-left:12px;flex-shrink:0">Install</button><button onclick="this.parentElement.style.display='none'" style="background:transparent;border:none;color:rgba(255,255,255,.7);font-size:20px;cursor:pointer;padding:4px 8px;margin-left:4px">×</button></div>';
+        document.body.appendChild(banner);
+        
+        document.getElementById('pwa-install-btn').addEventListener('click', function() {
+          installPrompt.prompt();
+          installPrompt.userChoice.then(function(result) {
+            if (result.outcome === 'accepted') {
+              localStorage.setItem('ap_pwa_installed', '1');
+            }
+            installPrompt = null;
+            banner.style.display = 'none';
+          });
+        });
+      }
+    }, 5000);
+  });
+
+  window.addEventListener('appinstalled', function() {
+    installPrompt = null;
+    localStorage.setItem('ap_pwa_installed', '1');
+    console.log('[PWA] App installed!');
+    // Show toast
+    var toast = document.createElement('div');
+    toast.textContent = 'Airpak Express installed successfully!';
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1C1C1E;color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:500;z-index:99999;box-shadow:0 8px 32px rgba(0,0,0,.3)';
+    document.body.appendChild(toast);
+    setTimeout(function(){ toast.style.display='none'; }, 4000);
+  });
+
+  // Push notification subscription
+  if ('Notification' in window && navigator.serviceWorker) {
+    window.subscribePush = function() {
+      Notification.requestPermission().then(function(perm) {
+        if (perm === 'granted') {
+          navigator.serviceWorker.ready.then(function(reg) {
+            reg.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: 'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3M8NrXYu1Vwvfrwcsjk0s'
+            }).then(function(sub) {
+              console.log('[PWA] Push subscribed:', sub.endpoint);
+              localStorage.setItem('ap_push_sub', JSON.stringify(sub));
+            });
+          });
+        }
+      });
+    };
+    
+    // Auto-prompt after 10s if not subscribed
+    setTimeout(function() {
+      if (Notification.permission === 'default' && !localStorage.getItem('ap_push_sub')) {
+        window.subscribePush && window.subscribePush();
+      }
+    }, 10000);
+  }
+
+  // Check online/offline status
+  window.addEventListener('online', function() {
+    document.body.classList.remove('offline-mode');
+    console.log('[PWA] Back online');
+  });
+  window.addEventListener('offline', function() {
+    document.body.classList.add('offline-mode');
+    console.log('[PWA] Offline mode');
+  });
+
+  // Version check
+  window.apVersion = '1.0.0';
+})();
+</script>
+<script>
+window.addEventListener('load', function() {
+  if (typeof AirpakPWA !== 'undefined') {
+    AirpakPWA.init();
+  } else {
+    var s = document.createElement('script');
+    s.src = '/pwa-features.js';
+    document.head.appendChild(s);
+  }
+});
+</script>
+
 </body>
 </html>

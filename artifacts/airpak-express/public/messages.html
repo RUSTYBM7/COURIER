@@ -4,444 +4,599 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#f6f6f6">
-<title>Support — Airpak Express</title>
-<link rel="icon" href="/apps/airpak/img/logosmall.png">
-<link rel="stylesheet" href="/css/apple-tokens.css">
-<link rel="stylesheet" href="/css/glass-system.css">
-<link rel="stylesheet" href="/apps/airpak/css/ap-lang.css">
+<meta name="theme-color" content="#CD2727">
+<title>Messages — Airpak Express</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23CD2727'/%3E%3Cpath d='M8 16h16M16 8v16' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="/sw-advanced.js" defer></script>
 <style>
-  :root{
-    --imsg-bg:#ffffff;
-    --imsg-bg-grouped:#f2f2f7;
-    --imsg-header-bg:rgba(248,248,248,.86);
-    --imsg-header-border:rgba(0,0,0,.12);
-    --imsg-text:#000;
-    --imsg-text-sec:#8e8e93;
-    --imsg-blue:#007aff;
-    --imsg-blue-grad:linear-gradient(180deg,#1ea1ff 0%,#0a84ff 100%);
-    --imsg-grey-bubble:#e9e9eb;
-    --imsg-grey-text:#000;
-    --imsg-tail:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M0 0 C5 10 15 14 20 14 L20 20 L0 20 Z'/></svg>");
-  }
-  @media(prefers-color-scheme:dark){
-    :root{
-      --imsg-bg:#000;
-      --imsg-bg-grouped:#000;
-      --imsg-header-bg:rgba(28,28,30,.84);
-      --imsg-header-border:rgba(255,255,255,.12);
-      --imsg-text:#fff;
-      --imsg-text-sec:#8e8e93;
-      --imsg-grey-bubble:#26252a;
-      --imsg-grey-text:#fff;
-    }
-  }
-  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  html,body{ height:100%; margin:0; }
-  body{
-    font:-apple-system-body, system-ui, -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif;
-    color:var(--imsg-text); background:var(--imsg-bg);
-    overflow:hidden;
-    font-feature-settings:"kern" 1, "liga" 1;
-    -webkit-font-smoothing:antialiased;
-    text-rendering:optimizeLegibility;
-  }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#CD2727;--red-d:#9b1a1a;--red-l:#ff6b6b;
+  --apple-label:#1C1C1E;--apple-label-secondary:#636366;--apple-label-tertiary:#8E8E93;
+  --apple-bg:#FFFFFF;--apple-bg-secondary:#F2F2F7;
+  --apple-separator:rgba(60,60,67,.12);--apple-fill:rgba(120,120,128,.12);
+  --apple-blue:#007AFF;--apple-green:#34C759;--apple-orange:#FF9500;
+  --nav-height:60px;--radius:12px;--radius-lg:16px;
+  --font-main:-apple-system,BlinkMacSystemFont,'SF Pro Text','Inter',sans-serif;
+}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{font-family:var(--font-main);background:var(--apple-bg-secondary);color:var(--apple-label);min-height:100vh;overflow-x:hidden}
 
-  /* app shell */
-  .imsg{
-    display:flex; flex-direction:column;
-    height:100dvh; width:100%; max-width:100%;
-    background:var(--imsg-bg);
-    position:relative;
-  }
+/* === TOP NAV === */
+.top-nav{position:fixed;top:0;left:0;right:0;height:var(--nav-height);background:rgba(255,255,255,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--apple-separator);z-index:500;display:flex;align-items:center;padding:0 16px;gap:12px}
+.nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--apple-label);font-weight:700;font-size:18px;flex-shrink:0}
+.nav-brand svg{width:32px;height:32px}
+.nav-title{font-size:17px;font-weight:700;color:var(--apple-label)}
+.nav-spacer{flex:1}
+.nav-btn{width:36px;height:36px;border-radius:50%;background:var(--apple-fill);border:none;display:flex;align-items:center;justify-content:center;color:var(--apple-label);cursor:pointer;transition:all .15s}
+.menu-btn{display:none}
 
-  /* === HEADER === */
-  .imsg-header{
-    position:sticky; top:0; z-index:10;
-    background:var(--imsg-header-bg);
-    backdrop-filter:saturate(180%) blur(20px);
-    -webkit-backdrop-filter:saturate(180%) blur(20px);
-    border-bottom:.5px solid var(--imsg-header-border);
-    padding:8px 12px calc(8px + env(safe-area-inset-top)) 12px;
-    padding-top:calc(8px + env(safe-area-inset-top));
-    display:grid;
-    grid-template-columns:60px 1fr 60px;
-    align-items:center;
-    min-height:54px;
-  }
-  .imsg-back{
-    background:transparent; border:0; cursor:pointer;
-    color:var(--imsg-blue); font:600 17px/1.2 -apple-system,system-ui,sans-serif;
-    display:inline-flex; align-items:center; gap:2px; padding:6px 4px;
-  }
-  .imsg-back svg{ width:12px; height:21px; }
-  .imsg-header-center{
-    display:flex; flex-direction:column; align-items:center; gap:2px;
-    user-select:none;
-  }
-  .imsg-avatar{
-    width:34px; height:34px; border-radius:50%;
-    background:var(--imsg-blue-grad);
-    display:flex; align-items:center; justify-content:center;
-    color:#fff; font:700 14px/1 -apple-system,system-ui,sans-serif;
-    box-shadow:0 1px 2px rgba(0,0,0,.15);
-    overflow:hidden;
-  }
-  .imsg-avatar img{ width:100%; height:100%; object-fit:cover; }
-  .imsg-name{ font:600 11px/1.1 -apple-system,system-ui,sans-serif; color:var(--imsg-text); margin-top:2px; }
-  .imsg-name .chev{ color:var(--imsg-text-sec); font-size:9px; margin-left:1px; }
-  .imsg-actions{ display:flex; justify-content:flex-end; gap:14px; padding-right:6px; }
-  .imsg-actions button{
-    background:transparent; border:0; cursor:pointer; padding:4px;
-    color:var(--imsg-blue);
-  }
-  .imsg-actions svg{ width:24px; height:24px; }
+/* === MOBILE SIDEBAR === */
+.mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:599;opacity:0;pointer-events:none;transition:opacity .3s}
+.mobile-overlay.active{opacity:1;pointer-events:auto}
+.mobile-sidebar{position:fixed;top:0;left:0;bottom:0;width:300px;background:var(--apple-bg);z-index:600;transform:translateX(-100%);transition:transform .3s ease;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.15)}
+.mobile-sidebar.open{transform:translateX(0)}
+.ms-header{padding:16px 20px;border-bottom:1px solid var(--apple-separator);display:flex;align-items:center;gap:12px}
+.ms-user-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--red-l));display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:800;flex-shrink:0}
+.ms-user-name{font-size:15px;font-weight:700;color:var(--apple-label)}
+.ms-user-email{font-size:12px;color:var(--apple-label-secondary)}
+.ms-section{padding:12px 0}
+.ms-section-label{font-size:11px;font-weight:700;color:var(--apple-label-secondary);text-transform:uppercase;letter-spacing:.5px;padding:0 20px 6px}
+.ms-item{display:flex;align-items:center;gap:12px;padding:12px 20px;color:var(--apple-label);text-decoration:none;font-size:15px;font-weight:500;transition:all .15s;cursor:pointer;border:none;background:none;width:100%;text-align:left}
+.ms-item:hover{background:var(--apple-bg-secondary)}
+.ms-item.active{background:rgba(205,39,39,.08);color:var(--red);font-weight:700}
+.ms-item i,.ms-item svg{width:20px;height:20px;flex-shrink:0;color:var(--apple-label-secondary)}
+.ms-item.active i,.ms-item.active svg{color:var(--red)}
+.ms-item span{flex:1}
+.ms-sep{height:1px;background:var(--apple-separator);margin:8px 20px}
+.ms-signout{color:#FF3B30!important}
 
-  /* === MESSAGES SCROLL === */
-  .imsg-scroll{
-    flex:1; overflow-y:auto;
-    padding:12px 12px 8px 12px;
-    -webkit-overflow-scrolling:touch;
-    scroll-behavior:smooth;
-  }
-  .imsg-day{
-    text-align:center; color:var(--imsg-text-sec);
-    font:600 11px/1.4 -apple-system,system-ui,sans-serif;
-    margin:8px 0 14px;
-  }
-  .imsg-day .imsg-day-time{ font-weight:400; margin-left:6px; }
+/* === MAIN LAYOUT === */
+.main-content{padding-top:var(--nav-height);display:flex;height:100vh;overflow:hidden;padding-bottom:calc(80px + env(safe-area-inset-bottom, 16px))}
 
-  .imsg-row{ display:flex; margin:1px 0; }
-  .imsg-row.in{ justify-content:flex-start; }
-  .imsg-row.out{ justify-content:flex-end; }
+/* === CONVERSATION LIST === */
+.conv-list{width:300px;flex-shrink:0;border-right:1px solid var(--apple-separator);overflow-y:auto;background:var(--apple-bg)}
+.conv-list-header{padding:16px 16px 12px;border-bottom:1px solid var(--apple-separator);position:sticky;top:0;background:var(--apple-bg);z-index:10}
+.cl-title{font-size:28px;font-weight:700;color:var(--apple-label)}
+.conv-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--apple-separator);cursor:pointer;transition:background .15s}
+.conv-item:hover{background:var(--apple-bg-secondary)}
+.conv-item:active{background:var(--apple-fill)}
+.conv-item.active{background:rgba(205,39,39,.06)}
+.ci-avatar{width:44px;height:44px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff}
+.ci-info{flex:1;min-width:0}
+.ci-name{font-size:15px;font-weight:600;color:var(--apple-label);margin-bottom:2px}
+.ci-preview{font-size:13px;color:var(--apple-label-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci-meta{text-align:right;flex-shrink:0}
+.ci-time{font-size:11px;color:var(--apple-label-tertiary)}
+.ci-badge{width:20px;height:20px;border-radius:50%;background:var(--red);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:4px}
 
-  .imsg-bubble{
-    position:relative;
-    max-width:75%;
-    padding:8px 13px 9px;
-    border-radius:18px;
-    font:400 17px/1.32 -apple-system,system-ui,"SF Pro Text",sans-serif;
-    word-wrap:break-word; white-space:pre-wrap;
-    box-shadow:0 1px 0 rgba(0,0,0,.02);
-    letter-spacing:-.01em;
-    animation:imsgPop .26s cubic-bezier(.2,.9,.3,1.2);
-    transform-origin:bottom center;
-  }
-  @keyframes imsgPop{
-    0%  { transform:scale(.5) translateY(8px); opacity:0; }
-    60% { transform:scale(1.03) translateY(0); opacity:1; }
-    100%{ transform:scale(1) translateY(0); }
-  }
-  .imsg-row.in  .imsg-bubble{ background:var(--imsg-grey-bubble); color:var(--imsg-grey-text); border-bottom-left-radius:6px; }
-  .imsg-row.out .imsg-bubble{ background:var(--imsg-blue-grad); color:#fff; border-bottom-right-radius:6px; }
+/* === CHAT AREA === */
+.chat-area{flex:1;display:flex;flex-direction:column;background:var(--apple-bg)}
+.chat-header{padding:16px 20px;border-bottom:1px solid var(--apple-separator);display:flex;align-items:center;gap:12px}
+.ch-avatar{width:44px;height:44px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff}
+.ch-info{flex:1}
+.ch-name{font-size:16px;font-weight:700;color:var(--apple-label)}
+.ch-status{font-size:12px;color:var(--apple-green);display:flex;align-items:center;gap:4px}
+.ch-status::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--apple-green)}
+.chat-messages{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.msg{border-radius:var(--radius-lg);padding:10px 14px;max-width:75%;font-size:15px;line-height:1.4;position:relative}
+.msg.received{background:var(--apple-bg-secondary);align-self:flex-start;border-bottom-left-radius:4px}
+.msg.sent{background:var(--red);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.msg-time{font-size:10px;opacity:.5;margin-top:4px;text-align:right}
+.msg-status{font-size:10px;opacity:.5;margin-top:2px;text-align:right}
+.msg-status.read{color:rgba(255,255,255,.5)}
 
-  /* The classic iMessage tails */
-  .imsg-bubble.tail::after{
-    content:""; position:absolute; bottom:-1px; width:20px; height:20px;
-    background-repeat:no-repeat;
-    -webkit-mask-image:var(--imsg-tail); mask-image:var(--imsg-tail);
-    -webkit-mask-size:contain; mask-size:contain;
-  }
-  .imsg-row.in  .imsg-bubble.tail::after{ left:-6px;  background-color:var(--imsg-grey-bubble); transform:scaleX(1); }
-  .imsg-row.out .imsg-bubble.tail::after{ right:-6px; background-color:#0a84ff; transform:scaleX(-1); }
+/* === INPUT AREA === */
+.chat-input-wrap{padding:12px 16px;border-top:1px solid var(--apple-separator);display:flex;align-items:flex-end;gap:10px;background:var(--apple-bg)}
+.ciw-field{flex:1;background:var(--apple-bg-secondary);border-radius:20px;border:1px solid var(--apple-separator);padding:8px 14px;display:flex;align-items:flex-end;max-height:120px;overflow:hidden}
+.ciw-field textarea{flex:1;resize:none;border:0;outline:0;background:transparent;font-size:16px;font-family:var(--font-main);color:var(--apple-label);line-height:1.4;max-height:100px;width:100%}
+.ciw-field textarea::placeholder{color:var(--apple-label-tertiary)}
+.send-btn{width:36px;height:36px;border-radius:50%;background:var(--red);border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s}
+.send-btn:hover{transform:scale(1.05)}
+.send-btn:active{transform:scale(.95)}
+.send-btn svg,.send-btn i{width:18px;height:18px}
 
-  /* grouped consecutive */
-  .imsg-row + .imsg-row.same{ margin-top:2px; }
-  .imsg-row.same .imsg-bubble{ border-bottom-left-radius:18px; border-bottom-right-radius:18px; }
-  .imsg-row.same.in .imsg-bubble{ border-top-left-radius:6px; }
-  .imsg-row.same.out .imsg-bubble{ border-top-right-radius:6px; }
+/* === TOAST === */
+#toast{position:fixed;bottom:calc(80px + env(safe-area-inset-bottom, 16px));left:50%;transform:translateX(-50%) translateY(80px);background:#1C1C1E;color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:500;z-index:9999;transition:transform .3s;box-shadow:0 8px 32px rgba(0,0,0,.3);max-width:calc(100vw - 40px);text-align:center;pointer-events:none}
+.toast-show{transform:translateX(-50%) translateY(0)!important}
 
-  /* delivered / read receipts */
-  .imsg-meta{
-    text-align:right; color:var(--imsg-text-sec);
-    font:400 11px/1.2 -apple-system,system-ui,sans-serif;
-    margin:2px 4px 6px 0;
-  }
+/* === EMPTY STATE === */
+.chat-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--apple-label-secondary);padding:40px}
+.ce-icon{width:64px;height:64px;margin-bottom:16px;opacity:.4}
+.ce-title{font-size:18px;font-weight:700;color:var(--apple-label);margin-bottom:4px}
+.ce-desc{font-size:14px;text-align:center}
 
-  /* typing dots */
-  .imsg-typing-row{ display:flex; justify-content:flex-start; margin:4px 0; }
-  .imsg-typing{
-    background:var(--imsg-grey-bubble);
-    padding:11px 14px;
-    border-radius:18px; border-bottom-left-radius:6px;
-    display:flex; gap:4px; align-items:center;
-  }
-  .imsg-typing span{ width:7px; height:7px; border-radius:50%; background:#a0a0a8; opacity:.6; animation:imsgDots 1.3s infinite ease-in-out; }
-  .imsg-typing span:nth-child(2){ animation-delay:.16s; }
-  .imsg-typing span:nth-child(3){ animation-delay:.32s; }
-  @keyframes imsgDots{ 0%,80%,100%{ transform:scale(.7); opacity:.4;} 40%{ transform:scale(1); opacity:1;} }
+/* === RESPONSIVE === */
+@media(max-width:767px){
+  .menu-btn{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--apple-fill);border:none;color:var(--apple-label);cursor:pointer}
+  .nav-title{display:none}
+  .main-content{flex-direction:column;height:auto;overflow:visible}
+  .conv-list{width:100%;border-right:none;border-bottom:1px solid var(--apple-separator);max-height:50vh;overflow-y:auto}
+  .chat-area{flex:none;min-height:60vh}
+  .msg{max-width:88%}
+}
 
-  /* === INPUT BAR === */
-  .imsg-input-wrap{
-    flex-shrink:0;
-    background:var(--imsg-header-bg);
-    backdrop-filter:saturate(180%) blur(20px);
-    -webkit-backdrop-filter:saturate(180%) blur(20px);
-    border-top:.5px solid var(--imsg-header-border);
-    padding:7px 8px calc(7px + env(safe-area-inset-bottom)) 8px;
-  }
-  .imsg-input{
-    display:flex; align-items:flex-end; gap:8px;
-  }
-  .imsg-plus{
-    width:32px; height:32px; flex:0 0 32px;
-    border:0; background:transparent;
-    color:var(--imsg-blue);
-    cursor:pointer; padding:0;
-    display:flex; align-items:center; justify-content:center;
-  }
-  .imsg-plus svg{ width:30px; height:30px; }
-  .imsg-field{
-    flex:1; position:relative;
-    background:var(--imsg-bg);
-    border:.5px solid var(--imsg-header-border);
-    border-radius:18px;
-    min-height:34px;
-    display:flex; align-items:center;
-  }
-  .imsg-field textarea{
-    flex:1; resize:none; border:0; outline:0; background:transparent;
-    padding:7px 38px 7px 12px;
-    font:400 17px/1.3 -apple-system,system-ui,"SF Pro Text",sans-serif;
-    color:var(--imsg-text);
-    max-height:120px; overflow-y:auto;
-    width:100%;
-  }
-  .imsg-field textarea::placeholder{ color:var(--imsg-text-sec); }
-  .imsg-send{
-    position:absolute; right:3px; bottom:3px;
-    width:28px; height:28px; border-radius:50%;
-    background:var(--imsg-blue-grad);
-    border:0; cursor:pointer; color:#fff;
-    display:flex; align-items:center; justify-content:center;
-    transform:scale(1); transition:transform .15s, opacity .15s;
-  }
-  .imsg-send:disabled{ opacity:0; transform:scale(.5); pointer-events:none; }
-  .imsg-send svg{ width:18px; height:18px; }
+i[data-lucide]{width:18px;height:18px;display:block}
 
-  /* quick reply chips that surface on empty conversations */
-  .imsg-suggest{
-    display:flex; flex-wrap:wrap; gap:6px; padding:6px 12px 10px;
-    justify-content:center;
-  }
-  .imsg-suggest button{
-    background:var(--imsg-grey-bubble);
-    color:var(--imsg-text);
-    border:0; border-radius:14px;
-    padding:7px 12px;
-    font:500 14px/1.2 -apple-system,system-ui,sans-serif;
-    cursor:pointer;
-  }
-  .imsg-suggest button:active{ transform:scale(.97); }
+/* === iOS GLASS BOTTOM TAB BAR === */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;padding-bottom:env(safe-area-inset-bottom,16px);background:rgba(255,255,255,.72);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(0,0,0,.08);display:flex;align-items:center;justify-content:space-around;z-index:900;height:calc(60px + env(safe-area-inset-bottom,16px));padding-top:8px}
+.bottom-nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 8px;cursor:pointer;text-decoration:none;color:var(--apple-label-tertiary,#8E8E93);transition:all .15s}
+.bottom-nav-item.active{color:var(--red,#CD2727)}
+.bottom-nav-item svg{width:22px;height:22px;display:block}
+.bottom-nav-item span{font-size:10px;font-weight:600;font-family:Inter,sans-serif}
 
-  /* error row */
-  .imsg-err{
-    text-align:center; color:#ff3b30;
-    font:500 12px/1.3 -apple-system,system-ui,sans-serif;
-    margin:8px 0;
-  }
+/* === PRELOADER === */
+.ap-preloader{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#CD2727 0%,#9b1a1a 100%);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease,visibility .6s ease}
+.ap-preloader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.ap-preloader-logo{width:80px;height:80px;margin-bottom:24px;animation:preLogoPulse 1.5s ease-in-out infinite}
+.ap-preloader-title{font-family:"Sarabun",sans-serif;font-size:32px;font-weight:800;color:#fff;margin-bottom:8px}
+.ap-preloader-sub{font-family:"Inter",sans-serif;font-size:14px;color:rgba(255,255,255,.7);margin-bottom:40px;letter-spacing:.5px}
+.ap-preloader-bar-wrap{width:280px;height:4px;background:rgba(255,255,255,.2);border-radius:4px;overflow:hidden;margin-bottom:16px}
+.ap-preloader-bar{height:100%;background:#fff;border-radius:4px;animation:preBar 1.8s ease-in-out infinite;width:0}
+.ap-preloader-dots{display:flex;gap:8px}
+.ap-preloader-dot{width:8px;height:8px;background:rgba(255,255,255,.4);border-radius:50%;animation:preDot 1.2s ease-in-out infinite}
+.ap-preloader-dot:nth-child(2){animation-delay:.2s}
+.ap-preloader-dot:nth-child(3){animation-delay:.4s}
+@keyframes preLogoPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes preBar{0%{width:0}50%{width:70%}100%{width:100%}}
+@keyframes preDot{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
 
-  /* desktop max-width frame so it doesn't stretch endlessly */
-  @media(min-width:760px){
-    body{ background:#e5e5e7; }
-    @media(prefers-color-scheme:dark){ body{ background:#0a0a0a; } }
-    .imsg{
-      max-width:480px; margin:0 auto; height:100dvh;
-      border-left:.5px solid rgba(0,0,0,.08);
-      border-right:.5px solid rgba(0,0,0,.08);
-    }
-  }
 </style>
-  <link rel="stylesheet" href="css/responsive-global.css">
 </head>
 <body>
-<div class="imsg" id="app">
-  <header class="imsg-header">
-    <button class="imsg-back" type="button" onclick="history.length>1?history.back():(location.href='/dashboard.html')">
-      <svg viewBox="0 0 12 21" fill="currentColor"><path d="M11.5 1.7 9.8 0 0 9.8a1 1 0 0 0 0 1.4L9.8 21l1.7-1.7L3 10.5z"/></svg>
-      <span>Back</span>
-    </button>
-    <div class="imsg-header-center">
-      <div class="imsg-avatar"><img src="/apps/airpak/img/logosmall.png" alt="A" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'A'}))"></div>
-      <div class="imsg-name">Airpak Support <span class="chev">›</span></div>
-    </div>
-    <div class="imsg-actions">
-      <button type="button" title="Audio" onclick="alert('Voice calls coming soon.')">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 15.5a1 1 0 0 0-.7-.95l-3.5-1.2a1 1 0 0 0-1.15.36l-1.4 2a13.5 13.5 0 0 1-6.96-6.96l2-1.4a1 1 0 0 0 .36-1.15L7.45 2.7A1 1 0 0 0 6.5 2H4a2 2 0 0 0-2 2c0 9.4 8.6 18 18 18a2 2 0 0 0 2-2v-2.5Z"/></svg>
-      </button>
-      <button type="button" title="FaceTime" onclick="alert('Video calls coming soon.')">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3.5l5 4.5V6z"/></svg>
-      </button>
-    </div>
-  </header>
 
-  <main class="imsg-scroll" id="scroll">
-    <div class="imsg-day">iMessage<span class="imsg-day-time" id="dayTime"></span></div>
-  </main>
+<!-- Top Navigation -->
+<nav class="top-nav">
+  <button class="menu-btn" onclick="toggleSidebar()" aria-label="Menu">
+    <i data-lucide="menu" style="width:20px;height:20px"></i>
+  </button>
+  <a href="index.html" class="nav-brand">
+    <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#CD2727"/><path d="M8 16h16M16 8v16" stroke="white" stroke-width="2.5" stroke-linecap="round"/><circle cx="16" cy="16" r="5" fill="none" stroke="white" stroke-width="1.5"/></svg>
+  </a>
+  <span class="nav-title">Messages</span>
+  <div class="nav-spacer"></div>
+  <button class="nav-btn" aria-label="New message">
+    <i data-lucide="edit-3" style="width:18px;height:18px"></i>
+  </button>
+</nav>
 
-  <div class="imsg-suggest" id="suggest">
-    <button data-q="How do I track my parcel?">Track a parcel</button>
-    <button data-q="What are your delivery service options?">Service options</button>
-    <button data-q="Where is the nearest Airpak branch?">Find a branch</button>
-    <button data-q="How can I get a shipping quote?">Get a quote</button>
-    <button data-q="I need help with my COD shipment.">COD help</button>
+<!-- Mobile Overlay -->
+<div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+<!-- Mobile Sidebar -->
+<aside class="mobile-sidebar" id="mobileSidebar">
+  <div class="ms-header">
+    <div class="ms-user-avatar">JW</div>
+    <div>
+      <div class="ms-user-name">James Wilson</div>
+      <div class="ms-user-email">james@company.co.uk</div>
+    </div>
+  </div>
+  <div class="ms-section">
+    <div class="ms-section-label">Navigation</div>
+    <a href="dashboard.html" class="ms-item" onclick="toggleSidebar()"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a>
+    <a href="tracking.html" class="ms-item" onclick="toggleSidebar()"><i data-lucide="truck"></i><span>Track Packages</span></a>
+    <a href="payment.html" class="ms-item" onclick="toggleSidebar()"><i data-lucide="credit-card"></i><span>Billing & Payments</span></a>
+    <a href="contact.html" class="ms-item" onclick="toggleSidebar()"><i data-lucide="message-square"></i><span>Get Support</span></a>
+  </div>
+  <div class="ms-sep"></div>
+  <div class="ms-section">
+    <div class="ms-section-label">Messages</div>
+    <a href="messages.html" class="ms-item active" onclick="toggleSidebar()"><i data-lucide="message-circle"></i><span>Conversations</span></a>
+  </div>
+  <div class="ms-sep"></div>
+  <div class="ms-section">
+    <div class="ms-section-label">Account</div>
+    <a href="settings.html" class="ms-item" onclick="toggleSidebar()"><i data-lucide="settings"></i><span>Settings</span></a>
+    <a href="signin.html" class="ms-item ms-signout" onclick="showToast('Signed out');setTimeout(function(){window.location='signin.html'},500)"><i data-lucide="log-out"></i><span>Sign Out</span></a>
+  </div>
+</aside>
+
+<!-- Main Content -->
+<main class="main-content">
+  <!-- Decorative floating logistics icons -->
+  <div aria-hidden="true" style="position:absolute;top:20%;right:2%;width:48px;height:48px;opacity:0.05;pointer-events:none;z-index:0">
+    <svg viewBox="0 0 48 48" fill="none"><path d="M4 24h40M24 4v40" stroke="#CD2727" stroke-width="2"/><circle cx="24" cy="24" r="8" stroke="#CD2727" stroke-width="2"/></svg>
+  </div>
+  <div aria-hidden="true" style="position:absolute;bottom:35%;left:2%;width:40px;height:40px;opacity:0.04;pointer-events:none;z-index:0">
+    <svg viewBox="0 0 40 40" fill="none"><rect x="4" y="8" width="32" height="20" rx="2" stroke="#1a1a1a" stroke-width="1.5"/><path d="M4 14h32M16 8V4l8-4 8 4v4" stroke="#1a1a1a" stroke-width="1.5"/></svg>
+  </div>
+  <div aria-hidden="true" style="position:absolute;top:60%;left:4%;width:36px;height:36px;opacity:0.04;pointer-events:none;z-index:0">
+    <svg viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="15" stroke="#CD2727" stroke-width="1.5"/><path d="M18 3v30M3 18h30" stroke="#CD2727" stroke-width="1.5"/></svg>
   </div>
 
-  <div class="imsg-input-wrap">
-    <form class="imsg-input" id="form">
-      <button class="imsg-plus" type="button" title="More" onclick="alert('Attachments coming soon.')">
-        <svg viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="13" stroke="currentColor" stroke-width="1.5"/><path d="M15 9v12M9 15h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </button>
-      <div class="imsg-field">
-        <textarea id="input" rows="1" placeholder="iMessage" enterkeyhint="send" autocomplete="off"></textarea>
-        <button class="imsg-send" id="send" type="submit" disabled aria-label="Send">
-          <svg viewBox="0 0 18 18" fill="none"><path d="M9 14V4M4 9l5-5 5 5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <!-- Conversation List -->
+  <aside class="conv-list">
+    <div class="conv-list-header">
+      <div class="cl-title">Messages</div>
+    </div>
+
+    <div class="conv-item active" onclick="selectConv(this, 'support')">
+      <div class="ci-avatar" style="background:linear-gradient(135deg,#CD2727,#ff6b6b)">AP</div>
+      <div class="ci-info">
+        <div class="ci-name">Airpak Support</div>
+        <div class="ci-preview">We're here to help with any questions...</div>
+      </div>
+      <div class="ci-meta">
+        <div class="ci-time">2m ago</div>
+        <div class="ci-badge">1</div>
+      </div>
+    </div>
+
+    <div class="conv-item" onclick="selectConv(this, 'tracking')">
+      <div class="ci-avatar" style="background:linear-gradient(135deg,#007AFF,#0a84ff)">TR</div>
+      <div class="ci-info">
+        <div class="ci-name">Tracking Updates</div>
+        <div class="ci-preview">Your package APX—0000—UK is on track...</div>
+      </div>
+      <div class="ci-meta">
+        <div class="ci-time">1h ago</div>
+      </div>
+    </div>
+
+    <div class="conv-item" onclick="selectConv(this, 'billing')">
+      <div class="ci-avatar" style="background:linear-gradient(135deg,#34C759,#30D158)">BI</div>
+      <div class="ci-info">
+        <div class="ci-name">Billing Team</div>
+        <div class="ci-preview">Your invoice #INV—2026—0042 is ready</div>
+      </div>
+      <div class="ci-meta">
+        <div class="ci-time">Yesterday</div>
+      </div>
+    </div>
+
+    <div class="conv-item" onclick="selectConv(this, 'pickup')">
+      <div class="ci-avatar" style="background:linear-gradient(135deg,#FF9500,#FF6B00)">PK</div>
+      <div class="ci-info">
+        <div class="ci-name">Pickup Scheduler</div>
+        <div class="ci-preview">Pickup confirmed for tomorrow at 9 AM</div>
+      </div>
+      <div class="ci-meta">
+        <div class="ci-time">2 days</div>
+      </div>
+    </div>
+
+    <div class="conv-item" onclick="selectConv(this, 'customs')">
+      <div class="ci-avatar" style="background:linear-gradient(135deg,#5856D6,#AF52DE)">CX</div>
+      <div class="ci-info">
+        <div class="ci-name">Customs Advisory</div>
+        <div class="ci-preview">Your shipment may require additional...</div>
+      </div>
+      <div class="ci-meta">
+        <div class="ci-time">May 15</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Chat Area -->
+  <section class="chat-area" id="chatArea">
+    <div class="chat-empty" id="chatEmpty">
+      <div class="ce-icon">
+        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M8 8h48v40H8z" stroke-width="2.5"/>
+          <path d="M20 28l12 8 12-8"/>
+        </svg>
+      </div>
+      <div class="ce-title">Select a conversation</div>
+      <div class="ce-desc">Choose a conversation from the list<br>to start messaging</div>
+    </div>
+
+    <div id="chatContent" style="display:none;flex-direction:column;height:100%">
+      <div class="chat-header">
+        <div class="ch-avatar" id="chAvatar" style="background:linear-gradient(135deg,#CD2727,#ff6b6b)">AP</div>
+        <div class="ch-info">
+          <div class="ch-name" id="chName">Airpak Support</div>
+          <div class="ch-status">Online</div>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg received">
+          <div>Hi James! Welcome to Airpak Express support. How can I help you today?</div>
+          <div class="msg-time">10:30 AM</div>
+        </div>
+        <div class="msg sent">
+          <div>Hi, I need help tracking my shipment APX—0000—UK</div>
+          <div class="msg-status read">Read 10:32 AM</div>
+        </div>
+        <div class="msg received">
+          <div>Your shipment is currently in transit from Cardiff to London. Expected delivery is May 22, 2026. Everything is on schedule!</div>
+          <div class="msg-time">10:35 AM</div>
+        </div>
+        <div class="msg received">
+          <div>Is there anything else I can help you with?</div>
+          <div class="msg-time">10:35 AM</div>
+        </div>
+      </div>
+
+      <div class="chat-input-wrap">
+        <div class="ciw-field">
+          <textarea id="msgInput" placeholder="Type a message..." rows="1" onkeydown="handleEnter(event)"></textarea>
+        </div>
+        <button class="send-btn" onclick="sendMsg()">
+          <i data-lucide="send"></i>
         </button>
       </div>
-    </form>
+    </div>
+  </section>
+</main>
+
+<!-- iOS Glass Bottom Tab Bar -->
+<nav class="bottom-nav">
+  <a href="dashboard.html" class="bottom-nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>Home</span>
+  </a>
+  <a href="tracking.html" class="bottom-nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="10" x="5" y="2" rx="2"/><path d="M6 18h2"/><path d="M10 18h1"/><path d="M12 18h4"/><circle cx="12" cy="18" r="2"/></svg>
+    <span>Track</span>
+  </a>
+  <a href="payment.html" class="bottom-nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+    <span>Pay</span>
+  </a>
+  <a href="messages.html" class="bottom-nav-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span>Chat</span>
+  </a>
+  <a href="settings.html" class="bottom-nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <span>Settings</span>
+  </a>
+</nav>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+var currentConv = 'support';
+var conversations = {
+  support: [
+    {from:'received',text:'Hi James! Welcome to Airpak Express support. How can I help you today?',time:'10:30 AM'},
+    {from:'sent',text:'Hi, I need help tracking my shipment APX—0000—UK',time:'10:32 AM'},
+    {from:'received',text:'Your shipment is currently in transit from Cardiff to London. Expected delivery is May 22, 2026. Everything is on schedule!',time:'10:35 AM'},
+    {from:'received',text:'Is there anything else I can help you with?',time:'10:35 AM'}
+  ],
+  tracking: [
+    {from:'received',text:'Your package APX—0000—UK: Departed Cardiff Hub — In Transit to London',time:'9:00 AM'},
+    {from:'received',text:'Current location: M4 Motorway near Reading. ETA: May 22, 2026.',time:'9:00 AM'}
+  ],
+  billing: [
+    {from:'received',text:'Your invoice #INV—2026—0042 for £127.50 is now available.',time:'Yesterday'},
+    {from:'received',text:'You can view and download it in your Wallet.',time:'Yesterday'}
+  ],
+  pickup: [
+    {from:'received',text:'Pickup confirmed for Unit 7, Wales International Hub, Cardiff Bay, CF10 5AL at 9:00 AM tomorrow.',time:'2 days ago'}
+  ],
+  customs: [
+    {from:'received',text:'Your international shipment may require additional documentation.',time:'May 15'},
+    {from:'received',text:'Please reply with your invoice or packing list for customs clearance.',time:'May 15'}
+  ]
+};
+
+var convMeta = {
+  support:{name:'Airpak Support',initials:'AP',color:'#CD2727'},
+  tracking:{name:'Tracking Updates',initials:'TR',color:'#007AFF'},
+  billing:{name:'Billing Team',initials:'BI',color:'#34C759'},
+  pickup:{name:'Pickup Scheduler',initials:'PK',color:'#FF9500'},
+  customs:{name:'Customs Advisory',initials:'CX',color:'#5856D6'}
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+
+  window.toggleSidebar = function() {
+    var s = document.getElementById('mobileSidebar');
+    var o = document.getElementById('mobileOverlay');
+    s.classList.toggle('open');
+    o.classList.toggle('active');
+    document.body.style.overflow = s.classList.contains('open') ? 'hidden' : '';
+  };
+  document.getElementById('mobileOverlay') && document.getElementById('mobileOverlay').addEventListener('click', toggleSidebar);
+
+  window.showToast = function(m) {
+    var t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = m;
+    t.classList.add('toast-show');
+    setTimeout(function(){ t.classList.remove('toast-show'); }, 3000);
+  };
+
+  window.selectConv = function(el, id) {
+    currentConv = id;
+    document.querySelectorAll('.conv-item').forEach(function(c){ c.classList.remove('active'); });
+    el.classList.add('active');
+    var meta = convMeta[id];
+    var msgs = conversations[id] || [];
+    document.getElementById('chAvatar').textContent = meta.initials;
+    document.getElementById('chAvatar').style.background = 'linear-gradient(135deg,' + meta.color + ',' + meta.color + ')';
+    document.getElementById('chName').textContent = meta.name;
+    var html = '';
+    msgs.forEach(function(m) {
+      html += '<div class="msg ' + m.from + '"><div>' + m.text + '</div><div class="msg-time">' + m.time + '</div></div>';
+    });
+    document.getElementById('chatMessages').innerHTML = html;
+    document.getElementById('chatEmpty').style.display = 'none';
+    document.getElementById('chatContent').style.display = 'flex';
+    document.getElementById('chatContent').style.height = '100%';
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+    var msgsEl = document.getElementById('chatMessages');
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+  };
+
+  window.sendMsg = function() {
+    var inp = document.getElementById('msgInput');
+    var text = inp.value.trim();
+    if (!text) return;
+    var now = new Date();
+    var time = (now.getHours() > 12 ? now.getHours()-12 : now.getHours()) + ':' + String(now.getMinutes()).padStart(2,'0') + (now.getHours() >= 12 ? ' PM' : ' AM');
+    var html = '<div class="msg sent"><div>' + text + '</div><div class="msg-status">Sent ' + time + '</div></div>';
+    document.getElementById('chatMessages').insertAdjacentHTML('beforeend', html);
+    inp.value = '';
+    var msgsEl = document.getElementById('chatMessages');
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+    showToast('Message sent!');
+  };
+
+  window.handleEnter = function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMsg();
+    }
+  };
+});
+</script>
+
+<!-- Preloader -->
+<div class="ap-preloader" id="apPreloader">
+  <svg class="ap-preloader-logo" viewBox="0 0 80 80" fill="none">
+    <rect width="80" height="80" rx="16" fill="rgba(255,255,255,.15)"/>
+    <path d="M20 40h40M40 20v40" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="40" cy="40" r="12" fill="none" stroke="white" stroke-width="3"/>
+  </svg>
+  <div class="ap-preloader-title">Airpak Express</div>
+  <div class="ap-preloader-sub" id="apPreloaderGreeting">Loading your experience...</div>
+  <div class="ap-preloader-bar-wrap"><div class="ap-preloader-bar"></div></div>
+  <div class="ap-preloader-dots">
+    <div class="ap-preloader-dot"></div>
+    <div class="ap-preloader-dot"></div>
+    <div class="ap-preloader-dot"></div>
   </div>
 </div>
 
 <script>
+// Preloader with dynamic greeting
 (function(){
-  var API = "/api/chat";
-  var STORAGE = "ap_imsg_history_v1";
-  var $ = function(id){ return document.getElementById(id); };
-  var scroll = $('scroll'), input = $('input'), send = $('send'), form = $('form'), suggest = $('suggest');
-  var history;
-  try { history = JSON.parse(localStorage.getItem(STORAGE) || "[]"); } catch(e){ history = []; }
-  function save(){ try{ localStorage.setItem(STORAGE, JSON.stringify(history.slice(-30))); }catch(e){} }
-
-  // header date "iMessage Today 2:14 PM"
-  (function(){
-    var d = new Date();
-    var h = d.getHours(), m = d.getMinutes();
-    var ap = h>=12?'PM':'AM'; var hh = ((h+11)%12)+1;
-    $('dayTime').textContent = ' Today ' + hh + ':' + (m<10?'0':'') + m + ' ' + ap;
-  })();
-
-  function lastRole(){
-    var rows = scroll.querySelectorAll('.imsg-row');
-    if (!rows.length) return null;
-    return rows[rows.length-1].classList.contains('out') ? 'user' : 'assistant';
-  }
-  function addBubble(role, text, skipAnim){
-    var row = document.createElement('div');
-    row.className = 'imsg-row ' + (role==='user' ? 'out' : 'in');
-    var same = lastRole() === (role==='user'?'user':'assistant');
-    if (same) row.classList.add('same');
-    var bub = document.createElement('div');
-    bub.className = 'imsg-bubble' + (same ? '' : ' tail');
-    bub.textContent = text;
-    if (skipAnim) bub.style.animation = 'none';
-    row.appendChild(bub);
-    scroll.appendChild(row);
-    scroll.scrollTop = scroll.scrollHeight;
-    return row;
-  }
-  function addReadReceipt(){
-    var prev = scroll.querySelector('.imsg-meta');
-    if (prev) prev.remove();
-    var m = document.createElement('div');
-    m.className = 'imsg-meta';
-    m.textContent = 'Delivered';
-    scroll.appendChild(m);
-  }
-  function addTyping(){
-    removeTyping();
-    var w = document.createElement('div'); w.className='imsg-typing-row'; w.id='typing';
-    w.innerHTML = '<div class="imsg-typing"><span></span><span></span><span></span></div>';
-    scroll.appendChild(w); scroll.scrollTop = scroll.scrollHeight;
-  }
-  function removeTyping(){ var t = document.getElementById('typing'); if(t) t.remove(); }
-  function addError(msg){
-    var e = document.createElement('div'); e.className='imsg-err'; e.textContent='Not Delivered • ' + msg;
-    scroll.appendChild(e); scroll.scrollTop = scroll.scrollHeight;
-  }
-
-  // render saved history
-  if (history.length === 0) {
-    addBubble('assistant', "Hi! I'm Airpak Support. Ask me anything about tracking, pricing, services or your account.", true);
-  } else {
-    suggest.style.display = 'none';
-    history.forEach(function(m){ addBubble(m.role==='user'?'user':'assistant', m.content, true); });
-  }
-
-  function autosize(){
-    input.style.height = 'auto';
-    input.style.height = Math.min(120, input.scrollHeight) + 'px';
-    send.disabled = input.value.trim().length === 0;
-  }
-  input.addEventListener('input', autosize);
-  input.addEventListener('keydown', function(e){
-    if (e.key==='Enter' && !e.shiftKey){ e.preventDefault(); form.requestSubmit(); }
+  var h = new Date().getHours();
+  var greeting = 'Good morning';
+  if (h >= 12 && h < 17) greeting = 'Good afternoon';
+  else if (h >= 17 && h < 21) greeting = 'Good evening';
+  else if (h >= 21) greeting = 'Good night';
+  var el = document.getElementById('apPreloaderGreeting');
+  if (el) el.textContent = greeting + ' — preparing your experience...';
+  
+  // Hide preloader once page is fully loaded
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      var pl = document.getElementById('apPreloader');
+      if (pl) pl.classList.add('hidden');
+      setTimeout(function(){ if(pl) pl.style.display='none'; }, 700);
+    }, 1200);
   });
-
-  var sending = false;
-  function sendMessage(text){
-    text = (text||'').trim(); if (!text || sending) return;
-    sending = true; suggest.style.display = 'none';
-    addBubble('user', text);
-    history.push({role:'user', content:text}); save();
-    addReadReceipt();
-    addTyping();
-    fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history})})
-      .then(function(r){ return r.ok ? r.json() : r.json().then(function(e){ throw new Error(e.error||'Server error'); }); })
-      .then(function(data){
-        removeTyping();
-        var reply = (data && data.reply) || "Sorry, I couldn't reach an answer. Try /contact.html.";
-        // split bot reply into bubble groups by double newline for iMessage feel
-        var chunks = reply.split(/\n\n+/).map(function(s){return s.trim();}).filter(Boolean);
-        if (chunks.length===0) chunks = [reply];
-        var i = 0;
-        function next(){
-          if (i >= chunks.length){ history.push({role:'assistant', content:reply}); save(); sending=false; return; }
-          addTyping();
-          setTimeout(function(){
-            removeTyping();
-            addBubble('assistant', chunks[i]);
-            i++; setTimeout(next, 220);
-          }, 280 + Math.min(900, chunks[i].length*4));
-        }
-        next();
-      })
-      .catch(function(err){
-        removeTyping(); addError(err.message||'Could not send'); sending=false;
-      })
-      .finally(function(){ input.value=''; autosize(); input.focus(); });
-  }
-
-  form.addEventListener('submit', function(e){ e.preventDefault(); sendMessage(input.value); });
-  suggest.addEventListener('click', function(e){
-    var b = e.target.closest('button[data-q]'); if(!b) return;
-    sendMessage(b.getAttribute('data-q'));
-  });
-
-  // Recompute viewport when iOS keyboard appears
-  if (window.visualViewport){
-    window.visualViewport.addEventListener('resize', function(){
-      scroll.scrollTop = scroll.scrollHeight;
-    });
-  }
 })();
 </script>
-<script src="/apps/airpak/js/ap-lang.js" defer></script>
+
+
+<!-- PWA Registration -->
 <script>
 (function(){
-  // Platform detection — auto-understands device
-  var ua = navigator.userAgent.toLowerCase();
-  var os = 'desktop';
-  if (/iphone|ipad|ipod/.test(ua)) os = 'ios';
-  else if (/android/.test(ua)) os = 'android';
-  var w = window.innerWidth;
-  if (w < 480) os += '-phone';
-  else if (w < 768) os += '-tablet';
-  else if (w >= 1024) os += '-desktop';
-  var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  document.body.className = [os, isDark ? 'dark' : 'light', 'loaded'].join(' ');
-  // Prevent iOS Safari text inflation
-  document.documentElement.style.setProperty('--text-base', '16px');
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').then(function(reg) {
+        console.log('[PWA] SW registered:', reg.scope);
+      }).catch(function(err) {
+        console.warn('[PWA] SW registration failed:', err);
+      });
+    });
+  }
+
+  // Install prompt
+  var installPrompt = null;
+  var installBtn = null;
+  
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    installPrompt = e;
+    window.showInstallPrompt && window.showInstallPrompt();
+    
+    // Auto-show after 5 seconds
+    setTimeout(function() {
+      if (installPrompt && !localStorage.getItem('ap_pwa_installed')) {
+        var banner = document.createElement('div');
+        banner.id = 'pwa-install-banner';
+        banner.innerHTML = '<div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#CD2727,#9b1a1a);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;z-index:99999;box-shadow:0 -4px 20px rgba(0,0,0,.3)"><div style="flex:1"><div style="font-family:Sarabun,sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:2px">Install Airpak Express App</div><div style="font-size:12px;color:rgba(255,255,255,.7)">Get the full app experience — works offline!</div></div><button id="pwa-install-btn" style="background:#fff;color:#CD2727;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;margin-left:12px;flex-shrink:0">Install</button><button onclick="this.parentElement.style.display='none'" style="background:transparent;border:none;color:rgba(255,255,255,.7);font-size:20px;cursor:pointer;padding:4px 8px;margin-left:4px">×</button></div>';
+        document.body.appendChild(banner);
+        
+        document.getElementById('pwa-install-btn').addEventListener('click', function() {
+          installPrompt.prompt();
+          installPrompt.userChoice.then(function(result) {
+            if (result.outcome === 'accepted') {
+              localStorage.setItem('ap_pwa_installed', '1');
+            }
+            installPrompt = null;
+            banner.style.display = 'none';
+          });
+        });
+      }
+    }, 5000);
+  });
+
+  window.addEventListener('appinstalled', function() {
+    installPrompt = null;
+    localStorage.setItem('ap_pwa_installed', '1');
+    console.log('[PWA] App installed!');
+    // Show toast
+    var toast = document.createElement('div');
+    toast.textContent = 'Airpak Express installed successfully!';
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1C1C1E;color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:500;z-index:99999;box-shadow:0 8px 32px rgba(0,0,0,.3)';
+    document.body.appendChild(toast);
+    setTimeout(function(){ toast.style.display='none'; }, 4000);
+  });
+
+  // Push notification subscription
+  if ('Notification' in window && navigator.serviceWorker) {
+    window.subscribePush = function() {
+      Notification.requestPermission().then(function(perm) {
+        if (perm === 'granted') {
+          navigator.serviceWorker.ready.then(function(reg) {
+            reg.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: 'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3M8NrXYu1Vwvfrwcsjk0s'
+            }).then(function(sub) {
+              console.log('[PWA] Push subscribed:', sub.endpoint);
+              localStorage.setItem('ap_push_sub', JSON.stringify(sub));
+            });
+          });
+        }
+      });
+    };
+    
+    // Auto-prompt after 10s if not subscribed
+    setTimeout(function() {
+      if (Notification.permission === 'default' && !localStorage.getItem('ap_push_sub')) {
+        window.subscribePush && window.subscribePush();
+      }
+    }, 10000);
+  }
+
+  // Check online/offline status
+  window.addEventListener('online', function() {
+    document.body.classList.remove('offline-mode');
+    console.log('[PWA] Back online');
+  });
+  window.addEventListener('offline', function() {
+    document.body.classList.add('offline-mode');
+    console.log('[PWA] Offline mode');
+  });
+
+  // Version check
+  window.apVersion = '1.0.0';
 })();
 </script>
+<script>
+window.addEventListener('load', function() {
+  if (typeof AirpakPWA !== 'undefined') {
+    AirpakPWA.init();
+  } else {
+    var s = document.createElement('script');
+    s.src = '/pwa-features.js';
+    document.head.appendChild(s);
+  }
+});
+</script>
+
 </body>
 </html>

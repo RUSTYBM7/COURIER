@@ -3,373 +3,613 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#007AFF">
+  <meta name="theme-color" content="#CD2727">
   <meta name="color-scheme" content="light">
-  <meta name="description" content="Your Airpak Express dashboard — manage shipments, track packages, view wallet, and access all your logistics tools.">
+  <meta name="description" content="Your Airpak Express dashboard — manage shipments, track packages, and access all your logistics tools.">
   <meta name="robots" content="noindex, nofollow">
-  <meta property="og:title" content="Dashboard — Airpak Express">
-  <meta property="og:description" content="Your Airpak Express dashboard — manage shipments, track packages, and access logistics tools.">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Airpak Express">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23007AFF'/%3E%3Cpath d='M8 16h16M16 8v16' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/svg+xml" href="/apps/airpak/img/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Sarabun:wght@600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <link rel="stylesheet" href="css/apple-tokens.css">
   <link rel="stylesheet" href="css/glass-system.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/pages.css">
   <link rel="stylesheet" href="css/brand-airpak.css">
-  <link rel="stylesheet" href="/apps/airpak/css/ap-lang.css">
-  <link rel="stylesheet" href="css/responsive-global.css">
+  <script src="/sw-advanced.js" defer></script>
+  <style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#CD2727;--red-d:#9b1a1a;--red-l:#ff6b6b;
+  --apple-label:#1C1C1E;--apple-label-secondary:#636366;
+  --apple-bg:#FFFFFF;--apple-bg-secondary:#F2F2F7;
+  --apple-bg-grouped:#F2F2F7;--apple-separator:rgba(60,60,67,.12);
+  --apple-fill:rgba(120,120,128,.12);--apple-fill-secondary:rgba(118,118,128,.24);
+  --apple-blue:#007AFF;--apple-green:#34C759;--apple-orange:#FF9500;--apple-red:#FF3B30;
+  --apple-indigo:#5856D6;--apple-purple:#AF52DE;
+  --nav-height:60px;--radius:12px;--radius-lg:16px;--radius-xl:20px;
+  --font-main:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-display:'Sarabun','Inter',sans-serif;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.08);--shadow-md:0 4px 12px rgba(0,0,0,.1);--shadow-lg:0 8px 32px rgba(0,0,0,.12);
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{font-family:var(--font-main);background:var(--apple-bg);color:var(--apple-label);min-height:100vh;overflow-x:hidden}
+
+/* === TOP NAVIGATION === */
+.top-nav{position:fixed;top:0;left:0;right:0;height:var(--nav-height);background:rgba(255,255,255,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--apple-separator);z-index:500;display:flex;align-items:center;padding:0 16px;gap:12px}
+.nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--apple-label);font-family:var(--font-display);font-weight:800;font-size:18px;flex-shrink:0}
+.nav-brand svg{width:32px;height:32px}
+.nav-brand span{white-space:nowrap}
+.nav-spacer{flex:1}
+.nav-actions{display:flex;align-items:center;gap:8px}
+.nav-btn{width:36px;height:36px;border-radius:50%;background:var(--apple-fill);border:none;display:flex;align-items:center;justify-content:center;color:var(--apple-label);cursor:pointer;transition:all .15s;position:relative}
+.nav-btn:hover{background:var(--apple-fill-secondary)}
+.nav-btn:active{transform:scale(.95)}
+.nav-btn .badge-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--apple-bg)}
+.menu-btn{display:none}
+
+/* === MOBILE SIDEBAR === */
+.mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:599;opacity:0;pointer-events:none;transition:opacity .3s}
+.mobile-overlay.active{opacity:1;pointer-events:auto}
+.mobile-sidebar{position:fixed;top:0;left:0;bottom:0;width:300px;background:var(--apple-bg);z-index:600;transform:translateX(-100%);transition:transform .3s ease;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.mobile-sidebar.open{transform:translateX(0)}
+.ms-header{padding:16px 20px;border-bottom:1px solid var(--apple-separator);display:flex;align-items:center;gap:12px}
+.ms-user-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--red-l));display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:800;flex-shrink:0}
+.ms-user-name{font-size:15px;font-weight:700;color:var(--apple-label);font-family:var(--font-display)}
+.ms-user-email{font-size:12px;color:var(--apple-label-secondary)}
+.ms-section{padding:12px 0}
+.ms-section-label{font-size:11px;font-weight:700;color:var(--apple-label-secondary);text-transform:uppercase;letter-spacing:.5px;padding:0 20px 6px}
+.ms-item{display:flex;align-items:center;gap:12px;padding:12px 20px;color:var(--apple-label);text-decoration:none;font-size:15px;font-weight:500;transition:all .15s;cursor:pointer;border:none;background:none;width:100%;text-align:left}
+.ms-item:hover{background:var(--apple-bg-secondary)}
+.ms-item.active{background:rgba(205,39,39,.08);color:var(--red);font-weight:700}
+.ms-item i, .ms-item svg{width:20px;height:20px;flex-shrink:0;color:var(--apple-label-secondary)}
+.ms-item.active i, .ms-item.active svg{color:var(--red)}
+.ms-item span{flex:1}
+.ms-sep{height:1px;background:var(--apple-separator);margin:8px 20px}
+.ms-signout{color:var(--apple-red)!important}
+.ms-signout i, .ms-signout svg{color:var(--apple-red)!important}
+
+/* === MAIN CONTENT === */
+.main-content{padding-top:var(--nav-height);min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom, 16px));position:relative}
+
+/* === HERO WELCOME === */
+.welcome-hero{padding:24px 20px 16px;background:linear-gradient(135deg,var(--red) 0%,var(--red-d) 100%);color:#fff;position:relative;overflow:hidden}
+.wh-bg{position:absolute;top:-40%;right:-20%;width:280px;height:280px;background:radial-gradient(circle,rgba(255,255,255,.08) 0%,transparent 70%);border-radius:50%}
+.wh-content{position:relative;z-index:1}
+.wh-greeting{font-family:var(--font-display);font-size:26px;font-weight:800;line-height:1.2}
+.wh-sub{font-size:13px;opacity:.7;margin-top:4px}
+.wh-location{font-size:12px;opacity:.6;margin-top:8px}
+
+/* === STATS ROW === */
+.stats-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:16px 20px}
+.stat-card{background:var(--apple-bg);border-radius:var(--radius-lg);padding:16px;box-shadow:var(--shadow-sm);border:1px solid var(--apple-separator)}
+.sc-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.sc-icon.blue{background:rgba(0,122,255,.1);color:var(--apple-blue)}
+.sc-icon.green{background:rgba(52,199,89,.1);color:var(--apple-green)}
+.sc-icon.orange{background:rgba(255,149,0,.1);color:var(--apple-orange)}
+.sc-icon.purple{background:rgba(88,86,214,.1);color:var(--apple-indigo)}
+.sc-value{font-family:var(--font-display);font-size:28px;font-weight:800;color:var(--apple-label);line-height:1}
+.sc-label{font-size:12px;color:var(--apple-label-secondary);margin-top:2px}
+.sc-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-top:6px}
+.sc-badge.blue{background:rgba(0,122,255,.1);color:var(--apple-blue)}
+.sc-badge.green{background:rgba(52,199,89,.1);color:var(--apple-green)}
+.sc-badge.orange{background:rgba(255,149,0,.1);color:var(--apple-orange)}
+
+/* === QUICK ACTIONS === */
+.section{padding:0 20px 16px}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.section-title{font-family:var(--font-display);font-size:17px;font-weight:800;color:var(--apple-label)}
+.section-link{font-size:13px;color:var(--red);text-decoration:none;font-weight:600}
+.quick-actions{background:var(--apple-bg);border-radius:var(--radius-lg);border:1px solid var(--apple-separator);overflow:hidden}
+.qa-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--apple-separator)}
+.qa-item{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 8px;background:var(--apple-bg);color:var(--apple-label);text-decoration:none;transition:all .15s;cursor:pointer}
+.qa-item:hover{background:var(--apple-bg-secondary)}
+.qa-item:active{transform:scale(.97)}
+.qa-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.qa-icon.red{background:rgba(205,39,39,.1);color:var(--red)}
+.qa-icon.blue{background:rgba(0,122,255,.1);color:var(--apple-blue)}
+.qa-icon.green{background:rgba(52,199,89,.1);color:var(--apple-green)}
+.qa-icon.orange{background:rgba(255,149,0,.1);color:var(--apple-orange)}
+.qa-icon.purple{background:rgba(88,86,214,.1);color:var(--apple-indigo)}
+.qa-icon.teal{background:rgba(90,200,150,.1);color:#30D158}
+.qa-label{font-size:11px;font-weight:600;color:var(--apple-label-secondary);text-align:center;line-height:1.3}
+
+/* === SHIPMENTS LIST === */
+.shipments-list{display:flex;flex-direction:column;gap:10px}
+.shipment-card{background:var(--apple-bg);border-radius:var(--radius-lg);padding:14px 16px;border:1px solid var(--apple-separator);box-shadow:var(--shadow-sm);transition:all .15s;cursor:pointer;text-decoration:none;color:var(--apple-label);display:block}
+.shipment-card:hover{background:var(--apple-bg-secondary);transform:translateY(-1px)}
+.sc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.sc-awb{font-family:var(--font-display);font-size:15px;font-weight:800;color:var(--apple-label)}
+.sc-status{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+.sc-status.delivered{background:rgba(52,199,89,.1);color:var(--apple-green)}
+.sc-status.transit{background:rgba(0,122,255,.1);color:var(--apple-blue)}
+.sc-status.pending{background:rgba(255,149,0,.1);color:var(--apple-orange)}
+.sc-status.hold{background:rgba(255,59,48,.1);color:var(--apple-red)}
+.sc-route{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--apple-label-secondary)}
+.sc-route svg{width:14px;height:14px;flex-shrink:0}
+.sc-meta{display:flex;gap:16px;margin-top:8px;padding-top:8px;border-top:1px solid var(--apple-separator)}
+.sc-meta-item{font-size:12px;color:var(--apple-label-secondary)}
+.sc-meta-item strong{color:var(--apple-label);font-weight:600}
+
+/* === CTA BANNER === */
+.cta-banner{margin:16px 20px;background:linear-gradient(135deg,var(--red),#a01a1a);border-radius:var(--radius-xl);padding:20px;color:#fff;position:relative;overflow:hidden}
+.cta-bg{position:absolute;top:-50%;right:-30%;width:200px;height:200px;background:radial-gradient(circle,rgba(255,255,255,.06) 0%,transparent 70%)}
+.cta-content{position:relative;z-index:1}
+.cta-title{font-family:var(--font-display);font-size:18px;font-weight:800;margin-bottom:4px}
+.cta-sub{font-size:13px;opacity:.7;margin-bottom:14px}
+.cta-btn{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--red);font-weight:700;font-size:14px;padding:10px 20px;border-radius:50px;text-decoration:none;transition:all .2s}
+.cta-btn:hover{transform:scale(1.05);box-shadow:0 4px 16px rgba(0,0,0,.2)}
+
+/* === EMPTY STATE === */
+.empty-state{padding:48px 24px;text-align:center;color:var(--apple-label-secondary)}
+.empty-icon{width:56px;height:56px;margin:0 auto 16px;opacity:.4}
+.empty-title{font-size:16px;font-weight:700;color:var(--apple-label);margin-bottom:4px}
+.empty-desc{font-size:13px}
+
+/* === RESPONSIVE === */
+@media(min-width:768px){
+  .stats-row{grid-template-columns:repeat(4,1fr)}
+  .qa-grid{grid-template-columns:repeat(6,1fr)}
+  .shipments-list{max-width:640px;margin:0 auto}
+  .main-content{padding-left:0}
+}
+
+@media(max-width:767px){
+  .menu-btn{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--apple-fill);border:none;color:var(--apple-label);cursor:pointer}
+  .nav-links{display:none}
+  .welcome-hero{padding:20px 20px 16px}
+  .wh-greeting{font-size:22px}
+  .stats-row{gap:10px}
+  .stat-card{padding:14px}
+  .sc-value{font-size:24px}
+}
+
+@media(max-width:400px){
+  .stats-row{grid-template-columns:1fr 1fr;gap:8px}
+  .qa-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+/* === iOS GLASS BOTTOM TAB BAR === */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;padding-bottom:env(safe-area-inset-bottom,16px);background:rgba(255,255,255,.72);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(0,0,0,.08);display:flex;align-items:center;justify-content:space-around;z-index:900;height:calc(60px + env(safe-area-inset-bottom,16px));padding-top:8px}
+.bottom-nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 8px;cursor:pointer;text-decoration:none;color:var(--apple-label-tertiary,#8E8E93);transition:all .15s}
+.bottom-nav-item.active{color:var(--red,#CD2727)}
+.bottom-nav-item svg{width:22px;height:22px;display:block}
+.bottom-nav-item span{font-size:10px;font-weight:600;font-family:Inter,sans-serif}
+
+/* Lucide icon sizing */
+i[data-lucide], .icon-wrap svg{width:20px;height:20px;display:block}
+.sc-icon i[data-lucide], .sc-icon svg{width:20px;height:20px}
+.qa-icon i[data-lucide], .qa-icon svg{width:20px;height:20px}
+
+/* === PRELOADER === */
+.ap-preloader{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#CD2727 0%,#9b1a1a 100%);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease,visibility .6s ease}
+.ap-preloader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.ap-preloader-logo{width:80px;height:80px;margin-bottom:24px;animation:preLogoPulse 1.5s ease-in-out infinite}
+.ap-preloader-title{font-family:"Sarabun",sans-serif;font-size:32px;font-weight:800;color:#fff;margin-bottom:8px}
+.ap-preloader-sub{font-family:"Inter",sans-serif;font-size:14px;color:rgba(255,255,255,.7);margin-bottom:40px;letter-spacing:.5px}
+.ap-preloader-bar-wrap{width:280px;height:4px;background:rgba(255,255,255,.2);border-radius:4px;overflow:hidden;margin-bottom:16px}
+.ap-preloader-bar{height:100%;background:#fff;border-radius:4px;animation:preBar 1.8s ease-in-out infinite;width:0}
+.ap-preloader-dots{display:flex;gap:8px}
+.ap-preloader-dot{width:8px;height:8px;background:rgba(255,255,255,.4);border-radius:50%;animation:preDot 1.2s ease-in-out infinite}
+.ap-preloader-dot:nth-child(2){animation-delay:.2s}
+.ap-preloader-dot:nth-child(3){animation-delay:.4s}
+@keyframes preLogoPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes preBar{0%{width:0}50%{width:70%}100%{width:100%}}
+@keyframes preDot{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+
+</style>
 </head>
 <body>
-  <!-- Navigation Bar -->
-  <nav class="nav-bar">
-    <div class="nav-left">
-      <a href="index.html" class="nav-logo">
-        <img src="/brand/logo.png" alt="Airpak Express" class="ap-brand-logo" />
-        <span class="nav-logo-text">Airpak Express</span>
-      </a>
-      <div class="nav-links">
-        <a href="dashboard.html" class="nav-link active">Dashboard</a>
-        <a href="tracking.html" class="nav-link">Shipments</a>
-        <a href="dashboard.html" class="nav-link">Analytics</a>
-      </div>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+  <button class="menu-btn" onclick="toggleSidebar()" aria-label="Open menu">
+    <i data-lucide="menu" style="width:20px;height:20px"></i>
+  </button>
+  <a href="index.html" class="nav-brand">
+    <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#CD2727"/><path d="M8 16h16M16 8v16" stroke="white" stroke-width="2.5" stroke-linecap="round"/><circle cx="16" cy="16" r="5" fill="none" stroke="white" stroke-width="1.5"/></svg>
+    <span>Airpak Express</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-actions">
+    <button class="nav-btn" aria-label="Search" onclick="showToast('Search coming soon')">
+      <i data-lucide="search" style="width:18px;height:18px"></i>
+    </button>
+    <button class="nav-btn" aria-label="Notifications">
+      <i data-lucide="bell" style="width:18px;height:18px"></i>
+      <div class="badge-dot"></div>
+    </button>
+    <button class="nav-btn" onclick="window.location.href='settings.html'" aria-label="Settings">
+      <i data-lucide="settings" style="width:18px;height:18px"></i>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Overlay -->
+<div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+<!-- Mobile Sidebar -->
+<aside class="mobile-sidebar" id="mobileSidebar">
+  <div class="ms-header">
+    <div class="ms-user-avatar">JW</div>
+    <div>
+      <div class="ms-user-name">James Wilson</div>
+      <div class="ms-user-email">james@company.co.uk</div>
     </div>
-    <div class="nav-right">
-      <div class="lang-pill-wrapper">
-        <button class="lang-pill" aria-label="Select language">
-          <span class="flag">EN</span>
-        </button>
-        <div class="lang-dropdown">
-          <button class="lang-option" data-lang="en"><span class="flag">EN</span> English</button>
-          <button class="lang-option" data-lang="zh"><span class="flag">ZH</span> 中文</button>
-          <button class="lang-option" data-lang="ms"><span class="flag">MY</span> Bahasa</button>
-          <button class="lang-option" data-lang="ar"><span class="flag">AR</span> العربية</button>
-        </div>
-      </div>
-      <button class="theme-toggle" aria-label="Toggle theme"><span class="icon-moon"><i data-lucide="moon"></i></span></button>
-      <button class="nav-icon" aria-label="Notifications">
-        <i data-lucide="bell"></i>
-        <span class="badge-dot"></span>
-      </button>
-      <a href="settings.html" class="nav-signin" style="margin-left: 8px;">
-        <i data-lucide="settings"></i> Settings
-      </a>
-    </div>
-  </nav>
+  </div>
+  <div class="ms-section">
+    <div class="ms-section-label">Dashboard</div>
+    <a href="dashboard.html" class="ms-item active" onclick="toggleSidebar()">
+      <i data-lucide="layout-dashboard"></i><span>Overview</span>
+    </a>
+  </div>
+  <div class="ms-section">
+    <div class="ms-section-label">Shipments</div>
+    <a href="tracking.html" class="ms-item" onclick="toggleSidebar()">
+      <i data-lucide="truck"></i><span>Track Packages</span>
+    </a>
+    <a href="#" class="ms-item" onclick="showToast('New Shipment — Contact support to create')">
+      <i data-lucide="plus-circle"></i><span>New Shipment</span>
+    </a>
+    <a href="#" class="ms-item" onclick="showToast('Shipment History')">
+      <i data-lucide="clock"></i><span>History</span>
+    </a>
+  </div>
+  <div class="ms-section">
+    <div class="ms-section-label">Account</div>
+    <a href="payment.html" class="ms-item" onclick="toggleSidebar()">
+      <i data-lucide="credit-card"></i><span>Billing & Payments</span>
+    </a>
+    <a href="settings.html" class="ms-item" onclick="toggleSidebar()">
+      <i data-lucide="user"></i><span>Profile Settings</span>
+    </a>
+    <a href="contact.html" class="ms-item" onclick="toggleSidebar()">
+      <i data-lucide="headphones"></i><span>Get Support</span>
+    </a>
+  </div>
+  <div class="ms-sep"></div>
+  <div class="ms-section">
+    <a href="faq.html" class="ms-item" onclick="toggleSidebar()">
+      <i data-lucide="help-circle"></i><span>Help & FAQ</span>
+    </a>
+    <a href="signin.html" class="ms-item ms-signout" onclick="showToast('Signed out');setTimeout(()=>window.location='signin.html',500)">
+      <i data-lucide="log-out"></i><span>Sign Out</span>
+    </a>
+  </div>
+</aside>
 
-  <!-- Dashboard Layout -->
-  <div class="dashboard-layout" style="padding-top: var(--nav-height);">
-    <!-- Sidebar — grouped sections (shadcn DropdownMenu pattern) -->
-    <aside class="dashboard-sidebar ds-grouped">
-      <!-- File group -->
-      <div class="ds-group">
-        <div class="ds-label">File</div>
-        <a href="shipnow-new-shipment.html" class="ds-item">
-          <i data-lucide="file-plus"></i><span>New Shipment</span>
-          <span class="ds-shortcut">⌘N</span>
-        </a>
-        <a href="tracking.html" class="ds-item">
-          <i data-lucide="folder"></i><span>My Packages</span>
-          <span class="ds-shortcut">⇧⌘N</span>
-        </a>
-        <button type="button" class="ds-item ds-sub-trigger" data-sub="recent">
-          <i data-lucide="folder-open"></i><span>Open Recent</span>
-          <i data-lucide="chevron-right" class="ds-chev"></i>
-        </button>
-        <div class="ds-sub" id="ds-sub-recent">
-          <div class="ds-label">Recent Shipments</div>
-          <a href="tracking.html" class="ds-item"><i data-lucide="file-text"></i><span>AP-2026-04-1842</span></a>
-          <a href="tracking.html" class="ds-item"><i data-lucide="file-text"></i><span>AP-2026-04-1839</span></a>
-          <a href="tracking.html" class="ds-item"><i data-lucide="file-text"></i><span>AP-2026-04-1821</span></a>
-          <div class="ds-sep"></div>
-          <a href="tracking.html" class="ds-item"><i data-lucide="search"></i><span>Browse all…</span></a>
-        </div>
-        <div class="ds-sep"></div>
-        <a href="dashboard.html" class="ds-item active">
-          <i data-lucide="bar-chart-2"></i><span>Overview</span>
-          <span class="ds-shortcut">⌘D</span>
-        </a>
-        <a href="#" class="ds-item" onclick="window.print();return false;">
-          <i data-lucide="download"></i><span>Export Report</span>
-          <span class="ds-shortcut">⇧⌘E</span>
-        </a>
-      </div>
-
-      <div class="ds-sep"></div>
-
-      <!-- View group -->
-      <div class="ds-group">
-        <div class="ds-label">View</div>
-        <label class="ds-item ds-check">
-          <i data-lucide="eye"></i><span>Show Sidebar</span>
-          <input type="checkbox" checked data-toggle="sidebar">
-          <span class="ds-tick"></span>
-        </label>
-        <label class="ds-item ds-check">
-          <i data-lucide="layout"></i><span>Show Status Bar</span>
-          <input type="checkbox" data-toggle="statusbar">
-          <span class="ds-tick"></span>
-        </label>
-        <button type="button" class="ds-item ds-sub-trigger" data-sub="theme">
-          <i data-lucide="palette"></i><span>Theme</span>
-          <i data-lucide="chevron-right" class="ds-chev"></i>
-        </button>
-        <div class="ds-sub" id="ds-sub-theme">
-          <div class="ds-label">Appearance</div>
-          <label class="ds-item ds-radio">
-            <i data-lucide="sun"></i><span>Light</span>
-            <input type="radio" name="ds-theme" value="light" checked>
-            <span class="ds-dot"></span>
-          </label>
-          <label class="ds-item ds-radio">
-            <i data-lucide="moon"></i><span>Dark</span>
-            <input type="radio" name="ds-theme" value="dark">
-            <span class="ds-dot"></span>
-          </label>
-          <label class="ds-item ds-radio">
-            <i data-lucide="monitor"></i><span>System</span>
-            <input type="radio" name="ds-theme" value="system">
-            <span class="ds-dot"></span>
-          </label>
-        </div>
-      </div>
-
-      <div class="ds-sep"></div>
-
-      <!-- Account group -->
-      <div class="ds-group">
-        <div class="ds-label">Account</div>
-        <a href="settings.html" class="ds-item">
-          <i data-lucide="user"></i><span>Profile</span>
-          <span class="ds-shortcut">⇧⌘P</span>
-        </a>
-        <a href="payment.html" class="ds-item">
-          <i data-lucide="credit-card"></i><span>Billing</span>
-        </a>
-        <button type="button" class="ds-item ds-sub-trigger" data-sub="settings">
-          <i data-lucide="settings"></i><span>Settings</span>
-          <i data-lucide="chevron-right" class="ds-chev"></i>
-        </button>
-        <div class="ds-sub" id="ds-sub-settings">
-          <div class="ds-label">Preferences</div>
-          <a href="settings.html" class="ds-item"><i data-lucide="keyboard"></i><span>Keyboard Shortcuts</span></a>
-          <a href="#" class="ds-item" onclick="if(window.AirpakLang)AirpakLang.open();return false;">
-            <i data-lucide="languages"></i><span>Language</span>
-          </a>
-          <a href="settings.html" class="ds-item"><i data-lucide="bell"></i><span>Notifications</span></a>
-          <div class="ds-sep"></div>
-          <a href="privacy.html" class="ds-item"><i data-lucide="shield"></i><span>Privacy &amp; Security</span></a>
-        </div>
-      </div>
-
-      <div class="ds-sep"></div>
-
-      <!-- Help group -->
-      <div class="ds-group">
-        <a href="/messages.html" class="ds-item">
-          <i data-lucide="help-circle"></i><span>Help &amp; Support</span>
-        </a>
-        <a href="faq.html" class="ds-item">
-          <i data-lucide="file-text"></i><span>Documentation</span>
-        </a>
-      </div>
-
-      <div style="flex: 1;"></div>
-      <div class="ds-sep"></div>
-
-      <!-- Sign Out -->
-      <div class="ds-group">
-        <a href="signin.html" class="ds-item ds-destructive">
-          <i data-lucide="log-out"></i><span>Sign Out</span>
-          <span class="ds-shortcut">⇧⌘Q</span>
-        </a>
-      </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="dashboard-main">
-      <div class="dashboard-header">
-        <div>
-          <h1 class="dashboard-title" data-i18n="dashboard.welcome">Welcome to Your Dashboard</h1>
-          <p style="color: var(--apple-label-secondary); margin-top: var(--space-1);">Unit 7, Wales International Hub, Cardiff Bay, Wales CF10 5AL, United Kingdom</p>
-        </div>
-        <div class="dashboard-actions">
-          <a href="contact.html" class="btn-secondary"><i data-lucide="download"></i> Get Support</a>
-          <a href="contact.html" class="btn-primary"><i data-lucide="plus"></i> Create Shipment</a>
-        </div>
-      </div>
-
-      <!-- Stats Row -->
-      <div class="dashboard-stats">
-        <div class="dashboard-stat-card">
-          <div class="dashboard-stat-header">
-            <div class="dashboard-stat-icon" style="background: rgba(0,122,255,0.1); color: var(--apple-blue);"><i data-lucide="truck"></i></div>
-            <span class="dashboard-stat-badge badge-blue">Active</span>
-          </div>
-          <div class="dashboard-stat-value">—</div>
-          <div class="dashboard-stat-label">Active Shipments</div>
-        </div>
-        <div class="dashboard-stat-card">
-          <div class="dashboard-stat-header">
-            <div class="dashboard-stat-icon" style="background: rgba(52,199,89,0.1); color: var(--apple-green);"><i data-lucide="check-circle"></i></div>
-            <span class="dashboard-stat-badge badge-green">Track</span>
-          </div>
-          <div class="dashboard-stat-value">—</div>
-          <div class="dashboard-stat-label">Completed</div>
-        </div>
-        <div class="dashboard-stat-card">
-          <div class="dashboard-stat-header">
-            <div class="dashboard-stat-icon" style="background: rgba(255,149,0,0.1); color: var(--apple-orange);"><i data-lucide="clock"></i></div>
-            <span class="dashboard-stat-badge badge-orange">New</span>
-          </div>
-          <div class="dashboard-stat-value">—</div>
-          <div class="dashboard-stat-label">Pending Pickups</div>
-        </div>
-        <div class="dashboard-stat-card">
-          <div class="dashboard-stat-header">
-            <div class="dashboard-stat-icon" style="background: rgba(88,86,214,0.1); color: var(--apple-indigo);"><i data-lucide="sterling-sign"></i></div>
-            <span class="dashboard-stat-badge badge-green">Est.</span>
-          </div>
-          <div class="dashboard-stat-value">£—</div>
-          <div class="dashboard-stat-label">Revenue MTD</div>
-        </div>
-      </div>
-
-      <!-- Charts + Quick Actions + Activity -->
-      <div class="dashboard-grid">
-        <div class="chart-card">
-          <div class="chart-header">
-            <h3 class="chart-title">Shipment Volume</h3>
-            <div class="tabs">
-              <button class="tab active">Week</button>
-              <button class="tab">Month</button>
-              <button class="tab">Year</button>
-            </div>
-          </div>
-          <div class="chart-area" style="display: flex; align-items: center; justify-content: center; color: var(--apple-label-tertiary); font-size: 14px; text-align: center; padding: 40px;">
-            <div>
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto 12px; display: block; opacity: 0.5;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-              No shipment data yet.<br>Create your first shipment to see analytics.
-            </div>
-          </div>
-        </div>
-
-        <div class="quick-actions-panel">
-          <h3 class="chart-title" style="padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--apple-separator);">Quick Actions</h3>
-          <div class="quick-actions-list">
-            <a href="contact.html" class="quick-action-item"><span><i data-lucide="plus-circle"></i></span> New Shipment</a>
-            <a href="tracking.html" class="quick-action-item"><span><i data-lucide="scan-barcode"></i></span> Track Package</a>
-            <a href="contact.html" class="quick-action-item"><span><i data-lucide="printer"></i></span> Get Labels</a>
-            <a href="contact.html" class="quick-action-item"><span><i data-lucide="file-plus"></i></span> Request Pickup</a>
-            <a href="chat.html" class="quick-action-item"><span><i data-lucide="message-square"></i></span> Contact Support</a>
-            <a href="payment.html" class="quick-action-item"><span><i data-lucide="receipt"></i></span> Manage Payments</a>
-          </div>
-        </div>
-
-        <div class="recent-activity">
-          <div class="recent-activity-header">
-            <h3 class="chart-title">Recent Activity</h3>
-            <a href="tracking.html" class="btn-ghost">View All</a>
-          </div>
-          <div class="activity-list" style="padding: 40px; text-align: center; color: var(--apple-label-tertiary);">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto 12px; display: block; opacity: 0.5;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-            No activity yet.<br>Your shipments will appear here once created.
-          </div>
-        </div>
-      </div>
-
-      <!-- Recent Packages Table -->
-      <div class="table-container" style="margin-top: var(--space-6);">
-        <div style="padding: var(--space-5) var(--space-6); border-bottom: 1px solid var(--apple-separator); display: flex; justify-content: space-between; align-items: center;">
-          <h3 class="chart-title">Recent Shipments</h3>
-          <div class="tabs">
-            <button class="tab active">All</button>
-            <button class="tab">In Transit</button>
-            <button class="tab">Delivered</button>
-            <button class="tab">Pending</button>
-          </div>
-        </div>
-        <div style="padding: 60px; text-align: center; color: var(--apple-label-tertiary);">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto 16px; display: block; opacity: 0.5;"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-          <p style="margin-bottom: 8px;">No shipments yet</p>
-          <a href="contact.html" class="btn-primary" style="display: inline-flex; width: auto; padding: 12px 24px;">Create Your First Shipment</a>
-        </div>
-      </div>
-    </main>
+<!-- Main Content -->
+<main class="main-content">
+  <!-- Decorative background elements -->
+  <div aria-hidden="true" style="position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden;pointer-events:none;z-index:0">
+    <svg style="position:absolute;top:15%;left:8%;width:80px;height:80px;opacity:0.06" viewBox="0 0 80 80" fill="none"><rect x="8" y="20" width="64" height="40" rx="4" stroke="#CD2727" stroke-width="2"/><path d="M8 32h64M20 20v-8l20-12 20 12v8" stroke="#CD2727" stroke-width="2"/><circle cx="24" cy="60" r="8" fill="none" stroke="#CD2727" stroke-width="2"/><circle cx="56" cy="60" r="8" fill="none" stroke="#CD2727" stroke-width="2"/></svg>
+    <svg style="position:absolute;top:55%;right:5%;width:60px;height:60px;opacity:0.05" viewBox="0 0 60 60" fill="none"><path d="M10 30h40M30 10v40M15 15l30 30M45 15L15 45" stroke="#1a1a1a" stroke-width="2"/></svg>
+    <svg style="position:absolute;top:75%;left:3%;width:50px;height:50px;opacity:0.04" viewBox="0 0 50 50" fill="none"><circle cx="25" cy="25" r="20" stroke="#CD2727" stroke-width="1.5"/><path d="M25 5v40M5 25h40" stroke="#CD2727" stroke-width="1.5"/></svg>
+    <svg style="position:absolute;top:30%;right:12%;width:40px;height:40px;opacity:0.05" viewBox="0 0 40 40" fill="none"><rect x="4" y="4" width="32" height="32" rx="4" stroke="#1a1a1a" stroke-width="1.5"/><path d="M4 20h32M20 4v32" stroke="#1a1a1a" stroke-width="1.5"/></svg>
+    <svg style="position:absolute;top:5%;right:20%;width:60px;height:60px;opacity:0.04" viewBox="0 0 60 60" fill="none"><path d="M30 5L55 30L30 55L5 30Z" stroke="#CD2727" stroke-width="1.5"/></svg>
   </div>
 
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="js/main.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      lucide.createIcons();
-    });
-  </script>
-  <script src="/apps/airpak/js/ap-lang.js" defer></script>
+  <!-- Welcome Hero -->
+  <div class="welcome-hero">
+    <div class="wh-bg"></div>
+    <div class="wh-content">
+      <div class="wh-greeting">Good morning, James</div>
+      <div class="wh-sub">Manage your shipments and track packages</div>
+      <div class="wh-location">
+        <i data-lucide="map-pin" style="width:12px;height:12px;display:inline;vertical-align:middle;margin-right:4px"></i>
+        Unit 7, Wales International Hub, Cardiff Bay, Wales CF10 5AL
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="stats-row">
+    <div class="stat-card" onclick="window.location.href='tracking.html'">
+      <div class="sc-icon blue"><i data-lucide="truck"></i></div>
+      <div class="sc-value">0</div>
+      <div class="sc-label">Active Shipments</div>
+      <div class="sc-badge blue">Track</div>
+    </div>
+    <div class="stat-card" onclick="window.location.href='tracking.html'">
+      <div class="sc-icon green"><i data-lucide="check-circle"></i></div>
+      <div class="sc-value">0</div>
+      <div class="sc-label">Completed</div>
+      <div class="sc-badge green">All Time</div>
+    </div>
+    <div class="stat-card" onclick="showToast('No pending pickups')">
+      <div class="sc-icon orange"><i data-lucide="clock"></i></div>
+      <div class="sc-value">0</div>
+      <div class="sc-label">Pending</div>
+      <div class="sc-badge orange">Awaiting</div>
+    </div>
+    <div class="stat-card" onclick="window.location.href='payment.html'">
+      <div class="sc-icon purple"><i data-lucide="wallet"></i></div>
+      <div class="sc-value">£0</div>
+      <div class="sc-label">Total Spent</div>
+      <div class="sc-badge blue">View Bills</div>
+    </div>
+  </div>
+
+  <!-- CTA Banner -->
+  <div class="cta-banner">
+    <div class="cta-bg"></div>
+    <div class="cta-content">
+      <div class="cta-title">Need to send a package?</div>
+      <div class="cta-sub">Contact our support team to create a new shipment</div>
+      <a href="contact.html" class="cta-btn">
+        <i data-lucide="plus" style="width:16px;height:16px"></i>
+        Contact Support
+      </a>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="section" style="margin-top:8px;">
+    <div class="section-header">
+      <div class="section-title">Quick Actions</div>
+    </div>
+    <div class="quick-actions">
+      <div class="qa-grid">
+        <a href="contact.html" class="qa-item">
+          <div class="qa-icon red"><i data-lucide="plus-circle"></i></div>
+          <div class="qa-label">New Shipment</div>
+        </a>
+        <a href="tracking.html" class="qa-item">
+          <div class="qa-icon blue"><i data-lucide="scan-barcode"></i></div>
+          <div class="qa-label">Track Package</div>
+        </a>
+        <a href="contact.html" class="qa-item">
+          <div class="qa-icon green"><i data-lucide="printer"></i></div>
+          <div class="qa-label">Get Labels</div>
+        </a>
+        <a href="contact.html" class="qa-item">
+          <div class="qa-icon orange"><i data-lucide="map-pin"></i></div>
+          <div class="qa-label">Request Pickup</div>
+        </a>
+        <a href="contact.html" class="qa-item">
+          <div class="qa-icon purple"><i data-lucide="message-square"></i></div>
+          <div class="qa-label">Chat Support</div>
+        </a>
+        <a href="payment.html" class="qa-item">
+          <div class="qa-icon teal"><i data-lucide="receipt"></i></div>
+          <div class="qa-label">Billing</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Shipments -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Recent Shipments</div>
+      <a href="tracking.html" class="section-link">View All</a>
+    </div>
+    <div class="shipments-list">
+      <div class="empty-state" style="padding:32px 16px">
+        <div class="empty-icon">
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="20" width="48" height="32" rx="4"/><path d="M20 20V14l12-8 12 8v6"/><circle cx="20" cy="52" r="6"/><circle cx="44" cy="52" r="6"/></svg>
+        </div>
+        <div class="empty-title">No shipments yet</div>
+        <div class="empty-desc">Contact support to create your first shipment</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- iOS Glass Bottom Tab Bar -->
+<nav class="bottom-nav">
+  <a href="dashboard.html" class="bottom-nav-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>Home</span>
+  </a>
+  <a href="tracking.html" class="bottom-nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M8 16h6"/></svg>
+    <span>Track</span>
+  </a>
+  <a href="payment.html" class="bottom-nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+    <span>Pay</span>
+  </a>
+  <a href="messages.html" class="bottom-nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span>Chat</span>
+  </a>
+  <a href="#" class="bottom-nav-item" onclick="toggleSidebar();return false;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+    <span>More</span>
+  </a>
+</nav>
+
+<!-- Toast -->
+<div id="toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1C1C1E;color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:500;z-index:9999;transition:transform .3s;box-shadow:0 8px 32px rgba(0,0,0,.3);max-width:calc(100vw - 40px);text-align:center"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Init Lucide icons
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+  
+  // Set greeting
+  var h = new Date().getHours();
+  var greeting = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+  var el = document.querySelector('.wh-greeting');
+  if (el) el.textContent = greeting + ', James';
+  
+  // Mobile sidebar toggle
+  window.toggleSidebar = function() {
+    var sidebar = document.getElementById('mobileSidebar');
+    var overlay = document.getElementById('mobileOverlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
+    document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+  };
+  
+  // Toast notification
+  window.showToast = function(msg) {
+    var t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.style.transform = 'translateX(-50%) translateY(0)';
+    setTimeout(function() {
+      t.style.transform = 'translateX(-50%) translateY(80px)';
+    }, 3000);
+  };
+  
+  // Close sidebar on outside click
+  document.getElementById('mobileOverlay').addEventListener('click', toggleSidebar);
+});
+</script>
+
+<!-- Preloader -->
+<div class="ap-preloader" id="apPreloader">
+  <svg class="ap-preloader-logo" viewBox="0 0 80 80" fill="none">
+    <rect width="80" height="80" rx="16" fill="rgba(255,255,255,.15)"/>
+    <path d="M20 40h40M40 20v40" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="40" cy="40" r="12" fill="none" stroke="white" stroke-width="3"/>
+  </svg>
+  <div class="ap-preloader-title">Airpak Express</div>
+  <div class="ap-preloader-sub" id="apPreloaderGreeting">Loading your experience...</div>
+  <div class="ap-preloader-bar-wrap"><div class="ap-preloader-bar"></div></div>
+  <div class="ap-preloader-dots">
+    <div class="ap-preloader-dot"></div>
+    <div class="ap-preloader-dot"></div>
+    <div class="ap-preloader-dot"></div>
+  </div>
+</div>
+
+<script>
+// Preloader with dynamic greeting
+(function(){
+  var h = new Date().getHours();
+  var greeting = 'Good morning';
+  if (h >= 12 && h < 17) greeting = 'Good afternoon';
+  else if (h >= 17 && h < 21) greeting = 'Good evening';
+  else if (h >= 21) greeting = 'Good night';
+  var el = document.getElementById('apPreloaderGreeting');
+  if (el) el.textContent = greeting + ' — preparing your experience...';
+  
+  // Hide preloader once page is fully loaded
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      var pl = document.getElementById('apPreloader');
+      if (pl) pl.classList.add('hidden');
+      setTimeout(function(){ if(pl) pl.style.display='none'; }, 700);
+    }, 1200);
+  });
+})();
+</script>
+
+
+<!-- PWA Registration -->
 <script>
 (function(){
-  // Platform detection — auto-understands device
-  var ua = navigator.userAgent.toLowerCase();
-  var os = 'desktop';
-  if (/iphone|ipad|ipod/.test(ua)) os = 'ios';
-  else if (/android/.test(ua)) os = 'android';
-  var w = window.innerWidth;
-  if (w < 480) os += '-phone';
-  else if (w < 768) os += '-tablet';
-  else if (w >= 1024) os += '-desktop';
-  var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  document.body.className = [os, isDark ? 'dark' : 'light', 'loaded'].join(' ');
-  // Prevent iOS Safari text inflation
-  document.documentElement.style.setProperty('--text-base', '16px');
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').then(function(reg) {
+        console.log('[PWA] SW registered:', reg.scope);
+      }).catch(function(err) {
+        console.warn('[PWA] SW registration failed:', err);
+      });
+    });
+  }
+
+  // Install prompt
+  var installPrompt = null;
+  var installBtn = null;
+  
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    installPrompt = e;
+    window.showInstallPrompt && window.showInstallPrompt();
+    
+    // Auto-show after 5 seconds
+    setTimeout(function() {
+      if (installPrompt && !localStorage.getItem('ap_pwa_installed')) {
+        var banner = document.createElement('div');
+        banner.id = 'pwa-install-banner';
+        banner.innerHTML = '<div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#CD2727,#9b1a1a);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;z-index:99999;box-shadow:0 -4px 20px rgba(0,0,0,.3)"><div style="flex:1"><div style="font-family:Sarabun,sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:2px">Install Airpak Express App</div><div style="font-size:12px;color:rgba(255,255,255,.7)">Get the full app experience — works offline!</div></div><button id="pwa-install-btn" style="background:#fff;color:#CD2727;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;margin-left:12px;flex-shrink:0">Install</button><button onclick="this.parentElement.style.display='none'" style="background:transparent;border:none;color:rgba(255,255,255,.7);font-size:20px;cursor:pointer;padding:4px 8px;margin-left:4px">×</button></div>';
+        document.body.appendChild(banner);
+        
+        document.getElementById('pwa-install-btn').addEventListener('click', function() {
+          installPrompt.prompt();
+          installPrompt.userChoice.then(function(result) {
+            if (result.outcome === 'accepted') {
+              localStorage.setItem('ap_pwa_installed', '1');
+            }
+            installPrompt = null;
+            banner.style.display = 'none';
+          });
+        });
+      }
+    }, 5000);
+  });
+
+  window.addEventListener('appinstalled', function() {
+    installPrompt = null;
+    localStorage.setItem('ap_pwa_installed', '1');
+    console.log('[PWA] App installed!');
+    // Show toast
+    var toast = document.createElement('div');
+    toast.textContent = 'Airpak Express installed successfully!';
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1C1C1E;color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:500;z-index:99999;box-shadow:0 8px 32px rgba(0,0,0,.3)';
+    document.body.appendChild(toast);
+    setTimeout(function(){ toast.style.display='none'; }, 4000);
+  });
+
+  // Push notification subscription
+  if ('Notification' in window && navigator.serviceWorker) {
+    window.subscribePush = function() {
+      Notification.requestPermission().then(function(perm) {
+        if (perm === 'granted') {
+          navigator.serviceWorker.ready.then(function(reg) {
+            reg.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: 'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3M8NrXYu1Vwvfrwcsjk0s'
+            }).then(function(sub) {
+              console.log('[PWA] Push subscribed:', sub.endpoint);
+              localStorage.setItem('ap_push_sub', JSON.stringify(sub));
+            });
+          });
+        }
+      });
+    };
+    
+    // Auto-prompt after 10s if not subscribed
+    setTimeout(function() {
+      if (Notification.permission === 'default' && !localStorage.getItem('ap_push_sub')) {
+        window.subscribePush && window.subscribePush();
+      }
+    }, 10000);
+  }
+
+  // Check online/offline status
+  window.addEventListener('online', function() {
+    document.body.classList.remove('offline-mode');
+    console.log('[PWA] Back online');
+  });
+  window.addEventListener('offline', function() {
+    document.body.classList.add('offline-mode');
+    console.log('[PWA] Offline mode');
+  });
+
+  // Version check
+  window.apVersion = '1.0.0';
 })();
 </script>
+<script>
+window.addEventListener('load', function() {
+  if (typeof AirpakPWA !== 'undefined') {
+    AirpakPWA.init();
+  } else {
+    var s = document.createElement('script');
+    s.src = '/pwa-features.js';
+    document.head.appendChild(s);
+  }
+});
+</script>
+
 </body>
 </html>
-<script>
-(function () {
-  // Sidebar sub-menu expand/collapse
-  document.querySelectorAll('.ds-grouped .ds-sub-trigger').forEach(function (trig) {
-    trig.setAttribute('aria-expanded', 'false');
-    trig.addEventListener('click', function (e) {
-      e.preventDefault();
-      var id = 'ds-sub-' + trig.getAttribute('data-sub');
-      var sub = document.getElementById(id);
-      if (!sub) return;
-      var open = sub.classList.toggle('open');
-      trig.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-  });
-  // Theme radio → toggles dark on the html element
-  var html = document.documentElement;
-  document.querySelectorAll('input[name="ds-theme"]').forEach(function (r) {
-    r.addEventListener('change', function () {
-      if (!r.checked) return;
-      var v = r.value;
-      if (v === 'dark') html.setAttribute('data-theme', 'dark');
-      else if (v === 'light') html.removeAttribute('data-theme');
-      else html.removeAttribute('data-theme');
-      try { localStorage.setItem('ap_theme', v); } catch (e) {}
-    });
-  });
-  // Sidebar toggle
-  var sidebar = document.querySelector('.dashboard-sidebar');
-  document.querySelectorAll('[data-toggle="sidebar"]').forEach(function (cb) {
-    cb.addEventListener('change', function () {
-      if (!sidebar) return;
-      if (cb.checked) sidebar.style.display = '';
-      else sidebar.style.display = 'none';
-    });
-  });
-  // Re-render lucide icons for the new sidebar markup
-  if (window.lucide && typeof window.lucide.createIcons === 'function') {
-    setTimeout(function () { window.lucide.createIcons(); }, 0);
-  }
-})();
-</script>

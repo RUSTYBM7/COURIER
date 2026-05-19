@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#CD2727">
+<title>Offline — Airpak Express</title>
+<link rel="icon" type="image/svg+xml" href="/apps/airpak/img/favicon.svg">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a0a12 0%,#1a0a0a 100%);color:#fff;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;text-align:center;padding:24px}
+.icon{width:100px;height:100px;margin-bottom:32px;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.05);opacity:1}}
+h1{font-family:'Sarabun',sans-serif;font-size:32px;font-weight:800;color:#CD2727;margin-bottom:12px}
+p{font-size:16px;color:rgba(255,255,255,.6);max-width:360px;line-height:1.6;margin-bottom:32px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:#CD2727;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;transition:all .2s}
+.btn:hover{background:#9b1a1a;transform:translateY(-2px)}
+.status{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,.4);margin-top:24px}
+.dot{width:8px;height:8px;border-radius:50%;background:#16a34a;animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+small{font-size:11px;color:rgba(255,255,255,.2);margin-top:40px;display:block}
+</style>
+</head>
+<body>
+<svg class="icon" viewBox="0 0 100 100" fill="none">
+  <rect width="100" height="100" rx="20" fill="#CD2727"/>
+  <path d="M30 50h40M50 30v40" stroke="white" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="50" cy="50" r="12" stroke="white" stroke-width="3" opacity="0.7"/>
+</svg>
+<h1>You're Offline</h1>
+<p>No internet connection. Don't worry — your cached Airpak Express data is still available.</p>
+<a href="/" class="btn">Try Again</a>
+<a href="/dashboard.html" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,.2);margin-top:12px">View Dashboard</a>
+<div class="status">
+  <span class="dot"></span>
+  <span>Cached data available</span>
+</div>
+<small>Airpak Express PWA v1.0 — works offline</small>
+</body>
+</html>

@@ -51,7 +51,8 @@
         <meta name="msapplication-starturl" content="/" />
 
         <!-- Favicon -->
-        <link rel="icon" type="image/svg+xml" href="/apps/airpak/img/favicon.svg" />
+        <link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/svg+xml" href="/apps/airpak/img/favicon.svg" />
         <link rel="shortcut icon" type="image/svg+xml" href="/apps/airpak/img/favicon.svg" />
         
         <!-- Preload critical fonts -->
@@ -304,6 +305,7 @@ a{color:#CD2727;}
         <link rel="alternate" href="/" hreflang="en-sg" />        
       <link rel="stylesheet" href="/apps/airpak/css/ap-lang.css">
   <link rel="stylesheet" href="/apps/airpak/css/ap-chat.css">
+  <script src="/sw-advanced.js" defer></script>
 </head>
     
 <body>    
@@ -327,7 +329,7 @@ a{color:#CD2727;}
                                             <a href="/aboutus.html" class="tlang aph6" >About Us</a>
                                         </li>
                                         <li>
-                                            <a href="#" class="tlang aph6">Services <i class="fi-rs-angle-down"></i></a>
+                                            <a href="/service-warehousing.html" class="tlang aph6">Services <i class="fi-rs-angle-down"></i></a>
                                             <ul class="sub-menu">
                                                 <li><a href="/worldwide-domestic-courier-service.html">Worldwide Express & Domestic Express</a></li>
                                                 <li><a href="/service-warehousing.html">Warehousing & Fulfillment</a></li>
@@ -346,11 +348,11 @@ a{color:#CD2727;}
                                         <li>
                                             <a href="/careers.html" class="tlang aph6">Careers</a>
                                         </li>
-                                        <li>
-                                            <a href="https://tracking.airpak-express.site/tracking_search.aspx?stid=airpak" target="_blank" class="tlang aph6">Track Shipment</a>
+<li>
+                                            <a href="/tracking.html" class="tlang">Track Shipment</a>
                                         </li>
                                         <li>
-                                            <a href="#" class="tlang aph6">Login <i class="fi-rs-angle-down"></i></a>
+                                            <a href="/signin.html" class="tlang">Login <i class="fi-rs-angle-down"></i></a>
                                             <ul class="sub-menu">
                                                 <li>
                                                 <a href="/admin.html" class="tlang">Employer Portal</a>
@@ -367,7 +369,7 @@ a{color:#CD2727;}
                                                 </ul>
                                     </li>
                                         <li>
-                                            <a class="btn button btn-rounded red-btn btn-hvr-red btn-xs ah5" href="javascript:;" onclick="signup();">Sign Up</a>
+                                            <a class="btn button btn-rounded red-btn btn-hvr-red btn-xs ah5" href="/signup.html" onclick="signup(); return false;">Sign Up</a>
                                         </li>
                                     </ul>
                                 </nav>
@@ -434,7 +436,7 @@ a{color:#CD2727;}
                                             <a href="/aboutus.html" class="tlang" >About Us</a>
                                         </li>
                                         <li class="menu-item-has-children">
-                                            <a href="#" class="tlang">Services</a>
+                                            <a href="/service-warehousing.html" class="tlang">Services</a>
                                             <ul class="dropdown">     
                                                 <li><a href="/worldwide-domestic-courier-service.html">Worldwide Express & Domestic Express</a></li>
                                                 <li><a href="/service-warehousing.html">Warehousing & Fulfillment</a></li>
@@ -454,10 +456,10 @@ a{color:#CD2727;}
                                             <a href="/careers.html" class="tlang">Careers</a>
                                         </li>
                                         <li>
-                                            <a href="https://tracking.airpak-express.site/tracking_search.aspx?stid=airpak" target="_blank" class="tlang">Track Shipment</a>
+                                            <a href="/tracking.html" class="tlang">Track Shipment</a>
                                         </li>
                                         <li class="menu-item-has-children">
-                                            <a href="#" class="tlang">Login</a>
+                                            <a href="/signin.html" class="tlang">Login <i class="fi-rs-angle-down"></i></a>
                                             <ul class="dropdown">     
                                         <li>
                                                 <a href="/admin.html" class="tlang">Employer Portal</a>
@@ -472,7 +474,7 @@ a{color:#CD2727;}
                                                 </ul>
                                     </li>
                                         <li>
-                                            <a href="javascript:;" onclick="signup();">Sign Up</a>
+                                            <a href="/signup.html" onclick="signup(); return false;">Sign Up</a>
                                         </li>
                             </ul>
                         </nav>
@@ -627,10 +629,10 @@ a{color:#CD2727;}
                                </div>
                            <!--<div class="col-3">
                                <img src="/apps/airpak/img/icons/parcel.png"  alt="Parcel" />
-                                    <a href="#" class="aph6">Parcel</a></div>
+                                    <a href="/service-domestic-worldwide-deliveries.html" class="aph6">Parcel</a>
                            <div class="col-3">
                                <img src="/apps/airpak/img/icons/envelope.png"  alt="Envelope" />
-                                    <a href="#" class="aph6">Postal</a></div>-->
+                                    <a href="/worldwide-domestic-courier-service.html" class="aph6">Postal</a></div>-->
                            </div>
                    </div>
                    </div>
@@ -803,18 +805,16 @@ a{color:#CD2727;}
                <div class="row dot-box">
                    <!-- Tabs navs -->
 <ul class="nav nav-tabs nav-fill mb-3" id="ex1" role="tablist">
-  <li class="nav-item nav-item-active" role="presentation">
-    <a class="nav-link active aph4" id="ex2-tab-1" data-toggle="tab" href="#ex2-tabs-1" role="tab" aria-controls="ex2-tabs-1" aria-selected="true" >Airpak ShipNow</a>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link active aph4" id="ex2-tab-1" data-toggle="tab" href="#ex2-tabs-1" role="tab" aria-controls="ex2-tabs-1" aria-selected="true">Airpak ShipProfile</a>
   </li>
   <li class="nav-item" role="presentation">
-    <a class="nav-link aph4" id="ex2-tab-2" data-toggle="tab" href="#ex2-tabs-2" role="tab" aria-controls="ex2-tabs-2" aria-selected="false" >Airpak ShipLite</a>
+    <a class="nav-link aph4" id="ex2-tab-2" data-toggle="tab" href="#ex2-tabs-2" role="tab" aria-controls="ex2-tabs-2" aria-selected="false">Airpak ShipNow</a>
   </li>
   <li class="nav-item" role="presentation">
-    <a class="nav-link aph4" id="ex2-tab-3" data-toggle="tab" href="#ex2-tabs-3" role="tab" aria-controls="ex2-tabs-3" aria-selected="false">Airpak GETOnline</a>
+    <a class="nav-link aph4" id="ex2-tab-3" data-toggle="tab" href="#ex2-tabs-3" role="tab" aria-controls="ex2-tabs-3" aria-selected="false">Airpak Employee</a>
   </li>
-</ul>
-<!-- Tabs navs -->
-<!-- Tabs content -->
+</ul><!-- Tabs content -->
 <div class="tab-content tab3" id="ex2-content">
   <div class="tab-pane fade show active" id="ex2-tabs-1" role="tabpanel" aria-labelledby="ex2-tab-1">
     <div class="row dot-box">
@@ -829,7 +829,7 @@ a{color:#CD2727;}
 <br />d. Ideal for merchants and businesses
                            </p>
                            <!--<a href="#" class="btn button btn-rounded red-btn btn-hvr-black scroll" id="" style="padding-top:5px !important;padding-bottom:5px !important;">COMING SOON</a>-->
-                           <a href="/shipnow.html" class="btn button btn-rounded red-btn btn-hvr-black" id="" style="padding-top:5px !important;padding-bottom:5px !important;">Go To Airpak ShipNow</a>
+                           <a href="/shipnow.html" class="btn button btn-rounded red-btn btn-hvr-red" id="" style="padding-top:5px !important;padding-bottom:5px !important;">Airpak ShipNow</a>
                        </div>
                    </div>
 
@@ -854,7 +854,7 @@ a{color:#CD2727;}
 <br />b. Immediate shipping: Quickly send your packages with minimal delay. 
 <br />c. Pay-per-shipment basis: Pay only for the shipments you make, offering flexibility.
                            </p>
-                           <a href="/admin.html" target="_blank" class="btn button btn-rounded red-btn btn-hvr-black " id="" style="padding-top:5px !important;padding-bottom:5px !important;">Go to Employee Access</a>
+                           <a href="/admin.html" target="_blank" class="btn button btn-rounded red-btn btn-hvr-black " id="" href="/signup.html" class="btn button btn-rounded red-btn btn-hvr-red" style="padding-top:8px !important;padding-bottom:8px !important;display:inline-block;">Airpak ShipProfile — Get Started</a>
                        </div>
                    </div>
 
@@ -874,14 +874,7 @@ a{color:#CD2727;}
                    <div class="col-lg-6 order-lg-2">
                        <div class="heading-area pl-lg-4 " style="padding-top:2em !important;padding:20px;">
 
-                           <p class="paragraph" style="margin-top:30px;line-height:30px;">
-                               a. Targeted at businesses and enterprise users: Designed to support larger organizations with higher shipping demands. 
-<br />b. Contract pricing: Benefit from Custom Rates tailored to your business needs. 
-<br />c. Customized reports: Monitor your shipping activities with tailored reporting and analytics. 
-<br />d. API integration: Seamlessly connect our shipping services to your existing systems.
-                           </p>
-                           <a href="/contact.html" target="_blank" class="btn button btn-rounded red-btn btn-hvr-black " id="" style="padding-top:5px !important;padding-bottom:5px !important;">Go to Airpak GETOnline</a>
-                       </div>
+<!-- Employee portal section already added above -->
                    </div>
 
                    <!-- Features Box-->
@@ -895,7 +888,28 @@ a{color:#CD2727;}
                </div>
   </div>
 </div>
-<!-- Tabs content -->
+<!-- Tabs content --><!-- Footer -->
+
+                           <p class="paragraph" style="margin-top:30px;line-height:30px;">
+                               a. Targeted at businesses and enterprise users: Designed to support larger organizations with higher shipping demands. 
+<br />b. Contract pricing: Benefit from Custom Rates tailored to your business needs. 
+<br />c. Customized reports: Monitor your shipping activities with tailored reporting and analytics. 
+<br />d. API integration: Seamlessly connect our shipping services to your existing systems.
+                           </p>
+                           <a href="/contact.html" target="_blank" class="btn button btn-rounded red-btn btn-hvr-black " id="" style="padding-top:5px !important;padding-bottom:5px !important;">Go to Airpak Employee</a>
+                       </div>
+                   </div>
+
+                   <!-- Features Box-->
+                   <div class="col-lg-6">
+                       <!--About Image-->
+                       <div class="about-image">
+                           <img src="/apps/airpak/img/home/getonline_tab.png" alt="about-img" style="width:100%;">
+                       </div>
+                   </div>
+
+               </div>
+  </div>
                    </div>
                
 
@@ -1427,6 +1441,23 @@ a{color:#CD2727;}
     .ap-why-stats { grid-template-columns:repeat(2,1fr); padding:24px 20px; }
     .ap-why-stat .ap-stat-num { font-size:28px; }
   }
+
+/* === PRELOADER === */
+.ap-preloader{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#CD2727 0%,#9b1a1a 100%);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease,visibility .6s ease}
+.ap-preloader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.ap-preloader-logo{width:80px;height:80px;margin-bottom:24px;animation:preLogoPulse 1.5s ease-in-out infinite}
+.ap-preloader-title{font-family:"Sarabun",sans-serif;font-size:32px;font-weight:800;color:#fff;margin-bottom:8px}
+.ap-preloader-sub{font-family:"Inter",sans-serif;font-size:14px;color:rgba(255,255,255,.7);margin-bottom:40px;letter-spacing:.5px}
+.ap-preloader-bar-wrap{width:280px;height:4px;background:rgba(255,255,255,.2);border-radius:4px;overflow:hidden;margin-bottom:16px}
+.ap-preloader-bar{height:100%;background:#fff;border-radius:4px;animation:preBar 1.8s ease-in-out infinite;width:0}
+.ap-preloader-dots{display:flex;gap:8px}
+.ap-preloader-dot{width:8px;height:8px;background:rgba(255,255,255,.4);border-radius:50%;animation:preDot 1.2s ease-in-out infinite}
+.ap-preloader-dot:nth-child(2){animation-delay:.2s}
+.ap-preloader-dot:nth-child(3){animation-delay:.4s}
+@keyframes preLogoPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes preBar{0%{width:0}50%{width:70%}100%{width:100%}}
+@keyframes preDot{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+
 </style>
 <section class="ap-why-section">
   <div class="ap-container">
@@ -1486,11 +1517,11 @@ a{color:#CD2727;}
     </div>
   </div>
 </section>
-           function gettrack() {
-               if ($("#trackentry").val() == "") { return false;}
-               window.open("https://tracking.airpak-express.site/tracking_search.aspx?stid=airpak&cn=" + $("#trackentry").val());
-               //location.href = "parcel?trackingnumber=" + $("#trackentry").val();
-           }
+function gettrack() {
+                var tn = $("#trackentry").val().trim();
+                if (tn === "") { alert("Please enter a tracking number"); return false; }
+                window.location.href = "/tracking.html?q=" + encodeURIComponent(tn);
+            }
 
            function formini() {
                //$(".scrollingdiv .col-lg-3 .serviceboxhidden").css("top", "-100%");
@@ -1557,6 +1588,64 @@ a{color:#CD2727;}
                     </div>
             </section>
             
+</section>
+
+<!-- Global Partners Section -->
+<section style="padding:60px 0;background:linear-gradient(180deg,#F8F9FC 0%,#fff 100%);position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:0;pointer-events:none;background:url('data:image/svg+xml,...')"></div>
+  <div style="max-width:1200px;margin:0 auto;padding:0 24px;position:relative;z-index:1">
+    <div style="text-align:center;margin-bottom:40px">
+      <div style="font-size:11px;font-weight:700;color:#CD2727;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px">Global Network</div>
+      <h2 style="font-family:'Sarabun',sans-serif;font-size:32px;font-weight:800;color:#1a1a1a;margin:0">Trusted by Businesses Worldwide</h2>
+      <p style="font-size:15px;color:#636366;margin-top:8px">Delivering excellence across 150+ countries with our global partner network</p>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:32px;opacity:0.55;filter:grayscale(100%)">
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 24px;background:rgba(0,0,0,.03);border-radius:12px;border:1px solid rgba(0,0,0,.06);min-width:160px">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="14" height="14" x="1" y="1" fill="#1a1a1a"/><rect width="14" height="14" x="17" y="1" fill="#1a1a1a" opacity=".6"/><rect width="14" height="14" x="1" y="17" fill="#1a1a1a" opacity=".6"/><rect width="14" height="14" x="17" y="17" fill="#1a1a1a" opacity=".3"/></svg>
+        <span style="font-size:16px;font-weight:700;color:#1a1a1a;font-family:'Inter',sans-serif;letter-spacing:-0.5px">TechFlow</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 24px;background:rgba(0,0,0,.03);border-radius:12px;border:1px solid rgba(0,0,0,.06);min-width:160px">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 2L30 16L16 30L2 16Z" fill="#1a1a1a"/><path d="M16 8L24 16L16 24L8 16Z" fill="white"/></svg>
+        <span style="font-size:16px;font-weight:700;color:#1a1a1a;font-family:'Inter',sans-serif;letter-spacing:-0.5px">Meridian</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 24px;background:rgba(0,0,0,.03);border-radius:12px;border:1px solid rgba(0,0,0,.06);min-width:160px">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" fill="#1a1a1a"/><circle cx="16" cy="16" r="6" fill="none" stroke="white" stroke-width="2"/></svg>
+        <span style="font-size:16px;font-weight:700;color:#1a1a1a;font-family:'Inter',sans-serif;letter-spacing:-0.5px">NovaCorp</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 24px;background:rgba(0,0,0,.03);border-radius:12px;border:1px solid rgba(0,0,0,.06);min-width:160px">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 4L28 28H4Z" fill="#1a1a1a"/></svg>
+        <span style="font-size:16px;font-weight:700;color:#1a1a1a;font-family:'Inter',sans-serif;letter-spacing:-0.5px">ApexGroup</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 24px;background:rgba(0,0,0,.03);border-radius:12px;border:1px solid rgba(0,0,0,.06);min-width:160px">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 3L28 9.5V22.5L16 29L4 22.5V9.5Z" fill="#1a1a1a"/><path d="M16 10L21 13V19L16 22L11 19V13Z" fill="white"/></svg>
+        <span style="font-size:16px;font-weight:700;color:#1a1a1a;font-family:'Inter',sans-serif;letter-spacing:-0.5px">Veritas</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 24px;background:rgba(0,0,0,.03);border-radius:12px;border:1px solid rgba(0,0,0,.06);min-width:160px">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M4 20Q16 4 28 20" stroke="#1a1a1a" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M4 24Q16 10 28 24" stroke="#1a1a1a" stroke-width="2" fill="none" stroke-linecap="round" opacity=".5"/></svg>
+        <span style="font-size:16px;font-weight:700;color:#1a1a1a;font-family:'Inter',sans-serif;letter-spacing:-0.5px">SkyLink</span>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:48px;text-align:center">
+      <div>
+        <div style="font-family:'Sarabun',sans-serif;font-size:36px;font-weight:800;color:#CD2727">150+</div>
+        <div style="font-size:13px;color:#636366;margin-top:4px">Countries Served</div>
+      </div>
+      <div>
+        <div style="font-family:'Sarabun',sans-serif;font-size:36px;font-weight:800;color:#1a1a1a">10K+</div>
+        <div style="font-size:13px;color:#636366;margin-top:4px">Business Partners</div>
+      </div>
+      <div>
+        <div style="font-family:'Sarabun',sans-serif;font-size:36px;font-weight:800;color:#1a1a1a">99.7%</div>
+        <div style="font-size:13px;color:#636366;margin-top:4px">On-Time Delivery</div>
+      </div>
+      <div>
+        <div style="font-family:'Sarabun',sans-serif;font-size:36px;font-weight:800;color:#1a1a1a">24/7</div>
+        <div style="font-size:13px;color:#636366;margin-top:4px">Global Support</div>
+      </div>
+    </div>
+  </div>
+</section>
+
         </footer>
         
         <!-- Vendor JS -->
@@ -2028,6 +2117,156 @@ src="https://www.facebook.com/tr?id=503153045757252&ev=PageView&noscript=1"
 
   <script src="/apps/airpak/js/ap-lang.js" defer></script>
   <script src="/apps/airpak/js/ap-chat.js" defer></script>
+
+<!-- Preloader -->
+<div class="ap-preloader" id="apPreloader">
+  <svg class="ap-preloader-logo" viewBox="0 0 80 80" fill="none">
+    <rect width="80" height="80" rx="16" fill="rgba(255,255,255,.15)"/>
+    <path d="M20 40h40M40 20v40" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="40" cy="40" r="12" fill="none" stroke="white" stroke-width="3"/>
+  </svg>
+  <div class="ap-preloader-title">Airpak Express</div>
+  <div class="ap-preloader-sub" id="apPreloaderGreeting">Loading your experience...</div>
+  <div class="ap-preloader-bar-wrap"><div class="ap-preloader-bar"></div></div>
+  <div class="ap-preloader-dots">
+    <div class="ap-preloader-dot"></div>
+    <div class="ap-preloader-dot"></div>
+    <div class="ap-preloader-dot"></div>
+  </div>
+</div>
+
+<script>
+// Preloader with dynamic greeting
+(function(){
+  var h = new Date().getHours();
+  var greeting = 'Good morning';
+  if (h >= 12 && h < 17) greeting = 'Good afternoon';
+  else if (h >= 17 && h < 21) greeting = 'Good evening';
+  else if (h >= 21) greeting = 'Good night';
+  var el = document.getElementById('apPreloaderGreeting');
+  if (el) el.textContent = greeting + ' — preparing your experience...';
+  
+  // Hide preloader once page is fully loaded
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      var pl = document.getElementById('apPreloader');
+      if (pl) pl.classList.add('hidden');
+      setTimeout(function(){ if(pl) pl.style.display='none'; }, 700);
+    }, 1200);
+  });
+})();
+</script>
+
+
+<!-- PWA Registration -->
+<script>
+(function(){
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').then(function(reg) {
+        console.log('[PWA] SW registered:', reg.scope);
+      }).catch(function(err) {
+        console.warn('[PWA] SW registration failed:', err);
+      });
+    });
+  }
+
+  // Install prompt
+  var installPrompt = null;
+  var installBtn = null;
+  
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    installPrompt = e;
+    window.showInstallPrompt && window.showInstallPrompt();
+    
+    // Auto-show after 5 seconds
+    setTimeout(function() {
+      if (installPrompt && !localStorage.getItem('ap_pwa_installed')) {
+        var banner = document.createElement('div');
+        banner.id = 'pwa-install-banner';
+        banner.innerHTML = '<div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#CD2727,#9b1a1a);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;z-index:99999;box-shadow:0 -4px 20px rgba(0,0,0,.3)"><div style="flex:1"><div style="font-family:Sarabun,sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:2px">Install Airpak Express App</div><div style="font-size:12px;color:rgba(255,255,255,.7)">Get the full app experience — works offline!</div></div><button id="pwa-install-btn" style="background:#fff;color:#CD2727;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;margin-left:12px;flex-shrink:0">Install</button><button onclick="this.parentElement.style.display='none'" style="background:transparent;border:none;color:rgba(255,255,255,.7);font-size:20px;cursor:pointer;padding:4px 8px;margin-left:4px">×</button></div>';
+        document.body.appendChild(banner);
+        
+        document.getElementById('pwa-install-btn').addEventListener('click', function() {
+          installPrompt.prompt();
+          installPrompt.userChoice.then(function(result) {
+            if (result.outcome === 'accepted') {
+              localStorage.setItem('ap_pwa_installed', '1');
+            }
+            installPrompt = null;
+            banner.style.display = 'none';
+          });
+        });
+      }
+    }, 5000);
+  });
+
+  window.addEventListener('appinstalled', function() {
+    installPrompt = null;
+    localStorage.setItem('ap_pwa_installed', '1');
+    console.log('[PWA] App installed!');
+    // Show toast
+    var toast = document.createElement('div');
+    toast.textContent = 'Airpak Express installed successfully!';
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1C1C1E;color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:500;z-index:99999;box-shadow:0 8px 32px rgba(0,0,0,.3)';
+    document.body.appendChild(toast);
+    setTimeout(function(){ toast.style.display='none'; }, 4000);
+  });
+
+  // Push notification subscription
+  if ('Notification' in window && navigator.serviceWorker) {
+    window.subscribePush = function() {
+      Notification.requestPermission().then(function(perm) {
+        if (perm === 'granted') {
+          navigator.serviceWorker.ready.then(function(reg) {
+            reg.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: 'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3M8NrXYu1Vwvfrwcsjk0s'
+            }).then(function(sub) {
+              console.log('[PWA] Push subscribed:', sub.endpoint);
+              localStorage.setItem('ap_push_sub', JSON.stringify(sub));
+            });
+          });
+        }
+      });
+    };
+    
+    // Auto-prompt after 10s if not subscribed
+    setTimeout(function() {
+      if (Notification.permission === 'default' && !localStorage.getItem('ap_push_sub')) {
+        window.subscribePush && window.subscribePush();
+      }
+    }, 10000);
+  }
+
+  // Check online/offline status
+  window.addEventListener('online', function() {
+    document.body.classList.remove('offline-mode');
+    console.log('[PWA] Back online');
+  });
+  window.addEventListener('offline', function() {
+    document.body.classList.add('offline-mode');
+    console.log('[PWA] Offline mode');
+  });
+
+  // Version check
+  window.apVersion = '1.0.0';
+})();
+</script>
+<script>
+window.addEventListener('load', function() {
+  if (typeof AirpakPWA !== 'undefined') {
+    AirpakPWA.init();
+  } else {
+    var s = document.createElement('script');
+    s.src = '/pwa-features.js';
+    document.head.appendChild(s);
+  }
+});
+</script>
+
 </body>
 
 </html>
