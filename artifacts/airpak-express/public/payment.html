@@ -30,6 +30,16 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ===== MESH GRADIENT BACKGROUND ===== */
+    .bg-canvas{position:fixed;top:0;left:0;right:0;bottom:0;z-index:0;overflow:hidden;background:linear-gradient(135deg,#F8F8FC 0%,#EEF0F5 40%,#F5F0F8 70%,#F0F4FA 100%)}
+    .bg-blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.45;animation:floatB 22s ease-in-out infinite}
+    .bg-blob-1{width:600px;height:600px;top:-200px;right:-100px;background:radial-gradient(circle,rgba(205,39,39,.12) 0%,transparent 70%);animation-delay:0s}
+    .bg-blob-2{width:500px;height:500px;bottom:-150px;left:-150px;background:radial-gradient(circle,rgba(0,122,255,.1) 0%,transparent 70%);animation-delay:-7s}
+    .bg-blob-3{width:400px;height:400px;top:40%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(52,199,89,.08) 0%,transparent 70%);animation-delay:-14s}
+    @keyframes floatB{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(25px,-15px) scale(1.04)}50%{transform:translate(-15px,25px) scale(.96)}75%{transform:translate(15px,10px) scale(1.02)}}
+    .bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(205,39,39,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(205,39,39,.03) 1px,transparent 1px);background-size:40px 40px}
+    body{background:#F2F2F7!important;min-height:100vh}
+
     :root {
       --wallet-blue: #007AFF;
       --wallet-blue-dark: #0056B3;
@@ -163,8 +173,10 @@
       flex: 1;
       margin-left: var(--sidebar-width);
       min-height: 100vh;
-      background: var(--apple-bg);
+      background: transparent;
       padding-bottom: calc(80px + env(safe-area-inset-bottom, 16px));
+      position: relative;
+      z-index: 1;
     }
 
     /* === HEADER === */
@@ -1539,6 +1551,15 @@
   <script src="/sw-advanced.js" defer></script>
 </head>
 <body>
+
+<!-- Mesh Gradient Background -->
+<div class="bg-canvas" aria-hidden="true">
+  <div class="bg-blob bg-blob-1"></div>
+  <div class="bg-blob bg-blob-2"></div>
+  <div class="bg-blob bg-blob-3"></div>
+  <div class="bg-grid"></div>
+</div>
+
 <!-- Mobile Nav Bar -->
 <nav class="top-nav">
   <button class="mn-btn" onclick="toggleSidebar()" aria-label="Menu">
