@@ -258,12 +258,12 @@
         <div class="quick-actions-panel">
           <h3 class="chart-title" style="padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--apple-separator);">Quick Actions</h3>
           <div class="quick-actions-list">
-            <button class="quick-action-item"><span><i data-lucide="plus-circle"></i></span> New Shipment</button>
-            <button class="quick-action-item"><span><i data-lucide="scan-barcode"></i></span> Track Package</button>
-            <button class="quick-action-item"><span><i data-lucide="printer"></i></span> Print Label</button>
-            <button class="quick-action-item"><span><i data-lucide="file-plus"></i></span> Request Pickup</button>
-            <button class="quick-action-item"><span><i data-lucide="message-square"></i></span> Contact Support</button>
-            <button class="quick-action-item"><span><i data-lucide="receipt"></i></span> View Invoices</button>
+            <a href="shipnow-new-shipment.html" class="quick-action-item"><span><i data-lucide="plus-circle"></i></span> New Shipment</a>
+            <a href="tracking.html" class="quick-action-item"><span><i data-lucide="scan-barcode"></i></span> Track Package</a>
+            <a href="#" class="quick-action-item" onclick="window.print();return false;"><span><i data-lucide="printer"></i></span> Print Label</a>
+            <a href="shipnow-new-shipment.html" class="quick-action-item"><span><i data-lucide="file-plus"></i></span> Request Pickup</a>
+            <a href="chat.html" class="quick-action-item"><span><i data-lucide="message-square"></i></span> Contact Support</a>
+            <a href="payment.html" class="quick-action-item"><span><i data-lucide="receipt"></i></span> View Invoices</a>
           </div>
         </div>
 
@@ -437,9 +437,18 @@
       if (!r.checked) return;
       var v = r.value;
       if (v === 'dark') html.setAttribute('data-theme', 'dark');
-      else if (v === 'light') html.setAttribute('data-theme', 'light');
+      else if (v === 'light') html.removeAttribute('data-theme');
       else html.removeAttribute('data-theme');
       try { localStorage.setItem('ap_theme', v); } catch (e) {}
+    });
+  });
+  // Sidebar toggle
+  var sidebar = document.querySelector('.dashboard-sidebar');
+  document.querySelectorAll('[data-toggle="sidebar"]').forEach(function (cb) {
+    cb.addEventListener('change', function () {
+      if (!sidebar) return;
+      if (cb.checked) sidebar.style.display = '';
+      else sidebar.style.display = 'none';
     });
   });
   // Re-render lucide icons for the new sidebar markup

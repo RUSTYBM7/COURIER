@@ -5,8 +5,9 @@
   "framework": null,
   "cleanUrls": false,
   "rewrites": [
-    { "source": "/signin", "destination": "/signin.html" },
+    { "source": "/shipnow", "destination": "/signin.html" },
     { "source": "/signup", "destination": "/signup.html" },
+    { "source": "/signin", "destination": "/signin.html" },
     { "source": "/dashboard", "destination": "/dashboard.html" },
     { "source": "/tracking", "destination": "/tracking.html" },
     { "source": "/settings", "destination": "/settings.html" },
