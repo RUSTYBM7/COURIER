@@ -23,17 +23,14 @@ const cleanUrlsPlugin = (publicDir: string): Plugin => ({
   },
 });
 
-// Injects React module script + dark class into the dist index.html
-// so Vite can load the React app as an SPA entry point
-const injectReactApp: Plugin = {
-  name: "inject-react-app",
+// Injects dark class into the dist index.html
+const injectDark: Plugin = {
+  name: "inject-dark",
   apply: "build",
   transformIndexHtml(html) {
-    // Inject before </body>
-    const scriptTag = `<script type="module" src="/js/main.js"></script>`;
     const darkClass = `<script>document.documentElement.classList.add('dark');document.body.classList.add('dark');</script>`;
-    if (!html.includes("/js/main.js")) {
-      html = html.replace("</body>", `${scriptTag}\n${darkClass}\n</body>`);
+    if (!html.includes("document.documentElement.classList.add('dark')")) {
+      html = html.replace("</body>", `${darkClass}\n</body>`);
     }
     return html;
   },
@@ -59,8 +56,8 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    cleanUrlsPlugin(path.resolve(import.meta.dirname, "public")),
-    injectReactApp,
+    cleanUrlsPlugin(path.resolve(import.meta.dirname, "static")),
+    injectDark,
     ...replitPlugins,
   ],
   resolve: {
@@ -71,11 +68,12 @@ export default defineConfig({
     dedupe: ["react", "react-dom"],
   },
   root: path.resolve(import.meta.dirname),
+  publicDir: path.resolve(import.meta.dirname, "static"),
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
     rollupOptions: {
-      input: path.resolve(import.meta.dirname, "src/index.html"),
+      input: path.resolve(import.meta.dirname, "index.html"),
       output: {
         entryFileNames: "assets/[name].js",
         chunkFileNames: "assets/[name].js",

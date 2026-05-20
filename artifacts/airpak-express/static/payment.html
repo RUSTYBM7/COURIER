@@ -1,0 +1,2879 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#007AFF">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Your Airpak Express wallet — manage your balance, saved cards, and transaction history.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta property="og:title" content="Wallet — Airpak Express">
+  <meta property="og:description" content="Your Airpak Express wallet.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Airpak Express">
+  <title>Wallet — Airpak Express</title>
+  <link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23007AFF'/%3E%3Cpath d='M8 16h16M16 8v16' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/apple-tokens.css">
+  <link rel="stylesheet" href="css/glass-system.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/brand-airpak.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ===== MESH GRADIENT BACKGROUND ===== */
+    .bg-canvas{position:fixed;top:0;left:0;right:0;bottom:0;z-index:0;overflow:hidden;background:linear-gradient(135deg,#F8F8FC 0%,#EEF0F5 40%,#F5F0F8 70%,#F0F4FA 100%)}
+    .bg-blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.45;animation:floatB 22s ease-in-out infinite}
+    .bg-blob-1{width:600px;height:600px;top:-200px;right:-100px;background:radial-gradient(circle,rgba(205,39,39,.12) 0%,transparent 70%);animation-delay:0s}
+    .bg-blob-2{width:500px;height:500px;bottom:-150px;left:-150px;background:radial-gradient(circle,rgba(0,122,255,.1) 0%,transparent 70%);animation-delay:-7s}
+    .bg-blob-3{width:400px;height:400px;top:40%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(52,199,89,.08) 0%,transparent 70%);animation-delay:-14s}
+    @keyframes floatB{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(25px,-15px) scale(1.04)}50%{transform:translate(-15px,25px) scale(.96)}75%{transform:translate(15px,10px) scale(1.02)}}
+    .bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(205,39,39,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(205,39,39,.03) 1px,transparent 1px);background-size:40px 40px}
+    body{background:#F2F2F7!important;min-height:100vh}
+
+    :root {
+      --wallet-blue: #007AFF;
+      --wallet-blue-dark: #0056B3;
+      --wallet-indigo: #5856D6;
+      --wallet-green: #34C759;
+      --wallet-purple: #AF52DE;
+      --wallet-orange: #FF9500;
+    }
+
+    [data-theme="dark"] {
+      --wallet-card-bg: #1C1C1E;
+      --wallet-card-border: rgba(255,255,255,0.1);
+      --wallet-surface: #2C2C2E;
+      --wallet-surface-2: #3A3A3C;
+    }
+
+    :root {
+      --wallet-card-bg: #FFFFFF;
+      --wallet-card-border: rgba(255,255,255,0.2);
+      --wallet-surface: #F2F2F7;
+      --wallet-surface-2: #E5E5EA;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', Helvetica, Arial, sans-serif;
+      background: var(--apple-bg);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* === LAYOUT === */
+    .wallet-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* === SIDEBAR === */
+    .wallet-sidebar {
+      width: var(--sidebar-width);
+      min-width: var(--sidebar-width);
+      background: var(--wallet-card-bg);
+      border-right: 1px solid var(--apple-separator);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: var(--z-sticky);
+      overflow-y: auto;
+    }
+
+    .wallet-sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-6) var(--space-5);
+      border-bottom: 1px solid var(--apple-separator);
+      text-decoration: none;
+    }
+
+    .wallet-sidebar-logo svg {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+    }
+
+    .wallet-sidebar-logo span {
+      font-size: var(--text-lg);
+      font-weight: var(--font-bold);
+      color: var(--apple-label);
+      letter-spacing: -0.01em;
+    }
+
+    .wallet-sidebar-section {
+      padding: var(--space-4) 0;
+    }
+
+    .wallet-sidebar-section + .wallet-sidebar-section {
+      border-top: 1px solid var(--apple-separator);
+    }
+
+    .wallet-sidebar-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--apple-label-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: var(--space-2) var(--space-5);
+    }
+
+    .wallet-nav-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: 10px var(--space-5);
+      font-size: var(--text-base);
+      font-weight: 500;
+      color: var(--apple-label);
+      text-decoration: none;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: all var(--duration-fast);
+    }
+
+    .wallet-nav-item:hover {
+      background: var(--apple-fill);
+      text-decoration: none;
+      color: var(--apple-label);
+    }
+
+    .wallet-nav-item.active {
+      background: rgba(0,122,255,0.08);
+      color: var(--wallet-blue);
+      border-left-color: var(--wallet-blue);
+      font-weight: 600;
+    }
+
+    .wallet-nav-item i {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .wallet-nav-item span {
+      font-size: var(--text-sm);
+    }
+
+    /* === MAIN CONTENT === */
+    .wallet-main {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      min-height: 100vh;
+      background: transparent;
+      padding-bottom: calc(80px + env(safe-area-inset-bottom, 16px));
+      position: relative;
+      z-index: 1;
+    }
+
+    /* === HEADER === */
+    .wallet-header {
+      position: sticky;
+      top: 0;
+      z-index: var(--z-sticky);
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-bottom: 1px solid var(--apple-separator);
+      padding: 0 var(--space-8);
+    }
+
+    .wallet-header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+
+    .wallet-header-left {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .wallet-title {
+      font-size: var(--text-2xl);
+      font-weight: 800;
+      color: var(--apple-label);
+      letter-spacing: -0.02em;
+    }
+
+    .wallet-header-right {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .lang-pill {
+      display: flex;
+      align-items: center;
+      background: var(--apple-fill);
+      border-radius: var(--radius-full);
+      padding: 4px 8px;
+      font-size: var(--text-xs);
+      font-weight: 600;
+      color: var(--apple-label);
+      cursor: pointer;
+      border: none;
+      transition: all var(--duration-fast);
+    }
+
+    .lang-pill:hover {
+      background: var(--apple-fill-secondary);
+    }
+
+    .lang-pill .lang-active {
+      background: var(--wallet-blue);
+      color: white;
+      border-radius: var(--radius-full);
+      padding: 2px 8px;
+    }
+
+    .theme-toggle {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--apple-fill);
+      border: none;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      color: var(--apple-label);
+      transition: all var(--duration-fast);
+    }
+
+    .theme-toggle:hover {
+      background: var(--apple-fill-secondary);
+    }
+
+    .theme-toggle i {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* === WALLET BODY === */
+    .wallet-body {
+      padding: var(--space-6) var(--space-8);
+      max-width: 1200px;
+    }
+
+    /* === APPLE WALLET CARDS (iOS STYLE) === */
+    .wallet-cards-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      margin-bottom: var(--space-8);
+    }
+
+    .wallet-card {
+      position: relative;
+      border-radius: 20px;
+      padding: var(--space-6);
+      color: white;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform var(--duration-fast) var(--ease-spring);
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .wallet-card:hover {
+      transform: scale(1.01);
+    }
+
+    .wallet-card-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .wallet-card-blue .wallet-card-bg {
+      background: linear-gradient(135deg, var(--wallet-blue) 0%, var(--wallet-indigo) 100%);
+    }
+
+    .wallet-card-blue .wallet-card-bg::before {
+      content: '';
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 200px;
+      height: 200px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+    }
+
+    .wallet-card-blue .wallet-card-bg::after {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      left: -20px;
+      width: 180px;
+      height: 180px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+
+    .wallet-card-green .wallet-card-bg {
+      background: linear-gradient(135deg, var(--wallet-green) 0%, #20A050 100%);
+    }
+
+    .wallet-card-green .wallet-card-bg::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      width: 120px;
+      height: 120px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 50%;
+    }
+
+    .wallet-card-purple .wallet-card-bg {
+      background: linear-gradient(135deg, var(--wallet-purple) 0%, #7B3DB8 100%);
+    }
+
+    .wallet-card-purple .wallet-card-bg::before {
+      content: '';
+      position: absolute;
+      top: -30px;
+      right: 20px;
+      width: 150px;
+      height: 150px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+    }
+
+    .wallet-card-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .wallet-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: auto;
+    }
+
+    .wallet-card-brand {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .wallet-card-chip {
+      width: 44px;
+      height: 34px;
+      background: linear-gradient(135deg, #D4AF37, #C9A430);
+      border-radius: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wallet-card-chip::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(0,0,0,0.15);
+    }
+
+    .wallet-card-chip::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: rgba(0,0,0,0.15);
+    }
+
+    .wallet-card-number {
+      font-size: var(--text-xl);
+      font-weight: 500;
+      letter-spacing: 3px;
+      margin: var(--space-6) 0 var(--space-4);
+      font-family: 'SF Mono', 'Inter', monospace;
+    }
+
+    .wallet-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .wallet-card-info-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.7;
+      margin-bottom: 2px;
+    }
+
+    .wallet-card-info-value {
+      font-size: var(--text-base);
+      font-weight: 600;
+    }
+
+    /* === QUICK ACTIONS === */
+    .wallet-quick-actions {
+      background: var(--wallet-card-bg);
+      border-radius: var(--radius-2xl);
+      padding: var(--space-5);
+      margin-bottom: var(--space-8);
+      border: 1px solid var(--apple-separator);
+    }
+
+    .wallet-quick-actions-title {
+      font-size: var(--text-base);
+      font-weight: 600;
+      color: var(--apple-label);
+      margin-bottom: var(--space-4);
+    }
+
+    .wallet-quick-actions-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-3);
+    }
+
+    .wallet-quick-action {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-4);
+      background: var(--apple-fill);
+      border-radius: var(--radius-xl);
+      cursor: pointer;
+      transition: all var(--duration-fast);
+      border: none;
+      font-family: inherit;
+    }
+
+    .wallet-quick-action:hover {
+      background: var(--apple-fill-secondary);
+    }
+
+    .wallet-quick-action:active {
+      transform: scale(0.96);
+    }
+
+    .wallet-quick-action i {
+      width: 24px;
+      height: 24px;
+      color: var(--wallet-blue);
+    }
+
+    .wallet-quick-action span {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--apple-label);
+    }
+
+    /* === RECENT ACTIVITY === */
+    .wallet-activity {
+      background: var(--wallet-card-bg);
+      border-radius: var(--radius-2xl);
+      overflow: hidden;
+      border: 1px solid var(--apple-separator);
+    }
+
+    .wallet-activity-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-5) var(--space-6);
+      border-bottom: 1px solid var(--apple-separator);
+    }
+
+    .wallet-activity-title {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      color: var(--apple-label);
+    }
+
+    .wallet-activity-see-all {
+      font-size: var(--text-sm);
+      font-weight: 500;
+      color: var(--wallet-blue);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .wallet-activity-see-all:hover {
+      text-decoration: underline;
+    }
+
+    .wallet-activity-list {
+      list-style: none;
+    }
+
+    .wallet-activity-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) var(--space-6);
+      border-bottom: 1px solid var(--apple-separator);
+      transition: background var(--duration-fast);
+    }
+
+    .wallet-activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .wallet-activity-item:hover {
+      background: var(--apple-fill);
+    }
+
+    .wallet-activity-left {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .wallet-activity-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .wallet-activity-icon.blue { background: rgba(0,122,255,0.1); color: var(--wallet-blue); }
+    .wallet-activity-icon.green { background: rgba(52,199,89,0.1); color: var(--wallet-green); }
+    .wallet-activity-icon.orange { background: rgba(255,149,0,0.1); color: var(--wallet-orange); }
+    .wallet-activity-icon.purple { background: rgba(175,82,222,0.1); color: var(--wallet-purple); }
+
+    .wallet-activity-icon i { width: 18px; height: 18px; }
+
+    .wallet-activity-details {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .wallet-activity-name {
+      font-size: var(--text-base);
+      font-weight: 600;
+      color: var(--apple-label);
+    }
+
+    .wallet-activity-date {
+      font-size: var(--text-sm);
+      color: var(--apple-label-secondary);
+    }
+
+    .wallet-activity-amount {
+      font-size: var(--text-base);
+      font-weight: 700;
+    }
+
+    .wallet-activity-amount.debit { color: var(--apple-label); }
+    .wallet-activity-amount.credit { color: var(--wallet-green); }
+
+    /* === DESKTOP LAYOUT === */
+    .wallet-desktop-layout {
+      display: none;
+    }
+
+    @media (min-width: 769px) {
+      .wallet-mobile-layout {
+        display: none;
+      }
+
+      .wallet-desktop-layout {
+        display: block;
+      }
+
+      .wallet-desktop-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: var(--space-8);
+        padding-bottom: var(--space-6);
+        border-bottom: 1px solid var(--apple-separator);
+      }
+
+      .wallet-desktop-title-block h1 {
+        font-size: var(--text-4xl);
+        font-weight: 900;
+        color: var(--apple-label);
+        letter-spacing: -0.02em;
+      }
+
+      .wallet-desktop-title-block p {
+        font-size: var(--text-base);
+        color: var(--apple-label-secondary);
+        margin-top: var(--space-1);
+      }
+
+      /* Summary Widgets */
+      .wallet-summary-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-4);
+        margin-bottom: var(--space-8);
+      }
+
+      .wallet-summary-card {
+        background: var(--wallet-card-bg);
+        border-radius: var(--radius-2xl);
+        padding: var(--space-6);
+        border: 1px solid var(--apple-separator);
+      }
+
+      .wallet-summary-label {
+        font-size: var(--text-sm);
+        color: var(--apple-label-secondary);
+        margin-bottom: var(--space-2);
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+      }
+
+      .wallet-summary-label i { width: 14px; height: 14px; }
+
+      .wallet-summary-value {
+        font-size: var(--text-3xl);
+        font-weight: 800;
+        color: var(--apple-label);
+      }
+
+      .wallet-summary-value.blue { color: var(--wallet-blue); }
+      .wallet-summary-value.green { color: var(--wallet-green); }
+      .wallet-summary-value.orange { color: var(--wallet-orange); }
+
+      /* Payment Methods Grid */
+      .wallet-methods-section {
+        margin-bottom: var(--space-8);
+      }
+
+      .wallet-section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: var(--space-5);
+      }
+
+      .wallet-section-title {
+        font-size: var(--text-xl);
+        font-weight: 700;
+        color: var(--apple-label);
+      }
+
+      .wallet-payment-methods {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: var(--space-4);
+      }
+
+      .wallet-payment-method {
+        background: var(--wallet-card-bg);
+        border-radius: var(--radius-xl);
+        padding: var(--space-5);
+        border: 1px solid var(--apple-separator);
+        cursor: pointer;
+        transition: all var(--duration-fast);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .wallet-payment-method:hover {
+        border-color: var(--wallet-blue);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      }
+
+      .wallet-payment-method.selected {
+        border-color: var(--wallet-blue);
+        background: rgba(0,122,255,0.04);
+      }
+
+      .wallet-payment-method-badge {
+        position: absolute;
+        top: var(--space-4);
+        right: var(--space-4);
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 3px 8px;
+        border-radius: var(--radius-full);
+      }
+
+      .wallet-payment-method-badge.blue { background: var(--wallet-blue); color: white; }
+      .wallet-payment-method-badge.green { background: var(--wallet-green); color: white; }
+      .wallet-payment-method-badge.orange { background: var(--wallet-orange); color: white; }
+      .wallet-payment-method-badge.purple { background: var(--wallet-purple); color: white; }
+      .wallet-payment-method-badge.gray { background: var(--apple-gray); color: white; }
+
+      .wallet-payment-method-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-xl);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: var(--space-4);
+      }
+
+      .wallet-payment-method-icon.blue { background: rgba(0,122,255,0.1); color: var(--wallet-blue); }
+      .wallet-payment-method-icon.green { background: rgba(52,199,89,0.1); color: var(--wallet-green); }
+      .wallet-payment-method-icon.orange { background: rgba(255,149,0,0.1); color: var(--wallet-orange); }
+      .wallet-payment-method-icon.purple { background: rgba(175,82,222,0.1); color: var(--wallet-purple); }
+      .wallet-payment-method-icon.gray { background: var(--apple-fill); color: var(--apple-label); }
+
+      .wallet-payment-method-icon i { width: 24px; height: 24px; }
+
+      .wallet-payment-method-name {
+        font-size: var(--text-base);
+        font-weight: 700;
+        color: var(--apple-label);
+        margin-bottom: 2px;
+      }
+
+      .wallet-payment-method-desc {
+        font-size: var(--text-sm);
+        color: var(--apple-label-secondary);
+      }
+
+      /* Saved Cards Grid */
+      .wallet-saved-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: var(--space-5);
+        margin-bottom: var(--space-8);
+      }
+
+      .wallet-saved-card {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform var(--duration-fast) var(--ease-spring);
+      }
+
+      .wallet-saved-card:hover {
+        transform: scale(1.02);
+      }
+
+      .wallet-saved-card-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+
+      .wallet-saved-card-content {
+        position: relative;
+        z-index: 1;
+        padding: var(--space-5);
+        color: white;
+        min-height: 160px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .wallet-saved-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: auto;
+      }
+
+      .wallet-saved-card-brand {
+        font-size: var(--text-sm);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .wallet-saved-card-default {
+        font-size: 10px;
+        font-weight: 600;
+        background: rgba(255,255,255,0.2);
+        padding: 3px 8px;
+        border-radius: var(--radius-full);
+      }
+
+      .wallet-saved-card-chip {
+        width: 38px;
+        height: 28px;
+        background: linear-gradient(135deg, #D4AF37, #C9A430);
+        border-radius: 4px;
+        margin-bottom: var(--space-4);
+      }
+
+      .wallet-saved-card-number {
+        font-size: var(--text-lg);
+        font-family: 'SF Mono', monospace;
+        letter-spacing: 2px;
+        margin-bottom: auto;
+      }
+
+      .wallet-saved-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+
+      .wallet-saved-card-label {
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        opacity: 0.7;
+        margin-bottom: 2px;
+      }
+
+      .wallet-saved-card-value {
+        font-size: var(--text-sm);
+        font-weight: 600;
+      }
+
+      .wallet-saved-card-actions {
+        display: flex;
+        gap: var(--space-2);
+        margin-top: var(--space-4);
+      }
+
+      .wallet-saved-card-btn {
+        flex: 1;
+        padding: var(--space-2) var(--space-3);
+        font-size: var(--text-sm);
+        font-weight: 600;
+        border-radius: var(--radius-lg);
+        cursor: pointer;
+        transition: all var(--duration-fast);
+        border: none;
+        font-family: inherit;
+      }
+
+      .wallet-saved-card-btn.edit {
+        background: rgba(255,255,255,0.2);
+        color: white;
+      }
+
+      .wallet-saved-card-btn.edit:hover {
+        background: rgba(255,255,255,0.3);
+      }
+
+      .wallet-saved-card-btn.delete {
+        background: rgba(255,59,48,0.2);
+        color: #FF6B6B;
+      }
+
+      .wallet-saved-card-btn.delete:hover {
+        background: rgba(255,59,48,0.3);
+      }
+
+      /* Transactions Table */
+      .wallet-transactions {
+        background: var(--wallet-card-bg);
+        border-radius: var(--radius-2xl);
+        overflow: hidden;
+        border: 1px solid var(--apple-separator);
+        margin-bottom: var(--space-8);
+      }
+
+      .wallet-transactions-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--space-5) var(--space-6);
+        border-bottom: 1px solid var(--apple-separator);
+      }
+
+      .wallet-transactions-title {
+        font-size: var(--text-lg);
+        font-weight: 700;
+        color: var(--apple-label);
+      }
+
+      .wallet-transactions-filters {
+        display: flex;
+        gap: var(--space-3);
+      }
+
+      .wallet-filter-btn {
+        padding: var(--space-2) var(--space-4);
+        font-size: var(--text-sm);
+        font-weight: 500;
+        background: var(--apple-fill);
+        border: none;
+        border-radius: var(--radius-full);
+        cursor: pointer;
+        color: var(--apple-label);
+        font-family: inherit;
+        transition: all var(--duration-fast);
+      }
+
+      .wallet-filter-btn:hover {
+        background: var(--apple-fill-secondary);
+      }
+
+      .wallet-filter-btn.active {
+        background: var(--wallet-blue);
+        color: white;
+      }
+
+      .wallet-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .wallet-table th {
+        font-size: var(--text-xs);
+        font-weight: 600;
+        color: var(--apple-label-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        text-align: left;
+        padding: var(--space-3) var(--space-6);
+        border-bottom: 1px solid var(--apple-separator);
+        background: var(--apple-bg);
+      }
+
+      .wallet-table td {
+        font-size: var(--text-base);
+        color: var(--apple-label);
+        padding: var(--space-4) var(--space-6);
+        border-bottom: 1px solid var(--apple-separator);
+      }
+
+      .wallet-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .wallet-table tr:hover td {
+        background: var(--apple-fill);
+      }
+
+      .wallet-table-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        border-radius: var(--radius-full);
+        font-size: var(--text-xs);
+        font-weight: 600;
+      }
+
+      .wallet-table-badge.completed { background: rgba(52,199,89,0.1); color: var(--wallet-green); }
+      .wallet-table-badge.pending { background: rgba(255,149,0,0.1); color: var(--wallet-orange); }
+      .wallet-table-badge.refunded { background: rgba(0,122,255,0.1); color: var(--wallet-blue); }
+      .wallet-table-badge.failed { background: rgba(255,59,48,0.1); color: var(--apple-red); }
+
+      .wallet-table-actions {
+        display: flex;
+        gap: var(--space-2);
+      }
+
+      .wallet-table-btn {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        background: var(--apple-fill);
+        color: var(--apple-label);
+        transition: all var(--duration-fast);
+      }
+
+      .wallet-table-btn:hover {
+        background: var(--apple-fill-secondary);
+      }
+
+      .wallet-table-btn i { width: 14px; height: 14px; }
+
+      /* Desktop 2 Column Layout */
+      .wallet-desktop-columns {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: var(--space-8);
+        align-items: start;
+      }
+
+      .wallet-desktop-main {
+        min-width: 0;
+      }
+
+      .wallet-desktop-sidebar {
+        position: sticky;
+        top: 80px;
+      }
+
+      /* Quick Pay & Top Up Forms */
+      .wallet-action-card {
+        background: var(--wallet-card-bg);
+        border-radius: var(--radius-2xl);
+        overflow: hidden;
+        border: 1px solid var(--apple-separator);
+        margin-bottom: var(--space-5);
+      }
+
+      .wallet-action-card-header {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        padding: var(--space-5) var(--space-6);
+        border-bottom: 1px solid var(--apple-separator);
+      }
+
+      .wallet-action-card-header i {
+        width: 20px;
+        height: 20px;
+        color: var(--wallet-blue);
+      }
+
+      .wallet-action-card-header h3 {
+        font-size: var(--text-lg);
+        font-weight: 700;
+        color: var(--apple-label);
+      }
+
+      .wallet-action-card-body {
+        padding: var(--space-6);
+      }
+
+      .wallet-field {
+        margin-bottom: var(--space-4);
+      }
+
+      .wallet-field:last-child {
+        margin-bottom: 0;
+      }
+
+      .wallet-field-label {
+        display: block;
+        font-size: var(--text-sm);
+        font-weight: 600;
+        color: var(--apple-label-secondary);
+        margin-bottom: var(--space-2);
+      }
+
+      .wallet-input {
+        width: 100%;
+        padding: var(--space-3) var(--space-4);
+        font-size: var(--text-base);
+        font-family: inherit;
+        background: var(--apple-bg);
+        border: 1.5px solid var(--apple-separator);
+        border-radius: var(--radius-lg);
+        color: var(--apple-label);
+        transition: all var(--duration-fast);
+      }
+
+      .wallet-input:focus {
+        outline: none;
+        border-color: var(--wallet-blue);
+        box-shadow: 0 0 0 3px rgba(0,122,255,0.1);
+      }
+
+      .wallet-input::placeholder {
+        color: var(--apple-label-tertiary);
+      }
+
+      .wallet-input-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-4);
+      }
+
+      .wallet-btn-primary {
+        width: 100%;
+        padding: var(--space-4);
+        font-size: var(--text-base);
+        font-weight: 700;
+        background: var(--wallet-blue);
+        color: white;
+        border: none;
+        border-radius: var(--radius-xl);
+        cursor: pointer;
+        font-family: inherit;
+        transition: all var(--duration-fast);
+        box-shadow: 0 4px 16px rgba(0,122,255,0.3);
+      }
+
+      .wallet-btn-primary:hover {
+        background: var(--wallet-blue-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 8px 24px rgba(0,122,255,0.4);
+      }
+
+      .wallet-btn-primary:active {
+        transform: scale(0.98);
+      }
+
+      .wallet-btn-secondary {
+        width: 100%;
+        padding: var(--space-4);
+        font-size: var(--text-base);
+        font-weight: 600;
+        background: var(--apple-fill);
+        color: var(--apple-label);
+        border: none;
+        border-radius: var(--radius-xl);
+        cursor: pointer;
+        font-family: inherit;
+        transition: all var(--duration-fast);
+      }
+
+      .wallet-btn-secondary:hover {
+        background: var(--apple-fill-secondary);
+      }
+
+      /* Balance Card */
+      .wallet-balance-card {
+        background: linear-gradient(135deg, var(--wallet-blue) 0%, var(--wallet-indigo) 100%);
+        border-radius: var(--radius-2xl);
+        padding: var(--space-6);
+        color: white;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: var(--space-5);
+      }
+
+      .wallet-balance-card::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 160px;
+        height: 160px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+      }
+
+      .wallet-balance-card-label {
+        font-size: var(--text-sm);
+        opacity: 0.8;
+        margin-bottom: var(--space-2);
+      }
+
+      .wallet-balance-card-value {
+        font-size: var(--text-4xl);
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        margin-bottom: var(--space-4);
+      }
+
+      .wallet-balance-card-actions {
+        display: flex;
+        gap: var(--space-3);
+      }
+
+      .wallet-balance-btn {
+        flex: 1;
+        padding: var(--space-3);
+        font-size: var(--text-sm);
+        font-weight: 700;
+        border-radius: var(--radius-xl);
+        cursor: pointer;
+        transition: all var(--duration-fast);
+        border: none;
+        font-family: inherit;
+      }
+
+      .wallet-balance-btn.fill {
+        background: rgba(255,255,255,0.2);
+        color: white;
+      }
+
+      .wallet-balance-btn.fill:hover {
+        background: rgba(255,255,255,0.3);
+      }
+
+      .wallet-balance-btn.solid {
+        background: white;
+        color: var(--wallet-blue);
+      }
+
+      .wallet-balance-btn.solid:hover {
+        background: rgba(255,255,255,0.9);
+      }
+    }
+
+    /* === MODAL === */
+    .wallet-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: var(--z-modal-backdrop);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-4);
+    }
+
+    .wallet-modal-overlay.active {
+      display: flex;
+    }
+
+    .wallet-modal {
+      background: var(--wallet-card-bg);
+      border-radius: var(--radius-2xl);
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--glass-shadow-ultra);
+    }
+
+    .wallet-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-5) var(--space-6);
+      border-bottom: 1px solid var(--apple-separator);
+    }
+
+    .wallet-modal-header h3 {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      color: var(--apple-label);
+    }
+
+    .wallet-modal-close {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--apple-fill);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      color: var(--apple-label);
+      transition: all var(--duration-fast);
+    }
+
+    .wallet-modal-close:hover {
+      background: var(--apple-fill-secondary);
+    }
+
+    .wallet-modal-close i { width: 16px; height: 16px; }
+
+    .wallet-modal-body {
+      padding: var(--space-6);
+    }
+
+    .wallet-modal-footer {
+      padding: var(--space-4) var(--space-6);
+      border-top: 1px solid var(--apple-separator);
+      display: flex;
+      gap: var(--space-3);
+    }
+
+    .wallet-modal-footer .wallet-btn-primary {
+      flex: 1;
+    }
+
+    .wallet-modal-footer .wallet-btn-secondary {
+      flex: 1;
+    }
+
+    /* Card Preview */
+    .wallet-card-preview {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: var(--space-6);
+    }
+
+    .wallet-card-preview-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--wallet-blue) 0%, var(--wallet-indigo) 100%);
+    }
+
+    .wallet-card-preview-content {
+      position: relative;
+      z-index: 1;
+      padding: var(--space-5);
+      color: white;
+      min-height: 150px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .wallet-card-preview-chip {
+      width: 36px;
+      height: 26px;
+      background: linear-gradient(135deg, #D4AF37, #C9A430);
+      border-radius: 4px;
+      margin-bottom: auto;
+    }
+
+    .wallet-card-preview-number {
+      font-size: var(--text-lg);
+      font-family: 'SF Mono', monospace;
+      letter-spacing: 2px;
+      margin: var(--space-4) 0 var(--space-3);
+    }
+
+    .wallet-card-preview-footer {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .wallet-card-preview-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      opacity: 0.7;
+      margin-bottom: 2px;
+    }
+
+    .wallet-card-preview-value {
+      font-size: var(--text-sm);
+      font-weight: 600;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .wallet-sidebar {
+        display: none;
+      }
+
+      .wallet-main {
+        margin-left: 0;
+      }
+
+      .wallet-body {
+        padding: var(--space-4);
+      }
+
+      .bottom-nav {
+        display: flex !important;
+      }
+    }
+
+    /* Toast notification */
+    .wallet-toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--apple-label);
+      color: var(--apple-bg);
+      padding: var(--space-4) var(--space-6);
+      border-radius: var(--radius-xl);
+      font-size: var(--text-base);
+      font-weight: 600;
+      z-index: var(--z-toast);
+      opacity: 0;
+      transition: all var(--duration-normal) var(--ease-spring);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      white-space: nowrap;
+    }
+
+    .wallet-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .wallet-toast i { width: 18px; height: 18px; }
+
+    /* Confirmation Dialog */
+    .wallet-confirm {
+      text-align: center;
+      padding: var(--space-4) 0;
+    }
+
+    .wallet-confirm-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(255,59,48,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-4);
+      color: var(--apple-red);
+    }
+
+    .wallet-confirm-icon i { width: 28px; height: 28px; }
+
+    .wallet-confirm-title {
+      font-size: var(--text-xl);
+      font-weight: 700;
+      color: var(--apple-label);
+      margin-bottom: var(--space-2);
+    }
+
+    .wallet-confirm-message {
+      font-size: var(--text-base);
+      color: var(--apple-label-secondary);
+      margin-bottom: var(--space-6);
+    }
+  
+    
+    /* === Crypto Payment Panel === */
+    .crypto-panel {
+      background: linear-gradient(135deg, #1a1a2e 0%, #2d1f3d 100%);
+      border-radius: 16px;
+      padding: 24px;
+      margin: 20px 0;
+      color: #fff;
+      animation: slideDown 0.3s ease;
+    }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    .crypto-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .crypto-panel-title { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; font-family: 'Sarabun', sans-serif; }
+    .crypto-panel-close { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.1); border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .crypto-panel-close:hover { background: rgba(255,255,255,0.2); }
+    .crypto-coins-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+    .crypto-coin-btn { flex: 1; min-width: 80px; background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all 0.2s; color: #fff; }
+    .crypto-coin-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.25); }
+    .crypto-coin-btn.active { background: rgba(205,39,39,0.3); border-color: var(--ap-red, #CD2727); }
+    .crypto-coin-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .crypto-coin-icon.btc { background: #F7931A; }
+    .crypto-coin-icon.eth { background: #627EEA; }
+    .crypto-coin-icon.usdt { background: #26A17A; }
+    .crypto-coin-icon.usdc { background: #2775CA; }
+    .crypto-coin-icon.xrp { background: #23292F; }
+    .crypto-coin-name { font-size: 11px; font-weight: 600; }
+    .crypto-coin-sym { font-size: 10px; opacity: 0.6; }
+    .crypto-wallet-box { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.1); }
+    .crypto-wallet-label { font-size: 12px; opacity: 0.7; margin-bottom: 10px; }
+    .crypto-wallet-address-row { display: flex; align-items: center; gap: 8px; }
+    .crypto-wallet-address { font-family: monospace; font-size: 13px; background: rgba(255,255,255,0.1); padding: 10px 12px; border-radius: 8px; flex: 1; word-break: break-all; }
+    .crypto-copy-btn { display: flex; align-items: center; gap: 4px; background: var(--ap-red, #CD2727); color: #fff; border: none; padding: 10px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+    .crypto-copy-btn:hover { background: #b01a1a; }
+    .crypto-copy-btn.copied { background: var(--wallet-green, #34C759); }
+    .crypto-network-note { font-size: 11px; opacity: 0.5; margin-top: 8px; }
+    .crypto-scan-section { text-align: center; padding: 16px; }
+    .crypto-qr-placeholder { width: 120px; height: 120px; background: #fff; margin: 0 auto 8px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+    .crypto-scan-label { font-size: 12px; opacity: 0.6; }
+    .crypto-actions { display: flex; gap: 12px; margin-top: 16px; }
+    .changelly-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px; background: linear-gradient(135deg, #F7931A, #E8811E); color: #fff; border-radius: 12px; font-size: 14px; font-weight: 700; text-decoration: none; transition: all 0.2s; cursor: pointer; border: none; }
+    .changelly-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(247,147,26,0.3); }
+    .crypto-confirm-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 14px; background: var(--wallet-green, #34C759); color: #fff; border-radius: 12px; font-size: 14px; font-weight: 700; border: none; cursor: pointer; transition: all 0.2s; }
+    .crypto-confirm-btn:hover { background: #2cb84a; }
+    .crypto-confirm-note { font-size: 11px; opacity: 0.5; text-align: center; margin-top: 12px; }
+
+
+  /* === MOBILE NAV === */
+  .top-nav{display:none}
+  .mobile-nav-wrap{display:none}
+  @media(max-width:767px){
+    .top-nav{display:flex!important;position:fixed;top:0;left:0;right:0;height:60px;background:rgba(255,255,255,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(60,60,67,.12);z-index:500;align-items:center;padding:0 16px;gap:12px}
+    .mobile-nav-wrap{display:block!important;padding-top:60px}
+    .mobile-nav-wrap .wallet-sidebar{display:none!important}
+    .mobile-nav-wrap .wallet-main{margin:0!important;padding:20px 16px!important}
+  }
+  .mn-btn{width:36px;height:36px;border-radius:50%;background:rgba(120,120,128,.12);border:none;display:flex;align-items:center;justify-content:center;color:#1C1C1E;cursor:pointer;flex-shrink:0}
+  .mn-brand{font-family:"Sarabun",sans-serif;font-weight:800;font-size:18px;color:#1C1C1E;text-decoration:none;display:flex;align-items:center;gap:6px}
+  .mn-brand svg{width:28px;height:28px;flex-shrink:0}
+  .mn-spacer{flex:1}
+  .mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:599;opacity:0;pointer-events:none;transition:opacity .3s}
+  .mobile-overlay.active{opacity:1;pointer-events:auto}
+  .mobile-sidebar{position:fixed;top:0;left:0;bottom:0;width:300px;background:#fff;z-index:600;transform:translateX(-100%);transition:transform .3s ease;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.15)}
+  .mobile-sidebar.open{transform:translateX(0)}
+  .ms-header{padding:16px 20px;border-bottom:1px solid rgba(60,60,67,.12);display:flex;align-items:center;gap:12px}
+  .ms-user-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#CD2727,#ff6b6b);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:800;flex-shrink:0}
+  .ms-user-name{font-size:15px;font-weight:700;color:#1C1C1E}
+  .ms-user-email{font-size:12px;color:#636366}
+  .ms-section{padding:12px 0}
+  .ms-section-label{font-size:11px;font-weight:700;color:#636366;text-transform:uppercase;letter-spacing:.5px;padding:0 20px 6px}
+  .ms-item{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#1C1C1E;text-decoration:none;font-size:15px;font-weight:500;transition:background .15s;cursor:pointer;border:none;background:none;width:100%;text-align:left}
+  .ms-item:hover{background:#F2F2F7}
+  .ms-item.active{background:rgba(205,39,39,.08);color:#CD2727;font-weight:700}
+  .ms-item i,.ms-item svg{width:20px;height:20px;flex-shrink:0;color:#636366}
+  .ms-item.active i,.ms-item.active svg{color:#CD2727}
+  .ms-item span{flex:1}
+  .ms-sep{height:1px;background:rgba(60,60,67,.12);margin:8px 20px}
+  .ms-signout{color:#FF3B30!important}
+  .ms-signout i,.ms-signout svg{color:#FF3B30!important}
+  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1C1C1E;color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:500;z-index:9999;transition:transform .3s;box-shadow:0 8px 32px rgba(0,0,0,.3);max-width:calc(100vw - 40px);text-align:center;pointer-events:none}
+  .toast-show{transform:translateX(-50%) translateY(0)!important}
+
+
+/* === PRELOADER === */
+.ap-preloader{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#CD2727 0%,#9b1a1a 100%);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease,visibility .6s ease}
+.ap-preloader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.ap-preloader-logo{width:80px;height:80px;margin-bottom:24px;animation:preLogoPulse 1.5s ease-in-out infinite}
+.ap-preloader-title{font-family:"Sarabun",sans-serif;font-size:32px;font-weight:800;color:#fff;margin-bottom:8px}
+.ap-preloader-sub{font-family:"Inter",sans-serif;font-size:14px;color:rgba(255,255,255,.7);margin-bottom:40px;letter-spacing:.5px}
+.ap-preloader-bar-wrap{width:280px;height:4px;background:rgba(255,255,255,.2);border-radius:4px;overflow:hidden;margin-bottom:16px}
+.ap-preloader-bar{height:100%;background:#fff;border-radius:4px;animation:preBar 1.8s ease-in-out infinite;width:0}
+.ap-preloader-dots{display:flex;gap:8px}
+.ap-preloader-dot{width:8px;height:8px;background:rgba(255,255,255,.4);border-radius:50%;animation:preDot 1.2s ease-in-out infinite}
+.ap-preloader-dot:nth-child(2){animation-delay:.2s}
+.ap-preloader-dot:nth-child(3){animation-delay:.4s}
+@keyframes preLogoPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes preBar{0%{width:0}50%{width:70%}100%{width:100%}}
+@keyframes preDot{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+
+/* === iOS GLASS BOTTOM TAB BAR === */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;padding-bottom:env(safe-area-inset-bottom,16px);background:rgba(255,255,255,.72);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(0,0,0,.08);display:flex;align-items:center;justify-content:space-around;z-index:900;height:calc(60px + env(safe-area-inset-bottom,16px));padding-top:8px}
+.bottom-nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 8px;cursor:pointer;text-decoration:none;color:var(--apple-label-tertiary,#8E8E93);transition:all .15s}
+.bottom-nav-item.active{color:var(--red,#CD2727)}
+.bottom-nav-item svg{width:22px;height:22px;display:block}
+.bottom-nav-item span{font-size:10px;font-weight:600;font-family:Inter,sans-serif}
+
+</style>
+  <link rel="stylesheet" href="/apps/airpak/css/ap-lang.css">
+  <link rel="stylesheet" href="css/responsive-global.css">
+  <script src="/sw-advanced.js" defer></script>
+</head>
+<body>
+
+<!-- Mesh Gradient Background -->
+<div class="bg-canvas" aria-hidden="true">
+  <div class="bg-blob bg-blob-1"></div>
+  <div class="bg-blob bg-blob-2"></div>
+  <div class="bg-blob bg-blob-3"></div>
+  <div class="bg-grid"></div>
+</div>
+
+<!-- Mobile Nav Bar -->
+<nav class="top-nav">
+  <button class="mn-btn" onclick="toggleSidebar()" aria-label="Menu">
+    <i data-lucide="menu" style="width:20px;height:20px;display:block"></i>
+  </button>
+  <a href="index.html" class="mn-brand">
+    <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#CD2727"/><path d="M8 16h16M16 8v16" stroke="white" stroke-width="2.5" stroke-linecap="round"/><circle cx="16" cy="16" r="5" fill="none" stroke="white" stroke-width="1.5"/></svg>
+    Airpak
+  </a>
+  <div class="mn-spacer"></div>
+  <button class="mn-btn" onclick="window.location.href='dashboard.html'" aria-label="Home">
+    <i data-lucide="home" style="width:18px;height:18px;display:block"></i>
+  </button>
+</nav>
+
+<!-- Mobile Overlay -->
+<div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+<!-- Mobile Sidebar -->
+<aside class="mobile-sidebar" id="mobileSidebar">
+  <div class="ms-header">
+    <div class="ms-user-avatar">JW</div>
+    <div>
+      <div class="ms-user-name">James Wilson</div>
+      <div class="ms-user-email">james@company.co.uk</div>
+    </div>
+  </div>
+  <div class="ms-section">
+    <div class="ms-section-label">Navigation</div>
+    <a href="dashboard.html" class="ms-item" onclick="toggleSidebar()"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a>
+    <a href="tracking.html" class="ms-item" onclick="toggleSidebar()"><i data-lucide="truck"></i><span>Track Packages</span></a>
+    <a href="payment.html" class="ms-item active" onclick="toggleSidebar()"><i data-lucide="credit-card"></i><span>Billing & Payments</span></a>
+    <a href="contact.html" class="ms-item" onclick="toggleSidebar()"><i data-lucide="message-square"></i><span>Get Support</span></a>
+  </div>
+  <div class="ms-sep"></div>
+  <div class="ms-section">
+    <div class="ms-section-label">Account</div>
+    <a href="settings.html" class="ms-item" onclick="toggleSidebar()"><i data-lucide="settings"></i><span>Settings</span></a>
+    <a href="signin.html" class="ms-item ms-signout" onclick="showToast('Signed out');setTimeout(function(){window.location='signin.html'},500)"><i data-lucide="log-out"></i><span>Sign Out</span></a>
+  </div>
+</aside>
+
+
+  <div class="wallet-layout">
+    <!-- Sidebar -->
+    <aside class="wallet-sidebar">
+      <a href="index.html" class="wallet-sidebar-logo">
+        <img src="/brand/logo.png" alt="Airpak Express" class="ap-brand-logo" />
+        <span>Airpak Express</span>
+      </a>
+
+      <div class="wallet-sidebar-section">
+        <div class="wallet-sidebar-title">Menu</div>
+        <a href="dashboard.html" class="wallet-nav-item">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="tracking.html" class="wallet-nav-item">
+          <i data-lucide="package"></i>
+          <span>Track</span>
+        </a>
+        <a href="shipnow-dashboard.html" class="wallet-nav-item">
+          <i data-lucide="truck"></i>
+          <span>Ship Now</span>
+        </a>
+        <a href="/messages.html" class="wallet-nav-item">
+          <i data-lucide="message-circle"></i>
+          <span>Messages</span>
+        </a>
+        <a href="settings.html" class="wallet-nav-item">
+          <i data-lucide="settings"></i>
+          <span>Settings</span>
+        </a>
+      </div>
+
+      <div class="wallet-sidebar-section">
+        <div class="wallet-sidebar-title">Account</div>
+        <a href="payment.html" class="wallet-nav-item active">
+          <i data-lucide="wallet"></i>
+          <span>Payments</span>
+        </a>
+        <a href="admin.html" class="wallet-nav-item">
+          <i data-lucide="shield"></i>
+          <span>Admin</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="wallet-main">
+      <!-- Header -->
+      <header class="wallet-header">
+        <div class="wallet-header-inner">
+          <div class="wallet-header-left">
+            <h1 class="wallet-title">Wallet</h1>
+          </div>
+          <div class="wallet-header-right">
+            <div class="lang-pill">
+              <button class="lang-active" onclick="setLang('en')">EN</button>
+              <button onclick="setLang('zh')">ZH</button>
+              <button onclick="setLang('ms')">MS</button>
+              <button onclick="setLang('ar')">AR</button>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()">
+              <i data-lucide="moon" class="icon-dark"></i>
+              <i data-lucide="sun" class="icon-light" style="display:none"></i>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Mobile Layout -->
+      <div class="wallet-body wallet-mobile-layout">
+        <!-- Cards Stack -->
+        <div class="wallet-cards-stack">
+          <div class="wallet-card wallet-card-blue">
+            <div class="wallet-card-bg"></div>
+            <div class="wallet-card-content">
+              <div class="wallet-card-header">
+                <div class="wallet-card-brand">Airpak Express</div>
+                <div class="wallet-card-chip"></div>
+              </div>
+              <div class="wallet-card-number">•••• •••• •••• —•••</div>
+              <div class="wallet-card-footer">
+                <div>
+                  <div class="wallet-card-info-label">GBP Balance</div>
+                  <div class="wallet-card-info-value">£2,847.50</div>
+                </div>
+                <div>
+                  <div class="wallet-card-info-label">Available</div>
+                  <div class="wallet-card-info-value">£2,650.00</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wallet-card wallet-card-green">
+            <div class="wallet-card-bg"></div>
+            <div class="wallet-card-content">
+              <div class="wallet-card-header">
+                <div class="wallet-card-brand">Visa</div>
+                <div class="wallet-card-chip"></div>
+              </div>
+              <div class="wallet-card-number">•••• •••• •••• —•••</div>
+              <div class="wallet-card-footer">
+                <div>
+                  <div class="wallet-card-info-label">Card Holder</div>
+                  <div class="wallet-card-info-value">Your Name</div>
+                </div>
+                <div>
+                  <div class="wallet-card-info-label">Expires</div>
+                  <div class="wallet-card-info-value">09/27</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wallet-card wallet-card-purple">
+            <div class="wallet-card-bg"></div>
+            <div class="wallet-card-content">
+              <div class="wallet-card-header">
+                <div class="wallet-card-brand">Mastercard</div>
+                <div class="wallet-card-chip"></div>
+              </div>
+              <div class="wallet-card-number">•••• •••• •••• —•••</div>
+              <div class="wallet-card-footer">
+                <div>
+                  <div class="wallet-card-info-label">Card Holder</div>
+                  <div class="wallet-card-info-value">Your Name</div>
+                </div>
+                <div>
+                  <div class="wallet-card-info-label">Expires</div>
+                  <div class="wallet-card-info-value">03/26</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Apple Pay Style Button -->
+        <div style="text-align:center;margin:24px 0">
+          <button onclick="showToast('Apple Pay — contact support to set up')" style="display:inline-flex;align-items:center;gap:12px;background:#1a1a1a;color:#fff;border:none;border-radius:12px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.2)">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="white"><path d="M4 4h5v5H4zM11 4h5v5h-5zM4 11h5v5H4z" opacity=".6"/><path d="M11 14h4v2h-4z" fill="white"/></svg>
+            Add to Apple Wallet
+          </button>
+        </div>
+
+        <!-- Crypto Payments -->
+        <div style="margin:0 0 32px;background:linear-gradient(135deg,#1a1a2e,#2d1f3d);border-radius:20px;padding:24px;color:#fff;position:relative;overflow:hidden">
+          <div style="position:absolute;top:-40%;right:-20%;width:200px;height:200px;background:radial-gradient(circle,rgba(205,39,39,.2),transparent 70%);border-radius:50%;pointer-events:none"></div>
+          <div style="position:relative;z-index:1">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.5;margin-bottom:8px">Crypto Payments</div>
+            <h3 style="font-family:'Sarabun',sans-serif;font-size:20px;font-weight:800;margin-bottom:12px">Pay with Crypto</h3>
+            <p style="font-size:13px;opacity:.6;margin-bottom:20px">Send Bitcoin, Ethereum, USDT, USDC, or XRP directly to our wallet. Instant on-chain confirmation.</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button onclick="showToast('BTC wallet: opens when selected')" style="background:rgba(247,147,26,.15);border:1px solid rgba(247,147,26,.3);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:8px;color:#F7931A;font-size:13px;font-weight:600;cursor:pointer">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#F7931A"><circle cx="12" cy="12" r="10"/><path d="M12 6c-.9 0-1.7.1-2.4.4l.6 1.8c.5-.2 1-.3 1.5-.3.5 0 .8.2.8.6s-.3.6-1 .9l-.7.2c-1.6.5-2.6 1.2-2.6 2.4 0 1.4 1.1 2.4 2.8 2.4.8 0 1.5-.2 2.2-.5l-.5-1.7c-.5.2-1 .3-1.5.3-.4 0-.7-.2-.7-.5s.2-.5.8-.8l.8-.2c1.8-.5 2.8-1.2 2.8-2.5 0-1.4-1-2.5-2.8-2.5" fill="white"/></svg>
+                Bitcoin
+              </button>
+              <button onclick="showToast('ETH wallet: opens when selected')" style="background:rgba(98,126,234,.15);border:1px solid rgba(98,126,234,.3);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:8px;color:#627EEA;font-size:13px;font-weight:600;cursor:pointer">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#627EEA"><circle cx="12" cy="12" r="10"/><path d="M12 4v4l5 2" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                Ethereum
+              </button>
+              <button onclick="showToast('USDT: opens when selected')" style="background:rgba(38,161,122,.15);border:1px solid rgba(38,161,122,.3);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:8px;color:#26A17B;font-size:13px;font-weight:600;cursor:pointer">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#26A17B"><rect width="24" height="24" rx="4"/><text x="12" y="17" text-anchor="middle" font-size="12" font-weight="bold" fill="white">₮</text></svg>
+                USDT
+              </button>
+              <button onclick="showToast('XRP: opens when selected')" style="background:rgba(35,41,47,.15);border:1px solid rgba(35,41,47,.3);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:8px;color:#fff;font-size:13px;font-weight:600;cursor:pointer">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#23292F"><rect width="24" height="24" rx="4"/><text x="12" y="17" text-anchor="middle" font-size="14" font-weight="bold" fill="white">X</text></svg>
+                XRP
+              </button>
+            </div>
+            <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.07)">
+              <a href="#" onclick="showToast('Changelly integration coming soon')" style="color:rgba(255,255,255,.4);font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:6px">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Buy crypto with card via Changelly
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="wallet-quick-actions">
+          <div class="wallet-quick-actions-title">Quick Actions</div>
+          <div class="wallet-quick-actions-grid">
+            <button class="wallet-quick-action" onclick="openModal('pay')">
+              <i data-lucide="send"></i>
+              <span>Pay</span>
+            </button>
+            <button class="wallet-quick-action" onclick="openModal('send')">
+              <i data-lucide="arrow-right-left"></i>
+              <span>Send</span>
+            </button>
+            <button class="wallet-quick-action" onclick="openModal('topup')">
+              <i data-lucide="plus-circle"></i>
+              <span>Top Up</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="wallet-activity">
+          <div class="wallet-activity-header">
+            <div class="wallet-activity-title">Recent Activity</div>
+            <button class="wallet-activity-see-all">See All</button>
+          </div>
+          <ul class="wallet-activity-list">
+            <li class="wallet-activity-item">
+              <div class="wallet-activity-left">
+                <div class="wallet-activity-icon blue"><i data-lucide="package"></i></div>
+                <div class="wallet-activity-details">
+                  <div class="wallet-activity-name">International Shipment</div>
+                  <div class="wallet-activity-date">Apr 12, 2026</div>
+                </div>
+              </div>
+              <div class="wallet-activity-amount debit">-£24.99</div>
+            </li>
+            <li class="wallet-activity-item">
+              <div class="wallet-activity-left">
+                <div class="wallet-activity-icon orange"><i data-lucide="clock"></i></div>
+                <div class="wallet-activity-details">
+                  <div class="wallet-activity-name">Package Consolidation</div>
+                  <div class="wallet-activity-date">Apr 11, 2026</div>
+                </div>
+              </div>
+              <div class="wallet-activity-amount debit">-£12.50</div>
+            </li>
+            <li class="wallet-activity-item">
+              <div class="wallet-activity-left">
+                <div class="wallet-activity-icon green"><i data-lucide="refresh-cw"></i></div>
+                <div class="wallet-activity-details">
+                  <div class="wallet-activity-name">Refund - Overpayment</div>
+                  <div class="wallet-activity-date">Apr 10, 2026</div>
+                </div>
+              </div>
+              <div class="wallet-activity-amount credit">+£12.00</div>
+            </li>
+            <li class="wallet-activity-item">
+              <div class="wallet-activity-left">
+                <div class="wallet-activity-icon purple"><i data-lucide="zap"></i></div>
+                <div class="wallet-activity-details">
+                  <div class="wallet-activity-name">Express Delivery Upgrade</div>
+                  <div class="wallet-activity-date">Apr 8, 2026</div>
+                </div>
+              </div>
+              <div class="wallet-activity-amount debit">-£35.00</div>
+            </li>
+            <li class="wallet-activity-item">
+              <div class="wallet-activity-left">
+                <div class="wallet-activity-icon blue"><i data-lucide="credit-card"></i></div>
+                <div class="wallet-activity-details">
+                  <div class="wallet-activity-name">Top Up - Visa ****8892</div>
+                  <div class="wallet-activity-date">Apr 5, 2026</div>
+                </div>
+              </div>
+              <div class="wallet-activity-amount credit">+£500.00</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Desktop Layout -->
+      <div class="wallet-body wallet-desktop-layout">
+        <div class="wallet-desktop-header">
+          <div class="wallet-desktop-title-block">
+            <h1>Payments</h1>
+            <p>Manage your payment methods and transactions</p>
+          </div>
+          <div style="display:flex;gap:var(--space-3)">
+            <button class="wallet-btn-secondary" onclick="openModal('addCard')">
+              <i data-lucide="plus" style="width:16px;height:16px;display:inline"></i>
+              Add Card
+            </button>
+            <button class="wallet-btn-primary" onclick="openModal('topup')">
+              <i data-lucide="plus-circle" style="width:16px;height:16px;display:inline"></i>
+              Top Up Balance
+            </button>
+          </div>
+        </div>
+
+        <div class="wallet-desktop-columns">
+          <div class="wallet-desktop-main">
+            <!-- Summary Widgets -->
+            <div class="wallet-summary-grid">
+              <div class="wallet-summary-card">
+                <div class="wallet-summary-label"><i data-lucide="wallet"></i> Total Balance</div>
+                <div class="wallet-summary-value blue">£2,847.50</div>
+              </div>
+              <div class="wallet-summary-card">
+                <div class="wallet-summary-label"><i data-lucide="clock"></i> Pending</div>
+                <div class="wallet-summary-value orange">£197.50</div>
+              </div>
+              <div class="wallet-summary-card">
+                <div class="wallet-summary-label"><i data-lucide="check-circle"></i> Available</div>
+                <div class="wallet-summary-value green">£2,650.00</div>
+              </div>
+            </div>
+
+            <!-- Saved Cards -->
+            <div class="wallet-saved-cards-grid">
+              <div class="wallet-saved-card">
+                <div class="wallet-saved-card-bg" style="background: linear-gradient(135deg, var(--wallet-blue) 0%, var(--wallet-indigo) 100%);"></div>
+                <div class="wallet-saved-card-content">
+                  <div class="wallet-saved-card-header">
+                    <div class="wallet-saved-card-brand">Airpak Balance</div>
+                    <div class="wallet-saved-card-default">Default</div>
+                  </div>
+                  <div class="wallet-saved-card-chip"></div>
+                  <div class="wallet-saved-card-number">•••• •••• •••• 4721</div>
+                  <div class="wallet-saved-card-footer">
+                    <div>
+                      <div class="wallet-saved-card-label">GBP Balance</div>
+                      <div class="wallet-saved-card-value">£2,847.50</div>
+                    </div>
+                    <div>
+                      <div class="wallet-saved-card-label">Available</div>
+                      <div class="wallet-saved-card-value">£2,650.00</div>
+                    </div>
+                  </div>
+                </div>
+                <div style="padding:0 var(--space-5) var(--space-5); position:relative; z-index:1;">
+                  <div class="wallet-saved-card-actions">
+                    <button class="wallet-saved-card-btn edit" onclick="editCard(0)"><i data-lucide="pencil" style="width:14px;height:14px;display:inline"></i> Edit</button>
+                    <button class="wallet-saved-card-btn delete" onclick="confirmDelete(0)"><i data-lucide="trash-2" style="width:14px;height:14px;display:inline"></i> Delete</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="wallet-saved-card">
+                <div class="wallet-saved-card-bg" style="background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);"></div>
+                <div class="wallet-saved-card-content">
+                  <div class="wallet-saved-card-header">
+                    <div class="wallet-saved-card-brand">Visa</div>
+                  </div>
+                  <div class="wallet-saved-card-chip"></div>
+                  <div class="wallet-saved-card-number">•••• •••• •••• 8892</div>
+                  <div class="wallet-saved-card-footer">
+                    <div>
+                      <div class="wallet-saved-card-label">Card Holder</div>
+                      <div class="wallet-saved-card-value">Your Name</div>
+                    </div>
+                    <div>
+                      <div class="wallet-saved-card-label">Expires</div>
+                      <div class="wallet-saved-card-value">09/27</div>
+                    </div>
+                  </div>
+                </div>
+                <div style="padding:0 var(--space-5) var(--space-5); position:relative; z-index:1;">
+                  <div class="wallet-saved-card-actions">
+                    <button class="wallet-saved-card-btn edit" onclick="editCard(1)"><i data-lucide="pencil" style="width:14px;height:14px;display:inline"></i> Edit</button>
+                    <button class="wallet-saved-card-btn delete" onclick="confirmDelete(1)"><i data-lucide="trash-2" style="width:14px;height:14px;display:inline"></i> Delete</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="wallet-saved-card">
+                <div class="wallet-saved-card-bg" style="background: linear-gradient(135deg, #EB5757 0%, #C0392B 100%);"></div>
+                <div class="wallet-saved-card-content">
+                  <div class="wallet-saved-card-header">
+                    <div class="wallet-saved-card-brand">Mastercard</div>
+                  </div>
+                  <div class="wallet-saved-card-chip"></div>
+                  <div class="wallet-saved-card-number">•••• •••• •••• 3341</div>
+                  <div class="wallet-saved-card-footer">
+                    <div>
+                      <div class="wallet-saved-card-label">Card Holder</div>
+                      <div class="wallet-saved-card-value">Your Name</div>
+                    </div>
+                    <div>
+                      <div class="wallet-saved-card-label">Expires</div>
+                      <div class="wallet-saved-card-value">03/26</div>
+                    </div>
+                  </div>
+                </div>
+                <div style="padding:0 var(--space-5) var(--space-5); position:relative; z-index:1;">
+                  <div class="wallet-saved-card-actions">
+                    <button class="wallet-saved-card-btn edit" onclick="editCard(2)"><i data-lucide="pencil" style="width:14px;height:14px;display:inline"></i> Edit</button>
+                    <button class="wallet-saved-card-btn delete" onclick="confirmDelete(2)"><i data-lucide="trash-2" style="width:14px;height:14px;display:inline"></i> Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Payment Methods -->
+            <div class="wallet-methods-section">
+              <div class="wallet-section-header">
+                <div class="wallet-section-title">Payment Methods</div>
+              </div>
+              <div class="wallet-payment-methods">
+                <div class="wallet-payment-method selected" onclick="selectMethod(this)">
+                  <div class="wallet-payment-method-badge blue">Popular</div>
+                  <div class="wallet-payment-method-icon blue"><i data-lucide="credit-card"></i></div>
+                  <div class="wallet-payment-method-name">Credit/Debit Cards</div>
+                  <div class="wallet-payment-method-desc">Visa, Mastercard, Amex</div>
+                </div>
+                <div class="wallet-payment-method" onclick="selectMethod(this)">
+                  <div class="wallet-payment-method-badge blue">Popular</div>
+                  <div class="wallet-payment-method-icon blue"><i data-lucide="smartphone"></i></div>
+                  <div class="wallet-payment-method-name">Apple Pay</div>
+                  <div class="wallet-payment-method-desc">Touch ID & Face ID</div>
+                </div>
+                <div class="wallet-payment-method" onclick="selectMethod(this)">
+                  <div class="wallet-payment-method-icon blue"><i data-lucide="chrome"></i></div>
+                  <div class="wallet-payment-method-name">Google Pay</div>
+                  <div class="wallet-payment-method-desc">Fast & secure checkout</div>
+                </div>
+                <div class="wallet-payment-method" onclick="selectMethod(this)">
+                  <div class="wallet-payment-method-badge blue">Popular</div>
+                  <div class="wallet-payment-method-icon blue"><i data-lucide="dollar-sign"></i></div>
+                  <div class="wallet-payment-method-name">PayPal</div>
+                  <div class="wallet-payment-method-desc">Buyer protection</div>
+                </div>
+                <div class="wallet-payment-method" onclick="selectMethod(this)">
+                  <div class="wallet-payment-method-icon blue"><i data-lucide="building"></i></div>
+                  <div class="wallet-payment-method-name">Bank Transfer</div>
+                  <div class="wallet-payment-method-desc">UK Faster Payments</div>
+                </div>
+                <div class="wallet-payment-method" onclick="selectMethod(this)">
+                  <div class="wallet-payment-method-icon purple"><i data-lucide="coins"></i></div>
+                  <div class="wallet-payment-method-name">Cryptocurrency</div>
+                  <div class="wallet-payment-method-desc">BTC, ETH, USDT, USDC, XRP</div>
+                </div>
+                <div class="wallet-payment-method" onclick="selectMethod(this)">
+                  <div class="wallet-payment-method-icon green"><i data-lucide="wallet"></i></div>
+                  <div class="wallet-payment-method-name">Airpak Balance</div>
+                  <div class="wallet-payment-method-desc">Stored value account</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Crypto Payment Panel -->
+              <div id="cryptoPanel" class="crypto-panel" style="display:none;">
+                <div class="crypto-panel-header">
+                  <div class="crypto-panel-title">
+                    <i data-lucide="coins" style="width:20px;height:20px"></i>
+                    Pay with Crypto
+                  </div>
+                  <button class="crypto-panel-close" onclick="toggleCryptoSection()">
+                    <i data-lucide="x" style="width:18px;height:18px"></i>
+                  </button>
+                </div>
+                <div class="crypto-coins-grid">
+                  <button class="crypto-coin-btn active" onclick="selectCoin(this, 'BTC')">
+                    <div class="crypto-coin-icon btc">
+                      <svg viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-12h2v2h-2zm0 3h2v5h-2z"/></svg>
+                    </div>
+                    <div class="crypto-coin-name">Bitcoin</div>
+                    <div class="crypto-coin-sym">BTC</div>
+                  </button>
+                  <button class="crypto-coin-btn" onclick="selectCoin(this, 'ETH')">
+                    <div class="crypto-coin-icon eth">
+                      <svg viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px"><path d="M12 1.75l-6.25 10.5L12 16l6.25-3.75L12 1.75zM5.75 13.5L12 22.25l6.25-8.75L12 17.25 5.75 13.5z"/></svg>
+                    </div>
+                    <div class="crypto-coin-name">Ethereum</div>
+                    <div class="crypto-coin-sym">ETH</div>
+                  </button>
+                  <button class="crypto-coin-btn" onclick="selectCoin(this, 'USDT')">
+                    <div class="crypto-coin-icon usdt">
+                      <svg viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px"><rect width="24" height="24" rx="4" fill="#26A17A"/><text x="12" y="16" text-anchor="middle" font-size="9" font-weight="bold" fill="white">₮</text></svg>
+                    </div>
+                    <div class="crypto-coin-name">Tether</div>
+                    <div class="crypto-coin-sym">USDT</div>
+                  </button>
+                  <button class="crypto-coin-btn" onclick="selectCoin(this, 'USDC')">
+                    <div class="crypto-coin-icon usdc">
+                      <svg viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px"><rect width="24" height="24" rx="4" fill="#2775CA"/><text x="12" y="17" text-anchor="middle" font-size="11" font-weight="bold" fill="white">$</text></svg>
+                    </div>
+                    <div class="crypto-coin-name">USD Coin</div>
+                    <div class="crypto-coin-sym">USDC</div>
+                  </button>
+                  <button class="crypto-coin-btn" onclick="selectCoin(this, 'XRP')">
+                    <div class="crypto-coin-icon xrp">
+                      <svg viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px"><rect width="24" height="24" rx="4" fill="#23292F"/><text x="12" y="17" text-anchor="middle" font-size="13" font-weight="bold" fill="white">X</text></svg>
+                    </div>
+                    <div class="crypto-coin-name">Ripple</div>
+                    <div class="crypto-coin-sym">XRP</div>
+                  </button>
+                </div>
+                <div class="crypto-wallet-box">
+                  <div class="crypto-wallet-label">Send payment to this wallet address</div>
+                  <div class="crypto-wallet-address-row">
+                    <div class="crypto-wallet-address" id="cryptoWalletAddr">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</div>
+                    <button class="crypto-copy-btn" id="copyBtn" onclick="copyWalletAddr()">
+                      <i data-lucide="copy" style="width:14px;height:14px"></i>
+                      <span>Copy</span>
+                    </button>
+                  </div>
+                  <div class="crypto-network-note" id="cryptoNetworkNote">Network: Bitcoin (BTC) — send only BTC to this address</div>
+                </div>
+                <div class="crypto-scan-section">
+                  <div class="crypto-qr-placeholder">
+                    <svg viewBox="0 0 80 80" fill="none" style="width:80px;height:80px">
+                      <rect x="0" y="0" width="80" height="80" fill="#fff"/>
+                      <rect x="4" y="4" width="24" height="24" fill="#000"/>
+                      <rect x="52" y="4" width="24" height="24" fill="#000"/>
+                      <rect x="4" y="52" width="24" height="24" fill="#000"/>
+                      <rect x="32" y="32" width="16" height="16" fill="#000"/>
+                      <rect x="36" y="36" width="8" height="8" fill="#fff"/>
+                    </svg>
+                  </div>
+                  <div class="crypto-scan-label">Scan with any wallet app</div>
+                </div>
+                <div class="crypto-actions">
+                  <a href="https://changelly.com/buy" target="_blank" rel="noopener" class="changelly-btn">
+                    <svg viewBox="0 0 20 20" fill="none" style="width:16px;height:16px;flex-shrink:0"><path d="M10 2L2 6l8 4 8-4-8-4zM2 14l8 4 8-4M2 10l8 4 8-4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                    Buy Crypto via Changelly
+                  </a>
+                  <button class="crypto-confirm-btn" onclick="confirmCryptoPayment()">
+                    <i data-lucide="check-circle" style="width:16px;height:16px"></i>
+                    I've Sent Payment
+                  </button>
+                </div>
+                <div class="crypto-confirm-note">Balance updates after blockchain confirmation (10-30 mins)</div>
+              </div>
+
+            <!-- Transactions -->
+            <div class="wallet-transactions">
+              <div class="wallet-transactions-header">
+                <div class="wallet-transactions-title">Transactions</div>
+                <div class="wallet-transactions-filters">
+                  <button class="wallet-filter-btn active" onclick="filterTransactions('all', this)">All</button>
+                  <button class="wallet-filter-btn" onclick="filterTransactions('debit', this)">Debit</button>
+                  <button class="wallet-filter-btn" onclick="filterTransactions('credit', this)">Credit</button>
+                  <button class="wallet-filter-btn" onclick="filterTransactions('card', this)">Card</button>
+                </div>
+              </div>
+              <table class="wallet-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Ref</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="transactions-body">
+                  <tr>
+                    <td>Apr 12, 2026</td>
+                    <td>International Shipment - Cardiff to London</td>
+                    <td style="font-weight:600">-£24.99</td>
+                    <td><span class="wallet-table-badge completed"><i data-lucide="check" style="width:10px;height:10px;display:inline"></i> Completed</span></td>
+                    <td style="color:var(--apple-label-secondary);font-size:var(--text-sm)">APX-2026-8841</td>
+                    <td><div class="wallet-table-actions"><button class="wallet-table-btn"><i data-lucide="receipt" style="width:12px;height:12px"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td>Apr 11, 2026</td>
+                    <td>Package Consolidation Fee</td>
+                    <td style="font-weight:600">-£12.50</td>
+                    <td><span class="wallet-table-badge completed"><i data-lucide="check" style="width:10px;height:10px;display:inline"></i> Completed</span></td>
+                    <td style="color:var(--apple-label-secondary);font-size:var(--text-sm)">APX-2026-8832</td>
+                    <td><div class="wallet-table-actions"><button class="wallet-table-btn"><i data-lucide="receipt" style="width:12px;height:12px"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td>Apr 10, 2026</td>
+                    <td>Refund - Overpayment Recovery</td>
+                    <td style="font-weight:600;color:var(--wallet-green)">+£12.00</td>
+                    <td><span class="wallet-table-badge refunded"><i data-lucide="refresh-cw" style="width:10px;height:10px;display:inline"></i> Refunded</span></td>
+                    <td style="color:var(--apple-label-secondary);font-size:var(--text-sm)">APX-2026-8799</td>
+                    <td><div class="wallet-table-actions"><button class="wallet-table-btn"><i data-lucide="receipt" style="width:12px;height:12px"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td>Apr 8, 2026</td>
+                    <td>Express Delivery Upgrade</td>
+                    <td style="font-weight:600">-£35.00</td>
+                    <td><span class="wallet-table-badge completed"><i data-lucide="check" style="width:10px;height:10px;display:inline"></i> Completed</span></td>
+                    <td style="color:var(--apple-label-secondary);font-size:var(--text-sm)">APX-2026-8765</td>
+                    <td><div class="wallet-table-actions"><button class="wallet-table-btn"><i data-lucide="receipt" style="width:12px;height:12px"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td>Apr 5, 2026</td>
+                    <td>Balance Top Up - Visa ****8892</td>
+                    <td style="font-weight:600;color:var(--wallet-green)">+£500.00</td>
+                    <td><span class="wallet-table-badge completed"><i data-lucide="check" style="width:10px;height:10px;display:inline"></i> Completed</span></td>
+                    <td style="color:var(--apple-label-secondary);font-size:var(--text-sm)">APX-2026-8701</td>
+                    <td><div class="wallet-table-actions"><button class="wallet-table-btn"><i data-lucide="receipt" style="width:12px;height:12px"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td>Apr 3, 2026</td>
+                    <td>Customs Clearance - Import Duty</td>
+                    <td style="font-weight:600">-£67.80</td>
+                    <td><span class="wallet-table-badge pending"><i data-lucide="clock" style="width:10px;height:10px;display:inline"></i> Pending</span></td>
+                    <td style="color:var(--apple-label-secondary);font-size:var(--text-sm)">APX-2026-8644</td>
+                    <td><div class="wallet-table-actions"><button class="wallet-table-btn"><i data-lucide="receipt" style="width:12px;height:12px"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td>Apr 1, 2026</td>
+                    <td>Monthly Subscription - Premium Plan</td>
+                    <td style="font-weight:600">-£29.99</td>
+                    <td><span class="wallet-table-badge completed"><i data-lucide="check" style="width:10px;height:10px;display:inline"></i> Completed</span></td>
+                    <td style="color:var(--apple-label-secondary);font-size:var(--text-sm)">APX-2026-8590</td>
+                    <td><div class="wallet-table-actions"><button class="wallet-table-btn"><i data-lucide="receipt" style="width:12px;height:12px"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td>Mar 28, 2026</td>
+                    <td>International Shipment - UK to USA</td>
+                    <td style="font-weight:600">-£156.00</td>
+                    <td><span class="wallet-table-badge completed"><i data-lucide="check" style="width:10px;height:10px;display:inline"></i> Completed</span></td>
+                    <td style="color:var(--apple-label-secondary);font-size:var(--text-sm)">APX-2026-8532</td>
+                    <td><div class="wallet-table-actions"><button class="wallet-table-btn"><i data-lucide="receipt" style="width:12px;height:12px"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td>Mar 25, 2026</td>
+                    <td>Insurance Add-on - High Value Package</td>
+                    <td style="font-weight:600">-£8.50</td>
+                    <td><span class="wallet-table-badge completed"><i data-lucide="check" style="width:10px;height:10px;display:inline"></i> Completed</span></td>
+                    <td style="color:var(--apple-label-secondary);font-size:var(--text-sm)">APX-2026-8477</td>
+                    <td><div class="wallet-table-actions"><button class="wallet-table-btn"><i data-lucide="receipt" style="width:12px;height:12px"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td>Mar 22, 2026</td>
+                    <td>Failed Delivery Attempt - Re-delivery Fee</td>
+                    <td style="font-weight:600">-£15.00</td>
+                    <td><span class="wallet-table-badge failed"><i data-lucide="x" style="width:10px;height:10px;display:inline"></i> Failed</span></td>
+                    <td style="color:var(--apple-label-secondary);font-size:var(--text-sm)">APX-2026-8411</td>
+                    <td><div class="wallet-table-actions"><button class="wallet-table-btn"><i data-lucide="receipt" style="width:12px;height:12px"></i></button></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Desktop Sidebar -->
+          <div class="wallet-desktop-sidebar">
+            <!-- Balance Card -->
+            <div class="wallet-balance-card">
+              <div class="wallet-balance-card-label">Airpak Balance</div>
+              <div class="wallet-balance-card-value">£2,847.50</div>
+              <div class="wallet-balance-card-actions">
+                <button class="wallet-balance-btn fill" onclick="openModal('send')">Send</button>
+                <button class="wallet-balance-btn solid" onclick="openModal('topup')">Top Up</button>
+              </div>
+            </div>
+
+            <!-- Quick Pay -->
+            <div class="wallet-action-card">
+              <div class="wallet-action-card-header">
+                <i data-lucide="send"></i>
+                <h3>Quick Pay</h3>
+              </div>
+              <div class="wallet-action-card-body">
+                <div class="wallet-field">
+                  <label class="wallet-field-label">Recipient</label>
+                  <input type="text" class="wallet-input" placeholder="Email or phone">
+                </div>
+                <div class="wallet-field">
+                  <label class="wallet-field-label">Amount</label>
+                  <input type="text" class="wallet-input" placeholder="£0.00">
+                </div>
+                <div class="wallet-field">
+                  <label class="wallet-field-label">From</label>
+                  <select class="wallet-input">
+                    <option>Airpak Balance - £2,847.50</option>
+                    <option>Visa ****8892</option>
+                    <option>Mastercard ****3341</option>
+                  </select>
+                </div>
+                <button class="wallet-btn-primary" onclick="showToast('Payment sent successfully')">Send Payment</button>
+              </div>
+            </div>
+
+            <!-- Send Money -->
+            <div class="wallet-action-card">
+              <div class="wallet-action-card-header">
+                <i data-lucide="arrow-right-left"></i>
+                <h3>Bank Transfer</h3>
+              </div>
+              <div class="wallet-action-card-body">
+                <div class="wallet-field">
+                  <label class="wallet-field-label">Account Number</label>
+                  <input type="text" class="wallet-input" placeholder="12345678">
+                </div>
+                <div class="wallet-field">
+                  <label class="wallet-field-label">Sort Code</label>
+                  <input type="text" class="wallet-input" placeholder="12-34-56">
+                </div>
+                <div class="wallet-field">
+                  <label class="wallet-field-label">Reference</label>
+                  <input type="text" class="wallet-input" placeholder="Your reference">
+                </div>
+                <button class="wallet-btn-primary" onclick="showToast('Transfer initiated')">Send via Faster Payments</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+</div>
+
+      <!-- iOS Glass Bottom Tab Bar (mobile only) -->
+      <nav class="bottom-nav" style="display:none">
+        <a href="dashboard.html" class="bottom-nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Home</span>
+        </a>
+        <a href="tracking.html" class="bottom-nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="10" x="5" y="2" rx="2"/><path d="M6 18h2"/><path d="M10 18h1"/><path d="M12 18h4"/><circle cx="12" cy="18" r="2"/></svg>
+          <span>Track</span>
+        </a>
+        <a href="payment.html" class="bottom-nav-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+          <span>Pay</span>
+        </a>
+        <a href="messages.html" class="bottom-nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>Chat</span>
+        </a>
+        <a href="settings.html" class="bottom-nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Add Card Modal -->
+  <div class="wallet-modal-overlay" id="modal-addCard">
+    <div class="wallet-modal">
+      <div class="wallet-modal-header">
+        <h3>Add New Card</h3>
+        <button class="wallet-modal-close" onclick="closeModal('addCard')"><i data-lucide="x"></i></button>
+      </div>
+      <div class="wallet-modal-body">
+        <div class="wallet-card-preview">
+          <div class="wallet-card-preview-bg"></div>
+          <div class="wallet-card-preview-content">
+            <div class="wallet-card-preview-chip"></div>
+            <div class="wallet-card-preview-number" id="preview-number">•••• •••• •••• ••••</div>
+            <div class="wallet-card-preview-footer">
+              <div>
+                <div class="wallet-card-preview-label">Card Holder</div>
+                <div class="wallet-card-preview-value" id="preview-name">Your Name</div>
+              </div>
+              <div>
+                <div class="wallet-card-preview-label">Expires</div>
+                <div class="wallet-card-preview-value" id="preview-expiry">MM/YY</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="wallet-field">
+          <label class="wallet-field-label">Card Number</label>
+          <input type="text" class="wallet-input" id="input-cardnumber" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCardNumber(this)">
+        </div>
+        <div class="wallet-input-row">
+          <div class="wallet-field">
+            <label class="wallet-field-label">Expiry Date</label>
+            <input type="text" class="wallet-input" id="input-expiry" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)">
+          </div>
+          <div class="wallet-field">
+            <label class="wallet-field-label">CVV</label>
+            <input type="text" class="wallet-input" id="input-cvv" placeholder="123" maxlength="4">
+          </div>
+        </div>
+        <div class="wallet-field">
+          <label class="wallet-field-label">Cardholder Name</label>
+          <input type="text" class="wallet-input" id="input-name" placeholder="Name on card" oninput="updatePreview()">
+        </div>
+        <div class="wallet-field" style="margin-top:var(--space-4)">
+          <label class="wallet-field-label">Billing Address</label>
+          <input type="text" class="wallet-input" value="Unit 7, Wales International Hub, Cardiff Bay, Wales CF10 5AL, United Kingdom" readonly>
+        </div>
+      </div>
+      <div class="wallet-modal-footer">
+        <button class="wallet-btn-secondary" onclick="closeModal('addCard')">Cancel</button>
+        <button class="wallet-btn-primary" onclick="saveCard()">Save Card</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Up Modal -->
+  <div class="wallet-modal-overlay" id="modal-topup">
+    <div class="wallet-modal">
+      <div class="wallet-modal-header">
+        <h3>Top Up Balance</h3>
+        <button class="wallet-modal-close" onclick="closeModal('topup')"><i data-lucide="x"></i></button>
+      </div>
+      <div class="wallet-modal-body">
+        <div class="wallet-field">
+          <label class="wallet-field-label">Amount to Add</label>
+          <input type="text" class="wallet-input" placeholder="£0.00" style="font-size:var(--text-2xl);text-align:center;padding:var(--space-6)">
+        </div>
+        <div class="wallet-field">
+          <label class="wallet-field-label">Funding Source</label>
+          <select class="wallet-input">
+            <option>Visa ****8892</option>
+            <option>Mastercard ****3341</option>
+            <option>Bank Transfer (Faster Payments)</option>
+          </select>
+        </div>
+        <div style="margin-top:var(--space-4)">
+          <div class="wallet-field-label" style="margin-bottom:var(--space-3)">Quick Amounts</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-2)">
+            <button class="wallet-filter-btn" onclick="setAmount('50')">£50</button>
+            <button class="wallet-filter-btn" onclick="setAmount('100')">£100</button>
+            <button class="wallet-filter-btn" onclick="setAmount('250')">£250</button>
+            <button class="wallet-filter-btn" onclick="setAmount('500')">£500</button>
+          </div>
+        </div>
+      </div>
+      <div class="wallet-modal-footer">
+        <button class="wallet-btn-secondary" onclick="closeModal('topup')">Cancel</button>
+        <button class="wallet-btn-primary" onclick="topUp()">Top Up</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Send Money Modal -->
+  <div class="wallet-modal-overlay" id="modal-send">
+    <div class="wallet-modal">
+      <div class="wallet-modal-header">
+        <h3>Send Money</h3>
+        <button class="wallet-modal-close" onclick="closeModal('send')"><i data-lucide="x"></i></button>
+      </div>
+      <div class="wallet-modal-body">
+        <div class="wallet-field">
+          <label class="wallet-field-label">Recipient Email or Phone</label>
+          <input type="text" class="wallet-input" placeholder="name@example.com">
+        </div>
+        <div class="wallet-field">
+          <label class="wallet-field-label">Amount</label>
+          <input type="text" class="wallet-input" placeholder="£0.00" style="font-size:var(--text-2xl);text-align:center;padding:var(--space-6)">
+        </div>
+        <div class="wallet-field">
+          <label class="wallet-field-label">Note (optional)</label>
+          <input type="text" class="wallet-input" placeholder="What's this for?">
+        </div>
+      </div>
+      <div class="wallet-modal-footer">
+        <button class="wallet-btn-secondary" onclick="closeModal('send')">Cancel</button>
+        <button class="wallet-btn-primary" onclick="sendMoney()">Send Money</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pay Modal -->
+  <div class="wallet-modal-overlay" id="modal-pay">
+    <div class="wallet-modal">
+      <div class="wallet-modal-header">
+        <h3>Pay for Shipment</h3>
+        <button class="wallet-modal-close" onclick="closeModal('pay')"><i data-lucide="x"></i></button>
+      </div>
+      <div class="wallet-modal-body">
+        <div class="wallet-field">
+          <label class="wallet-field-label">Shipment Reference</label>
+          <input type="text" class="wallet-input" placeholder="APX-2026-XXXX">
+        </div>
+        <div class="wallet-field">
+          <label class="wallet-field-label">Amount Due</label>
+          <input type="text" class="wallet-input" placeholder="£0.00" style="font-size:var(--text-2xl);text-align:center;padding:var(--space-6)">
+        </div>
+        <div class="wallet-field">
+          <label class="wallet-field-label">Payment Method</label>
+          <select class="wallet-input">
+            <option>Airpak Balance - £2,847.50</option>
+            <option>Visa ****8892</option>
+            <option>Mastercard ****3341</option>
+          </select>
+        </div>
+      </div>
+      <div class="wallet-modal-footer">
+        <button class="wallet-btn-secondary" onclick="closeModal('pay')">Cancel</button>
+        <button class="wallet-btn-primary" onclick="payShipment()">Pay Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="wallet-modal-overlay" id="modal-delete">
+    <div class="wallet-modal">
+      <div class="wallet-modal-header">
+        <h3>Delete Card</h3>
+        <button class="wallet-modal-close" onclick="closeModal('delete')"><i data-lucide="x"></i></button>
+      </div>
+      <div class="wallet-modal-body">
+        <div class="wallet-confirm">
+          <div class="wallet-confirm-icon"><i data-lucide="trash-2"></i></div>
+          <div class="wallet-confirm-title">Remove this card?</div>
+          <div class="wallet-confirm-message">This action cannot be undone. The card ending in <strong>****3341</strong> will be removed from your account.</div>
+        </div>
+      </div>
+      <div class="wallet-modal-footer">
+        <button class="wallet-btn-secondary" onclick="closeModal('delete')">Cancel</button>
+        <button class="wallet-btn-danger">Delete Card</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="wallet-toast" id="toast">
+    <i data-lucide="check-circle"></i>
+    <span id="toast-message">Success</span>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    lucide.createIcons();
+
+    function openModal(id) {
+      document.getElementById('modal-' + id).classList.add('active');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+
+    function closeModal(id) {
+      document.getElementById('modal-' + id).classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function selectMethod(el) {
+      document.querySelectorAll('.wallet-payment-method').forEach(e => e.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    function filterTransactions(type, btn) {
+      document.querySelectorAll('.wallet-filter-btn').forEach(e => e.classList.remove('active'));
+      btn.classList.add('active');
+      showToast(type === 'all' ? 'Showing all transactions' : 'Filtered: ' + type);
+    }
+
+    function formatCardNumber(input) {
+      let value = input.value.replace(/\s/g, '').replace(/\D/g, '');
+      let formatted = value.match(/.{1,4}/g)?.join(' ') || '';
+      input.value = formatted;
+      let preview = formatted || '•••• •••• •••• ••••';
+      document.getElementById('preview-number').textContent = preview;
+    }
+
+    function formatExpiry(input) {
+      let value = input.value.replace(/\D/g, '');
+      if (value.length >= 2) {
+        value = value.slice(0, 2) + '/' + value.slice(2, 4);
+      }
+      input.value = value;
+      document.getElementById('preview-expiry').textContent = value || 'MM/YY';
+    }
+
+    function updatePreview() {
+      const name = document.getElementById('input-name').value || 'Your Name';
+      document.getElementById('preview-name').textContent = name.toUpperCase();
+    }
+
+    function saveCard() {
+      closeModal('addCard');
+      showToast('Card saved successfully');
+    }
+
+    function topUp() {
+      closeModal('topup');
+      showToast('Balance topped up successfully');
+    }
+
+    function sendMoney() {
+      closeModal('send');
+      showToast('Money sent successfully');
+    }
+
+    function payShipment() {
+      closeModal('pay');
+      showToast('Payment processed successfully');
+    }
+
+    function setAmount(amount) {
+      showToast('Amount set to £' + amount);
+    }
+
+    function editCard(id) {
+      openModal('addCard');
+    }
+
+    function confirmDelete(id) {
+      openModal('delete');
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-message').textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function setLang(lang) {
+      showToast('Language: ' + lang.toUpperCase());
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      document.body.setAttribute('data-theme', next);
+
+      const iconDark = document.querySelector('.icon-dark');
+      const iconLight = document.querySelector('.icon-light');
+      if (next === 'dark') {
+        iconDark.style.display = 'none';
+        iconLight.style.display = 'block';
+      } else {
+        iconDark.style.display = 'block';
+        iconLight.style.display = 'none';
+      }
+    }
+
+    document.querySelectorAll('.wallet-modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          overlay.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+    });
+  </script>
+  <script src="/apps/airpak/js/ap-lang.js" defer></script>
+<script>
+(function(){
+  // Platform detection — auto-understands device
+  var ua = navigator.userAgent.toLowerCase();
+  var os = 'desktop';
+  if (/iphone|ipad|ipod/.test(ua)) os = 'ios';
+  else if (/android/.test(ua)) os = 'android';
+  var w = window.innerWidth;
+  if (w < 480) os += '-phone';
+  else if (w < 768) os += '-tablet';
+  else if (w >= 1024) os += '-desktop';
+  var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  document.body.className = [os, isDark ? 'dark' : 'light', 'loaded'].join(' ');
+  // Prevent iOS Safari text inflation
+  document.documentElement.style.setProperty('--text-base', '16px');
+})();
+
+// === Crypto Payment Functions ===
+const walletAddresses = {
+  BTC: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh',
+  ETH: '0x742d35Cc6634C0532925a3b844Bc9e7595f2D234',
+  USDT: '0x742d35Cc6634C0532925a3b844Bc9e7595f2D234',
+  USDC: '0x742d35Cc6634C0532925a3b844Bc9e7595f2D234',
+  XRP: 'rN7n3473SaZBCQSYBFGxE8iRMFDSjWEjDu'
+};
+
+function toggleCryptoSection() {
+  var panel = document.getElementById('cryptoPanel');
+  if (!panel) return;
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function selectCoin(btn, coin) {
+  document.querySelectorAll('.crypto-coin-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  var addr = walletAddresses[coin] || '';
+  var addrEl = document.getElementById('cryptoWalletAddr');
+  if (addrEl) addrEl.textContent = addr;
+  var note = '';
+  if (coin === 'BTC') note = 'Network: Bitcoin (BTC) — send only BTC to this address';
+  else if (coin === 'ETH') note = 'Network: Ethereum (ERC-20) — send only ETH to this address';
+  else if (coin === 'USDT' || coin === 'USDC') note = 'Network: ' + coin + ' (ERC-20) — send only ' + coin + ' to this address';
+  else if (coin === 'XRP') note = 'Network: Ripple (XRP) — send only XRP with Destination Tag: 123456';
+  var noteEl = document.getElementById('cryptoNetworkNote');
+  if (noteEl) noteEl.textContent = note;
+}
+
+function copyWalletAddr() {
+  var addr = document.getElementById('cryptoWalletAddr');
+  if (!addr) return;
+  var text = addr.textContent;
+  var btn = document.getElementById('copyBtn');
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function() {
+      if (btn) {
+        btn.querySelector('span').textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(function() {
+          btn.querySelector('span').textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      }
+    });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    if (btn) {
+      btn.querySelector('span').textContent = 'Copied!';
+      setTimeout(function(){ btn.querySelector('span').textContent = 'Copy'; }, 2000);
+    }
+  }
+}
+
+function confirmCryptoPayment() {
+  var addr = document.getElementById('cryptoWalletAddr');
+  var coinBtn = document.querySelector('.crypto-coin-btn.active');
+  var coin = coinBtn ? coinBtn.querySelector('.crypto-coin-sym').textContent : 'BTC';
+  var addrText = addr ? addr.textContent : '';
+  showToast('Payment initiated for ' + coin + '! Check your email for confirmation.');
+  toggleCryptoSection();
+}
+
+// Wire up crypto method card click
+document.addEventListener('DOMContentLoaded', function() {
+  var cryptoMethod = document.querySelector('.wallet-payment-method');
+  var methods = document.querySelectorAll('.wallet-payment-method');
+  methods.forEach(function(m) {
+    var nameEl = m.querySelector('.wallet-payment-method-name');
+    if (nameEl && nameEl.textContent.trim() === 'Cryptocurrency') {
+      m.style.cursor = 'pointer';
+      m.onclick = function() { toggleCryptoSection(); };
+    }
+  });
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+});
+
+// === Mobile Nav Functions ===
+window.toggleSidebar=function(){var s=document.getElementById('mobileSidebar'),o=document.getElementById('mobileOverlay');s.classList.toggle('open');o.classList.toggle('active');document.body.style.overflow=s.classList.contains('open')?'hidden':''};
+window.showToast=function(m){var t=document.getElementById('toast');if(!t)return;t.textContent=m;t.classList.add('toast-show');setTimeout(function(){t.classList.remove('toast-show')},3000)};
+document.addEventListener('DOMContentLoaded',function(){
+  document.getElementById('mobileOverlay')&&document.getElementById('mobileOverlay').addEventListener('click',toggleSidebar);
+  if(typeof lucide!=='undefined')lucide.createIcons();
+});
+
+</script>
+
+<!-- Preloader -->
+<div class="ap-preloader" id="apPreloader">
+  <svg class="ap-preloader-logo" viewBox="0 0 80 80" fill="none">
+    <rect width="80" height="80" rx="16" fill="rgba(255,255,255,.15)"/>
+    <path d="M20 40h40M40 20v40" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="40" cy="40" r="12" fill="none" stroke="white" stroke-width="3"/>
+  </svg>
+  <div class="ap-preloader-title">Airpak Express</div>
+  <div class="ap-preloader-sub" id="apPreloaderGreeting">Loading your experience...</div>
+  <div class="ap-preloader-bar-wrap"><div class="ap-preloader-bar"></div></div>
+  <div class="ap-preloader-dots">
+    <div class="ap-preloader-dot"></div>
+    <div class="ap-preloader-dot"></div>
+    <div class="ap-preloader-dot"></div>
+  </div>
+</div>
+
+<script>
+// Preloader with dynamic greeting
+(function(){
+  var h = new Date().getHours();
+  var greeting = 'Good morning';
+  if (h >= 12 && h < 17) greeting = 'Good afternoon';
+  else if (h >= 17 && h < 21) greeting = 'Good evening';
+  else if (h >= 21) greeting = 'Good night';
+  var el = document.getElementById('apPreloaderGreeting');
+  if (el) el.textContent = greeting + ' — preparing your experience...';
+  
+  // Hide preloader once page is fully loaded
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      var pl = document.getElementById('apPreloader');
+      if (pl) pl.classList.add('hidden');
+      setTimeout(function(){ if(pl) pl.style.display='none'; }, 700);
+    }, 1200);
+  });
+})();
+</script>
+
+
+<!-- PWA Registration -->
+<script>
+(function(){
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').then(function(reg) {
+        console.log('[PWA] SW registered:', reg.scope);
+      }).catch(function(err) {
+        console.warn('[PWA] SW registration failed:', err);
+      });
+    });
+  }
+
+  // Install prompt
+  var installPrompt = null;
+  var installBtn = null;
+  
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    installPrompt = e;
+    window.showInstallPrompt && window.showInstallPrompt();
+    
+    // Auto-show after 5 seconds
+    setTimeout(function() {
+      if (installPrompt && !localStorage.getItem('ap_pwa_installed')) {
+        var banner = document.createElement('div');
+        banner.id = 'pwa-install-banner';
+        banner.innerHTML = '<div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#CD2727,#9b1a1a);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;z-index:99999;box-shadow:0 -4px 20px rgba(0,0,0,.3)"><div style="flex:1"><div style="font-family:Sarabun,sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:2px">Install Airpak Express App</div><div style="font-size:12px;color:rgba(255,255,255,.7)">Get the full app experience — works offline!</div></div><button id="pwa-install-btn" style="background:#fff;color:#CD2727;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;margin-left:12px;flex-shrink:0">Install</button><button onclick="this.parentElement.style.display='none'" style="background:transparent;border:none;color:rgba(255,255,255,.7);font-size:20px;cursor:pointer;padding:4px 8px;margin-left:4px">×</button></div>';
+        document.body.appendChild(banner);
+        
+        document.getElementById('pwa-install-btn').addEventListener('click', function() {
+          installPrompt.prompt();
+          installPrompt.userChoice.then(function(result) {
+            if (result.outcome === 'accepted') {
+              localStorage.setItem('ap_pwa_installed', '1');
+            }
+            installPrompt = null;
+            banner.style.display = 'none';
+          });
+        });
+      }
+    }, 5000);
+  });
+
+  window.addEventListener('appinstalled', function() {
+    installPrompt = null;
+    localStorage.setItem('ap_pwa_installed', '1');
+    console.log('[PWA] App installed!');
+    // Show toast
+    var toast = document.createElement('div');
+    toast.textContent = 'Airpak Express installed successfully!';
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1C1C1E;color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:500;z-index:99999;box-shadow:0 8px 32px rgba(0,0,0,.3)';
+    document.body.appendChild(toast);
+    setTimeout(function(){ toast.style.display='none'; }, 4000);
+  });
+
+  // Push notification subscription
+  if ('Notification' in window && navigator.serviceWorker) {
+    window.subscribePush = function() {
+      Notification.requestPermission().then(function(perm) {
+        if (perm === 'granted') {
+          navigator.serviceWorker.ready.then(function(reg) {
+            reg.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: 'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3M8NrXYu1Vwvfrwcsjk0s'
+            }).then(function(sub) {
+              console.log('[PWA] Push subscribed:', sub.endpoint);
+              localStorage.setItem('ap_push_sub', JSON.stringify(sub));
+            });
+          });
+        }
+      });
+    };
+    
+    // Auto-prompt after 10s if not subscribed
+    setTimeout(function() {
+      if (Notification.permission === 'default' && !localStorage.getItem('ap_push_sub')) {
+        window.subscribePush && window.subscribePush();
+      }
+    }, 10000);
+  }
+
+  // Check online/offline status
+  window.addEventListener('online', function() {
+    document.body.classList.remove('offline-mode');
+    console.log('[PWA] Back online');
+  });
+  window.addEventListener('offline', function() {
+    document.body.classList.add('offline-mode');
+    console.log('[PWA] Offline mode');
+  });
+
+  // Version check
+  window.apVersion = '1.0.0';
+})();
+</script>
+<script>
+window.addEventListener('load', function() {
+  if (typeof AirpakPWA !== 'undefined') {
+    AirpakPWA.init();
+  } else {
+    var s = document.createElement('script');
+    s.src = '/pwa-features.js';
+    document.head.appendChild(s);
+  }
+});
+</script>
+
+</body>
+</html>

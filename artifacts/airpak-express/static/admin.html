@@ -1,0 +1,2320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Airpak Express Admin Portal — full operations management.">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#CD2727">
+    <meta name="color-scheme" content="light">
+    <link rel="canonical" href="https://airpak-express.site/admin.html" />
+    <title>Admin Portal | Airpak Express</title>
+    <link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/svg+xml" href="/apps/airpak/img/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Sarabun:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="/sw-advanced.js" defer></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#CD2727;--red-d:#9b1a1a;--dark:#0a0a12;--sidebar:#10101a;
+  --card:#16162a;--card2:#1e1e32;--border:rgba(255,255,255,.07);
+  --text:#dde0f0;--sub:rgba(255,255,255,.35);--green:#16a34a;
+  --amber:#d97706;--blue:#2563eb;--purple:#7c3aed;--teal:#0d9488;
+  --sidebar-w:260px;
+}
+html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);}
+body{overflow-x:hidden}
+
+/* === TOPBAR === */
+.topbar{position:fixed;top:0;left:var(--sidebar-w);right:0;height:60px;background:var(--sidebar);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:200;gap:16px;}
+.hamburger-btn{display:none;width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.07);border:none;color:#fff;cursor:pointer;flex-shrink:0;align-items:center;justify-content:center;transition:background .2s;padding:0;}
+.hamburger-btn:hover{background:rgba(255,255,255,.12)}
+.hamburger-btn svg{width:20px;height:20px;display:block}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.topbar-title{font-size:15px;font-weight:800;color:#fff;font-family:'Sarabun',sans-serif;}
+.topbar-breadcrumb{font-size:12px;color:var(--sub);}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-stat{text-align:center;}
+.topbar-stat .ts-val{font-size:16px;font-weight:800;color:var(--red);}
+.topbar-stat .ts-lbl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;}
+.tbar-sep{width:1px;height:28px;background:var(--border);}
+.user-chip{display:flex;align-items:center;gap:10px;background:var(--card2);border:1px solid var(--border);border-radius:24px;padding:5px 14px 5px 5px;cursor:pointer;}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--red-d));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;}
+.user-name{font-size:13px;font-weight:700;color:#fff;}
+.user-role{font-size:10px;color:var(--sub);text-transform:uppercase;}
+.notif-btn{position:relative;background:none;border:none;color:var(--sub);cursor:pointer;padding:6px;border-radius:8px;transition:all .2s;}
+.notif-btn:hover{background:rgba(255,255,255,.06);color:#fff;}
+.notif-dot{position:absolute;top:4px;right:4px;width:8px;height:8px;border-radius:50%;background:var(--red);border:2px solid var(--sidebar);}
+
+/* Mobile topbar: compact avatar + settings only */
+.mobile-profile-dot{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--red-d));display:none;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;cursor:pointer;border:none;flex-shrink:0;}
+.mobile-settings-btn{display:none;width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.06);border:none;cursor:pointer;align-items:center;justify-content:center;color:rgba(255,255,255,.7);transition:background .2s;padding:0;}
+.mobile-settings-btn:hover{background:rgba(255,255,255,.12);color:#fff;}
+
+/* === SIDEBAR === */
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;z-index:300;}
+.sidebar-header{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.sidebar-logo{max-height:30px;filter:brightness(10);}
+.sidebar-brand{font-size:11px;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;line-height:1.3;font-family:'Sarabun',sans-serif;}
+.sidebar-brand span{display:block;color:var(--red);font-size:9px;letter-spacing:2px;}
+.sidebar-search{padding:10px 14px;border-bottom:1px solid var(--border);}
+.sidebar-search input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:#fff;font-size:12px;outline:none;transition:border-color .2s;}
+.sidebar-search input:focus{border-color:rgba(205,39,39,.5);}
+.sidebar-search input::placeholder{color:var(--sub);}
+.sidebar-scroll{flex:1;overflow-y:auto;padding:6px 0;}
+.sidebar-scroll::-webkit-scrollbar{width:3px;}
+.sidebar-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+
+/* Admin Profile Card */
+.sidebar-profile{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border);margin-bottom:4px;background:linear-gradient(135deg,rgba(205,39,39,.08),transparent);cursor:pointer;}
+.sp-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--red),#ff6b6b);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;}
+.sp-info{flex:1;min-width:0;}
+.sp-name{font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sp-role{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;}
+.sp-status{flex-shrink:0;}
+.sp-status-dot{width:10px;height:10px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px rgba(74,222,128,.5);}
+
+/* Nav Groups */
+.nav-group{margin-bottom:2px;}
+.nav-group-header{display:flex;align-items:center;justify-content:space-between;padding:8px 18px;cursor:pointer;user-select:none;transition:all .2s;}
+.nav-group-header:hover{background:rgba(255,255,255,.03);}
+.ngh-label{font-size:10px;font-weight:800;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.5px;font-family:'Inter',sans-serif;}
+.ngh-chev{width:16px;height:16px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.2);transition:transform .25s;}
+.nav-group.open .ngh-chev{transform:rotate(180deg);}
+.nav-group-items{display:none;padding:0 0 4px 0;}
+.nav-group.open .nav-group-items{display:block;}
+
+/* Nav Items */
+.nav-item{display:flex;align-items:center;gap:10px;padding:7px 18px;cursor:pointer;transition:all .15s;border-left:2px solid transparent;font-size:12px;color:rgba(255,255,255,.5);margin:1px 0;}
+.nav-item:hover{background:rgba(255,255,255,.04);color:rgba(255,255,255,.85);}
+.nav-item.active{background:rgba(205,39,39,.12);border-left-color:var(--red);color:#fff;}
+.nav-item .nav-icon{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.nav-item .nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:800;}
+.nav-item .nav-badge.green{background:var(--green);}
+.nav-item .nav-badge.amber{background:var(--amber);}
+.nav-item .nav-badge.blue{background:var(--blue);}
+.nav-item .nav-badge.purple{background:var(--purple);}
+
+/* === MAIN CONTENT === */
+.main{position:fixed;top:60px;left:var(--sidebar-w);right:0;bottom:0;overflow-y:auto;}
+.main::-webkit-scrollbar{width:4px;}
+.main::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.panel{display:none;padding:28px;min-height:100%;}
+.panel.active{display:block;}
+
+/* === STAY PAID HERO === */
+.stay-paid-hero{background:linear-gradient(135deg,#0a0a12 0%,#1a0a1a 40%,#0a0a12 100%);border-radius:16px;padding:36px 40px;margin-bottom:28px;position:relative;overflow:hidden;border:1px solid rgba(205,39,39,.15);}
+.stay-paid-hero::before{content:'';position:absolute;top:-100px;right:-100px;width:300px;height:300px;background:radial-gradient(circle,rgba(205,39,39,.15) 0%,transparent 70%);border-radius:50%;}
+.stay-paid-hero::after{content:'';position:absolute;bottom:-80px;left:-80px;width:250px;height:250px;background:radial-gradient(circle,rgba(205,39,39,.08) 0%,transparent 70%);border-radius:50%;}
+.sph-content{position:relative;z-index:1;}
+.sph-greeting{font-family:'Sarabun',sans-serif;font-size:clamp(28px,4vw,44px);font-weight:800;color:#fff;line-height:1.1;margin-bottom:10px;}
+.sph-greeting .sph-red{color:var(--red);}
+.sph-tagline{display:inline-block;overflow:hidden;white-space:nowrap;}
+.sph-tagline-text{display:inline-block;animation:taglineSlide 8s linear infinite;font-size:clamp(13px,2vw,16px);color:rgba(255,255,255,.5);font-weight:500;padding-right:40px;}
+@keyframes taglineSlide{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.sph-time{font-size:12px;color:var(--sub);margin-top:12px;letter-spacing:.5px;}
+.sph-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.2);border-radius:20px;padding:4px 12px;font-size:11px;color:#4ade80;margin-top:16px;}
+.sph-badge svg{width:12px;height:12px;}
+
+/* === CARDS === */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;}
+.card-sm{padding:14px 18px;}
+.card-title{font-size:13px;font-weight:800;color:#fff;margin-bottom:16px;display:flex;align-items:center;gap:8px;font-family:'Sarabun',sans-serif;}
+.card-title .ctag{margin-left:auto;font-size:10px;padding:2px 10px;border-radius:10px;font-weight:800;}
+.ctag-live{background:rgba(22,163,74,.15);color:#4ade80;}
+.ctag-ai{background:rgba(124,58,237,.15);color:#a78bfa;}
+.ctag-new{background:rgba(205,39,39,.15);color:#f87171;}
+
+/* === GRID === */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.g14{display:grid;grid-template-columns:1fr 3fr;gap:20px;}
+@media(max-width:1200px){.g4{grid-template-columns:1fr 1fr;}.g3{grid-template-columns:1fr 1fr;}}
+@media(max-width:800px){.g2,.g3,.g4,.g14{grid-template-columns:1fr;}}
+
+/* === STAT BOX === */
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px;position:relative;overflow:hidden;}
+.stat-box::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.stat-box.red::after{background:linear-gradient(90deg,var(--red),#ff6b6b);}
+.stat-box.green::after{background:linear-gradient(90deg,var(--green),#4ade80);}
+.stat-box.amber::after{background:linear-gradient(90deg,var(--amber),#fbbf24);}
+.stat-box.blue::after{background:linear-gradient(90deg,var(--blue),#60a5fa);}
+.stat-box.purple::after{background:linear-gradient(90deg,var(--purple),#a78bfa);}
+.stat-box.teal::after{background:linear-gradient(90deg,var(--teal),#2dd4bf);}
+.stat-val{font-size:2.2rem;font-weight:900;color:#fff;line-height:1;font-family:'Sarabun',sans-serif;}
+.stat-lbl{font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-top:6px;font-weight:600;}
+.stat-chg{font-size:12px;margin-top:8px;font-weight:700;}
+.stat-chg.up{color:#4ade80;}
+.stat-chg.down{color:#f87171;}
+
+/* === TABLE === */
+.ent-table{width:100%;border-collapse:collapse;font-size:13px;}
+.ent-table th{background:rgba(255,255,255,.03);color:var(--sub);padding:10px 14px;font-size:10px;text-transform:uppercase;letter-spacing:.5px;text-align:left;border-bottom:1px solid var(--border);}
+.ent-table td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.03);color:var(--text);vertical-align:middle;}
+.ent-table tr:hover td{background:rgba(255,255,255,.02);}
+.ent-table td strong{color:#fff;}
+
+/* === BADGES === */
+.badge{display:inline-block;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:800;}
+.b-green{background:rgba(22,163,74,.12);color:#4ade80;}
+.b-red{background:rgba(205,39,39,.12);color:#f87171;}
+.b-amber{background:rgba(217,119,6,.12);color:#fbbf24;}
+.b-blue{background:rgba(37,99,235,.12);color:#60a5fa;}
+.b-purple{background:rgba(124,58,237,.12);color:#a78bfa;}
+.b-grey{background:rgba(255,255,255,.06);color:rgba(255,255,255,.4);}
+
+/* === FORM CONTROLS === */
+.f-label{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block;}
+.f-input,.f-select,.f-textarea{width:100%;padding:10px 14px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;color:#fff;font-size:13px;outline:none;transition:border-color .2s;font-family:inherit;}
+.f-input:focus,.f-select:focus,.f-textarea:focus{border-color:rgba(205,39,39,.5);}
+.f-input::placeholder,.f-textarea::placeholder{color:rgba(255,255,255,.2);}
+.f-select option{background:#16162a;}
+.f-textarea{resize:vertical;min-height:90px;}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.f-row.f3{grid-template-columns:1fr 1fr 1fr;}
+.f-group{margin-bottom:14px;}
+
+/* === BUTTONS === */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;border:none;transition:all .2s;font-family:'Inter',sans-serif;}
+.btn svg{width:14px;height:14px;flex-shrink:0;}
+.btn-primary{background:var(--red);color:#fff;}
+.btn-primary:hover{background:var(--red-d);transform:translateY(-1px);box-shadow:0 4px 16px rgba(205,39,39,.3);}
+.btn-ghost{background:rgba(255,255,255,.05);color:rgba(255,255,255,.6);border:1px solid var(--border);}
+.btn-ghost:hover{background:rgba(255,255,255,.09);color:#fff;}
+.btn-success{background:rgba(22,163,74,.15);color:#4ade80;border:1px solid rgba(22,163,74,.2);}
+.btn-warning{background:rgba(217,119,6,.15);color:#fbbf24;border:1px solid rgba(217,119,6,.2);}
+.btn-danger{background:rgba(205,39,39,.12);color:#f87171;border:1px solid rgba(205,39,39,.2);}
+.btn-sm{padding:5px 12px;font-size:11px;}
+.btn-lg{padding:12px 28px;font-size:15px;}
+
+/* === TIMELINE === */
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-item{display:flex;gap:14px;position:relative;padding-bottom:20px;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-left{display:flex;flex-direction:column;align-items:center;width:28px;flex-shrink:0;}
+.tl-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid transparent;}
+.tl-dot.done{background:rgba(22,163,74,.12);border-color:var(--green);}
+.tl-dot.done svg{color:#4ade80;}
+.tl-dot.current{background:rgba(205,39,39,.12);border-color:var(--red);animation:tl-pulse 2s ease infinite;}
+.tl-dot.current svg{color:#f87171;}
+.tl-dot.pending{background:rgba(255,255,255,.04);border-color:var(--border);}
+.tl-dot.pending svg{color:var(--sub);}
+@keyframes tl-pulse{0%,100%{box-shadow:0 0 0 0 rgba(205,39,39,.4)}50%{box-shadow:0 0 0 6px rgba(205,39,39,0)}}
+.tl-line{flex:1;width:2px;background:var(--border);margin-top:4px;}
+.tl-line.done{background:var(--green);}
+.tl-body{padding-top:2px;flex:1;}
+.tl-title{font-size:13px;font-weight:700;color:#fff;}
+.tl-meta{font-size:11px;color:var(--sub);margin-top:2px;}
+
+/* === MODAL === */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.6);}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-header h3{font-size:16px;font-weight:800;color:#fff;font-family:'Sarabun',sans-serif;}
+.modal-close{background:none;border:none;color:var(--sub);cursor:pointer;padding:4px;border-radius:6px;}
+.modal-close:hover{background:rgba(255,255,255,.06);color:#fff;}
+.modal-body{padding:24px;}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;}
+
+/* === CHAT === */
+.chat-wrap{background:var(--dark);border-radius:12px;overflow:hidden;}
+.chat-msgs{padding:16px;max-height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
+.chat-msg{display:flex;gap:10px;align-items:flex-start;}
+.chat-msg.admin{flex-direction:row-reverse;}
+.chat-bubble{padding:10px 14px;border-radius:12px;font-size:13px;max-width:78%;line-height:1.5;}
+.chat-msg.client .chat-bubble{background:rgba(255,255,255,.06);color:var(--text);}
+.chat-msg.admin .chat-bubble{background:rgba(205,39,39,.15);color:#fff;}
+.chat-avatar{width:30px;height:30px;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.chat-avatar svg{width:14px;height:14px;color:var(--sub);}
+.chat-input-row{display:flex;border-top:1px solid var(--border);}
+.chat-input-row input{flex:1;background:transparent;border:none;padding:12px 16px;color:#fff;font-size:13px;outline:none;}
+.chat-input-row input::placeholder{color:rgba(255,255,255,.2);}
+.chat-send{background:var(--red);border:none;padding:12px 20px;color:#fff;cursor:pointer;font-size:13px;font-weight:700;}
+
+/* === EMAIL TEMPLATES === */
+.email-template-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px;}
+.email-tpl{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;}
+.email-tpl:hover,.email-tpl.selected{border-color:var(--red);background:rgba(205,39,39,.07);}
+.email-tpl .et-icon{width:32px;height:32px;background:rgba(205,39,39,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;}
+.email-tpl .et-icon svg{width:16px;height:16px;color:var(--red);}
+.email-tpl .et-name{font-size:12px;font-weight:800;color:#fff;margin-bottom:3px;}
+.email-tpl .et-desc{font-size:11px;color:var(--sub);}
+
+/* === ALERTS === */
+.alert-item{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--card2);border-radius:12px;margin-bottom:8px;border-left:3px solid transparent;}
+.alert-item.danger{border-left-color:var(--red);}
+.alert-item.warning{border-left-color:var(--amber);}
+.alert-item.ok{border-left-color:var(--green);}
+.alert-item.info{border-left-color:var(--blue);}
+.alert-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.alert-icon svg{width:16px;height:16px;}
+.alert-item.danger .alert-icon{background:rgba(205,39,39,.12);}
+.alert-item.danger .alert-icon svg{color:#f87171;}
+.alert-item.warning .alert-icon{background:rgba(217,119,6,.12);}
+.alert-item.warning .alert-icon svg{color:#fbbf24;}
+.alert-item.ok .alert-icon{background:rgba(22,163,74,.12);}
+.alert-item.ok .alert-icon svg{color:#4ade80;}
+.alert-item.info .alert-icon{background:rgba(37,99,235,.12);}
+.alert-item.info .alert-icon svg{color:#60a5fa;}
+.alert-body{flex:1;min-width:0;}
+.alert-body h5{font-size:13px;font-weight:800;color:#fff;margin-bottom:3px;}
+.alert-body p{font-size:12px;color:var(--sub);line-height:1.5;}
+.alert-actions{margin-left:auto;display:flex;gap:6px;flex-shrink:0;}
+
+/* === AUDIT LOG === */
+.audit-row{display:flex;gap:14px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.03);font-size:12px;align-items:center;}
+.audit-row:hover{background:rgba(255,255,255,.02);}
+.audit-time{color:var(--sub);width:90px;flex-shrink:0;font-family:monospace;font-size:11px;}
+.audit-user{width:100px;flex-shrink:0;color:var(--text);font-weight:600;}
+.audit-action{flex:1;color:#fff;}
+.audit-tag{font-size:10px;padding:2px 8px;border-radius:8px;}
+
+/* === PROGRESS BAR === */
+.pbar-wrap{background:rgba(255,255,255,.06);border-radius:4px;height:6px;overflow:hidden;}
+.pbar-fill{height:100%;border-radius:4px;transition:width 1s ease;}
+
+/* === SECTION HEADER === */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+.section-hdr h2{font-size:18px;font-weight:900;color:#fff;font-family:'Sarabun',sans-serif;}
+.section-hdr p{font-size:13px;color:var(--sub);margin-top:4px;}
+.hdr-actions{display:flex;gap:8px;flex-shrink:0;}
+
+/* === TOAST === */
+#toast{position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 20px;font-size:13px;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.4);transform:translateY(80px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:12px;max-width:360px;}
+#toast.show{transform:translateY(0);opacity:1;}
+#toast svg{width:16px;height:16px;flex-shrink:0;}
+
+/* === AI AUTOMATION PANEL === */
+.ai-automation-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px;}
+.ai-auto-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;transition:all .25s;}
+.ai-auto-card:hover{border-color:rgba(205,39,39,.3);transform:translateY(-2px);}
+.ai-auto-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.ai-auto-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ai-auto-icon svg{width:20px;height:20px;}
+.ai-auto-card:nth-child(1) .ai-auto-icon{background:rgba(205,39,39,.15);}
+.ai-auto-card:nth-child(1) .ai-auto-icon svg{color:var(--red);}
+.ai-auto-card:nth-child(2) .ai-auto-icon{background:rgba(37,99,235,.15);}
+.ai-auto-card:nth-child(2) .ai-auto-icon svg{color:#60a5fa;}
+.ai-auto-card:nth-child(3) .ai-auto-icon{background:rgba(22,163,74,.15);}
+.ai-auto-card:nth-child(3) .ai-auto-icon svg{color:#4ade80;}
+.ai-auto-card:nth-child(4) .ai-auto-icon{background:rgba(124,58,237,.15);}
+.ai-auto-card:nth-child(4) .ai-auto-icon svg{color:#a78bfa;}
+.ai-auto-card:nth-child(5) .ai-auto-icon{background:rgba(217,119,6,.15);}
+.ai-auto-card:nth-child(5) .ai-auto-icon svg{color:#fbbf24;}
+.ai-auto-card:nth-child(6) .ai-auto-icon{background:rgba(13,148,136,.15);}
+.ai-auto-card:nth-child(6) .ai-auto-icon svg{color:#2dd4bf;}
+.ai-auto-title{font-size:14px;font-weight:800;color:#fff;font-family:'Sarabun',sans-serif;}
+.ai-auto-desc{font-size:12px;color:var(--sub);margin-top:2px;}
+.ai-auto-status{display:flex;align-items:center;gap:6px;margin-top:12px;font-size:11px;font-weight:700;}
+.ai-auto-status .status-dot{width:8px;height:8px;border-radius:50%;animation:pulse-green 2s ease infinite;}
+@keyframes pulse-green{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.4)}50%{box-shadow:0 0 0 4px rgba(74,222,128,0)}}
+.ai-auto-card .status-dot{background:#4ade80;}
+.ai-auto-status.paused .status-dot{background:#fbbf24;animation:none;}
+.ai-auto-status.paused{color:#fbbf24;}
+.ai-auto-btn{margin-top:14px;width:100%;}
+
+/* Role Management Styles */
+.role-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;display:flex;align-items:center;gap:16px;}
+.role-avatar{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;flex-shrink:0;}
+.role-info{flex:1;}
+.role-name{font-size:15px;font-weight:800;color:#fff;font-family:'Sarabun',sans-serif;}
+.role-title{font-size:12px;color:var(--sub);margin-top:2px;}
+.role-perms{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.role-perm-tag{font-size:10px;padding:2px 8px;border-radius:6px;background:rgba(255,255,255,.05);color:var(--sub);}
+.role-actions{display:flex;gap:8px;}
+
+/* === RESPONSIVE === */
+@media(max-width:1024px){:root{--sidebar-w:220px}.topbar{left:var(--sidebar-w);padding:0 16px}.topbar-title{font-size:14px}.user-name{display:none}}
+@media(max-width:768px){
+  .hamburger-btn{display:flex!important}
+  .topbar{left:0!important;padding:0 16px!important}
+  .topbar-title{font-size:14px!important}
+  /* Hide desktop stats/chip/logout on mobile */
+  .topbar-stat,.tbar-sep,.topbar-breadcrumb,.notif-dot,.user-chip,.topbar .btn.btn-ghost{display:none!important}
+  /* Show mobile profile dot and settings */
+  .mobile-profile-dot{display:flex!important}
+  .mobile-settings-btn{display:flex!important}
+  body{overflow-x:hidden!important}
+  .sidebar{transform:translateX(-100%)!important;transition:transform .3s;width:280px!important}
+  .sidebar.open{transform:translateX(0)!important}
+  .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:250;display:none}
+  .sidebar-overlay.active{display:block}
+  /* Fix main content - no left offset on mobile */
+  .main{left:0!important;padding:16px!important}
+  .panel{padding:16px!important}
+  .card{padding:14px!important}
+  .ent-table{font-size:12px}
+  .ent-table th,.ent-table td{padding:8px 10px}
+  .modal{max-width:calc(100vw - 32px)!important;margin:16px;border-radius:16px}
+  .modal-body{padding:16px!important}
+  .stat-box{padding:16px!important}
+  .stat-val{font-size:1.8rem!important}
+  .ai-automation-grid{grid-template-columns:1fr!important}
+  .g2,.g3,.g4,.g14{grid-template-columns:1fr!important;gap:12px!important}
+  .f-row{grid-template-columns:1fr!important}
+  .role-card{flex-wrap:wrap!important}
+  .role-actions{margin-top:8px!important}
+  .card-sm{padding:12px 14px!important}
+  .chart-container{overflow-x:auto}
+  .tl-item{padding-bottom:14px!important}
+  .chat-wrap{margin-bottom:16px}
+  .chat-msgs{max-height:240px!important}
+  .stay-paid-hero{padding:20px!important}
+  .sph-greeting{font-size:28px!important}
+}
+@media(max-width:480px){
+  .stay-paid-hero{padding:24px 20px}
+  .ai-auto-card{padding:16px}
+  .topbar{padding:0 12px!important}
+  .topbar-title{font-size:12px!important}
+  .sidebar{width:260px!important}
+  .main{padding:12px!important}
+  .panel{padding:12px!important}
+  .card-title{font-size:12px!important}
+  .btn{padding:6px 12px!important;font-size:11px!important}
+  .btn-lg{padding:10px 20px!important;font-size:13px!important}
+}
+
+/* === PRELOADER === */
+.ap-preloader{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#CD2727 0%,#9b1a1a 100%);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease,visibility .6s ease}
+.ap-preloader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.ap-preloader-logo{width:80px;height:80px;margin-bottom:24px;animation:preLogoPulse 1.5s ease-in-out infinite}
+.ap-preloader-title{font-family:"Sarabun",sans-serif;font-size:32px;font-weight:800;color:#fff;margin-bottom:8px}
+.ap-preloader-sub{font-family:"Inter",sans-serif;font-size:14px;color:rgba(255,255,255,.7);margin-bottom:40px;letter-spacing:.5px}
+.ap-preloader-bar-wrap{width:280px;height:4px;background:rgba(255,255,255,.2);border-radius:4px;overflow:hidden;margin-bottom:16px}
+.ap-preloader-bar{height:100%;background:#fff;border-radius:4px;animation:preBar 1.8s ease-in-out infinite;width:0}
+.ap-preloader-dots{display:flex;gap:8px}
+.ap-preloader-dot{width:8px;height:8px;background:rgba(255,255,255,.4);border-radius:50%;animation:preDot 1.2s ease-in-out infinite}
+.ap-preloader-dot:nth-child(2){animation-delay:.2s}
+.ap-preloader-dot:nth-child(3){animation-delay:.4s}
+@keyframes preLogoPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes preBar{0%{width:0}50%{width:70%}100%{width:100%}}
+@keyframes preDot{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+
+</style>
+</head>
+<body>
+
+<!-- Sidebar overlay for mobile - tap to close -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<script>
+function closeSidebar() {
+  var sb = document.getElementById('adminSidebar');
+  var ov = document.getElementById('sidebarOverlay');
+  if (sb) sb.classList.remove('open');
+  if (ov) ov.classList.remove('active');
+}
+</script>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="adminSidebar">
+  <div class="sidebar-header">
+    <img src="/apps/airpak/img/logo.png" class="sidebar-logo" alt="Airpak Express" />
+    <div class="sidebar-brand">Airpak Express<span>Admin Portal</span></div>
+  </div>
+  <div class="sidebar-search">
+    <input type="text" placeholder="Search..." oninput="filterNav(this.value)"/>
+  </div>
+  <div class="sidebar-scroll" id="sidebarNav">
+    <!-- Admin Profile -->
+    <div class="sidebar-profile" onclick="openProfile()">
+      <div class="sp-avatar" id="spAvatar">SA</div>
+      <div class="sp-info">
+        <div class="sp-name" id="spName">Administrator</div>
+        <div class="sp-role" id="spRole">Super Admin</div>
+      </div>
+      <div class="sp-status"><div class="sp-status-dot"></div></div>
+    </div>
+
+    <!-- OVERVIEW GROUP -->
+    <div class="nav-group open" data-group="overview">
+      <div class="nav-group-header" onclick="toggleGroup('overview')">
+        <span class="ngh-label">Overview</span>
+        <span class="ngh-chev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg></span>
+      </div>
+      <div class="nav-group-items">
+        <div class="nav-item active" onclick="nav('dashboard')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg></span>
+          Dashboard
+        </div>
+        <div class="nav-item" onclick="nav('audit')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2.5A1.5 1.5 0 013.5 1h9A1.5 1.5 0 0114 2.5v11a1.5 1.5 0 01-1.5 1.5h-9A1.5 1.5 0 012 13.5v-11zM3.5 3v10h9V3h-9z"/></svg></span>
+          Audit Logs
+        </div>
+        <div class="nav-item" onclick="nav('alerts')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2.5a.75.75 0 110 1.5.75.75 0 010-1.5zM8.75 11H7V7h1.5v4z"/></svg></span>
+          System Alerts <span class="nav-badge amber">5</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLIENT MANAGEMENT GROUP -->
+    <div class="nav-group" data-group="clients">
+      <div class="nav-group-header" onclick="toggleGroup('clients')">
+        <span class="ngh-label">Client Management</span>
+        <span class="ngh-chev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg></span>
+      </div>
+      <div class="nav-group-items">
+        <div class="nav-item" onclick="nav('clients')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="6" cy="4" r="2.5"/><path d="M1 14c0-2.5 2-4 5-4s5 1.5 5 4"/><circle cx="12" cy="5" r="2"/><path d="M10.5 14c0-2.5 1.5-4 3.5-4"/></svg></span>
+          Client Accounts
+        </div>
+        <div class="nav-item" onclick="nav('client-create')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V9H3a1 1 0 110-2h4V3a1 1 0 011-1z"/></svg></span>
+          Create Account
+        </div>
+        <div class="nav-item" onclick="nav('client-verify')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg></span>
+          Verification Queue <span class="nav-badge">7</span>
+        </div>
+        <div class="nav-item" onclick="nav('client-suspend')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5"/><path d="M5.5 5.5l5 5M10.5 5.5l-5 5"/></svg></span>
+          Account Control
+        </div>
+        <div class="nav-item" onclick="nav('messaging')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M14 2H2a1 1 0 00-1 1v8a1 1 0 001 1h3l3 3 3-3h3a1 1 0 001-1V3a1 1 0 00-1-1z"/></svg></span>
+          Messaging Center <span class="nav-badge green">2</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PARCEL MANAGEMENT GROUP -->
+    <div class="nav-group" data-group="parcels">
+      <div class="nav-group-header" onclick="toggleGroup('parcels')">
+        <span class="ngh-label">Parcel Management</span>
+        <span class="ngh-chev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg></span>
+      </div>
+      <div class="nav-group-items">
+        <div class="nav-item" onclick="nav('parcels')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="M1 5.5h14M5 3V1.5M11 3V1.5"/></svg></span>
+          All Parcels
+        </div>
+        <div class="nav-item" onclick="nav('parcel-create')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V9H3a1 1 0 110-2h4V3a1 1 0 011-1z"/></svg></span>
+          Create Parcel
+        </div>
+        <div class="nav-item" onclick="nav('parcel-status')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/></svg></span>
+          Update Status
+        </div>
+        <div class="nav-item" onclick="nav('route-assign')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 1a5 5 0 015 5c0 3.5-5 9-5 9S3 9.5 3 6a5 5 0 015-5z"/><circle cx="8" cy="6" r="1.5"/></svg></span>
+          Assign Route
+        </div>
+        <div class="nav-item" onclick="nav('customs-clear')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="4" width="9" height="10" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M10 7h3a1 1 0 011 1v3M12 10l2-2M14 10l-2 2" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></span>
+          Customs Clearance
+        </div>
+        <div class="nav-item" onclick="nav('delivery-confirm')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg></span>
+          Delivery Confirm
+        </div>
+      </div>
+    </div>
+
+    <!-- TRACKING CONTROL GROUP -->
+    <div class="nav-group" data-group="tracking">
+      <div class="nav-group-header" onclick="toggleGroup('tracking')">
+        <span class="ngh-label">Tracking Control</span>
+        <span class="ngh-chev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg></span>
+      </div>
+      <div class="nav-group-items">
+        <div class="nav-item" onclick="nav('live-tracking')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3l2.5 1.5" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/><path d="M2 8h12" stroke="currentColor" stroke-width=".8" stroke-dasharray="2 2"/></svg></span>
+          Live Progress <span class="nav-badge green">Live</span>
+        </div>
+        <div class="nav-item" onclick="nav('route-monitor')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="6" width="14" height="5" rx="1"/><circle cx="4" cy="11.5" r="1.5"/><circle cx="12" cy="11.5" r="1.5"/></svg></span>
+          Route Monitor
+        </div>
+        <div class="nav-item" onclick="nav('status-override')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.5 1.5M11.5 11.5L13 13M13 3l-1.5 1.5M4.5 11.5L3 13" stroke="currentColor" stroke-width="1.3" fill="none"/></svg></span>
+          Status Override
+        </div>
+        <div class="nav-item" onclick="nav('scan-sim')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="2" y="4" width="12" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8.5" r="2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M11.5 6l1.5-1.5" stroke="currentColor" stroke-width="1.3"/></svg></span>
+          Scan Simulation
+        </div>
+      </div>
+    </div>
+
+    <!-- COMMUNICATION GROUP -->
+    <div class="nav-group" data-group="comms">
+      <div class="nav-group-header" onclick="toggleGroup('comms')">
+        <span class="ngh-label">Communication</span>
+        <span class="ngh-chev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg></span>
+      </div>
+      <div class="nav-group-items">
+        <div class="nav-item" onclick="nav('send-update')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M14 2H2a1 1 0 00-1 1v9l3-3h10a1 1 0 001-1V3a1 1 0 00-1-1z" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></span>
+          Send Customer Update
+        </div>
+        <div class="nav-item" onclick="nav('email-auto')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="2" width="14" height="11" rx="1.5"/><path d="M1 4l7 5 7-3"/></svg></span>
+          Email Automation
+        </div>
+        <div class="nav-item" onclick="nav('email-manual')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="M1 5l7 5 7-5"/></svg></span>
+          Manual Email
+        </div>
+        <div class="nav-item" onclick="nav('sms-control')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="2" y="1" width="12" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5 5h6M5 8h4" stroke="currentColor" stroke-width="1.3"/></svg></span>
+          SMS Notifications
+        </div>
+      </div>
+    </div>
+
+    <!-- PAYMENT MANAGEMENT GROUP -->
+    <div class="nav-group" data-group="payments">
+      <div class="nav-group-header" onclick="toggleGroup('payments')">
+        <span class="ngh-label">Payment Management</span>
+        <span class="ngh-chev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg></span>
+      </div>
+      <div class="nav-group-items">
+        <div class="nav-item" onclick="nav('payments')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="M4 7h8M4 9.5h5"/></svg></span>
+          Payment Records
+        </div>
+        <div class="nav-item" onclick="nav('invoice-gen')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 2.5A1.5 1.5 0 013.5 1h9A1.5 1.5 0 0114 2.5v11a1.5 1.5 0 01-1.5 1.5h-9A1.5 1.5 0 012 13.5v-11zM3.5 3v10h9V3h-9z"/></svg></span>
+          Invoice Generator
+        </div>
+        <div class="nav-item" onclick="nav('pay-verify')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 115 0v2" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></span>
+          Payment Verification
+        </div>
+      </div>
+    </div>
+
+    <!-- SYSTEM OPERATIONS GROUP -->
+    <div class="nav-group" data-group="system">
+      <div class="nav-group-header" onclick="toggleGroup('system')">
+        <span class="ngh-label">System Operations</span>
+        <span class="ngh-chev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg></span>
+      </div>
+      <div class="nav-group-items">
+        <div class="nav-item" onclick="nav('analytics')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 13.5L4 9l3 2.5 2-1.5 5 1.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span>
+          Analytics Dashboard
+        </div>
+        <div class="nav-item" onclick="nav('ai-control')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="5"/><path d="M5 8a3 3 0 106 0M8 6v2l1.5 1.5" stroke="white" stroke-width="1" fill="none" stroke-linecap="round"/></svg></span>
+          AI Logistics Center
+        </div>
+        <div class="nav-item" onclick="nav('route-intel')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M2 8h12M8 2c-2 2-2 8 0 12M8 2c2 2 2 8 0 12M2 8c2 0 4 4 6 4s4-4 6-4" fill="none" stroke="currentColor" stroke-width="1"/></svg></span>
+          Route Intelligence
+        </div>
+        <div class="nav-item" onclick="nav('workflow-auto')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M9 1L5 9h5l-2 6 7-7h-5l2-7z" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></span>
+          Workflow Automation
+        </div>
+        <div class="nav-item" onclick="nav('roles')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a5 5 0 015 5v5H3V6a5 5 0 015-5zm0 2a3 3 0 00-3 3v5h6V6a3 3 0 00-3-3z"/></svg></span>
+          Role Management
+        </div>
+        <div class="nav-item" onclick="nav('manual')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="6"/><path d="M6 6.5c0-.8.7-1.5 1.5-1.5h1c.8 0 1.5.7 1.5 1.5S10.8 8 10 8h-1c-.8 0-1.5-.7-1.5-1.5z" fill="currentColor"/><path d="M8 10v2"/></svg></span>
+          Admin Manual
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <button class="hamburger-btn" onclick="toggleMobileNav()" aria-label="Open menu">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
+    </button>
+    <div>
+      <div class="topbar-title" id="topbar-title">Operations Dashboard</div>
+      <div class="topbar-breadcrumb">Admin Portal / <span id="topbar-sub">Overview</span></div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-stat"><div class="ts-val" id="tb-parcels">2,147</div><div class="ts-lbl">Active</div></div>
+    <div class="tbar-sep"></div>
+    <div class="topbar-stat"><div class="ts-val" id="tb-alerts" style="color:#fbbf24">5</div><div class="ts-lbl">Alerts</div></div>
+    <div class="tbar-sep"></div>
+    <div class="topbar-stat"><div class="ts-val" id="tb-online" style="color:#4ade80">98.4%</div><div class="ts-lbl">On-Time</div></div>
+    <div class="tbar-sep"></div>
+    <button class="notif-btn" onclick="nav('alerts')">
+      <svg viewBox="0 0 16 16" fill="currentColor" style="width:18px;height:18px"><path d="M8 1a5 5 0 00-5 5v4l-1.5 1.5a.5.5 0 00.35.85h10.3a.5.5 0 00.35-.85L13 10V6a5 5 0 00-5-5zm0 1.5a3.5 3.5 0 110 7 3.5 3.5 0 010-7z"/></svg>
+      <div class="notif-dot"></div>
+    </button>
+    <!-- Desktop user chip -->
+    <div class="user-chip">
+      <div class="user-avatar" id="userAvatarTop">SA</div>
+      <div><div class="user-name" id="userName">Administrator</div><div class="user-role" id="userRole">Super Admin</div></div>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="doLogout()" style="border-color:rgba(205,39,39,.3);color:#ff9999">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 14H3a1 1 0 01-1-1V3a1 1 0 011-1h3M11 11l3-3-3-3M14 8H6"/></svg>
+      Logout
+    </button>
+    <!-- Mobile: profile dot -->
+    <button class="mobile-profile-dot" onclick="nav('roles')" title="Profile">SA</button>
+    <!-- Mobile: settings icon -->
+    <button class="mobile-settings-btn" onclick="nav('settings')" title="Settings">
+      <svg viewBox="0 0 16 16" fill="currentColor" style="width:18px;height:18px"><path d="M8 10a2 2 0 100-4 2 2 0 000 4zm6.32-1.906l-1.04-.16a5.5 5.5 0 00-.63-1.19l.68-.84a.375.375 0 00-.083-.548l-1.21-1.21a.375.375 0 00-.548-.083l-.84.68c-.42-.25-.85-.47-1.19-.63l-.16-1.04a.375.375 0 00-.368-.316H7.49a.375.375 0 00-.368.316l-.16 1.04c-.34.16-.77.38-1.19.63l-.84-.68a.375.375 0 00-.548.083L3.37 4.91a.375.375 0 00-.083.548l.68.84c-.24.41-.46.8-.63 1.19l-1.04.16a.375.375 0 00-.316.368v1.11c0 .207.168.375.375.375h1.11c.1 0 .207-.05.279-.13l.92-.9c.4.62.87 1.19 1.4 1.69l-.45 1.41a.375.375 0 00.083.393l.86.86c.15.15.39.17.548.083l1.04-.33c.31.35.66.67 1.04.95l.15.21v.09l.21-.15c.38-.28.73-.6 1.04-.95l1.04.33a.375.375 0 00.548-.083l.86-.86a.375.375 0 00.083-.393l-.45-1.41c.53-.5 1-.98 1.4-1.69l.92.9c.072.08.179.13.279.13h1.11a.375.375 0 00.375-.375v-1.11a.375.375 0 00-.316-.368z"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main" id="mainContent">
+
+<!-- ===== DASHBOARD PANEL ===== -->
+<div class="panel active" id="panel-dashboard">
+  <!-- STAY PAID Hero -->
+  <div class="stay-paid-hero">
+    <div class="sph-content">
+      <div class="sph-greeting" id="greetingText">Welcome back, <span class="sph-red">Administrator</span></div>
+      <div class="sph-tagline">
+        <span class="sph-tagline-text" id="taglineText">Aye fyn boy, Men wen get style! unto switzerland oh! &nbsp;&nbsp;&nbsp;&nbsp; Aye fyn boy, Men wen get style! unto switzerland oh! &nbsp;&nbsp;&nbsp;&nbsp;</span>
+      </div>
+      <div class="sph-badge">
+        <svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="4"/></svg>
+        All systems operational — 98.4% on-time rate
+      </div>
+      <div class="sph-time" id="liveTime"></div>
+    </div>
+  </div>
+
+  <div class="section-hdr">
+    <div><h2>Operations Overview</h2><p>Live metrics across all logistics channels</p></div>
+    <div class="hdr-actions">
+      <button class="btn btn-ghost" onclick="refreshDash()">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8a6 6 0 1011-1.5M13 4.5V8h-3.5"/></svg>
+        Refresh
+      </button>
+      <button class="btn btn-primary" onclick="nav('parcel-create')">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V9H3a1 1 0 110-2h4V3a1 1 0 011-1z"/></svg>
+        New Parcel
+      </button>
+    </div>
+  </div>
+
+  <div class="g4" style="margin-bottom:24px;">
+    <div class="stat-box red"><div class="stat-val" id="ds-active">2,147</div><div class="stat-lbl">Active Shipments</div><div class="stat-chg up"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline"><path d="M8 3v10M3 8l5-5 5 5"/></svg> 12.4% this week</div></div>
+    <div class="stat-box green"><div class="stat-val" id="ds-delivered">18,742</div><div class="stat-lbl">Delivered This Month</div><div class="stat-chg up"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline"><path d="M8 3v10M3 8l5-5 5 5"/></svg> 8.7% vs last month</div></div>
+    <div class="stat-box amber"><div class="stat-val" id="ds-delayed">23</div><div class="stat-lbl">Delayed Shipments</div><div class="stat-chg down"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline"><path d="M8 13V3M3 8l5 5 5-5"/></svg> 3 vs yesterday</div></div>
+    <div class="stat-box blue"><div class="stat-val" id="ds-clients">1,284</div><div class="stat-lbl">Active Clients</div><div class="stat-chg up"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline"><path d="M8 3v10M3 8l5-5 5 5"/></svg> 34 new this week</div></div>
+  </div>
+
+  <div class="g2" style="margin-bottom:24px;">
+    <div class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 16 16" fill="currentColor" style="width:14px;height:14px;color:#f87171"><circle cx="8" cy="8" r="5"/></svg>
+        Recent Alerts <span class="ctag ctag-live">Live</span>
+      </div>
+      <div id="dash-alerts">
+        <div class="alert-item danger">
+          <div class="alert-icon"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M9 1L5 9h5l-2 6 7-7h-5l2-7z" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></div>
+          <div class="alert-body"><h5>SLA Breach — AP-88064</h5><p>Amazon UK — Typhoon delay, 28h overdue</p></div>
+          <div class="alert-actions"><button class="btn btn-sm btn-ghost" onclick="nav('alerts')">View</button></div>
+        </div>
+        <div class="alert-item warning">
+          <div class="alert-icon"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2.5a.75.75 0 110 1.5.75.75 0 010-1.5zM8.75 11H7V7h1.5v4z"/></svg></div>
+          <div class="alert-body"><h5>Customs Risk — AP-88097</h5><p>Apple UK — 78% hold probability flagged</p></div>
+          <div class="alert-actions"><button class="btn btn-sm btn-ghost" onclick="nav('customs-clear')">Handle</button></div>
+        </div>
+        <div class="alert-item info">
+          <div class="alert-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="5"/><path d="M5.5 5.5l5 5M10.5 5.5l-5 5"/></svg></div>
+          <div class="alert-body"><h5>Account Flagged — #CL-0047</h5><p>Unusual booking pattern detected</p></div>
+          <div class="alert-actions"><button class="btn btn-sm btn-ghost" onclick="nav('client-suspend')">Review</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 13.5L4 9l3 2.5 2-1.5 5 1.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        Shipment Velocity
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Air Freight</span><strong>42%</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:42%;background:linear-gradient(90deg,#CD2727,#ff6b6b);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Sea Freight</span><strong>31%</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:31%;background:linear-gradient(90deg,#2563eb,#60a5fa);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Road</span><strong>16%</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:16%;background:linear-gradient(90deg,#d97706,#fbbf24);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Express</span><strong>11%</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:11%;background:linear-gradient(90deg,#16a34a,#4ade80);"></div></div></div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:10px;">
+        <div style="flex:1;text-align:center;background:var(--card2);border-radius:10px;padding:12px;"><div style="font-size:1.5rem;font-weight:900;color:#4ade80;font-family:'Sarabun',sans-serif;">98.4%</div><div style="font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;">On-Time Rate</div></div>
+        <div style="flex:1;text-align:center;background:var(--card2);border-radius:10px;padding:12px;"><div style="font-size:1.5rem;font-weight:900;color:#fbbf24;font-family:'Sarabun',sans-serif;">1.07%</div><div style="font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;">Delay Rate</div></div>
+        <div style="flex:1;text-align:center;background:var(--card2);border-radius:10px;padding:12px;"><div style="font-size:1.5rem;font-weight:900;color:#60a5fa;font-family:'Sarabun',sans-serif;">GBP 4.2M</div><div style="font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;">Month Revenue</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" style="width:14px;height:14px"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="M1 5.5h14M5 3V1.5M11 3V1.5"/></svg>
+      Latest Parcels <span class="ctag ctag-live">Live</span>
+    </div>
+    <table class="ent-table" id="dash-parcels-table">
+      <thead><tr><th>AWB</th><th>Client</th><th>Origin → Dest</th><th>Service</th><th>Status</th><th>SLA</th><th>Actions</th></tr></thead>
+      <tbody id="dash-parcel-rows"></tbody>
+    </table>
+  </div>
+</div>
+<!-- ===== AUDIT LOGS ===== -->
+<div class="panel" id="panel-audit">
+  <div class="section-hdr">
+    <div><h2>Audit Logs</h2><p>Complete record of all admin actions</p></div>
+    <div class="hdr-actions">
+      <select class="f-select" style="width:auto;padding:8px 14px;font-size:12px;" id="audit-filter" onchange="renderAudit()">
+        <option value="all">All Actions</option><option value="parcel">Parcel</option><option value="client">Client</option><option value="payment">Payment</option><option value="system">System</option>
+      </select>
+      <button class="btn btn-ghost">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        Export CSV
+      </button>
+    </div>
+  </div>
+  <div class="card">
+    <div style="display:flex;gap:12px;align-items:center;border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:14px;">
+      <input class="f-input" style="max-width:300px;" placeholder="Search logs..." oninput="filterAudit(this.value)" id="audit-search"/>
+      <span style="font-size:12px;color:var(--sub);" id="audit-count"></span>
+    </div>
+    <div id="audit-list"></div>
+  </div>
+</div>
+
+<!-- ===== SYSTEM ALERTS ===== -->
+<div class="panel" id="panel-alerts">
+  <div class="section-hdr"><div><h2>System Alerts</h2><p>Active alerts requiring attention</p></div></div>
+  <div class="g2">
+    <div>
+      <div class="alert-item danger">
+        <div class="alert-icon"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M9 1L5 9h5l-2 6 7-7h-5l2-7z" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></div>
+        <div class="alert-body"><h5>SLA Breach — AP-88064 (Amazon UK)</h5><p>28h delay due to storm. Auto-escalation triggered. Reroute via LHR evaluated.</p></div>
+        <div class="alert-actions"><button class="btn btn-sm btn-danger" onclick="dismissAlert(this)">Dismiss</button><button class="btn btn-sm btn-ghost" onclick="nav('route-assign')">Reroute</button></div>
+      </div>
+      <div class="alert-item warning">
+        <div class="alert-icon"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2.5a.75.75 0 110 1.5.75.75 0 010-1.5zM8.75 11H7V7h1.5v4z"/></svg></div>
+        <div class="alert-body"><h5>Customs Risk — AP-88097 (Apple UK)</h5><p>AI flagged 78% hold probability. Value mismatch on 3 SKUs. Submit revised invoice before 17:00 GMT.</p></div>
+        <div class="alert-actions"><button class="btn btn-sm btn-danger" onclick="dismissAlert(this)">Dismiss</button><button class="btn btn-sm btn-ghost" onclick="nav('customs-clear')">Resolve</button></div>
+      </div>
+      <div class="alert-item warning">
+        <div class="alert-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="6" width="14" height="5" rx="1"/><circle cx="4" cy="11.5" r="1.5"/><circle cx="12" cy="11.5" r="1.5"/></svg></div>
+        <div class="alert-body"><h5>Fleet — VH-002 Signal Lost</h5><p>Vehicle last GPS ping 22 minutes ago. Last known: Cardiff Hub. Driver unresponsive.</p></div>
+        <div class="alert-actions"><button class="btn btn-sm btn-danger" onclick="dismissAlert(this)">Dismiss</button><button class="btn btn-sm btn-ghost" onclick="nav('route-monitor')">Monitor</button></div>
+      </div>
+      <div class="alert-item info">
+        <div class="alert-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 2.5A1.5 1.5 0 013.5 1h9A1.5 1.5 0 0114 2.5v11a1.5 1.5 0 01-1.5 1.5h-9A1.5 1.5 0 012 13.5v-11zM3.5 3v10h9V3h-9z"/></svg></div>
+        <div class="alert-body"><h5>Invoice Overdue — INV-2024-1138</h5><p>Samsung UK — GBP 4,820 overdue by 14 days. 3rd reminder scheduled.</p></div>
+        <div class="alert-actions"><button class="btn btn-sm btn-danger" onclick="dismissAlert(this)">Dismiss</button><button class="btn btn-sm btn-ghost" onclick="nav('payments')">View</button></div>
+      </div>
+      <div class="alert-item ok">
+        <div class="alert-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg></div>
+        <div class="alert-body"><h5>Route Optimised — LHR→LAX corridor</h5><p>14 air shipments rerouted via NRT. Saving: GBP 2,340 and 6h transit improvement.</p></div>
+        <div class="alert-actions"><button class="btn btn-sm btn-danger" onclick="dismissAlert(this)">Dismiss</button></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 13.5L4 9l3 2.5 2-1.5 5 1.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        Alert Statistics
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;"><span>Critical</span><strong style="color:#f87171;">1</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:20%;background:var(--red);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;"><span>Warning</span><strong style="color:#fbbf24;">2</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:40%;background:var(--amber);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;"><span>Info</span><strong style="color:#60a5fa;">1</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:20%;background:var(--blue);"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;"><span>Resolved</span><strong style="color:#4ade80;">1</strong></div><div class="pbar-wrap"><div class="pbar-fill" style="width:20%;background:var(--green);"></div></div></div>
+      </div>
+      <div style="margin-top:16px;padding:12px;background:var(--card2);border-radius:10px;font-size:12px;color:var(--sub);">
+        <strong style="color:#fff;">Auto-actions enabled:</strong><br/>
+        AI auto-reroutes delays >12h · SLA breach auto-notifies client · Customs holds auto-email compliance team
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CLIENT MANAGEMENT ===== -->
+<div class="panel" id="panel-clients">
+  <div class="section-hdr">
+    <div><h2>Client Accounts</h2><p>Manage all client profiles and access</p></div>
+    <div class="hdr-actions">
+      <select class="f-select" style="width:auto;padding:8px 14px;font-size:12px;" onchange="filterClientStatus(this.value)">
+        <option value="all">All Status</option><option value="Active">Active</option><option value="Pending">Pending</option><option value="Suspended">Suspended</option>
+      </select>
+      <button class="btn btn-ghost" onclick="nav('client-create')">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V9H3a1 1 0 110-2h4V3a1 1 0 011-1z"/></svg>
+        Add Client
+      </button>
+    </div>
+  </div>
+  <div class="card">
+    <div style="display:flex;gap:12px;align-items:center;margin-bottom:14px;">
+      <input class="f-input" style="max-width:280px;" placeholder="Search clients..." id="client-search" oninput="filterClients(this.value)"/>
+    </div>
+    <table class="ent-table">
+      <thead><tr><th>Client ID</th><th>Name</th><th>Email</th><th>Country</th><th>Shipments</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="clients-rows"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="panel" id="panel-client-create">
+  <div class="section-hdr"><div><h2>Create Client Account</h2><p>Add a new client to the platform</p></div></div>
+  <div class="card" style="max-width:600px;">
+    <div class="f-row">
+      <div class="f-group"><label class="f-label">First Name</label><input class="f-input" id="cc-fname" placeholder="John"/></div>
+      <div class="f-group"><label class="f-label">Last Name</label><input class="f-input" id="cc-lname" placeholder="Smith"/></div>
+    </div>
+    <div class="f-group"><label class="f-label">Email Address</label><input class="f-input" type="email" id="cc-email" placeholder="john@company.com"/></div>
+    <div class="f-row">
+      <div class="f-group"><label class="f-label">Company</label><input class="f-input" id="cc-company" placeholder="Company Ltd"/></div>
+      <div class="f-group"><label class="f-label">Country</label>
+        <select class="f-select" id="cc-country">
+          <option value="United Kingdom">United Kingdom</option><option value="United States">United States</option><option value="Germany">Germany</option><option value="France">France</option><option value="China">China</option><option value="Japan">Japan</option><option value="Australia">Australia</option>
+        </select>
+      </div>
+    </div>
+    <div class="f-row">
+      <div class="f-group"><label class="f-label">Phone</label><input class="f-input" id="cc-phone" placeholder="+44 20 0000 0000"/></div>
+      <div class="f-group"><label class="f-label">Account Type</label>
+        <select class="f-select" id="cc-type">
+          <option value="standard">Standard</option><option value="premium">Premium</option><option value="enterprise">Enterprise</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-lg" onclick="createClient()">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V9H3a1 1 0 110-2h4V3a1 1 0 011-1z"/></svg>
+      Create Account
+    </button>
+  </div>
+</div>
+
+<div class="panel" id="panel-client-verify">
+  <div class="section-hdr"><div><h2>Verification Queue</h2><p>Accounts awaiting verification</p></div></div>
+  <div id="verify-list"></div>
+</div>
+
+<div class="panel" id="panel-client-suspend">
+  <div class="section-hdr"><div><h2>Account Control</h2><p>Suspend or reactivate client accounts</p></div></div>
+  <div class="card" style="max-width:560px;">
+    <div class="f-group"><label class="f-label">Client ID</label><input class="f-input" id="susp-client" placeholder="CL-0001"/></div>
+    <div class="f-group"><label class="f-label">Action</label>
+      <select class="f-select" id="susp-action">
+        <option value="Suspend">Suspend Account</option><option value="Reactivate">Reactivate Account</option><option value="Terminate">Terminate Account</option>
+      </select>
+    </div>
+    <div class="f-group"><label class="f-label">Reason</label><textarea class="f-textarea" id="susp-reason" placeholder="Enter reason for action..."></textarea></div>
+    <button class="btn btn-danger btn-lg" onclick="doSuspend()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5"/><path d="M5.5 5.5l5 5M10.5 5.5l-5 5"/></svg>
+      Apply Action
+    </button>
+  </div>
+</div>
+
+<div class="panel" id="panel-messaging">
+  <div class="section-hdr"><div><h2>Messaging Center</h2><p>Client communications and notifications</p></div></div>
+  <div class="g2">
+    <div class="chat-wrap">
+      <div class="chat-msgs">
+        <div class="chat-msg client"><div class="chat-avatar"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="6" r="3"/><path d="M2 14c0-3 3-5 6-5s6 2 6 5"/></svg></div><div class="chat-bubble">Hi, my shipment AP-88064 seems delayed. Can you check?</div></div>
+        <div class="chat-msg admin"><div class="chat-avatar"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a5 5 0 015 5v5H3V6a5 5 0 015-5z"/></svg></div><div class="chat-bubble">Checking now. I can see it's currently at Cardiff Hub, delayed by 4 hours due to weather conditions. ETA is 18:30 GMT today.</div></div>
+        <div class="chat-msg client"><div class="chat-avatar"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="6" r="3"/><path d="M2 14c0-3 3-5 6-5s6 2 6 5"/></svg></div><div class="chat-bubble">Thank you for the update. Is there a way to get it delivered sooner?</div></div>
+        <div class="chat-msg admin"><div class="chat-avatar"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a5 5 0 015 5v5H3V6a5 5 0 015-5z"/></svg></div><div class="chat-bubble">I can upgrade to priority delivery for free. Would you like me to process that?</div></div>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" placeholder="Type a message..."/>
+        <button class="chat-send">Send</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" style="width:14px;height:14px"><path d="M14 2H2a1 1 0 00-1 1v8a1 1 0 001 1h3l3 3 3-3h3a1 1 0 001-1V3a1 1 0 00-1-1z"/></svg>
+        Quick Actions
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <button class="btn btn-ghost" onclick="sendBulkUpdate()">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M14 2H2a1 1 0 00-1 1v9l3-3h10a1 1 0 001-1V3a1 1 0 00-1-1z" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>
+          Send Bulk Update to All Clients
+        </button>
+        <button class="btn btn-ghost" onclick="scheduleMessage()">
+          <svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 4.5V8l2.5 2" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/></svg>
+          Schedule Message
+        </button>
+        <button class="btn btn-ghost" onclick="exportMessages()">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          Export Message History
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PARCEL MANAGEMENT ===== -->
+<div class="panel" id="panel-parcels">
+  <div class="section-hdr">
+    <div><h2>All Parcels</h2><p>Complete shipment registry</p></div>
+    <div class="hdr-actions">
+      <input class="f-input" style="max-width:200px;" placeholder="Search AWB..." oninput="filterParcels(this.value)"/>
+      <select class="f-select" style="width:auto;padding:8px 14px;font-size:12px;">
+        <option>All Services</option><option>Express</option><option>Air Freight</option><option>Sea Freight</option><option>Road</option>
+      </select>
+    </div>
+  </div>
+  <div class="card">
+    <table class="ent-table">
+      <thead><tr><th>AWB</th><th>Client</th><th>Route</th><th>Service</th><th>Weight</th><th>Status</th><th>SLA</th><th>Actions</th></tr></thead>
+      <tbody id="parcels-rows"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="panel" id="panel-parcel-create">
+  <div class="section-hdr"><div><h2>Create Parcel</h2><p>Log a new shipment into the system</p></div></div>
+  <div class="card" style="max-width:680px;">
+    <div class="f-row">
+      <div class="f-group"><label class="f-label">Client ID</label><input class="f-input" id="pc-client" placeholder="CL-0001"/></div>
+      <div class="f-group"><label class="f-label">Service Type</label>
+        <select class="f-select" id="pc-service">
+          <option>Express Delivery</option><option>Air Freight</option><option>Sea Freight</option><option>Road Freight</option><option>Onboard Courier</option>
+        </select>
+      </div>
+    </div>
+    <div class="f-row">
+      <div class="f-group"><label class="f-label">Origin (3-letter code)</label><input class="f-input" id="pc-origin" placeholder="LHR" maxlength="3"/></div>
+      <div class="f-group"><label class="f-label">Destination (3-letter code)</label><input class="f-input" id="pc-dest" placeholder="JFK" maxlength="3"/></div>
+    </div>
+    <div class="f-row">
+      <div class="f-group"><label class="f-label">Weight (kg)</label><input class="f-input" id="pc-weight" placeholder="2.5" type="number"/></div>
+      <div class="f-group"><label class="f-label">Declared Value (GBP)</label><input class="f-input" id="pc-value" placeholder="500" type="number"/></div>
+    </div>
+    <div class="f-group"><label class="f-label">Description</label><textarea class="f-textarea" id="pc-desc" placeholder="Package contents..."></textarea></div>
+    <button class="btn btn-primary btn-lg" onclick="createParcel()">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V9H3a1 1 0 110-2h4V3a1 1 0 011-1z"/></svg>
+      Create Shipment
+    </button>
+  </div>
+</div>
+
+<div class="panel" id="panel-parcel-status">
+  <div class="section-hdr"><div><h2>Update Status</h2><p>Change shipment status and notify client</p></div></div>
+  <div class="card" style="max-width:560px;">
+    <div class="f-group"><label class="f-label">AWB Number</label><input class="f-input" id="ps-awb" placeholder="AP-2024-88064"/></div>
+    <div class="f-group"><label class="f-label">New Status</label>
+      <select class="f-select" id="ps-status">
+        <option>Shipment Booked</option><option>Picked Up</option><option>In Transit</option><option>Customs Hold</option><option>Out for Delivery</option><option>Delivered</option><option>Exception</option>
+      </select>
+    </div>
+    <div class="f-group"><label class="f-label">Notes</label><textarea class="f-textarea" id="ps-notes" placeholder="Status update notes..."></textarea></div>
+    <div class="f-group"><label class="f-label">Notify Client</label>
+      <select class="f-select" id="ps-notify">
+        <option value="yes">Yes — Send email & SMS</option><option value="no">No — Internal only</option>
+      </select>
+    </div>
+    <button class="btn btn-primary btn-lg" onclick="updateStatus()">
+      <svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/></svg>
+      Update & Notify
+    </button>
+    <div style="margin-top:20px;">
+      <h4 style="font-size:13px;font-weight:800;color:#fff;margin-bottom:10px;">Status Log</h4>
+      <div id="status-log"></div>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="panel-route-assign">
+  <div class="section-hdr"><div><h2>Assign Route</h2><p>Assign and optimise delivery routes</p></div></div>
+  <div class="card">
+    <div class="f-row" style="margin-bottom:20px;">
+      <div class="f-group"><label class="f-label">AWB Number</label><input class="f-input" placeholder="AP-2024-88064"/></div>
+      <div class="f-group"><label class="f-label">Route Option</label>
+        <select class="f-select">
+          <option>Auto-optimise (Recommended)</option><option>Fastest Route</option><option>Cheapest Route</option><option>Shortest Distance</option>
+        </select>
+      </div>
+    </div>
+    <div class="g2">
+      <div>
+        <div class="card-title">Route Option 1 — Fastest</div>
+        <div style="padding:14px;background:var(--card2);border-radius:10px;">
+          <div style="font-size:12px;color:#fff;font-weight:700;margin-bottom:6px;">LHR → NRT → JFK</div>
+          <div style="font-size:11px;color:var(--sub);margin-bottom:8px;">ETA: 18h 30m · Cost: GBP 1,240</div>
+          <div class="pbar-wrap"><div class="pbar-fill" style="width:85%;background:var(--green);"></div></div>
+          <div style="font-size:10px;color:var(--green);margin-top:4px;">85% on-time probability</div>
+        </div>
+      </div>
+      <div>
+        <div class="card-title">Route Option 2 — Cheapest</div>
+        <div style="padding:14px;background:var(--card2);border-radius:10px;">
+          <div style="font-size:12px;color:#fff;font-weight:700;margin-bottom:6px;">LHR → DXB → JFK</div>
+          <div style="font-size:11px;color:var(--sub);margin-bottom:8px;">ETA: 24h 15m · Cost: GBP 890</div>
+          <div class="pbar-wrap"><div class="pbar-fill" style="width:72%;background:var(--blue);"></div></div>
+          <div style="font-size:10px;color:#60a5fa;margin-top:4px;">72% on-time probability</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary" style="margin-top:20px;">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1a5 5 0 015 5c0 3.5-5 9-5 9S3 9.5 3 6a5 5 0 015-5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+      Assign Optimised Route
+    </button>
+  </div>
+</div>
+
+<div class="panel" id="panel-customs-clear">
+  <div class="section-hdr"><div><h2>Customs Clearance</h2><p>Handle international customs documentation and holds</p></div></div>
+  <div class="card">
+    <div class="card-title">Pending Clearance Items</div>
+    <table class="ent-table">
+      <thead><tr><th>AWB</th><th>Value</th><th>HS Code</th><th>Risk Score</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td><strong>AP-88097</strong></td><td>GBP 12,400</td><td>8471.30.00</td><td><span class="badge b-amber">78% Risk</span></td><td><button class="btn btn-sm btn-warning">Pre-clear</button></td></tr>
+        <tr><td><strong>AP-88102</strong></td><td>GBP 3,200</td><td>6201.11.00</td><td><span class="badge b-blue">35% Risk</span></td><td><button class="btn btn-sm btn-success">Auto-clear</button></td></tr>
+        <tr><td><strong>AP-88115</strong></td><td>GBP 8,900</td><td>8517.12.00</td><td><span class="badge b-green">15% Risk</span></td><td><button class="btn btn-sm btn-ghost">Review</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="panel" id="panel-delivery-confirm">
+  <div class="section-hdr"><div><h2>Delivery Confirmation</h2><p>Confirm and record completed deliveries</p></div></div>
+  <div class="card" style="max-width:560px;">
+    <div class="f-group"><label class="f-label">AWB Number</label><input class="f-input" placeholder="AP-2024-88064"/></div>
+    <div class="f-group"><label class="f-label">Recipient Name</label><input class="f-input" placeholder="John Smith"/></div>
+    <div class="f-group"><label class="f-label">Signature (base64)</label><textarea class="f-textarea" placeholder="Captured signature data..."></textarea></div>
+    <div class="f-group"><label class="f-label">Proof of Delivery Photo</label><input class="f-input" type="file" accept="image/*"/></div>
+    <button class="btn btn-success btn-lg" onclick="confirmDelivery()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>
+      Confirm Delivery
+    </button>
+  </div>
+</div>
+
+<!-- ===== TRACKING CONTROL ===== -->
+<div class="panel" id="panel-live-tracking">
+  <div class="section-hdr"><div><h2>Live Progress</h2><p>Real-time shipment tracking map</p></div></div>
+  <div class="card" style="height:500px;display:flex;align-items:center;justify-content:center;">
+    <div style="text-align:center;color:var(--sub);">
+      <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" style="width:64px;height:64px;margin-bottom:16px;opacity:.5"><circle cx="32" cy="32" r="28"/><path d="M32 16v16l12 8"/><path d="M16 32h32" stroke-dasharray="4 4"/></svg>
+      <p style="font-size:14px;font-weight:600;color:#fff;margin-bottom:4px;">Live Tracking Active</p>
+      <p style="font-size:12px;">2,147 shipments tracked · 6 vehicles online · Last update: <span id="live-track-time">just now</span></p>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="panel-route-monitor">
+  <div class="section-hdr"><div><h2>Route Monitor</h2><p>Fleet tracking and route management</p></div></div>
+  <div class="g4" style="margin-bottom:20px;">
+    <div class="stat-box teal"><div class="stat-val">6</div><div class="stat-lbl">Vehicles Online</div></div>
+    <div class="stat-box blue"><div class="stat-val">14</div><div class="stat-lbl">Active Routes</div></div>
+    <div class="stat-box green"><div class="stat-val">98.2%</div><div class="stat-lbl">Route Compliance</div></div>
+    <div class="stat-box amber"><div class="stat-val">2</div><div class="stat-lbl">Detours</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Fleet Status</div>
+    <table class="ent-table">
+      <thead><tr><th>Vehicle</th><th>Driver</th><th>Current Location</th><th>Status</th><th>ETA</th></tr></thead>
+      <tbody>
+        <tr><td><strong>VH-001</strong></td><td>Marcus Bell</td><td>M4 Corridor, Reading</td><td><span class="badge b-green">On Route</span></td><td>14:30 GMT</td></tr>
+        <tr><td><strong>VH-002</strong></td><td>Sarah Connor</td><td>Cardiff Hub</td><td><span class="badge b-amber">Idle</span></td><td>—</td></tr>
+        <tr><td><strong>VH-003</strong></td><td>James Wright</td><td>M25, Dartford</td><td><span class="badge b-green">On Route</span></td><td>15:45 GMT</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="panel" id="panel-status-override">
+  <div class="section-hdr"><div><h2>Status Override</h2><p>Manually override shipment status (admin only)</p></div></div>
+  <div class="card" style="max-width:560px;">
+    <div class="f-group"><label class="f-label">AWB Number</label><input class="f-input" placeholder="AP-2024-88064"/></div>
+    <div class="f-group"><label class="f-label">Override To</label>
+      <select class="f-select">
+        <option>Force Delivered</option><option>Force Exception</option><option>Force Return to Sender</option><option>Reset to Booked</option>
+      </select>
+    </div>
+    <div class="f-group"><label class="f-label">Override Reason</label><textarea class="f-textarea" placeholder="Required reason for override..."></textarea></div>
+    <button class="btn btn-danger btn-lg">Apply Override</button>
+  </div>
+</div>
+
+<div class="panel" id="panel-scan-sim">
+  <div class="section-hdr"><div><h2>Scan Simulation</h2><p>Simulate barcode and QR scan events</p></div></div>
+  <div class="card" style="max-width:480px;">
+    <div class="f-group"><label class="f-label">AWB / Barcode</label><input class="f-input" placeholder="AP-2024-88064"/></div>
+    <div class="f-group"><label class="f-label">Scan Type</label>
+      <select class="f-select">
+        <option>Pickup Scan</option><option>Transit Scan</option><option>Customs Scan</option><option>Out for Delivery</option><option>Delivered Scan</option>
+      </select>
+    </div>
+    <div class="f-group"><label class="f-label">Location</label><input class="f-input" placeholder="Cardiff Hub, UK"/></div>
+    <button class="btn btn-primary">Simulate Scan</button>
+  </div>
+</div>
+
+<!-- ===== COMMUNICATION ===== -->
+<div class="panel" id="panel-send-update">
+  <div class="section-hdr"><div><h2>Send Customer Update</h2><p>Broadcast status updates to clients</p></div></div>
+  <div class="card" style="max-width:680px;">
+    <div class="f-group"><label class="f-label">Send To</label>
+      <select class="f-select">
+        <option>All Active Clients</option><option>Premium Clients</option><option>Delayed Shipments Only</option><option>Customs Hold Clients</option><option>Specific Client ID</option>
+      </select>
+    </div>
+    <div class="f-group"><label class="f-label">Update Type</label>
+      <select class="f-select">
+        <option>Delay Notice</option><option>Delivery Confirmation</option><option>Customs Update</option><option>Service Alert</option><option>General Update</option>
+      </select>
+    </div>
+    <div class="f-group"><label class="f-label">Message</label><textarea class="f-textarea" style="min-height:120px;" placeholder="Your message to clients...">Dear Valued Client,
+
+We wanted to inform you of a weather-related delay affecting shipments in the UK region. Your package remains safe and will be delivered as soon as conditions improve.
+
+Thank you for your patience.
+
+Airpak Express Operations Team</textarea></div>
+    <div style="display:flex;gap:12px;">
+      <button class="btn btn-primary">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="2" width="14" height="11" rx="1.5"/><path d="M1 4l7 5 7-3"/></svg>
+        Send Email
+      </button>
+      <button class="btn btn-ghost">
+        <svg viewBox="0 0 16 16" fill="currentColor"><rect x="2" y="1" width="12" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5 5h6M5 8h4" stroke="currentColor" stroke-width="1.3"/></svg>
+        Send SMS
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== EMAIL AUTOMATION ===== -->
+<div class="panel" id="panel-email-auto">
+  <div class="section-hdr"><div><h2>Email Automation Centre</h2><p>Configure AI-powered automated email sequences</p></div></div>
+
+  <div class="ai-automation-grid">
+    <div class="ai-auto-card">
+      <div class="ai-auto-header">
+        <div class="ai-auto-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="2" width="14" height="11" rx="1.5"/><path d="M1 4l7 5 7-3"/></svg></div>
+        <div>
+          <div class="ai-auto-title">Welcome Email Sequence</div>
+          <div class="ai-auto-desc">Sent when a new client account is created</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--sub);margin-bottom:12px;">Triggers: Account creation → Day 1 → Day 3 → Day 7 follow-up</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <div style="flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;"><div style="width:92%;height:100%;background:linear-gradient(90deg,#16a34a,#4ade80);border-radius:3px;"></div></div>
+        <span style="font-size:11px;color:#4ade80;font-weight:700;">92% open rate</span>
+      </div>
+      <button class="btn btn-ghost btn-sm ai-auto-btn">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8h14M8 3l5 5-5 5"/></svg>
+        Edit Sequence
+      </button>
+    </div>
+
+    <div class="ai-auto-card">
+      <div class="ai-auto-header">
+        <div class="ai-auto-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="M1 5l7 5 7-5"/></svg></div>
+        <div>
+          <div class="ai-auto-title">Newsletter Automation</div>
+          <div class="ai-auto-desc">Monthly industry updates and company news</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--sub);margin-bottom:12px;">Triggers: 1st of every month → All active clients</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <div style="flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;"><div style="width:78%;height:100%;background:linear-gradient(90deg,#2563eb,#60a5fa);border-radius:3px;"></div></div>
+        <span style="font-size:11px;color:#60a5fa;font-weight:700;">78% open rate</span>
+      </div>
+      <button class="btn btn-ghost btn-sm ai-auto-btn">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8h14M8 3l5 5-5 5"/></svg>
+        Edit Template
+      </button>
+    </div>
+
+    <div class="ai-auto-card">
+      <div class="ai-auto-header">
+        <div class="ai-auto-icon"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/></svg></div>
+        <div>
+          <div class="ai-auto-title">Status Update Alerts</div>
+          <div class="ai-auto-desc">Auto-sent when shipment status changes</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--sub);margin-bottom:12px;">Triggers: Picked Up → In Transit → Out for Delivery → Delivered</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <div style="flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;"><div style="width:96%;height:100%;background:linear-gradient(90deg,#16a34a,#4ade80);border-radius:3px;"></div></div>
+        <span style="font-size:11px;color:#4ade80;font-weight:700;">96% open rate</span>
+      </div>
+      <button class="btn btn-ghost btn-sm ai-auto-btn">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8h14M8 3l5 5-5 5"/></svg>
+        Configure
+      </button>
+    </div>
+
+    <div class="ai-auto-card">
+      <div class="ai-auto-header">
+        <div class="ai-auto-icon"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2.5a.75.75 0 110 1.5.75.75 0 010-1.5zM8.75 11H7V7h1.5v4z"/></svg></div>
+        <div>
+          <div class="ai-auto-title">Delay & Exception Alerts</div>
+          <div class="ai-auto-desc">Proactive notification for shipment issues</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--sub);margin-bottom:12px;">Triggers: SLA risk >80% → Customs hold → Weather delay → Carrier issue</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <div style="flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;"><div style="width:88%;height:100%;background:linear-gradient(90deg,#d97706,#fbbf24);border-radius:3px;"></div></div>
+        <span style="font-size:11px;color:#fbbf24;font-weight:700;">88% open rate</span>
+      </div>
+      <button class="btn btn-ghost btn-sm ai-auto-btn">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8h14M8 3l5 5-5 5"/></svg>
+        Configure
+      </button>
+    </div>
+
+    <div class="ai-auto-card">
+      <div class="ai-auto-header">
+        <div class="ai-auto-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 2.5A1.5 1.5 0 013.5 1h9A1.5 1.5 0 0114 2.5v11a1.5 1.5 0 01-1.5 1.5h-9A1.5 1.5 0 012 13.5v-11zM3.5 3v10h9V3h-9z"/></svg></div>
+        <div>
+          <div class="ai-auto-title">Invoice & Payment Reminders</div>
+          <div class="ai-auto-desc">Automated billing follow-ups</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--sub);margin-bottom:12px;">Triggers: Invoice issued → 7 days → 14 days → 30 days overdue</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <div style="flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;"><div style="width:85%;height:100%;background:linear-gradient(90deg,#7c3aed,#a78bfa);border-radius:3px;"></div></div>
+        <span style="font-size:11px;color:#a78bfa;font-weight:700;">85% open rate</span>
+      </div>
+      <button class="btn btn-ghost btn-sm ai-auto-btn">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8h14M8 3l5 5-5 5"/></svg>
+        Configure
+      </button>
+    </div>
+
+    <div class="ai-auto-card">
+      <div class="ai-auto-header">
+        <div class="ai-auto-icon"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1L2 14h12L8 1zm0 4v5M8 11.5v.5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></div>
+        <div>
+          <div class="ai-auto-title">SLA Breach Escalation</div>
+          <div class="ai-auto-desc">Auto-escalate critical SLA violations</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--sub);margin-bottom:12px;">Triggers: ETA breach → Manager notify → Client notify → Executive alert</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <div style="flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;"><div style="width:100%;height:100%;background:linear-gradient(90deg,#CD2727,#ff6b6b);border-radius:3px;"></div></div>
+        <span style="font-size:11px;color:#f87171;font-weight:700;">100% triggered</span>
+      </div>
+      <button class="btn btn-ghost btn-sm ai-auto-btn">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8h14M8 3l5 5-5 5"/></svg>
+        View Log
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" style="width:14px;height:14px;color:#a78bfa"><rect x="1" y="2" width="14" height="11" rx="1.5"/><path d="M1 4l7 5 7-3"/></svg>
+      AI Email Templates <span class="ctag ctag-ai">AI-Powered</span>
+    </div>
+    <div class="email-template-grid">
+      <div class="email-tpl" onclick="selectTpl(this,'welcome')">
+        <div class="et-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1a5 5 0 015 5v5H3V6a5 5 0 015-5z"/><circle cx="8" cy="4" r="2"/></svg></div>
+        <div class="et-name">Welcome Sequence</div>
+        <div class="et-desc">3-email onboarding flow</div>
+      </div>
+      <div class="email-tpl" onclick="selectTpl(this,'tracking')">
+        <div class="et-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2.5 1.5" stroke-linecap="round"/><path d="M2 8h12" stroke-dasharray="2 2"/></svg></div>
+        <div class="et-name">Tracking Updates</div>
+        <div class="et-desc">Auto status notifications</div>
+      </div>
+      <div class="email-tpl" onclick="selectTpl(this,'delay')">
+        <div class="et-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="6"/><path d="M8 4.5V8l2.5 2" stroke-linecap="round"/></svg></div>
+        <div class="et-name">Delay Notification</div>
+        <div class="et-desc">Proactive delay alerts</div>
+      </div>
+      <div class="email-tpl" onclick="selectTpl(this,'newsletter')">
+        <div class="et-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 2.5A1.5 1.5 0 013.5 1h9A1.5 1.5 0 0114 2.5v11a1.5 1.5 0 01-1.5 1.5h-9A1.5 1.5 0 012 13.5v-11zM3.5 3v10h9V3h-9z"/></svg></div>
+        <div class="et-name">Monthly Newsletter</div>
+        <div class="et-desc">Industry insights & updates</div>
+      </div>
+      <div class="email-tpl" onclick="selectTpl(this,'invoice')">
+        <div class="et-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="M4 7h8M4 9.5h5"/></svg></div>
+        <div class="et-name">Invoice Reminder</div>
+        <div class="et-desc">Payment follow-up series</div>
+      </div>
+      <div class="email-tpl" onclick="selectTpl(this,'customs')">
+        <div class="et-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="4" width="9" height="10" rx="1"/><path d="M10 7h3a1 1 0 011 1v3"/></svg></div>
+        <div class="et-name">Customs Notice</div>
+        <div class="et-desc">Customs clearance alerts</div>
+      </div>
+    </div>
+    <div id="tpl-name" style="font-size:14px;font-weight:800;color:#fff;margin-bottom:12px;">Select a template to preview</div>
+    <textarea class="f-textarea" id="email-preview" style="min-height:200px;" placeholder="Email content will appear here..."></textarea>
+    <div style="display:flex;gap:10px;margin-top:12px;">
+      <button class="btn btn-primary">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8h14M8 3l5 5-5 5"/></svg>
+        Save Template
+      </button>
+      <button class="btn btn-ghost">Preview</button>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="panel-email-manual">
+  <div class="section-hdr"><div><h2>Manual Email</h2><p>Send one-off emails to specific clients</p></div></div>
+  <div class="card" style="max-width:680px;">
+    <div class="f-group"><label class="f-label">To (Client ID or Email)</label><input class="f-input" placeholder="CL-0001 or john@company.com"/></div>
+    <div class="f-group"><label class="f-label">Subject</label><input class="f-input" placeholder="Subject line..."/></div>
+    <div class="f-group"><label class="f-label">Message</label><textarea class="f-textarea" placeholder="Email content..."></textarea></div>
+    <button class="btn btn-primary">Send Email</button>
+  </div>
+</div>
+
+<div class="panel" id="panel-sms-control">
+  <div class="section-hdr"><div><h2>SMS Notifications</h2><p>Configure and manage SMS alert templates</p></div></div>
+  <div class="card" style="max-width:680px;">
+    <div class="f-group"><label class="f-label">SMS Template Name</label><input class="f-input" placeholder="Delay Alert SMS"/></div>
+    <div class="f-group"><label class="f-label">Message Content</label><textarea class="f-textarea" id="sms-body" placeholder="Your shipment {AWB} has been delayed. New ETA: {ETA}. Track at: {TRACK_URL}">Airpak Express: Your shipment {AWB} has been delayed. New ETA: {ETA}. Track at: {TRACK_URL}</textarea></div>
+    <div style="font-size:11px;color:var(--sub);margin-bottom:12px;">Variables: {AWB}, {CLIENT_NAME}, {ETA}, {TRACK_URL}, {ORIGIN}, {DEST}</div>
+    <button class="btn btn-primary">Save SMS Template</button>
+  </div>
+</div>
+
+<!-- ===== PAYMENT MANAGEMENT ===== -->
+<div class="panel" id="panel-payments">
+  <div class="section-hdr">
+    <div><h2>Payment Records</h2><p>Track all client payments and invoices</p></div>
+    <div class="hdr-actions">
+      <button class="btn btn-ghost">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        Export
+      </button>
+    </div>
+  </div>
+  <div class="card">
+    <table class="ent-table">
+      <thead><tr><th>Invoice</th><th>Client</th><th>Amount</th><th>Date</th><th>Method</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody id="payments-rows"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="panel" id="panel-invoice-gen">
+  <div class="section-hdr"><div><h2>Invoice Generator</h2><p>Create and issue invoices to clients</p></div></div>
+  <div class="card" style="max-width:680px;">
+    <div class="f-row">
+      <div class="f-group"><label class="f-label">Client ID</label><input class="f-input" placeholder="CL-0001" id="inv-client"/></div>
+      <div class="f-group"><label class="f-label">Invoice Date</label><input class="f-input" type="date" id="inv-date"/></div>
+    </div>
+    <div class="f-row">
+      <div class="f-group"><label class="f-label">Subtotal (GBP)</label><input class="f-input" placeholder="1,000.00" id="inv-sub" oninput="calcInv()"/></div>
+      <div class="f-group"><label class="f-label">VAT (20%)</label><input class="f-input" id="inv-gst" readonly/></div>
+    </div>
+    <div class="f-group"><label class="f-label">Total Amount</label><input class="f-input" id="inv-total" readonly style="font-weight:800;color:#4ade80;font-size:18px;"/></div>
+    <div style="padding:14px;background:var(--card2);border-radius:10px;margin-bottom:14px;">
+      <div style="font-size:12px;color:var(--sub);margin-bottom:4px;">Preview</div>
+      <div style="font-size:13px;color:#fff;">Subtotal: <span id="inv-prev-sub" style="color:#fff">GBP 0.00</span></div>
+      <div style="font-size:13px;color:#fff;">VAT (20%): <span id="inv-prev-gst" style="color:var(--sub)">GBP 0.00</span></div>
+      <div style="font-size:15px;color:#4ade80;font-weight:800;margin-top:6px;">Total: <span id="inv-prev-total">GBP 0.00</span></div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-primary">Generate Invoice</button>
+      <button class="btn btn-ghost">Save as Draft</button>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="panel-pay-verify">
+  <div class="section-hdr"><div><h2>Payment Verification</h2><p>Verify and approve pending payments</p></div></div>
+  <div class="card">
+    <table class="ent-table">
+      <thead><tr><th>Invoice</th><th>Client</th><th>Amount</th><th>Submitted</th><th>Method</th><th>Verify</th></tr></thead>
+      <tbody>
+        <tr><td><strong>INV-2024-1145</strong></td><td>Meridian Logistics</td><td>GBP 2,340</td><td>Today 09:15</td><td>Bank Transfer</td><td><button class="btn btn-sm btn-success">Verify</button></td></tr>
+        <tr><td><strong>INV-2024-1144</strong></td><td>Pacific Rim Exports</td><td>GBP 8,900</td><td>Today 08:30</td><td>Crypto</td><td><button class="btn btn-sm btn-success">Verify</button></td></tr>
+        <tr><td><strong>INV-2024-1143</strong></td><td>Kelso & Hart Trading</td><td>GBP 1,250</td><td>Yesterday 16:42</td><td>Card</td><td><button class="btn btn-sm btn-success">Verify</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== SYSTEM OPERATIONS ===== -->
+<div class="panel" id="panel-analytics">
+  <div class="section-hdr"><div><h2>Analytics Dashboard</h2><p>Performance metrics and business intelligence</p></div></div>
+  <div class="g4" style="margin-bottom:24px;">
+    <div class="stat-box teal"><div class="stat-val">GBP 4.2M</div><div class="stat-lbl">Monthly Revenue</div><div class="stat-chg up">+18.4% vs last month</div></div>
+    <div class="stat-box purple"><div class="stat-val">98.4%</div><div class="stat-lbl">On-Time Rate</div><div class="stat-chg up">+0.6% improvement</div></div>
+    <div class="stat-box blue"><div class="stat-val">2,147</div><div class="stat-lbl">Active Shipments</div><div class="stat-chg up">+312 this week</div></div>
+    <div class="stat-box green"><div class="stat-val">1,284</div><div class="stat-lbl">Active Clients</div><div class="stat-chg up">+34 this week</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Revenue by Service</div>
+      <div style="padding:16px;background:var(--card2);border-radius:10px;text-align:center;">
+        <div style="font-size:2rem;font-weight:900;color:#4ade80;font-family:'Sarabun',sans-serif;">GBP 4.2M</div>
+        <div style="font-size:12px;color:var(--sub);">Total this month</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Client Retention</div>
+      <div style="padding:16px;background:var(--card2);border-radius:10px;text-align:center;">
+        <div style="font-size:2rem;font-weight:900;color:#60a5fa;font-family:'Sarabun',sans-serif;">94.2%</div>
+        <div style="font-size:12px;color:var(--sub);">90-day retention rate</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="panel-ai-control">
+  <div class="section-hdr"><div><h2>AI Logistics Centre</h2><p>AI-powered automation and intelligence</p></div></div>
+  <div class="ai-automation-grid">
+    <div class="ai-auto-card">
+      <div class="ai-auto-header">
+        <div class="ai-auto-icon"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M9 1L5 9h5l-2 6 7-7h-5l2-7z" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></div>
+        <div>
+          <div class="ai-auto-title">Route Optimizer</div>
+          <div class="ai-auto-desc">AI finds fastest + cheapest routes automatically</div>
+        </div>
+      </div>
+      <div class="ai-auto-status"><div class="status-dot"></div> Active — 147 routes optimised today</div>
+      <button class="btn btn-primary btn-sm ai-auto-btn">Configure</button>
+    </div>
+    <div class="ai-auto-card">
+      <div class="ai-auto-header">
+        <div class="ai-auto-icon"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2.5a.75.75 0 110 1.5.75.75 0 010-1.5zM8.75 11H7V7h1.5v4z"/></svg></div>
+        <div>
+          <div class="ai-auto-title">SLA Predictor</div>
+          <div class="ai-auto-desc">Predicts delivery failures before they happen</div>
+        </div>
+      </div>
+      <div class="ai-auto-status"><div class="status-dot"></div> Active — 3 at-risk shipments flagged</div>
+      <button class="btn btn-primary btn-sm ai-auto-btn">View Predictions</button>
+    </div>
+    <div class="ai-auto-card">
+      <div class="ai-auto-header">
+        <div class="ai-auto-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="4" width="9" height="10" rx="1"/><path d="M10 7h3a1 1 0 011 1v3"/></svg></div>
+        <div>
+          <div class="ai-auto-title">Customs Classifier</div>
+          <div class="ai-auto-desc">Auto-classifies HS codes and flags risks</div>
+        </div>
+      </div>
+      <div class="ai-auto-status"><div class="status-dot"></div> Active — 28 items classified today</div>
+      <button class="btn btn-primary btn-sm ai-auto-btn">Review Queue</button>
+    </div>
+    <div class="ai-auto-card">
+      <div class="ai-auto-header">
+        <div class="ai-auto-icon"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="5"/><path d="M5 8a3 3 0 106 0M8 6v2l1.5 1.5" stroke="white" stroke-width="1" fill="none" stroke-linecap="round"/></svg></div>
+        <div>
+          <div class="ai-auto-title">AI Assistant</div>
+          <div class="ai-auto-desc">Natural language logistics queries</div>
+        </div>
+      </div>
+      <div class="ai-auto-status"><div class="status-dot"></div> Online — Ready to assist</div>
+      <button class="btn btn-primary btn-sm ai-auto-btn" onclick="openAIModal()">Chat with AI</button>
+    </div>
+  </div>
+
+  <!-- AI Chat Interface -->
+  <div class="card" style="margin-top:20px;">
+    <div class="card-title">
+      <svg viewBox="0 0 16 16" fill="currentColor" style="width:14px;height:14px;color:#a78bfa"><circle cx="8" cy="8" r="5"/><path d="M5 8a3 3 0 106 0M8 6v2l1.5 1.5" stroke="white" stroke-width="1" fill="none" stroke-linecap="round"/></svg>
+      AI Assistant <span class="ctag ctag-ai">Powered by AI</span>
+    </div>
+    <div class="chat-wrap">
+      <div class="chat-msgs" id="ai-admin-msgs" style="min-height:200px;">
+        <div style="background:rgba(124,58,237,.1);padding:12px 16px;border-radius:12px;font-size:13px;max-width:90%;color:var(--sub);">
+          AI Logistics Assistant ready. Ask me about: shipment delays, route optimisation, customs risks, SLA status, fleet management, or revenue forecasting.
+        </div>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="ai-admin-input" placeholder="Ask the AI about your logistics operations..." onkeydown="if(event.key==='Enter')sendAdminAI()"/>
+        <button class="chat-send" onclick="sendAdminAI()">Ask AI</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="panel-route-intel">
+  <div class="section-hdr"><div><h2>Route Intelligence</h2><p>AI-powered route analysis and optimisation</p></div></div>
+  <div class="card">
+    <div class="card-title">Active Corridors</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px;">
+      <div style="padding:16px;background:var(--card2);border-radius:10px;text-align:center;"><div style="font-size:1.2rem;font-weight:800;color:#fff;font-family:'Sarabun',sans-serif;">LHR→LAX</div><div style="font-size:11px;color:var(--sub);margin-top:4px;">14 shipments · 98.2% on-time</div></div>
+      <div style="padding:16px;background:var(--card2);border-radius:10px;text-align:center;"><div style="font-size:1.2rem;font-weight:800;color:#fff;font-family:'Sarabun',sans-serif;">LHR→NRT</div><div style="font-size:11px;color:var(--sub);margin-top:4px;">8 shipments · 97.8% on-time</div></div>
+      <div style="padding:16px;background:var(--card2);border-radius:10px;text-align:center;"><div style="font-size:1.2rem;font-weight:800;color:#fff;font-family:'Sarabun',sans-serif;">LHR→DXB</div><div style="font-size:11px;color:var(--sub);margin-top:4px;">11 shipments · 96.1% on-time</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="panel-workflow-auto">
+  <div class="section-hdr"><div><h2>Workflow Automation</h2><p>Configure automated operational workflows</p></div></div>
+  <div class="ai-automation-grid">
+    <div class="ai-auto-card">
+      <div class="ai-auto-header">
+        <div class="ai-auto-icon"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V9H3a1 1 0 110-2h4V3a1 1 0 011-1z"/></svg></div>
+        <div>
+          <div class="ai-auto-title">Auto Parcel Creation</div>
+          <div class="ai-auto-desc">New orders auto-create shipments</div>
+        </div>
+      </div>
+      <div class="ai-auto-status"><div class="status-dot"></div> Enabled</div>
+    </div>
+    <div class="ai-auto-card">
+      <div class="ai-auto-header">
+        <div class="ai-auto-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="2" width="14" height="11" rx="1.5"/><path d="M1 4l7 5 7-3"/></svg></div>
+        <div>
+          <div class="ai-auto-title">Auto Status Notifications</div>
+          <div class="ai-auto-desc">Email/SMS on every status change</div>
+        </div>
+      </div>
+      <div class="ai-auto-status"><div class="status-dot"></div> Enabled</div>
+    </div>
+    <div class="ai-auto-card">
+      <div class="ai-auto-header">
+        <div class="ai-auto-icon"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M9 1L5 9h5l-2 6 7-7h-5l2-7z" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></div>
+        <div>
+          <div class="ai-auto-title">Auto Reroute on Delay</div>
+          <div class="ai-auto-desc">AI reroutes shipments if delay >6h</div>
+        </div>
+      </div>
+      <div class="ai-auto-status paused"><div class="status-dot" style="background:#fbbf24;"></div> Paused — No delays</div>
+    </div>
+    <div class="ai-auto-card">
+      <div class="ai-auto-header">
+        <div class="ai-auto-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 2.5A1.5 1.5 0 013.5 1h9A1.5 1.5 0 0114 2.5v11a1.5 1.5 0 01-1.5 1.5h-9A1.5 1.5 0 012 13.5v-11zM3.5 3v10h9V3h-9z"/></svg></div>
+        <div>
+          <div class="ai-auto-title">Auto Invoice Generation</div>
+          <div class="ai-auto-desc">Monthly billing auto-generated</div>
+        </div>
+      </div>
+      <div class="ai-auto-status"><div class="status-dot"></div> Enabled</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ROLE MANAGEMENT ===== -->
+<div class="panel" id="panel-roles">
+  <div class="section-hdr">
+    <div><h2>Role Management</h2><p>Manage admin and manager accounts (max 3 admins)</p></div>
+    <div class="hdr-actions">
+      <button class="btn btn-primary" onclick="openAddRole()">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V9H3a1 1 0 110-2h4V3a1 1 0 011-1z"/></svg>
+        Add Team Member
+      </button>
+    </div>
+  </div>
+
+  <!-- Admin accounts -->
+  <div style="margin-bottom:32px;">
+    <h3 style="font-size:14px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;">
+      <svg viewBox="0 0 16 16" fill="currentColor" style="width:14px;height:14px;display:inline;vertical-align:middle;margin-right:6px;"><path d="M8 1a5 5 0 015 5v5H3V6a5 5 0 015-5z"/></svg>
+      Administrators <span style="color:var(--text);font-size:12px;">(1/3 max)</span>
+    </h3>
+    <div id="admin-role-list" style="display:flex;flex-direction:column;gap:10px;">
+      <div class="role-card">
+        <div class="role-avatar" style="background:linear-gradient(135deg,#CD2727,#ff6b6b);">SA</div>
+        <div class="role-info">
+          <div class="role-name">System Admin</div>
+          <div class="role-title">admin@airpak-express.com · Last login: Today 08:00</div>
+          <div class="role-perms">
+            <span class="role-perm-tag">Full Access</span>
+            <span class="role-perm-tag">User Management</span>
+            <span class="role-perm-tag">Billing</span>
+            <span class="role-perm-tag">System Config</span>
+          </div>
+        </div>
+        <div class="role-actions">
+          <button class="btn btn-sm btn-ghost">Edit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Manager roles -->
+  <div style="margin-bottom:32px;">
+    <h3 style="font-size:14px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;">
+      <svg viewBox="0 0 16 16" fill="currentColor" style="width:14px;height:14px;display:inline;vertical-align:middle;margin-right:6px;"><circle cx="8" cy="6" r="3"/><path d="M2 14c0-3 3-5 6-5s6 2 6 5"/></svg>
+      Operations Managers
+    </h3>
+    <div id="manager-role-list" style="display:flex;flex-direction:column;gap:10px;">
+      <div class="role-card">
+        <div class="role-avatar" style="background:linear-gradient(135deg,#2563eb,#60a5fa);">JW</div>
+        <div class="role-info">
+          <div class="role-name">James Wilson</div>
+          <div class="role-title">j.wilson@airpak-express.com · Transit Manager</div>
+          <div class="role-perms">
+            <span class="role-perm-tag">Parcel Management</span>
+            <span class="role-perm-tag">Route Assignment</span>
+            <span class="role-perm-tag">Status Updates</span>
+          </div>
+        </div>
+        <div class="role-actions">
+          <button class="btn btn-sm btn-ghost">Edit</button>
+          <button class="btn btn-sm btn-danger">Remove</button>
+        </div>
+      </div>
+      <div class="role-card">
+        <div class="role-avatar" style="background:linear-gradient(135deg,#16a34a,#4ade80);">EM</div>
+        <div class="role-info">
+          <div class="role-name">Emma Martinez</div>
+          <div class="role-title">e.martinez@airpak-express.com · Warehouse Manager</div>
+          <div class="role-perms">
+            <span class="role-perm-tag">Warehousing</span>
+            <span class="role-perm-tag">Inventory</span>
+            <span class="role-perm-tag">Fulfillment</span>
+          </div>
+        </div>
+        <div class="role-actions">
+          <button class="btn btn-sm btn-ghost">Edit</button>
+          <button class="btn btn-sm btn-danger">Remove</button>
+        </div>
+      </div>
+      <div class="role-card">
+        <div class="role-avatar" style="background:linear-gradient(135deg,#d97706,#fbbf24);color:#000;">RK</div>
+        <div class="role-info">
+          <div class="role-name">Raj Kumar</div>
+          <div class="role-title">r.kumar@airpak-express.com · Client Relations Manager</div>
+          <div class="role-perms">
+            <span class="role-perm-tag">Client Accounts</span>
+            <span class="role-perm-tag">Messaging</span>
+            <span class="role-perm-tag">Email Automation</span>
+          </div>
+        </div>
+        <div class="role-actions">
+          <button class="btn btn-sm btn-ghost">Edit</button>
+          <button class="btn btn-sm btn-danger">Remove</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Other staff -->
+  <div>
+    <h3 style="font-size:14px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;">
+      <svg viewBox="0 0 16 16" fill="currentColor" style="width:14px;height:14px;display:inline;vertical-align:middle;margin-right:6px;"><circle cx="8" cy="8" r="5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3l2 2"/></svg>
+      Operations Staff
+    </h3>
+    <div id="staff-role-list" style="display:flex;flex-direction:column;gap:10px;">
+      <div class="role-card">
+        <div class="role-avatar" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);">TO</div>
+        <div class="role-info">
+          <div class="role-name">Tom O'Brien</div>
+          <div class="role-title">t.obrien@airpak-express.com · Dispatch Coordinator</div>
+          <div class="role-perms">
+            <span class="role-perm-tag">Parcel Entry</span>
+            <span class="role-perm-tag">Scan Simulation</span>
+            <span class="role-perm-tag">Delivery Confirm</span>
+          </div>
+        </div>
+        <div class="role-actions">
+          <button class="btn btn-sm btn-ghost">Edit</button>
+          <button class="btn btn-sm btn-danger">Remove</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADMIN MANUAL ===== -->
+<div class="panel" id="panel-manual">
+  <div class="section-hdr"><div><h2>Admin Manual</h2><p>Complete guide to the Airpak Express Admin Portal</p></div></div>
+  <div class="card" style="max-width:800px;">
+    <div class="card-title">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" style="width:14px;height:14px"><circle cx="8" cy="8" r="6"/><path d="M6 6.5c0-.8.7-1.5 1.5-1.5h1c.8 0 1.5.7 1.5 1.5S10.8 8 10 8h-1c-.8 0-1.5-.7-1.5-1.5z" fill="currentColor"/><path d="M8 10v2"/></svg>
+      Getting Started
+    </div>
+    <div style="font-size:13px;color:var(--sub);line-height:1.7;">
+      <p style="margin-bottom:12px;"><strong style="color:#fff;">Welcome to the Airpak Express Admin Portal.</strong> This system gives you complete control over all logistics operations. Below is a comprehensive guide to every feature.</p>
+      <h4 style="color:#fff;margin:16px 0 8px;font-size:13px;font-weight:800;">Quick Start</h4>
+      <ol style="padding-left:20px;color:var(--text);">
+        <li>Review the <strong style="color:#fff;">Dashboard</strong> for real-time KPIs and alerts</li>
+        <li>Use <strong style="color:#fff;">Client Management</strong> to onboard new clients</li>
+        <li>Create shipments via <strong style="color:#fff;">Parcel Management → Create Parcel</strong></li>
+        <li>Track all shipments in <strong style="color:#fff;">Live Progress</strong></li>
+        <li>Use <strong style="color:#fff;">AI Logistics Centre</strong> for route optimisation and predictions</li>
+      </ol>
+      <h4 style="color:#fff;margin:16px 0 8px;font-size:13px;font-weight:800;">Email Automation</h4>
+      <p style="margin-bottom:8px;">The Email Automation Centre has 6 pre-configured AI-powered sequences:</p>
+      <ul style="padding-left:20px;color:var(--text);">
+        <li><strong style="color:#fff;">Welcome Email:</strong> 3-email onboarding sequence for new clients</li>
+        <li><strong style="color:#fff;">Newsletter:</strong> Monthly industry updates sent automatically</li>
+        <li><strong style="color:#fff;">Status Updates:</strong> Auto-sent when any shipment changes status</li>
+        <li><strong style="color:#fff;">Delay Alerts:</strong> Proactive notification for any delay or exception</li>
+        <li><strong style="color:#fff;">Invoice Reminders:</strong> Automated follow-ups at 7, 14, 30 days</li>
+        <li><strong style="color:#fff;">SLA Escalation:</strong> Auto-escalates critical breaches to management</li>
+      </ul>
+      <h4 style="color:#fff;margin:16px 0 8px;font-size:13px;font-weight:800;">Role Management</h4>
+      <p>You are the Super Admin. You can invite up to 2 additional admin accounts (max 3 total). Admins have full access. You can also create Manager roles for specific functions (Transit Manager, Warehouse Manager, Client Relations Manager, etc.). Managers have limited access based on their assigned permissions.</p>
+      <h4 style="color:#fff;margin:16px 0 8px;font-size:13px;font-weight:800;">AI Features</h4>
+      <p>The AI Logistics Centre can: predict SLA breaches before they happen, automatically reroute delayed shipments, classify customs HS codes, optimise routes for cost and speed, answer natural language queries about any shipment or client, and generate reports on demand.</p>
+      <h4 style="color:#fff;margin:16px 0 8px;font-size:13px;font-weight:800;">Payment & Billing</h4>
+      <p>The system supports GBP payments. Use Invoice Generator to create client invoices. Payment Verification handles pending transactions. All payments are recorded in Payment Records. Crypto payments are accepted — clients can buy crypto via the integrated Changelly widget on the payment page.</p>
+      <h4 style="color:#fff;margin:16px 0 8px;font-size:13px;font-weight:800;">Workflow Automation</h4>
+      <p>Automate parcel creation from orders, auto-send status notifications, AI reroutes on delay &gt;6h, and monthly auto-invoicing. All automations can be toggled on/off in the Workflow Automation panel.</p>
+      <h4 style="color:#fff;margin:16px 0 8px;font-size:13px;font-weight:800;">Support</h4>
+      <p>For technical support, contact the development team. All actions are logged in Audit Logs for compliance and accountability.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== DATA =====
+var parcels = [
+  {awb:'AP-2024-88064',client:'Amazon UK',origin:'LHR',dest:'SIN',service:'Air Freight',weight:'24kg',status:'In Transit',sla:'At Risk'},
+  {awb:'AP-2024-88097',client:'Apple UK',origin:'LHR',dest:'NRT',service:'Express',weight:'8kg',status:'Customs Hold',sla:'At Risk'},
+  {awb:'AP-2024-88102',client:'Samsung UK',origin:'LHR',dest:'ICN',service:'Sea Freight',weight:'156kg',status:'Shipment Booked',sla:'On Track'},
+  {awb:'AP-2024-88105',client:'Microsoft UK',origin:'LHR',dest:'JFK',service:'Express',weight:'3kg',status:'Delivered',sla:'On Time'},
+  {awb:'AP-2024-88108',client:'Tesla UK',origin:'LHR',dest:'LAX',service:'Air Freight',weight:'45kg',status:'In Transit',sla:'On Track'},
+  {awb:'AP-2024-88115',client:'Google UK',origin:'LHR',dest:'SFO',service:'Express',weight:'12kg',status:'Out for Delivery',sla:'On Track'},
+  {awb:'AP-2024-88120',client:'Meta UK',origin:'LHR',dest:'FRA',service:'Road Freight',weight:'89kg',status:'In Transit',sla:'On Track'},
+  {awb:'AP-2024-88125',client:'Oracle UK',origin:'LHR',dest:'AMS',service:'Air Freight',weight:'28kg',status:'Shipment Booked',sla:'On Track'},
+];
+
+var clients = [
+  {id:'CL-0001',name:'Amazon UK',email:'ops@amazon.co.uk',country:'United Kingdom',shipments:142,status:'Active'},
+  {id:'CL-0002',name:'Apple UK',email:'logistics@apple.uk',country:'United Kingdom',shipments:89,status:'Active'},
+  {id:'CL-0003',name:'Samsung UK',email:'supply@samsung.co.uk',country:'United Kingdom',shipments:67,status:'Active'},
+  {id:'CL-0004',name:'Microsoft UK',email:'ops@microsoft.uk',country:'United Kingdom',shipments:54,status:'Active'},
+  {id:'CL-0005',name:'Tesla UK',email:'logistics@tesla.co.uk',country:'United Kingdom',shipments:38,status:'Active'},
+  {id:'CL-0006',name:'Google UK',email:'shipping@google.uk',country:'United Kingdom',shipments:45,status:'Active'},
+  {id:'CL-0007',name:'Meta UK',email:'ops@meta.uk',country:'United Kingdom',shipments:31,status:'Active'},
+  {id:'CL-0047',name:'Unknown Client',email:'suspicious@temp.xyz',country:'United Kingdom',shipments:3,status:'Flagged'},
+];
+
+var payments = [
+  {inv:'INV-2024-1142',client:'Amazon UK',amount:'GBP 12,400',date:'2024-05-15',method:'Bank Transfer',status:'Paid'},
+  {inv:'INV-2024-1143',client:'Samsung UK',amount:'GBP 8,900',date:'2024-05-14',method:'Crypto',status:'Pending'},
+  {inv:'INV-2024-1144',client:'Apple UK',amount:'GBP 4,200',date:'2024-05-13',method:'Card',status:'Paid'},
+  {inv:'INV-2024-1145',client:'Microsoft UK',amount:'GBP 2,340',date:'2024-05-12',method:'Bank Transfer',status:'Overdue'},
+];
+
+var verifyQueue = [
+  {id:'CL-0101',name:'Meridian Logistics',email:'ops@meridian.co.uk',date:'Today'},
+  {id:'CL-0102',name:'Pacific Rim Exports',email:'info@pacificrim.uk',date:'Today'},
+  {id:'CL-0103',name:'Kelso & Hart Trading',email:'logistics@kelsohart.com',date:'Yesterday'},
+];
+
+var auditLog = [
+  {time:'16:42:18',user:'admin',action:'Parcel AP-2024-88115 status updated to Out for Delivery',tag:'Parcel',tagc:'b-red'},
+  {time:'16:30:05',user:'admin',action:'Client CL-0006 (Google UK) verified and activated',tag:'Client',tagc:'b-purple'},
+  {time:'15:12:33',user:'admin',action:'Invoice INV-2024-1144 marked as paid',tag:'Payment',tagc:'b-blue'},
+  {time:'14:55:00',user:'admin',action:'SLA breach triggered for AP-88064 — auto-escalation sent',tag:'System',tagc:'b-amber'},
+];
+
+var statusLog = [
+  {awb:'AP-2024-88115',entries:[{ts:'15:30',status:'Out for Delivery',note:'With driver Marcus Bell'},{ts:'10:15',status:'In Transit',note:'Departed Cardiff Hub'},{ts:'08:00',status:'Picked Up',note:'From Google UK warehouse'},{ts:'07:30',status:'Shipment Booked',note:'Standard air freight'}]},
+];
+
+var aiAdminResponses = {
+  delay: 'I've analysed 23 delayed shipments. Root cause: weather in the LHR-NRT corridor (28% of delays). Recommend adding a 2h buffer for flights via DXB. Can I auto-apply this to all future NRT shipments?',
+  route: 'Route optimisation complete for today's 47 active shipments. Best savings: LHR→NRT via DXB saves GBP 1,240. LHR→JFK via ICN saves 6h transit. Shall I apply these routes?',
+  customs: 'Customs alert: AP-88097 (Apple UK) has 78% hold risk. HS code 8471.30.00 requires revised commercial invoice. I've drafted the correction — approve to send?',
+  sla: 'SLA compliance: 94.3% this month. 1 breach (AP-88064), 1 at-risk (AP-88097). If AP-88097 is not resolved by 17:00 GMT, breach is likely. Recommend immediate action.',
+  default: 'AI Logistics Assistant ready. Ask me about: shipment delays, route optimisation, customs risks, SLA status, fleet management, client accounts, or revenue forecasts.',
+};
+
+function getGreeting() {
+  var h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
+function getTimeString() {
+  return new Date().toLocaleString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit', timeZoneName:'short'}).replace(' GMT', ' GMT');
+}
+
+function updateLiveTime() {
+  var t = document.getElementById('liveTime');
+  if (t) t.textContent = new Date().toLocaleString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'}) + ' — Live';
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', function() {
+  updateLiveTime();
+  setInterval(updateLiveTime, 60000);
+  
+  // Set dynamic greeting
+  var greet = document.getElementById('greetingText');
+  if (greet) {
+    greet.innerHTML = getGreeting() + ', <span class="sph-red">Administrator</span>';
+  }
+  
+  // Set live time every second
+  setInterval(function() {
+    var lt = document.getElementById('live-track-time');
+    if (lt) lt.textContent = 'just now';
+  }, 10000);
+
+  renderDashParcels();
+  renderAudit();
+  renderClients();
+  renderPayments();
+  renderVerify();
+  renderStatusLog();
+  
+  // Mobile sidebar toggle
+  const sidebar = document.getElementById('adminSidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  if (overlay) {
+    overlay.addEventListener('click', () => {
+      sidebar?.classList.remove('open');
+      overlay.classList.remove('active');
+    });
+  }
+});
+
+function toggleGroup(g) {
+  const group = document.querySelector(`.nav-group[data-group="${g}"]`);
+  if (group) group.classList.toggle('open');
+}
+
+function nav(id) {
+  // Close all panels
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  // Activate target
+  const target = document.getElementById('panel-' + id);
+  if (target) target.classList.add('active');
+  // Update active nav
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll(`.nav-item[onclick="nav('${id}')"]`).forEach(n => n.classList.add('active'));
+  // Update breadcrumb
+  const titleMap = {
+    dashboard:'Overview', audit:'Audit Logs', alerts:'System Alerts',
+    clients:'Client Accounts', 'client-create':'Create Account', 'client-verify':'Verification',
+    'client-suspend':'Account Control', messaging:'Messaging', parcels:'All Parcels',
+    'parcel-create':'Create Parcel', 'parcel-status':'Update Status', 'route-assign':'Assign Route',
+    'customs-clear':'Customs', 'delivery-confirm':'Delivery Confirm', 'live-tracking':'Live Progress',
+    'route-monitor':'Route Monitor', 'status-override':'Status Override', 'scan-sim':'Scan Simulation',
+    'send-update':'Customer Update', 'email-auto':'Email Automation', 'email-manual':'Manual Email',
+    'sms-control':'SMS', payments:'Payments', 'invoice-gen':'Invoice', 'pay-verify':'Payment Verify',
+    analytics:'Analytics', 'ai-control':'AI Centre', 'route-intel':'Route Intel', 'workflow-auto':'Workflows',
+    roles:'Role Management', manual:'Admin Manual', settings:'Settings'
+  };
+  var title = document.getElementById('topbar-title');
+  var sub = document.getElementById('topbar-sub');
+  if (title) title.textContent = titleMap[id] || 'Admin Portal';
+  if (sub) sub.textContent = id.split('-').map(w => w[0].toUpperCase()+w.slice(1)).join(' ');
+}
+
+function filterNav(v) {
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.style.display = n.textContent.toLowerCase().includes(v.toLowerCase()) ? '' : 'none';
+  });
+}
+
+function refreshDash() {
+  renderDashParcels();
+  var els = ['ds-active','ds-delivered','ds-delayed','ds-clients'];
+  els.forEach(id => {
+    var el = document.getElementById(id);
+    if (el) {
+      el.style.transform = 'scale(1.1)';
+      setTimeout(() => el.style.transform = '', 200);
+    }
+  });
+  toast('Dashboard refreshed', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8a6 6 0 1011-1.5M13 4.5V8h-3.5"/></svg>');
+}
+
+function renderDashParcels() {
+  var tbody = document.getElementById('dash-parcel-rows');
+  if (!tbody) return;
+  tbody.innerHTML = parcels.slice(0,8).map(p => {
+    var badge = p.status==='Delivered'?'b-green':p.status==='In Transit'?'b-blue':p.status==='Exception'?'b-red':'b-grey';
+    return `<tr><td><strong>${p.awb}</strong></td><td>${p.client}</td><td>${p.origin} → ${p.dest}</td><td>${p.service}</td><td><span class="badge ${badge}">${p.status}</span></td><td><span class="badge ${p.sla==='At Risk'?'b-amber':'b-green'}">${p.sla}</span></td><td><button class="btn btn-sm btn-ghost">Track</button></td></tr>`;
+  }).join('');
+}
+
+function renderAudit() {
+  var list = document.getElementById('audit-list');
+  if (!list) return;
+  var filter = document.getElementById('audit-filter')?.value || 'all';
+  var filtered = filter === 'all' ? auditLog : auditLog.filter(a => a.tag.toLowerCase() === filter);
+  list.innerHTML = filtered.map(a => `<div class="audit-row"><span class="audit-time">${a.time}</span><span class="audit-user">${a.user}</span><span class="audit-action">${a.action}</span><span class="audit-tag badge ${a.tagc}">${a.tag}</span></div>`).join('');
+  var count = document.getElementById('audit-count');
+  if (count) count.textContent = filtered.length + ' entries';
+}
+
+function filterAudit(v) {
+  document.querySelectorAll('#audit-list .audit-row').forEach(r => {
+    r.style.display = r.textContent.toLowerCase().includes(v.toLowerCase()) ? '' : 'none';
+  });
+}
+
+function renderClients() {
+  var tbody = document.getElementById('clients-rows');
+  if (!tbody) return;
+  tbody.innerHTML = clients.map(c => {
+    var badge = c.status==='Active'?'b-green':c.status==='Flagged'?'b-amber':'b-grey';
+    return `<tr><td><strong>${c.id}</strong></td><td>${c.name}</td><td>${c.email}</td><td>${c.country}</td><td>${c.shipments}</td><td><span class="badge ${badge}">${c.status}</span></td><td><button class="btn btn-sm btn-ghost" onclick="openClientEdit('${c.id}')">Edit</button></td></tr>`;
+  }).join('');
+}
+
+function filterClients(v) {
+  document.querySelectorAll('#clients-rows tr').forEach(r => {
+    r.style.display = r.textContent.toLowerCase().includes(v.toLowerCase()) ? '' : 'none';
+  });
+}
+
+function renderPayments() {
+  var tbody = document.getElementById('payments-rows');
+  if (!tbody) return;
+  tbody.innerHTML = payments.map(p => {
+    var badge = p.status==='Paid'?'b-green':p.status==='Pending'?'b-blue':p.status==='Overdue'?'b-red':'b-grey';
+    return `<tr><td><strong>${p.inv}</strong></td><td>${p.client}</td><td>${p.amount}</td><td>${p.date}</td><td>${p.method}</td><td><span class="badge ${badge}">${p.status}</span></td><td>${p.status!=='Paid'?'<button class="btn btn-sm btn-success" onclick="markPaid(\''+p.inv+'\')">Mark Paid</button>':'—'}</td></tr>`;
+  }).join('');
+}
+
+function renderVerify() {
+  var list = document.getElementById('verify-list');
+  if (!list) return;
+  list.innerHTML = verifyQueue.length ? verifyQueue.map(v => `<div class="alert-item info" style="margin-bottom:8px;"><div class="alert-body"><h5>${v.id} — ${v.name}</h5><p>${v.email} · Submitted: ${v.date}</p></div><div class="alert-actions"><button class="btn btn-sm btn-success" onclick="verifyClient('${v.id}')">Verify</button><button class="btn btn-sm btn-danger" onclick="rejectClient('${v.id}')">Reject</button></div></div>`).join('') : '<p style="color:var(--sub);font-size:13px;">No pending verifications.</p>';
+}
+
+function renderStatusLog() {
+  var el = document.getElementById('status-log');
+  if (!el) return;
+  el.innerHTML = statusLog.length ? statusLog[0].entries.map(e => `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;"><span style="color:var(--sub);margin-right:8px;">${e.ts}</span><strong style="color:#fff;">${e.status}</strong><span style="color:var(--sub);"> — ${e.note}</span></div>`).join('') : '<p style="color:var(--sub);font-size:12px;">No status history yet.</p>';
+}
+
+function dismissAlert(btn) {
+  var item = btn.closest('.alert-item');
+  if (item) item.style.opacity = '0';
+  setTimeout(() => item.remove(), 300);
+  toast('Alert dismissed', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>');
+}
+
+function createClient() {
+  var fname = document.getElementById('cc-fname')?.value;
+  var lname = document.getElementById('cc-lname')?.value;
+  var email = document.getElementById('cc-email')?.value;
+  if (!fname || !email) { toast('Please fill in name and email', '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2.5a.75.75 0 110 1.5.75.75 0 010-1.5zM8.75 11H7V7h1.5v4z"/></svg>'); return; }
+  var id = 'CL-' + String(clients.length + 101).padStart(4,'0');
+  clients.push({id, name:fname+' '+lname, email, country: document.getElementById('cc-country')?.value || 'United Kingdom', shipments:0, status:'Pending'});
+  addAuditEntry('admin', 'New client: '+fname+' '+lname+' ('+id+')', 'Client', 'b-purple');
+  toast('Client created: ' + id, '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V9H3a1 1 0 110-2h4V3a1 1 0 011-1z"/></svg>');
+  renderClients();
+}
+
+function createParcel() {
+  var dest = document.getElementById('pc-dest')?.value;
+  var service = document.getElementById('pc-service')?.value;
+  var weight = document.getElementById('pc-weight')?.value;
+  var awb = 'AP-' + new Date().getFullYear() + '-' + Math.floor(10000+Math.random()*90000);
+  parcels.unshift({awb, client:'New Client', origin:'LHR', dest: (dest||'JFK').slice(0,3).toUpperCase(), service: service||'Express', weight: (weight||'1')+'kg', status:'Shipment Booked', sla:'On Track'});
+  addAuditEntry('admin', 'Parcel created: '+awb, 'Parcel', 'b-red');
+  toast('Shipment created: ' + awb, '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="M1 5.5h14M5 3V1.5M11 3V1.5"/></svg>');
+  renderDashParcels();
+}
+
+function updateStatus() {
+  var awb = document.getElementById('ps-awb')?.value;
+  var status = document.getElementById('ps-status')?.value;
+  var notify = document.getElementById('ps-notify')?.value;
+  if (!awb) { toast('Enter an AWB number', '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2.5a.75.75 0 110 1.5.75.75 0 010-1.5zM8.75 11H7V7h1.5v4z"/></svg>'); return; }
+  addAuditEntry('admin', 'Status updated: '+awb+' → '+status + (notify==='yes'?' + client notified':' (internal)'), 'Parcel', 'b-red');
+  toast('Status updated' + (notify==='yes'?' + Customer notified':' (internal only)'), '<svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/></svg>');
+}
+
+function createParcel() {
+  toast('Parcel creation form opened', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M5 7h6M5 10h4"/></svg>');
+  var f = document.getElementById('parcel-form');
+  if (f) f.scrollIntoView({behavior:'smooth'});
+}
+
+function updateStatus() {
+  toast('Status updated successfully', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>');
+  renderParcels();
+}
+
+function verifyClient(id) {
+  var v = verifyQueue.find(x => x.id === id);
+  if (v) { v.status = 'Verified'; addAuditEntry('admin', 'Client verified: '+id, 'Verify', 'b-green'); }
+  toast(id + ' verified', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>');
+  renderVerify();
+}
+
+function rejectClient(id) {
+  var v = verifyQueue.find(x => x.id === id);
+  if (v) { v.status = 'Rejected'; addAuditEntry('admin', 'Client rejected: '+id, 'Reject', 'b-red'); }
+  toast(id + ' rejected', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5"/><path d="M5.5 5.5l5 5M10.5 5.5l-5 5"/></svg>');
+  renderVerify();
+}
+
+function doSuspend() {
+  toast('Account suspended successfully', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 4v4M8 10v.5"/><circle cx="8" cy="8" r="6"/></svg>');
+  addAuditEntry('admin', 'Account suspended', 'Suspend', 'b-red');
+}
+
+function sendBulkUpdate() {
+  toast('Bulk update sent to 47 clients', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h12M10 4l4 4-4 4"/></svg>');
+}
+
+function scheduleMessage() {
+  toast('Message scheduled for delivery', '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a5 5 0 015 5v5H3V6a5 5 0 015-5z"/></svg>');
+}
+
+function exportMessages() {
+  toast('Messages exported to CSV', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8M5 7l3 3 3-3M3 12h10"/></svg>');
+}
+
+function openClientEdit(id) {
+  toast('Editing client: ' + id, '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M11 2l3 3-8 8H3v-3l8-8z"/></svg>');
+}
+
+function markPaid(inv) {
+  var p = payments.find(x => x.inv === inv);
+  if (p) p.status = 'Paid';
+  addAuditEntry('admin', 'Payment marked as paid: '+inv, 'Payment', 'b-blue');
+  toast(inv + ' marked as paid', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>');
+  renderPayments();
+}
+
+function rejectClient(id) {
+  var idx = verifyQueue.findIndex(v => v.id === id);
+  if (idx > -1) verifyQueue.splice(idx, 1);
+  addAuditEntry('admin', 'Account rejected: '+id, 'Client', 'b-red');
+  toast(id + ' rejected', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5"/><path d="M5.5 5.5l5 5M10.5 5.5l-5 5"/></svg>');
+  renderVerify();
+}
+
+function markPaid(inv) {
+  var p = payments.find(x => x.inv === inv);
+  if (p) p.status = 'Paid';
+  addAuditEntry('admin', 'Payment marked as paid: '+inv, 'Payment', 'b-blue');
+  toast(inv + ' marked as paid', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>');
+  renderPayments();
+}
+
+function calcInv() {
+  var sub = parseFloat(document.getElementById('inv-sub')?.value) || 0;
+  var gst = sub * 0.20;
+  var total = sub + gst;
+  if (document.getElementById('inv-gst')) document.getElementById('inv-gst').value = 'GBP ' + gst.toFixed(2);
+  if (document.getElementById('inv-total')) document.getElementById('inv-total').value = 'GBP ' + total.toFixed(2);
+  if (document.getElementById('inv-prev-sub')) document.getElementById('inv-prev-sub').textContent = 'GBP ' + sub.toFixed(2);
+  if (document.getElementById('inv-prev-gst')) document.getElementById('inv-prev-gst').textContent = 'GBP ' + gst.toFixed(2);
+  if (document.getElementById('inv-prev-total')) document.getElementById('inv-prev-total').textContent = 'GBP ' + total.toFixed(2);
+}
+
+function selectTpl(el, key) {
+  document.querySelectorAll('.email-tpl').forEach(t => t.classList.remove('selected'));
+  el.classList.add('selected');
+  var nameEl = document.getElementById('tpl-name');
+  if (nameEl) nameEl.textContent = el.querySelector('.et-name')?.textContent || '';
+  var preview = document.getElementById('email-preview');
+  if (preview) preview.value = 'Dear [Client Name],
+
+[Email content template for ' + key + '...]
+
+Best regards,
+Airpak Express Operations Team';
+}
+
+function sendAdminAI() {
+  var input = document.getElementById('ai-admin-input');
+  var msg = input?.value.trim();
+  if (!msg) return;
+  input.value = '';
+  var msgs = document.getElementById('ai-admin-msgs');
+  if (!msgs) return;
+  msgs.innerHTML += `<div style="align-self:flex-end;background:rgba(205,39,39,.15);padding:10px 14px;border-radius:12px;font-size:13px;max-width:80%;color:#fff;">${msg}</div>`;
+  setTimeout(function() {
+    var lc = msg.toLowerCase();
+    var r = aiAdminResponses.default;
+    if (lc.includes('delay') || lc.includes('late')) r = aiAdminResponses.delay;
+    else if (lc.includes('route') || lc.includes('optim')) r = aiAdminResponses.route;
+    else if (lc.includes('custom') || lc.includes('customs')) r = aiAdminResponses.customs;
+    else if (lc.includes('sla') || lc.includes('breach')) r = aiAdminResponses.sla;
+    msgs.innerHTML += `<div style="background:rgba(124,58,237,.12);padding:10px 14px;border-radius:12px;font-size:13px;max-width:90%;"><svg viewBox="0 0 16 16" fill="currentColor" style="width:16px;height:16px;display:inline;vertical-align:middle;margin-right:6px;color:#a78bfa"><circle cx="8" cy="8" r="5"/><path d="M5 8a3 3 0 106 0M8 6v2l1.5 1.5" stroke="white" stroke-width="1" fill="none" stroke-linecap="round"/></svg>${r}</div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 800);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function openAIModal() { nav('ai-control'); }
+
+function openProfile() { nav('roles'); }
+
+function openAddRole() { toast('Use the Role Management panel to add team members', '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a5 5 0 015 5v5H3V6a5 5 0 015-5z"/></svg>'); }
+
+function doLogout() {
+  toast('Logged out successfully', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 14H3a1 1 0 01-1-1V3a1 1 0 011-1h3M11 11l3-3-3-3M14 8H6"/></svg>');
+  setTimeout(() => window.location.href = 'index.html', 1000);
+}
+
+function addAuditEntry(user, action, tag, tagc) {
+  var t = new Date().toLocaleTimeString('en-GB', {hour12:false});
+  auditLog.unshift({time:t, user, action, tag, tagc});
+}
+
+function toast(msg, icon) {
+  var el = document.getElementById('toast');
+  if (!el) return;
+  el.innerHTML = (icon || '') + '<span>' + msg + '</span>';
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+function toggleMobileNav() {
+  var sb = document.getElementById('adminSidebar');
+  var ov = document.getElementById('sidebarOverlay');
+  if (sb && ov) {
+    sb.classList.toggle('open');
+    ov.classList.toggle('active');
+  }
+}
+
+function confirmDelivery() {
+  toast('Delivery confirmed and client notified', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>');
+}
+</script>
+
+</div><!-- end main -->
+<div id="toast"></div>
+
+<!-- Preloader -->
+<div class="ap-preloader" id="apPreloader">
+  <svg class="ap-preloader-logo" viewBox="0 0 80 80" fill="none">
+    <rect width="80" height="80" rx="16" fill="rgba(255,255,255,.15)"/>
+    <path d="M20 40h40M40 20v40" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="40" cy="40" r="12" fill="none" stroke="white" stroke-width="3"/>
+  </svg>
+  <div class="ap-preloader-title">Airpak Express</div>
+  <div class="ap-preloader-sub" id="apPreloaderGreeting">Loading your experience...</div>
+  <div class="ap-preloader-bar-wrap"><div class="ap-preloader-bar"></div></div>
+  <div class="ap-preloader-dots">
+    <div class="ap-preloader-dot"></div>
+    <div class="ap-preloader-dot"></div>
+    <div class="ap-preloader-dot"></div>
+  </div>
+</div>
+
+<script>
+// Preloader with dynamic greeting
+(function(){
+  var h = new Date().getHours();
+  var greeting = 'Good morning';
+  if (h >= 12 && h < 17) greeting = 'Good afternoon';
+  else if (h >= 17 && h < 21) greeting = 'Good evening';
+  else if (h >= 21) greeting = 'Good night';
+  var el = document.getElementById('apPreloaderGreeting');
+  if (el) el.textContent = greeting + ' — preparing your experience...';
+  
+  // Hide preloader once page is fully loaded
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      var pl = document.getElementById('apPreloader');
+      if (pl) pl.classList.add('hidden');
+      setTimeout(function(){ if(pl) pl.style.display='none'; }, 700);
+    }, 1200);
+  });
+})();
+</script>
+
+
+<!-- PWA Registration -->
+<script>
+(function(){
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').then(function(reg) {
+        console.log('[PWA] SW registered:', reg.scope);
+      }).catch(function(err) {
+        console.warn('[PWA] SW registration failed:', err);
+      });
+    });
+  }
+
+  // Install prompt
+  var installPrompt = null;
+  var installBtn = null;
+  
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    installPrompt = e;
+    window.showInstallPrompt && window.showInstallPrompt();
+    
+    // Auto-show after 5 seconds
+    setTimeout(function() {
+      if (installPrompt && !localStorage.getItem('ap_pwa_installed')) {
+        var banner = document.createElement('div');
+        banner.id = 'pwa-install-banner';
+        banner.innerHTML = '<div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#CD2727,#9b1a1a);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;z-index:99999;box-shadow:0 -4px 20px rgba(0,0,0,.3)"><div style="flex:1"><div style="font-family:Sarabun,sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:2px">Install Airpak Express App</div><div style="font-size:12px;color:rgba(255,255,255,.7)">Get the full app experience — works offline!</div></div><button id="pwa-install-btn" style="background:#fff;color:#CD2727;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;margin-left:12px;flex-shrink:0">Install</button><button onclick="this.parentElement.style.display='none'" style="background:transparent;border:none;color:rgba(255,255,255,.7);font-size:20px;cursor:pointer;padding:4px 8px;margin-left:4px">×</button></div>';
+        document.body.appendChild(banner);
+        
+        document.getElementById('pwa-install-btn').addEventListener('click', function() {
+          installPrompt.prompt();
+          installPrompt.userChoice.then(function(result) {
+            if (result.outcome === 'accepted') {
+              localStorage.setItem('ap_pwa_installed', '1');
+            }
+            installPrompt = null;
+            banner.style.display = 'none';
+          });
+        });
+      }
+    }, 5000);
+  });
+
+  window.addEventListener('appinstalled', function() {
+    installPrompt = null;
+    localStorage.setItem('ap_pwa_installed', '1');
+    console.log('[PWA] App installed!');
+    // Show toast
+    var toast = document.createElement('div');
+    toast.textContent = 'Airpak Express installed successfully!';
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1C1C1E;color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:500;z-index:99999;box-shadow:0 8px 32px rgba(0,0,0,.3)';
+    document.body.appendChild(toast);
+    setTimeout(function(){ toast.style.display='none'; }, 4000);
+  });
+
+  // Push notification subscription
+  if ('Notification' in window && navigator.serviceWorker) {
+    window.subscribePush = function() {
+      Notification.requestPermission().then(function(perm) {
+        if (perm === 'granted') {
+          navigator.serviceWorker.ready.then(function(reg) {
+            reg.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: 'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3M8NrXYu1Vwvfrwcsjk0s'
+            }).then(function(sub) {
+              console.log('[PWA] Push subscribed:', sub.endpoint);
+              localStorage.setItem('ap_push_sub', JSON.stringify(sub));
+            });
+          });
+        }
+      });
+    };
+    
+    // Auto-prompt after 10s if not subscribed
+    setTimeout(function() {
+      if (Notification.permission === 'default' && !localStorage.getItem('ap_push_sub')) {
+        window.subscribePush && window.subscribePush();
+      }
+    }, 10000);
+  }
+
+  // Check online/offline status
+  window.addEventListener('online', function() {
+    document.body.classList.remove('offline-mode');
+    console.log('[PWA] Back online');
+  });
+  window.addEventListener('offline', function() {
+    document.body.classList.add('offline-mode');
+    console.log('[PWA] Offline mode');
+  });
+
+  // Version check
+  window.apVersion = '1.0.0';
+})();
+</script>
+<script>
+window.addEventListener('load', function() {
+  if (typeof AirpakPWA !== 'undefined') {
+    AirpakPWA.init();
+  } else {
+    var s = document.createElement('script');
+    s.src = '/pwa-features.js';
+    document.head.appendChild(s);
+  }
+});
+</script>
+
+</body>
+</html>

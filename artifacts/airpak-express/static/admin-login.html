@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://airpak-express.site/admin-login.html" />
+    <meta name="description" content="Page description - update this with relevant content.">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Admin Login | Airpak Express Operations</title>
+<link rel="shortcut icon" type="image/x-icon" href="/apps/airpak/images/icon.png"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --red: #CD2727; --dark: #0f0f14; --card: #1a1a24; --border: rgba(255,255,255,.08); }
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--dark);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Grid background */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(205,39,39,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(205,39,39,.04) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Glow orbs */
+.orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; }
+.orb-1 { width: 400px; height: 400px; background: rgba(205,39,39,.15); top: -100px; right: -100px; }
+.orb-2 { width: 300px; height: 300px; background: rgba(100,0,150,.1); bottom: -50px; left: -50px; }
+
+.login-card {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 48px 44px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 32px 80px rgba(0,0,0,.5);
+  backdrop-filter: blur(10px);
+}
+
+.login-top { text-align: center; margin-bottom: 36px; }
+.login-logo { max-height: 44px; filter: brightness(10); margin-bottom: 20px; }
+.login-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(205,39,39,.15); border: 1px solid rgba(205,39,39,.3);
+  border-radius: 20px; padding: 4px 14px; font-size: 12px;
+  color: #ff9999; font-weight: 600; letter-spacing: .5px;
+  text-transform: uppercase; margin-bottom: 16px;
+}
+.login-badge span { width: 6px; height: 6px; border-radius: 50%; background: var(--red); display: inline-block; animation: pulse 1.5s ease infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+
+.login-top h1 { color: #fff; font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; }
+.login-top p { color: rgba(255,255,255,.45); font-size: 13px; }
+
+.form-group { margin-bottom: 18px; }
+.form-group label { display: block; font-size: 12px; font-weight: 600; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
+.form-group input, .form-group select {
+  width: 100%; padding: 12px 16px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid var(--border);
+  border-radius: 10px; color: #fff; font-size: 14px;
+  outline: none; transition: border-color .2s, background .2s;
+}
+.form-group input:focus, .form-group select:focus {
+  border-color: rgba(205,39,39,.5);
+  background: rgba(205,39,39,.05);
+}
+.form-group input::placeholder { color: rgba(255,255,255,.25); }
+.form-group select option { background: #1a1a24; }
+
+.pass-wrap { position: relative; }
+.pass-wrap input { padding-right: 44px; }
+.pass-toggle {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; color: rgba(255,255,255,.4); cursor: pointer; font-size: 16px;
+}
+
+.login-btn {
+  width: 100%; padding: 14px;
+  background: linear-gradient(135deg, var(--red), #9b1a1a);
+  border: none; border-radius: 10px; color: #fff;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  transition: all .25s; margin-top: 4px;
+  position: relative; overflow: hidden;
+}
+.login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(205,39,39,.4); }
+.login-btn:active { transform: translateY(0); }
+.login-btn .btn-spinner { display: none; }
+.login-btn.loading .btn-text { display: none; }
+.login-btn.loading .btn-spinner { display: inline-block; }
+
+.error-msg {
+  background: rgba(205,39,39,.1); border: 1px solid rgba(205,39,39,.3);
+  border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #ff9999;
+  margin-top: 14px; display: none;
+}
+
+.login-footer { text-align: center; margin-top: 28px; }
+.login-footer p { font-size: 12px; color: rgba(255,255,255,.25); }
+.login-footer a { color: rgba(255,255,255,.4); }
+
+.demo-creds {
+  background: rgba(255,255,255,.03); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px; margin-top: 20px;
+}
+.demo-creds p { font-size: 12px; color: rgba(255,255,255,.4); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+.demo-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: rgba(255,255,255,.5); margin-bottom: 4px; }
+.demo-row strong { color: rgba(255,255,255,.7); font-family: monospace; }
+.fill-btn { background: rgba(205,39,39,.2); border: none; border-radius: 4px; color: #ff9999; font-size: 10px; padding: 2px 8px; cursor: pointer; }
+</style>
+  <link rel="stylesheet" href="/apps/airpak/css/ap-lang.css">
+  <link rel="stylesheet" href="/apps/airpak/css/ap-chat.css">
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<div class="login-card">
+  <div class="login-top">
+    <img src="/apps/airpak/img/logo.png" class="login-logo" alt="Airpak Express"/>
+    <div><span class="login-badge"><span></span>Admin Access Only</span></div>
+    <h1>Operations Portal</h1>
+    <p>Sign in with your admin credentials to continue</p>
+  </div>
+
+  <div class="form-group">
+    <label>Access Role</label>
+    <select id="role">
+      <option value="superadmin">Super Administrator</option>
+      <option value="manager">Operations Manager</option>
+      <option value="support">Support Agent</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Admin Username</label>
+    <input type="text" id="username" placeholder="Enter admin username" autocomplete="username"/>
+  </div>
+
+  <div class="form-group">
+    <label>Password</label>
+    <div class="pass-wrap">
+      <input type="password" id="password" placeholder="Enter password" autocomplete="current-password"/>
+      <button class="pass-toggle" type="button" onclick="togglePass()">&#128065;</button>
+    </div>
+  </div>
+
+  <button class="login-btn" id="loginBtn" onclick="doLogin()">
+    <span class="btn-text">Sign In to Admin Portal</span>
+    <span class="btn-spinner">&#9696; Authenticating...</span>
+  </button>
+
+  <div class="error-msg" id="errorMsg">Invalid credentials. Please try again.</div>
+
+  <div class="demo-creds">
+    <p>Demo Credentials</p>
+    <div class="demo-row"><span>Super Admin</span><strong>admin / airpak2024</strong><button class="fill-btn" onclick="fill('admin','airpak2024','superadmin')">Fill</button></div>
+    <div class="demo-row"><span>Manager</span><strong>manager / ops2024</strong><button class="fill-btn" onclick="fill('manager','ops2024','manager')">Fill</button></div>
+    <div class="demo-row"><span>Support</span><strong>support / cs2024</strong><button class="fill-btn" onclick="fill('support','cs2024','support')">Fill</button></div>
+  </div>
+
+  <div class="login-footer">
+    <p>&#128274; All access is logged and monitored &bull; <a href="/">Return to main site</a></p>
+  </div>
+</div>
+
+<script>
+const CREDENTIALS = {
+  admin: { pass: 'airpak2024', role: 'superadmin', name: 'System Administrator' },
+  manager: { pass: 'ops2024', role: 'manager', name: 'Operations Manager' },
+  support: { pass: 'cs2024', role: 'support', name: 'Support Agent' },
+};
+
+function togglePass() {
+  const p = document.getElementById('password');
+  p.type = p.type === 'password' ? 'text' : 'password';
+}
+
+function fill(u, p, r) {
+  document.getElementById('username').value = u;
+  document.getElementById('password').value = p;
+  document.getElementById('role').value = r;
+}
+
+function doLogin() {
+  const user = document.getElementById('username').value.trim();
+  const pass = document.getElementById('password').value;
+  const btn = document.getElementById('loginBtn');
+  const err = document.getElementById('errorMsg');
+
+  btn.classList.add('loading');
+  err.style.display = 'none';
+
+  setTimeout(() => {
+    const cred = CREDENTIALS[user];
+    if (cred && cred.pass === pass) {
+      sessionStorage.setItem('ap_admin', JSON.stringify({
+        user, role: cred.role, name: cred.name,
+        loginTime: new Date().toISOString()
+      }));
+      window.location.href = '/admin';
+    } else {
+      btn.classList.remove('loading');
+      err.style.display = 'block';
+      document.getElementById('password').value = '';
+    }
+  }, 1200);
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+</script>
+  <script src="/apps/airpak/js/ap-lang.js" defer></script>
+  <script src="/apps/airpak/js/ap-chat.js" defer></script>
+</body>
+</html>

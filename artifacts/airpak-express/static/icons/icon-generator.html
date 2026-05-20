@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generate PWA Icons — Airpak Express</title>
+<style>
+  body{font-family:'Inter',sans-serif;background:#0a0a12;color:#fff;padding:40px;max-width:800px;margin:0 auto}
+  h1{font-family:'Sarabun',sans-serif;font-size:28px;color:#CD2727}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:20px;margin-top:24px}
+  .icon-card{background:#16162a;border-radius:16px;padding:20px;text-align:center;border:1px solid rgba(255,255,255,.07)}
+  .icon-card canvas{border-radius:12px;display:block;margin:0 auto 10px}
+  .icon-card .name{font-size:12px;color:rgba(255,255,255,.5);margin-top:8px}
+  .icon-card .size{font-size:10px;color:rgba(255,255,255,.3);margin-top:2px}
+  button{background:#CD2727;color:#fff;border:none;border-radius:12px;padding:12px 24px;font-size:14px;font-weight:700;cursor:pointer;margin:20px 0;display:block}
+  button:hover{background:#9b1a1a}
+  .done{color:#16a34a;font-size:14px;font-weight:600}
+</style>
+</head>
+<body>
+<h1>PWA Icon Generator</h1>
+<p>Click the button below to generate all PNG icons for the Airpak Express PWA.</p>
+<button onclick="generateAll()">Generate All Icons</button>
+<div class="grid" id="grid"></div>
+<div id="status"></div>
+
+<script>
+// Airpak logo drawing function
+function drawLogo(ctx, size) {
+  const r = Math.round(size * 0.12); // corner radius
+  // Background
+  ctx.fillStyle = '#CD2727';
+  roundRect(ctx, 0, 0, size, size, r);
+  ctx.fill();
+  
+  const cx = size / 2;
+  const cy = size / 2;
+  const arm = size * 0.3;
+  const thick = size * 0.08;
+  
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = thick;
+  ctx.lineCap = 'round';
+  
+  // Horizontal arm
+  ctx.beginPath();
+  ctx.moveTo(cx - arm, cy);
+  ctx.lineTo(cx + arm, cy);
+  ctx.stroke();
+  
+  // Vertical arm
+  ctx.beginPath();
+  ctx.moveTo(cx, cy - arm);
+  ctx.lineTo(cx, cy + arm);
+  ctx.stroke();
+  
+  // Center circle
+  ctx.beginPath();
+  ctx.arc(cx, cy, arm * 0.35, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+  ctx.lineWidth = thick * 0.6;
+  ctx.stroke();
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.arcTo(x + w, y, x + w, y + r, r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+  ctx.lineTo(x + r, y + h);
+  ctx.arcTo(x, y + h, x, y + h - r, r);
+  ctx.lineTo(x, y + r);
+  ctx.arcTo(x, y, x + r, y, r);
+  ctx.closePath();
+}
+
+function generateAll() {
+  const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+  const grid = document.getElementById('grid');
+  const status = document.getElementById('status');
+  grid.innerHTML = '';
+  
+  sizes.forEach(size => {
+    const c = document.createElement('canvas');
+    c.width = size;
+    c.height = size;
+    const ctx = c.getContext('2d');
+    drawLogo(ctx, size);
+    
+    const card = document.createElement('div');
+    card.className = 'icon-card';
+    card.appendChild(c);
+    
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'name';
+    nameDiv.textContent = `${size}x${size}`;
+    card.appendChild(nameDiv);
+    
+    const dlBtn = document.createElement('button');
+    dlBtn.textContent = 'Download';
+    dlBtn.style.cssText = 'font-size:11px;padding:6px 12px;margin-top:8px;background:#2563eb;border:none;border-radius:8px;color:#fff;cursor:pointer;width:100%';
+    dlBtn.onclick = () => downloadCanvas(c, `icon-${size}.png`);
+    card.appendChild(dlBtn);
+    
+    grid.appendChild(card);
+  });
+  
+  // Generate special icons
+  const specials = [
+    {name: 'icon-maskable', size: 512, maskable: true},
+    {name: 'track-96', size: 96, label: 'TRACK'},
+    {name: 'new-96', size: 96, label: 'NEW'},
+    {name: 'portal-96', size: 96, label: 'PORTAL'},
+  ];
+  
+  specials.forEach(spec => {
+    const c = document.createElement('canvas');
+    c.width = spec.size;
+    c.height = spec.size;
+    const ctx = c.getContext('2d');
+    drawLogo(ctx, spec.size);
+    
+    const card = document.createElement('div');
+    card.className = 'icon-card';
+    card.appendChild(c);
+    
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'name';
+    nameDiv.textContent = spec.name;
+    card.appendChild(nameDiv);
+    
+    const dlBtn = document.createElement('button');
+    dlBtn.textContent = 'Download';
+    dlBtn.style.cssText = 'font-size:11px;padding:6px 12px;margin-top:8px;background:#2563eb;border:none;border-radius:8px;color:#fff;cursor:pointer;width:100%';
+    dlBtn.onclick = () => downloadCanvas(c, `${spec.name}.png`);
+    card.appendChild(dlBtn);
+    
+    grid.appendChild(card);
+  });
+  
+  status.innerHTML = '<span class="done">✅ Click "Download" on each icon to save them to the icons/ folder, then upload them.</span>';
+}
+
+function downloadCanvas(canvas, filename) {
+  const link = document.createElement('a');
+  link.download = filename;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+</script>
+</body>
+</html>
