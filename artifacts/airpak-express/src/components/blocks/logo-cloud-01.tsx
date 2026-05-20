@@ -13,23 +13,19 @@ const logos = [
 
 export default function LogoCloud01() {
   return (
-    <section className="bg-black py-20 px-6">
+    <section className="py-16 px-6">
       <div className="max-w-5xl mx-auto">
-        <h2 className="text-white text-center text-xl font-medium mb-12">
+        <h2 className="text-white/60 text-center text-xs font-medium tracking-widest uppercase mb-10">
           Trusted by Leading Brands
         </h2>
-
-        <div className="border-t border-white/10 pt-12">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+        <div className="border-t border-white/10 pt-10">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             {logos.map((logo) => (
-              <div
-                key={logo}
-                className="flex items-center justify-center"
-              >
+              <div key={logo} className="flex items-center justify-center">
                 <span
                   className={cn(
-                    "text-sm font-medium tracking-wide transition-colors duration-200",
-                    "text-white/40 hover:text-white/70"
+                    "text-sm font-medium tracking-wide transition-colors duration-200 cursor-default",
+                    "text-white/30 hover:text-white/70"
                   )}
                 >
                   {logo}
