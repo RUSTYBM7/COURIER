@@ -18,6 +18,10 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
+import WidgetComponent01 from "@/components/blocks/widget-component-01";
+import WidgetProductInsights from "@/components/blocks/widget-product-insights";
+import StatisticsCard01 from "@/components/blocks/statistics-card-01";
+import { DashboardDialog01 } from "@/components/blocks/dashboard-dialog-01";
 
 const STATS = [
   { icon: <Package size={20} />, label: "Total Packages", value: "247", change: "+12 this month", color: "var(--apple-blue)" },
@@ -83,25 +87,23 @@ export default function Dashboard() {
                   <Search size={16} aria-hidden="true" /> Track Package
                 </Button>
               </Link>
-              <Button variant="default" size="sm" style={{ gap: 8 }} aria-label="Create new shipment">
-                <Plus size={16} aria-hidden="true" /> New Shipment
-              </Button>
+              <DashboardDialog01 />
             </div>
           </div>
 
-          <section aria-label="Shipment statistics">
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 32 }}>
-              {STATS.map((stat) => (
-                <Card key={stat.label} style={{ padding: 20 }} role="region" aria-label={stat.label}>
-                  <div style={{ color: stat.color, background: `${stat.color}18`, width: 40, height: 40, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }} aria-hidden="true">{stat.icon}</div>
-                  <div style={{ fontSize: "var(--text-2xl)", fontWeight: "var(--font-bold)", color: "var(--apple-label)" }} aria-label={`${stat.label}: ${stat.value}`}>{stat.value}</div>
-                  <div style={{ fontSize: "var(--text-sm)", color: "var(--apple-label-secondary)", marginTop: 2 }}>{stat.label}</div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 4, fontSize: "var(--text-xs)", color: "var(--apple-label-secondary)" }}>
-                    <TrendingUp size={12} aria-hidden="true" /> {stat.change}
-                  </div>
-                </Card>
-              ))}
-            </div>
+          {/* Widget — Total Earnings */}
+          <section aria-label="Earnings overview" className="mb-8">
+            <WidgetComponent01 />
+          </section>
+
+          {/* Widget — Product Insights */}
+          <section aria-label="Product insights" className="mb-8">
+            <WidgetProductInsights />
+          </section>
+
+          {/* Stats grid */}
+          <section aria-label="Shipment statistics" className="mb-8">
+            <StatisticsCard01 />
           </section>
 
           <section aria-label="Recent shipments" style={{ borderRadius: "var(--radius-xl)", overflow: "hidden" }}>

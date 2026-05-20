@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { AppNav } from "@/components/AppNav";
 import { AppSidebar } from "@/components/AppSidebar";
+import TimelineComponent05 from "@/components/blocks/timeline-component-05";
+import { DashboardDialog01 } from "@/components/blocks/dashboard-dialog-01";
 import {
   Search, Package, MapPin, Truck, CheckCircle,
   Clock, AlertCircle, RefreshCw, Share2
@@ -137,7 +139,7 @@ export default function Tracking() {
             </div>
           )}
 
-          {/* Tracking Result */}
+          {/* Tracking Result + Timeline */}
           {result && (() => {
             const cfg = STATUS_CONFIG[result.status];
             return (
@@ -247,6 +249,13 @@ export default function Tracking() {
               </div>
             );
           })()}
+
+          {/* Timeline Component — shown when a shipment is found */}
+          {result && (
+            <div className="mt-8">
+              <TimelineComponent05 />
+            </div>
+          )}
 
           {/* Recent Shipments (when no search) */}
           {!result && !notFound && !loading && (
