@@ -1,5 +1,5 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 
 const Home = lazy(() => import("@/pages/Home"));
 const AboutUs = lazy(() => import("@/pages/AboutUs"));
@@ -20,14 +20,15 @@ const FAQ = lazy(() => import("@/pages/FAQ"));
 const Terms = lazy(() => import("@/pages/Terms"));
 const Privacy = lazy(() => import("@/pages/Privacy"));
 const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
+const NovaShowcase = lazy(() => import("@/pages/NovaShowcase"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 
 function LoadingFallback() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
+    <div className="min-h-screen flex items-center justify-center bg-black">
       <div className="text-center">
-        <div className="w-10 h-10 border-4 border-[#E11D2A] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-        <p className="text-sm text-gray-500">Loading…</p>
+        <div className="w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+        <p className="text-sm text-white/60">Loading…</p>
       </div>
     </div>
   );
@@ -56,6 +57,7 @@ function Router() {
         <Route path="/terms" component={Terms} />
         <Route path="/privacy" component={Privacy} />
         <Route path="/reset-password" component={ResetPassword} />
+        <Route path="/nova" component={NovaShowcase} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
@@ -63,6 +65,11 @@ function Router() {
 }
 
 export default function App() {
+  // Force dark (Geist black/white) theme
+  useEffect(() => {
+    document.body.classList.add("dark");
+  }, []);
+
   return (
     <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
       <Router />
