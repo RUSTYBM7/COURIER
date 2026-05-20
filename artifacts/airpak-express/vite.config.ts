@@ -23,6 +23,22 @@ const cleanUrlsPlugin = (publicDir: string): Plugin => ({
   },
 });
 
+// Injects React module script + dark class into the dist index.html
+// so Vite can load the React app as an SPA entry point
+const injectReactApp: Plugin = {
+  name: "inject-react-app",
+  apply: "build",
+  transformIndexHtml(html) {
+    // Inject before </body>
+    const scriptTag = `<script type="module" src="/js/main.js"></script>`;
+    const darkClass = `<script>document.documentElement.classList.add('dark');document.body.classList.add('dark');</script>`;
+    if (!html.includes("/js/main.js")) {
+      html = html.replace("</body>", `${scriptTag}\n${darkClass}\n</body>`);
+    }
+    return html;
+  },
+};
+
 const rawPort = process.env.PORT;
 const port = rawPort ? Number(rawPort) : 5173;
 const basePath = process.env.BASE_PATH ?? "/";
@@ -44,6 +60,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
     cleanUrlsPlugin(path.resolve(import.meta.dirname, "public")),
+    injectReactApp,
     ...replitPlugins,
   ],
   resolve: {
@@ -57,6 +74,14 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      input: path.resolve(import.meta.dirname, "src/index.html"),
+      output: {
+        entryFileNames: "assets/[name].js",
+        chunkFileNames: "assets/[name].js",
+        assetFileNames: "assets/[name].[ext]",
+      },
+    },
   },
   server: {
     port,
