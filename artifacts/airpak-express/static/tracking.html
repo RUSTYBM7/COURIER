@@ -113,16 +113,30 @@ body{font-family:var(--font-main);background:#F2F2F7;color:var(--apple-label);mi
 .tr-awb-copy:hover{background:rgba(120,120,128,.2)}
 
 /* === MAP === */
-.map-section{margin:0 20px 16px;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.8);height:240px;position:relative;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+.map-section{margin:0;border-radius:0;border:none;height:100vh;position:fixed;top:0;left:0;right:0;bottom:0;width:100%;z-index:10;box-shadow:none;display:none;background:#0a0a12}
+.map-section.active{display:block}
 #map{width:100%;height:100%;z-index:1}
-.map-overlay{position:absolute;top:12px;left:12px;z-index:400;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-radius:var(--radius);padding:10px 14px;box-shadow:0 2px 12px rgba(0,0,0,.1)}
-.map-route{display:flex;align-items:center;gap:8px}
-.map-from{width:10px;height:10px;border-radius:50%;background:var(--red);flex-shrink:0}
-.map-line{flex:1;height:2px;background:var(--apple-separator);position:relative}
-.map-line::after{content:'';position:absolute;left:0;top:0;width:50%;height:100%;background:var(--red)}
-.map-to{width:10px;height:10px;border-radius:50%;background:var(--apple-green);flex-shrink:0}
+
+/* Full-page dark map UI */
+.map-ui-panel{position:absolute;bottom:0;left:0;right:0;z-index:400;padding:20px;padding-bottom:calc(20px + env(safe-area-inset-bottom, 20px));background:linear-gradient(0deg,rgba(10,10,18,.95) 0%,rgba(10,10,18,.8) 60%,transparent 100%)}
+.map-ui-top{position:absolute;top:16px;left:16px;right:16px;z-index:400;display:flex;align-items:center;justify-content:space-between}
+.map-close-btn{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border:none;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;font-size:20px;z-index:401}
+.map-live-badge{display:flex;align-items:center;gap:6px;background:rgba(52,199,89,.2);border:1px solid rgba(52,199,89,.4);border-radius:20px;padding:6px 14px;color:#34C759;font-size:12px;font-weight:700}
+.map-live-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:#34C759;animation:pulse-dot 1.5s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.3}}
+.map-route{display:flex;align-items:center;gap:8px;padding:8px 0}
+.map-from{width:10px;height:10px;border-radius:50%;background:#CD2727;flex-shrink:0}
+.map-line{flex:1;height:2px;background:rgba(255,255,255,.2);position:relative}
+.map-line::after{content:'';position:absolute;left:0;top:0;width:60%;height:100%;background:#CD2727}
+.map-to{width:10px;height:10px;border-radius:50%;background:#34C759;flex-shrink:0}
 .map-labels{display:flex;justify-content:space-between;margin-top:4px}
-.map-label{font-size:10px;font-weight:700;color:var(--apple-label)}
+.map-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.7)}
+.map-info-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:16px}
+.map-info-cell{background:rgba(255,255,255,.08);border-radius:12px;padding:12px;text-align:center}
+.map-info-label{font-size:10px;font-weight:600;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.map-info-value{font-size:16px;font-weight:800;color:#fff}
+.map-status-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(205,39,39,.2);border:1px solid rgba(205,39,39,.4);border-radius:20px;padding:8px 16px;font-size:13px;font-weight:700;color:#ff6b6b;margin-top:12px}
+.map-status-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:#CD2727;animation:pulse-dot 1.5s ease-in-out infinite}
 
 /* === TIMELINE === */
 .timeline-section{margin:0 20px 16px}
@@ -185,24 +199,11 @@ body{font-family:var(--font-main);background:#F2F2F7;color:var(--apple-label);mi
 
 /* === RESPONSIVE === */
 @media(min-width:768px){
-  .map-section{height:300px}
   .search-section{padding:20px 20px 8px;max-width:640px;margin-left:auto;margin-right:auto}
   .track-result{max-width:640px;margin-left:auto;margin-right:auto}
   .timeline-section{max-width:640px;margin-left:auto;margin-right:auto}
   .details-section{max-width:640px;margin-left:auto;margin-right:auto}
   .quick-links{max-width:640px;margin-left:auto;margin-right:auto}
-}
-
-@media(max-width:767px){
-  .menu-btn{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--apple-fill);border:none;color:var(--apple-label);cursor:pointer}
-  .nav-title{display:none}
-  .search-section{padding:14px 16px 8px}
-  .search-btn span{display:none}
-  .map-section{margin:0 16px 12px;height:180px;border-radius:var(--radius-lg)}
-  .track-result{margin:8px 16px 12px}
-  .timeline-section{margin:0 16px 12px}
-  .details-section{margin:0 16px 20px}
-  .quick-links{margin:0 16px 20px}
 }
 
 i[data-lucide]{width:16px;height:16px;display:block}
@@ -215,13 +216,13 @@ i[data-lucide]{width:16px;height:16px;display:block}
 .bottom-nav-item span{font-size:10px;font-weight:600;font-family:Inter,sans-serif}
 
 /* === PRELOADER === */
-.ap-preloader{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#CD2727 0%,#9b1a1a 100%);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease,visibility .6s ease}
+.ap-preloader{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a0a0a 0%,#0a0a1a 50%,#0a0505 100%);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s ease,visibility .8s ease}
 .ap-preloader.hidden{opacity:0;visibility:hidden;pointer-events:none}
-.ap-preloader-logo{width:80px;height:80px;margin-bottom:24px;animation:preLogoPulse 1.5s ease-in-out infinite}
-.ap-preloader-title{font-family:"Sarabun",sans-serif;font-size:32px;font-weight:800;color:#fff;margin-bottom:8px}
-.ap-preloader-sub{font-family:"Inter",sans-serif;font-size:14px;color:rgba(255,255,255,.7);margin-bottom:40px;letter-spacing:.5px}
-.ap-preloader-bar-wrap{width:280px;height:4px;background:rgba(255,255,255,.2);border-radius:4px;overflow:hidden;margin-bottom:16px}
-.ap-preloader-bar{height:100%;background:#fff;border-radius:4px;animation:preBar 1.8s ease-in-out infinite;width:0}
+
+.ap-preloader-title{font-family:"Sarabun",sans-serif;font-size:26px;font-weight:800;color:#fff;margin-bottom:6px;letter-spacing:.5px}
+.ap-preloader-sub{font-family:"Inter",sans-serif;font-size:13px;color:rgba(255,255,255,.5);margin-bottom:36px;letter-spacing:.3px}
+.ap-preloader-bar-wrap{width:240px;height:3px;background:rgba(205,39,39,.15);border-radius:3px;overflow:hidden;margin-bottom:20px}
+.ap-preloader-bar{height:100%;background:linear-gradient(90deg,#CD2727,#ff4444);border-radius:3px;animation:orbBar 1.8s ease-in-out infinite;width:0}
 .ap-preloader-dots{display:flex;gap:8px}
 .ap-preloader-dot{width:8px;height:8px;background:rgba(255,255,255,.4);border-radius:50%;animation:preDot 1.2s ease-in-out infinite}
 .ap-preloader-dot:nth-child(2){animation-delay:.2s}
@@ -355,19 +356,38 @@ i[data-lucide]{width:16px;height:16px;display:block}
       </div>
     </div>
 
-    <!-- Map -->
-    <div class="map-section">
+    <!-- Full dark map section (toggled by View on Map button) -->
+    <div class="map-section" id="fullMapSection">
+      <div class="map-ui-top">
+        <button class="map-close-btn" onclick="closeFullMap()">&#x2715;</button>
+        <div class="map-live-badge">&#9679; LIVE TRACKING</div>
+      </div>
       <div id="map"></div>
-      <div class="map-overlay">
+      <div class="map-ui-panel">
         <div class="map-route">
           <div class="map-from"></div>
           <div class="map-line"></div>
           <div class="map-to"></div>
         </div>
         <div class="map-labels">
-          <span class="map-label">Cardiff</span>
-          <span class="map-label">London</span>
+          <span class="map-label">Cardiff Hub, Wales</span>
+          <span class="map-label">London, EC2A 4NE</span>
         </div>
+        <div class="map-info-grid">
+          <div class="map-info-cell">
+            <div class="map-info-label">ETA</div>
+            <div class="map-info-value">14:30</div>
+          </div>
+          <div class="map-info-cell">
+            <div class="map-info-label">Distance</div>
+            <div class="map-info-value">248km</div>
+          </div>
+          <div class="map-info-cell">
+            <div class="map-info-label">Progress</div>
+            <div class="map-info-value">60%</div>
+          </div>
+        </div>
+        <div class="map-status-pill">&#9679; In Transit — LHR &#8594; DXB &#8594; JFK</div>
       </div>
     </div>
 
@@ -467,7 +487,14 @@ i[data-lucide]{width:16px;height:16px;display:block}
         </div>
       </div>
     </div>
-  </div>
+
+    <!-- View Full Map Button -->
+    <div style="margin:0 20px 24px;text-align:center">
+      <button onclick="openFullMap()" style="display:inline-flex;align-items:center;gap:8px;background:#1a1a2e;color:#fff;border:none;border-radius:12px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.3)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+        View on Map
+      </button>
+    </div>
 
   <!-- Quick Links (shown before search) -->
   <div class="quick-links" id="quickLinks">
@@ -534,6 +561,18 @@ i[data-lucide]{width:16px;height:16px;display:block}
 <!-- Toast -->
 <div id="toast"></div>
 
+<!-- Auth Guard -->
+<script>
+(function() {
+  var user = sessionStorage.getItem('airpak_user');
+  if (!user) { window.location.replace('signin.html'); return; }
+  try {
+    var u = JSON.parse(user);
+    if (!u.email) { window.location.replace('signin.html'); return; }
+  } catch(e) { window.location.replace('signin.html'); return; }
+})();
+</script>
+
 <!-- Leaflet Map JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -547,10 +586,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Init map
   if (typeof L !== 'undefined') {
-    map = L.map('map').setView([51.48, -3.17], 7);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap'
-    }).addTo(map);
+    map = L.map('map', {zoomControl: false, attributionControl: false}).setView([51.48, -3.17], 7);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {}).addTo(map);
+    L.control.attribution({prefix: false, position: 'bottomright'}).addTo(map);
 
     // Route line
     var route = L.polyline([
@@ -560,11 +598,13 @@ document.addEventListener('DOMContentLoaded', function() {
       [52.0, -1.0],
       [52.2, -0.5],
       [51.52, -0.12] // London
-    ], {color: '#CD2727', weight: 3, opacity: 0.8}).addTo(map);
+    ], {color: '#CD2727', weight: 4, opacity: 0.9}).addTo(map);
 
     // Markers
-    L.circleMarker([51.48, -3.17], {radius: 8, fillColor: '#CD2727', color: '#fff', weight: 2}).addTo(map).bindPopup('Cardiff Hub');
-    L.circleMarker([51.52, -0.12], {radius: 8, fillColor: '#34C759', color: '#fff', weight: 2}).addTo(map).bindPopup('London');
+    L.circleMarker([51.48, -3.17], {radius: 10, fillColor: '#CD2727', color: '#fff', weight: 3}).addTo(map).bindPopup('<b style="color:#1a1a1a">Cardiff Hub</b><br style="color:#636366">UK Distribution Centre');
+    L.circleMarker([51.52, -0.12], {radius: 10, fillColor: '#34C759', color: '#fff', weight: 3}).addTo(map).bindPopup('<b style="color:#1a1a1a">London</b><br style="color:#636366">Final Destination');
+    L.circleMarker([51.75, -2.0], {radius: 7, fillColor: '#CD2727', color: '#fff', weight: 2, opacity: 0.6}).addTo(map).bindPopup('In Transit');
+  }
 
     // Fit bounds
     map.fitBounds(route.getBounds(), {padding: [20,20]});
@@ -610,6 +650,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   };
 
+  // Toggle full dark map
+  window.openFullMap = function() {
+    document.getElementById('fullMapSection').classList.add('active');
+    if (map) setTimeout(function() { map.invalidateSize(); }, 50);
+  };
+  window.closeFullMap = function() {
+    document.getElementById('fullMapSection').classList.remove('active');
+  };
+
   // Toast
   window.showToast = function(msg) {
     var t = document.getElementById('toast');
@@ -628,11 +677,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Preloader -->
 <div class="ap-preloader" id="apPreloader">
-  <svg class="ap-preloader-logo" viewBox="0 0 80 80" fill="none">
-    <rect width="80" height="80" rx="16" fill="rgba(255,255,255,.15)"/>
-    <path d="M20 40h40M40 20v40" stroke="white" stroke-width="5" stroke-linecap="round"/>
-    <circle cx="40" cy="40" r="12" fill="none" stroke="white" stroke-width="3"/>
-  </svg>
+  <div class="ap-atom-wrap">
+    <div class="ap-atom-nucleus"></div>
+    <div class="ap-atom-orbit ap-orbit-1">
+      <div class="ap-atom-elec ap-elec-1"></div>
+    </div>
+    <div class="ap-atom-orbit ap-orbit-2">
+      <div class="ap-atom-elec ap-elec-2"></div>
+    </div>
+    <div class="ap-atom-orbit ap-orbit-3">
+      <div class="ap-atom-elec ap-elec-3"></div>
+    </div>
+  </div>
   <div class="ap-preloader-title">Airpak Express</div>
   <div class="ap-preloader-sub" id="apPreloaderGreeting">Loading your experience...</div>
   <div class="ap-preloader-bar-wrap"><div class="ap-preloader-bar"></div></div>
@@ -642,6 +698,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="ap-preloader-dot"></div>
   </div>
 </div>
+
 
 <script>
 // Preloader with dynamic greeting

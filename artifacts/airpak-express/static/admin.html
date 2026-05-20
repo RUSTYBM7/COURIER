@@ -1752,6 +1752,29 @@ Airpak Express Operations Team</textarea></div>
 </div>
 
 <script>
+// ===== AUTH GUARD =====
+(function() {
+  var role = sessionStorage.getItem('airpak_role') || sessionStorage.getItem('role');
+  if (role !== 'admin') {
+    // Check if there's any admin indicator
+    var user = sessionStorage.getItem('airpak_user');
+    if (!user) {
+      window.location.replace('signin.html');
+      return;
+    }
+    try {
+      var u = JSON.parse(user);
+      if (u.role !== 'admin' && u.email !== 'admin@airpak-express.com') {
+        window.location.replace('dashboard.html');
+        return;
+      }
+    } catch(e) {
+      window.location.replace('signin.html');
+      return;
+    }
+  }
+})();
+
 // ===== DATA =====
 var parcels = [
   {awb:'AP-2024-88064',client:'Amazon UK',origin:'LHR',dest:'SIN',service:'Air Freight',weight:'24kg',status:'In Transit',sla:'At Risk'},
@@ -2106,6 +2129,123 @@ function toggleMobileNav() {
 function confirmDelivery() {
   toast('Delivery confirmed and client notified', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>');
 }
+// ===== MISSING FUNCTIONS =====
+
+function filterClientStatus(v) {
+  var rows = document.querySelectorAll('#clients-rows tr');
+  rows.forEach(function(r) {
+    var status = r.querySelector('.badge');
+    if (!status) return;
+    if (v === 'all' || status.textContent.trim() === v) {
+      r.style.display = '';
+    } else {
+      r.style.display = 'none';
+    }
+  });
+}
+
+function filterParcels(v) {
+  var q = v.toUpperCase();
+  var rows = document.querySelectorAll('#parcels-rows tr');
+  rows.forEach(function(r) {
+    var text = r.textContent.toUpperCase();
+    r.style.display = text.includes(q) ? '' : 'none';
+  });
+}
+
+function doSuspend() {
+  var client = document.getElementById('susp-client')?.value;
+  var action = document.getElementById('susp-action')?.value;
+  var reason = document.getElementById('susp-reason')?.value;
+  if (!client) { toast('Enter a client ID', '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2.5a.75.75 0 110 1.5.75.75 0 010-1.5zM8.75 11H7V7h1.5v4z"/></svg>'); return; }
+  var tag = action === 'Suspend' ? 'b-red' : action === 'Terminate' ? 'b-amber' : 'b-green';
+  addAuditEntry('admin', action + ': ' + client + (reason ? ' — ' + reason : ''), 'Client', tag);
+  toast(action + ' action applied to ' + client, '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>');
+  if (action === 'Terminate') {
+    var idx = clients.findIndex(function(c) { return c.id === client; });
+    if (idx > -1) clients[idx].status = 'Terminated';
+  }
+  renderClients();
+}
+
+function createParcel() {
+  var client = document.getElementById('pc-client')?.value;
+  var origin = document.getElementById('pc-origin')?.value;
+  var dest = document.getElementById('pc-dest')?.value;
+  var service = document.getElementById('pc-service')?.value;
+  var weight = document.getElementById('pc-weight')?.value;
+  var awb = 'AP-' + new Date().getFullYear() + '-' + Math.floor(10000+Math.random()*90000);
+  parcels.unshift({awb: awb, client: client || 'New Client', origin: (origin||'LHR').toUpperCase().slice(0,3), dest: (dest||'JFK').toUpperCase().slice(0,3), service: service||'Express', weight: (weight||'1')+'kg', status: 'Shipment Booked', sla: 'On Track'});
+  addAuditEntry('admin', 'Parcel created: ' + awb, 'Parcel', 'b-red');
+  toast('Shipment created: ' + awb, '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M5 7h6M5 10h4"/></svg>');
+  renderParcels();
+  // Clear form
+  ['pc-client','pc-origin','pc-dest','pc-weight','pc-value','pc-desc'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+}
+
+function updateStatus() {
+  var awb = document.getElementById('ps-awb')?.value;
+  var status = document.getElementById('ps-status')?.value;
+  var notes = document.getElementById('ps-notes')?.value;
+  var notify = document.getElementById('ps-notify')?.value;
+  if (!awb) { toast('Enter an AWB number', '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2.5a.75.75 0 110 1.5.75.75 0 010-1.5zM8.75 11H7V7h1.5v4z"/></svg>'); return; }
+  var p = parcels.find(function(x) { return x.awb === awb || x.awb.includes(awb); });
+  if (p) p.status = status;
+  var now = new Date();
+  var ts = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  var entry = {ts: ts, status: status, note: notes || 'Admin update'};
+  if (statusLog[0]) statusLog[0].entries.unshift(entry);
+  addAuditEntry('admin', 'Status updated: ' + awb + ' → ' + status + (notify === 'yes' ? ' + client notified' : ' (internal)'), 'Parcel', 'b-red');
+  toast('Status updated' + (notify === 'yes' ? ' + Customer notified' : ''), '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>');
+  renderParcels();
+  renderStatusLog();
+}
+
+function verifyClient(id) {
+  var v = verifyQueue.find(function(x) { return x.id === id; });
+  if (v) { v.status = 'Verified'; addAuditEntry('admin', 'Client verified: ' + id, 'Verify', 'b-green'); }
+  toast(id + ' verified', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>');
+  renderVerify();
+}
+
+function rejectClient(id) {
+  var idx = verifyQueue.findIndex(function(v) { return v.id === id; });
+  if (idx > -1) { verifyQueue.splice(idx, 1); addAuditEntry('admin', 'Client rejected: ' + id, 'Reject', 'b-red'); }
+  toast(id + ' rejected', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5"/><path d="M5.5 5.5l5 5M10.5 5.5l-5 5"/></svg>');
+  renderVerify();
+}
+
+// Working versions of previously toast-only functions
+function sendBulkUpdate() {
+  var msgs = document.querySelectorAll('.chat-msg.client');
+  toast('Bulk update sent to ' + msgs.length + ' clients', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H2a1 1 0 00-1 1v9l3-3h10a1 1 0 001-1V3a1 1 0 00-1-1z"/></svg>');
+  addAuditEntry('admin', 'Bulk client update sent', 'Comms', 'b-blue');
+}
+
+function scheduleMessage() {
+  toast('Message scheduled — will send in 1 hour', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4.5V8l2 2"/></svg>');
+  addAuditEntry('admin', 'Scheduled message created', 'Comms', 'b-blue');
+}
+
+function exportMessages() {
+  var msgs = [];
+  document.querySelectorAll('.chat-msg').forEach(function(m) { msgs.push(m.textContent.trim()); });
+  var blob = new Blob([msgs.join('\n')], {type: 'text/plain'});
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'messages-' + new Date().toISOString().slice(0,10) + '.txt'; a.click();
+  toast('Message history exported', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>');
+}
+
+function openClientEdit(id) {
+  var c = clients.find(function(x) { return x.id === id; });
+  if (!c) { toast('Client not found', '<svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="5"/></svg>'); return; }
+  toast('Editing: ' + c.name + ' (' + c.email + ')', '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M11 2l3 3-8 8H3v-3l8-8z"/></svg>');
+}
+
+// Make createParcel work from parcel-create panel
+
 </script>
 
 </div><!-- end main -->

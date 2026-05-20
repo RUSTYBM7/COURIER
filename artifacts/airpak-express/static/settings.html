@@ -197,13 +197,13 @@ i[data-lucide]{width:16px;height:16px;display:block}
 .bottom-nav-item span{font-size:10px;font-weight:600;font-family:Inter,sans-serif}
 
 /* === PRELOADER === */
-.ap-preloader{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#CD2727 0%,#9b1a1a 100%);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease,visibility .6s ease}
+.ap-preloader{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a0a0a 0%,#0a0a1a 50%,#0a0505 100%);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s ease,visibility .8s ease}
 .ap-preloader.hidden{opacity:0;visibility:hidden;pointer-events:none}
-.ap-preloader-logo{width:80px;height:80px;margin-bottom:24px;animation:preLogoPulse 1.5s ease-in-out infinite}
-.ap-preloader-title{font-family:"Sarabun",sans-serif;font-size:32px;font-weight:800;color:#fff;margin-bottom:8px}
-.ap-preloader-sub{font-family:"Inter",sans-serif;font-size:14px;color:rgba(255,255,255,.7);margin-bottom:40px;letter-spacing:.5px}
-.ap-preloader-bar-wrap{width:280px;height:4px;background:rgba(255,255,255,.2);border-radius:4px;overflow:hidden;margin-bottom:16px}
-.ap-preloader-bar{height:100%;background:#fff;border-radius:4px;animation:preBar 1.8s ease-in-out infinite;width:0}
+
+.ap-preloader-title{font-family:"Sarabun",sans-serif;font-size:26px;font-weight:800;color:#fff;margin-bottom:6px;letter-spacing:.5px}
+.ap-preloader-sub{font-family:"Inter",sans-serif;font-size:13px;color:rgba(255,255,255,.5);margin-bottom:36px;letter-spacing:.3px}
+.ap-preloader-bar-wrap{width:240px;height:3px;background:rgba(205,39,39,.15);border-radius:3px;overflow:hidden;margin-bottom:20px}
+.ap-preloader-bar{height:100%;background:linear-gradient(90deg,#CD2727,#ff4444);border-radius:3px;animation:orbBar 1.8s ease-in-out infinite;width:0}
 .ap-preloader-dots{display:flex;gap:8px}
 .ap-preloader-dot{width:8px;height:8px;background:rgba(255,255,255,.4);border-radius:50%;animation:preDot 1.2s ease-in-out infinite}
 .ap-preloader-dot:nth-child(2){animation-delay:.2s}
@@ -552,6 +552,16 @@ i[data-lucide]{width:16px;height:16px;display:block}
 <div id="toast"></div>
 
 <script>
+// ===== AUTH GUARD =====
+(function() {
+  var user = sessionStorage.getItem('airpak_user');
+  if (!user) { window.location.replace('signin.html'); return; }
+  try {
+    var u = JSON.parse(user);
+    if (!u.email) { window.location.replace('signin.html'); return; }
+  } catch(e) { window.location.replace('signin.html'); return; }
+})();
+
 document.addEventListener('DOMContentLoaded', function() {
   // Init Lucide icons
   if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -638,11 +648,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
   </script>
 <div class="ap-preloader" id="apPreloader">
-  <svg class="ap-preloader-logo" viewBox="0 0 80 80" fill="none">
-    <rect width="80" height="80" rx="16" fill="rgba(255,255,255,.15)"/>
-    <path d="M20 40h40M40 20v40" stroke="white" stroke-width="5" stroke-linecap="round"/>
-    <circle cx="40" cy="40" r="12" fill="none" stroke="white" stroke-width="3"/>
-  </svg>
+  <div class="ap-atom-wrap">
+    <div class="ap-atom-nucleus"></div>
+    <div class="ap-atom-orbit ap-orbit-1">
+      <div class="ap-atom-elec ap-elec-1"></div>
+    </div>
+    <div class="ap-atom-orbit ap-orbit-2">
+      <div class="ap-atom-elec ap-elec-2"></div>
+    </div>
+    <div class="ap-atom-orbit ap-orbit-3">
+      <div class="ap-atom-elec ap-elec-3"></div>
+    </div>
+  </div>
   <div class="ap-preloader-title">Airpak Express</div>
   <div class="ap-preloader-sub" id="apPreloaderGreeting">Loading your experience...</div>
   <div class="ap-preloader-bar-wrap"><div class="ap-preloader-bar"></div></div>
@@ -652,6 +669,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="ap-preloader-dot"></div>
   </div>
 </div>
+
 
 <script>
 // Preloader with dynamic greeting

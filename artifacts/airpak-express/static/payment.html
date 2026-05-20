@@ -1523,13 +1523,13 @@
 
 
 /* === PRELOADER === */
-.ap-preloader{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#CD2727 0%,#9b1a1a 100%);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease,visibility .6s ease}
+.ap-preloader{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a0a0a 0%,#0a0a1a 50%,#0a0505 100%);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s ease,visibility .8s ease}
 .ap-preloader.hidden{opacity:0;visibility:hidden;pointer-events:none}
-.ap-preloader-logo{width:80px;height:80px;margin-bottom:24px;animation:preLogoPulse 1.5s ease-in-out infinite}
-.ap-preloader-title{font-family:"Sarabun",sans-serif;font-size:32px;font-weight:800;color:#fff;margin-bottom:8px}
-.ap-preloader-sub{font-family:"Inter",sans-serif;font-size:14px;color:rgba(255,255,255,.7);margin-bottom:40px;letter-spacing:.5px}
-.ap-preloader-bar-wrap{width:280px;height:4px;background:rgba(255,255,255,.2);border-radius:4px;overflow:hidden;margin-bottom:16px}
-.ap-preloader-bar{height:100%;background:#fff;border-radius:4px;animation:preBar 1.8s ease-in-out infinite;width:0}
+
+.ap-preloader-title{font-family:"Sarabun",sans-serif;font-size:26px;font-weight:800;color:#fff;margin-bottom:6px;letter-spacing:.5px}
+.ap-preloader-sub{font-family:"Inter",sans-serif;font-size:13px;color:rgba(255,255,255,.5);margin-bottom:36px;letter-spacing:.3px}
+.ap-preloader-bar-wrap{width:240px;height:3px;background:rgba(205,39,39,.15);border-radius:3px;overflow:hidden;margin-bottom:20px}
+.ap-preloader-bar{height:100%;background:linear-gradient(90deg,#CD2727,#ff4444);border-radius:3px;animation:orbBar 1.8s ease-in-out infinite;width:0}
 .ap-preloader-dots{display:flex;gap:8px}
 .ap-preloader-dot{width:8px;height:8px;background:rgba(255,255,255,.4);border-radius:50%;animation:preDot 1.2s ease-in-out infinite}
 .ap-preloader-dot:nth-child(2){animation-delay:.2s}
@@ -1861,25 +1861,14 @@
         </div>
       </div>
 
-      <!-- Desktop Layout -->
-      <div class="wallet-body wallet-desktop-layout">
+      <!-- Simplified Payment Tabs (mobile + desktop) -->
+      <div class="wallet-body wallet-desktop-layout" style="display:none">
         <div class="wallet-desktop-header">
           <div class="wallet-desktop-title-block">
             <h1>Payments</h1>
             <p>Manage your payment methods and transactions</p>
           </div>
-          <div style="display:flex;gap:var(--space-3)">
-            <button class="wallet-btn-secondary" onclick="openModal('addCard')">
-              <i data-lucide="plus" style="width:16px;height:16px;display:inline"></i>
-              Add Card
-            </button>
-            <button class="wallet-btn-primary" onclick="openModal('topup')">
-              <i data-lucide="plus-circle" style="width:16px;height:16px;display:inline"></i>
-              Top Up Balance
-            </button>
-          </div>
         </div>
-
         <div class="wallet-desktop-columns">
           <div class="wallet-desktop-main">
             <!-- Summary Widgets -->
@@ -1897,46 +1886,83 @@
                 <div class="wallet-summary-value green">£2,650.00</div>
               </div>
             </div>
-
-            <!-- Saved Cards -->
-            <div class="wallet-saved-cards-grid">
-              <div class="wallet-saved-card">
-                <div class="wallet-saved-card-bg" style="background: linear-gradient(135deg, var(--wallet-blue) 0%, var(--wallet-indigo) 100%);"></div>
-                <div class="wallet-saved-card-content">
-                  <div class="wallet-saved-card-header">
-                    <div class="wallet-saved-card-brand">Airpak Balance</div>
-                    <div class="wallet-saved-card-default">Default</div>
-                  </div>
-                  <div class="wallet-saved-card-chip"></div>
-                  <div class="wallet-saved-card-number">•••• •••• •••• 4721</div>
-                  <div class="wallet-saved-card-footer">
-                    <div>
-                      <div class="wallet-saved-card-label">GBP Balance</div>
-                      <div class="wallet-saved-card-value">£2,847.50</div>
-                    </div>
-                    <div>
-                      <div class="wallet-saved-card-label">Available</div>
-                      <div class="wallet-saved-card-value">£2,650.00</div>
-                    </div>
-                  </div>
+            <!-- Two payment options -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+              <div style="background:#fff;border-radius:16px;border:1px solid var(--apple-separator);padding:24px;cursor:pointer;transition:all .2s" onclick="openTab('coinbase')" onmouseover="this.style.borderColor='#007AFF'" onmouseout="this.style.borderColor=''">
+                <div style="width:48px;height:48px;border-radius:12px;background:rgba(0,122,255,.1);display:flex;align-items:center;justify-content:center;margin-bottom:16px">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="#0052FF"><circle cx="12" cy="12" r="10"/><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 8c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3z" fill="#fff"/></svg>
                 </div>
-                <div style="padding:0 var(--space-5) var(--space-5); position:relative; z-index:1;">
-                  <div class="wallet-saved-card-actions">
-                    <button class="wallet-saved-card-btn edit" onclick="editCard(0)"><i data-lucide="pencil" style="width:14px;height:14px;display:inline"></i> Edit</button>
-                    <button class="wallet-saved-card-btn delete" onclick="confirmDelete(0)"><i data-lucide="trash-2" style="width:14px;height:14px;display:inline"></i> Delete</button>
-                  </div>
-                </div>
+                <div style="font-size:17px;font-weight:700;color:var(--apple-label);margin-bottom:4px">Pay with Coinbase</div>
+                <div style="font-size:13px;color:var(--apple-label-secondary)">Buy crypto or pay directly via Coinbase — fast, secure, instant confirmation.</div>
               </div>
-
-              <div class="wallet-saved-card">
-                <div class="wallet-saved-card-bg" style="background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);"></div>
-                <div class="wallet-saved-card-content">
-                  <div class="wallet-saved-card-header">
-                    <div class="wallet-saved-card-brand">Visa</div>
+              <div style="background:#fff;border-radius:16px;border:1px solid var(--apple-separator);padding:24px;cursor:pointer;transition:all .2s" onclick="openTab('wallet')" onmouseover="this.style.borderColor='#007AFF'" onmouseout="this.style.borderColor=''">
+                <div style="width:48px;height:48px;border-radius:12px;background:rgba(175,82,222,.1);display:flex;align-items:center;justify-content:center;margin-bottom:16px">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#AF52DE" stroke-width="2"><path d="M21 4H3a1 1 0 00-1 1v14a1 1 0 001 1h18a1 1 0 001-1V5a1 1 0 00-1-1z"/><path d="M2 9h20"/><path d="M12 9v12"/></svg>
+                </div>
+                <div style="font-size:17px;font-weight:700;color:var(--apple-label);margin-bottom:4px">Manual Wallet Copy</div>
+                <div style="font-size:13px;color:var(--apple-label-secondary)">Copy our wallet address and send crypto directly from any wallet app.</div>
+              </div>
+            </div>
+            <!-- Coinbase Tab -->
+            <div id="coinbaseTab" class="payment-tab-content">
+              <div style="background:linear-gradient(135deg,#0052FF,#0032B5);border-radius:16px;padding:32px;text-align:center;color:#fff;margin-bottom:16px">
+                <div style="width:64px;height:64px;border-radius:16px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="12" r="10"/><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 8c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3z"/></svg>
+                </div>
+                <h3 style="font-family:'Sarabun',sans-serif;font-size:22px;font-weight:800;margin-bottom:8px">Coinbase Commerce</h3>
+                <p style="font-size:14px;opacity:.7;margin-bottom:24px">Pay securely via Coinbase — supports BTC, ETH, USDT, USDC, XRP and 60+ other cryptocurrencies. Instant on-chain confirmation.</p>
+                <a href="https://commerce.coinbase.com" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#fff;color:#0052FF;border:none;border-radius:12px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;font-family:Inter,sans-serif">
+                  Open Coinbase
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                </a>
+              </div>
+            </div>
+            <!-- Wallet Copy Tab -->
+            <div id="walletTab" class="payment-tab-content" style="display:none">
+              <div style="background:#fff;border-radius:16px;border:1px solid var(--apple-separator);padding:24px">
+                <h3 style="font-family:'Sarabun',sans-serif;font-size:17px;font-weight:800;margin-bottom:20px;color:var(--apple-label)">Manual Wallet Transfer</h3>
+                <div style="margin-bottom:20px">
+                  <div style="font-size:13px;font-weight:600;color:var(--apple-label-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Select Coin</div>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="coin-select-btn active" onclick="selectPaymentCoin(this,'BTC')" data-coin="BTC" style="background:rgba(247,147,26,.15);border:1px solid rgba(247,147,26,.4);border-radius:10px;padding:10px 16px;color:#F7931A;font-size:13px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif">
+                      <span style="display:block;font-size:16px;font-weight:900">₿</span> Bitcoin (BTC)
+                    </button>
+                    <button class="coin-select-btn" onclick="selectPaymentCoin(this,'ETH')" data-coin="ETH" style="background:rgba(98,126,234,.15);border:1px solid rgba(98,126,234,.3);border-radius:10px;padding:10px 16px;color:#627EEA;font-size:13px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif">
+                      <span style="display:block;font-size:16px;font-weight:900">Ξ</span> Ethereum (ETH)
+                    </button>
+                    <button class="coin-select-btn" onclick="selectPaymentCoin(this,'USDT')" data-coin="USDT" style="background:rgba(38,161,122,.15);border:1px solid rgba(38,161,122,.3);border-radius:10px;padding:10px 16px;color:#26A17B;font-size:13px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif">
+                      <span style="display:block;font-size:16px;font-weight:900">₮</span> Tether (USDT)
+                    </button>
+                    <button class="coin-select-btn" onclick="selectPaymentCoin(this,'XRP')" data-coin="XRP" style="background:rgba(35,41,47,.15);border:1px solid rgba(35,41,47,.3);border-radius:10px;padding:10px 16px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif">
+                      <span style="display:block;font-size:16px;font-weight:900">X</span> Ripple (XRP)
+                    </button>
                   </div>
-                  <div class="wallet-saved-card-chip"></div>
-                  <div class="wallet-saved-card-number">•••• •••• •••• 8892</div>
-                  <div class="wallet-saved-card-footer">
+                </div>
+                <div style="margin-bottom:16px">
+                  <div style="font-size:13px;font-weight:600;color:var(--apple-label-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Wallet Address</div>
+                  <div style="background:var(--apple-bg-secondary);border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+                    <span id="paymentWalletAddr" style="font-size:14px;font-weight:600;color:var(--apple-label);word-break:break-all;font-family:monospace">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</span>
+                    <button onclick="copyPaymentWallet()" style="flex-shrink:0;background:var(--apple-blue);color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer">Copy</button>
+                  </div>
+                  <div id="paymentNetworkNote" style="font-size:12px;color:var(--apple-label-tertiary);margin-top:8px">Network: Bitcoin (BTC) — send only BTC to this address</div>
+                </div>
+                <div style="text-align:center;padding:16px;border:2px dashed var(--apple-separator);border-radius:12px;margin-bottom:20px">
+                  <svg width="48" height="48" viewBox="0 0 80 80" fill="none" style="margin-bottom:8px">
+                    <rect x="0" y="0" width="80" height="80" rx="8" fill="#fff"/>
+                    <rect x="4" y="4" width="24" height="24" fill="#000"/>
+                    <rect x="52" y="4" width="24" height="24" fill="#000"/>
+                    <rect x="4" y="52" width="24" height="24" fill="#000"/>
+                    <rect x="32" y="32" width="16" height="16" fill="#000"/>
+                    <rect x="36" y="36" width="8" height="8" fill="#fff"/>
+                  </svg>
+                  <div style="font-size:12px;color:var(--apple-label-tertiary)">Scan with any wallet app</div>
+                </div>
+                <a href="https://changelly.com/buy" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(255,255,255,.8);border:1px solid var(--apple-separator);border-radius:12px;padding:12px;color:var(--apple-label-secondary);text-decoration:none;font-size:13px;font-weight:500">
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2L2 6l8 4 8-4-8-4zM2 14l8 4 8-4M2 10l8 4 8-4" stroke-linejoin="round"/></svg>
+                  Buy crypto with card via Changelly
+                </a>
+              </div>
+            </div>
                     <div>
                       <div class="wallet-saved-card-label">Card Holder</div>
                       <div class="wallet-saved-card-value">Your Name</div>
@@ -2613,6 +2639,17 @@
     });
   </script>
   <script src="/apps/airpak/js/ap-lang.js" defer></script>
+<!-- Auth Guard -->
+<script>
+(function() {
+  var user = sessionStorage.getItem('airpak_user');
+  if (!user) { window.location.replace('signin.html'); return; }
+  try {
+    var u = JSON.parse(user);
+    if (!u.email) { window.location.replace('signin.html'); return; }
+  } catch(e) { window.location.replace('signin.html'); return; }
+})();
+</script>
 <script>
 (function(){
   // Platform detection — auto-understands device
@@ -2638,6 +2675,42 @@ const walletAddresses = {
   USDC: '0x742d35Cc6634C0532925a3b844Bc9e7595f2D234',
   XRP: 'rN7n3473SaZBCQSYBFGxE8iRMFDSjWEjDu'
 };
+
+    // Payment tab functions (simplified layout)
+    window.openTab = function(tab) {
+      var cb = document.getElementById('coinbaseTab');
+      var wl = document.getElementById('walletTab');
+      if (!cb || !wl) return;
+      if (tab === 'coinbase') { cb.style.display = ''; wl.style.display = 'none'; }
+      else { cb.style.display = 'none'; wl.style.display = ''; }
+    };
+
+    var paymentWallets = {
+      BTC: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh',
+      ETH: '0x71C95911E9a5D330f8D8C2471d5aA7FB7aB9C72F',
+      USDT: '0x71C95911E9a5D330f8D8C2471d5aA7FB7aB9C72F',
+      XRP: 'rN4nNsCkzP1xRW3J2b8X5gQW3kP3x2Y5mW'
+    };
+    var paymentNetworks = {
+      BTC: 'Network: Bitcoin (BTC) — send only BTC to this address',
+      ETH: 'Network: Ethereum (ERC-20) — send only ETH/USDT to this address',
+      USDT: 'Network: Ethereum (ERC-20) — send only USDT to this address',
+      XRP: 'Network: Ripple (XRP Ledger) — include destination tag 818281'
+    };
+
+    window.selectPaymentCoin = function(btn, coin) {
+      document.querySelectorAll('.coin-select-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      var addrEl = document.getElementById('paymentWalletAddr');
+      var noteEl = document.getElementById('paymentNetworkNote');
+      if (addrEl) addrEl.textContent = paymentWallets[coin] || paymentWallets.BTC;
+      if (noteEl) noteEl.textContent = paymentNetworks[coin] || paymentNetworks.BTC;
+    };
+
+    window.copyPaymentWallet = function() {
+      var addr = document.getElementById('paymentWalletAddr');
+      if (navigator.clipboard && addr) navigator.clipboard.writeText(addr.textContent).then(function() { showToast('Wallet address copied!'); });
+    };
 
 function toggleCryptoSection() {
   var panel = document.getElementById('cryptoPanel');
