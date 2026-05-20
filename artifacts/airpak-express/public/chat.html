@@ -10,32 +10,9 @@
     .redirect svg { width: 48px; height: 48px; margin-bottom: 16px; }
     .redirect p { font-size: 15px; color: #636366; }
     a { color: #CD2727; text-decoration: none; }
-  /* ===== MESH GRADIENT BACKGROUND ===== */
-  .bg-canvas{position:fixed;top:0;left:0;right:0;bottom:0;z-index:0;overflow:hidden;background:linear-gradient(135deg,#F8F8FC 0%,#EEF0F5 40%,#F5F0F8 70%,#F0F4FA 100%);pointer-events:none;}
-  .bg-blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.5;animation:floatBlob 20s ease-in-out infinite;}
-  .bg-blob-1{width:600px;height:600px;top:-200px;right:-100px;background:radial-gradient(circle,rgba(205,39,39,.12) 0%,transparent 70%);animation-delay:0s;}
-  .bg-blob-2{width:500px;height:500px;bottom:-150px;left:-150px;background:radial-gradient(circle,rgba(0,122,255,.1) 0%,transparent 70%);animation-delay:-7s;}
-  .bg-blob-3{width:400px;height:400px;top:40%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(52,199,89,.08) 0%,transparent 70%);animation-delay:-14s;}
-  .bg-blob-4{width:350px;height:350px;top:10%;left:20%;background:radial-gradient(circle,rgba(88,86,214,.08) 0%,transparent 70%);animation-delay:-4s;}
-  .bg-blob-5{width:450px;height:450px;bottom:20%;right:10%;background:radial-gradient(circle,rgba(255,149,0,.08) 0%,transparent 70%);animation-delay:-10s;}
-  @keyframes floatBlob{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(30px,-20px) scale(1.05)}50%{transform:translate(-20px,30px) scale(0.95)}75%{transform:translate(20px,10px) scale(1.02)}}
-  .bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,0,0,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.03) 1px,transparent 1px);background-size:40px 40px;}
-  body{position:relative;overflow-x:hidden;background:transparent;}
-  .redirect{position:relative;z-index:2;}
-</style>
+  </style>
 </head>
 <body>
-
-<!-- Mesh Gradient Background -->
-<div class="bg-canvas" aria-hidden="true">
-  <div class="bg-blob bg-blob-1"></div>
-  <div class="bg-blob bg-blob-2"></div>
-  <div class="bg-blob bg-blob-3"></div>
-  <div class="bg-blob bg-blob-4"></div>
-  <div class="bg-blob bg-blob-5"></div>
-  <div class="bg-grid"></div>
-</div>
-
   <div class="redirect">
     <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#CD2727"/><path d="M8 16h16M16 8v16" stroke="white" stroke-width="2.5" stroke-linecap="round"/><circle cx="16" cy="16" r="5" fill="none" stroke="white" stroke-width="1.5"/></svg>
     <p>Redirecting to <a href="messages.html">Messages</a>...</p>

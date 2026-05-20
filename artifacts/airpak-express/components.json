@@ -21,7 +21,5 @@
   "rtl": false,
   "menuColor": "default",
   "menuAccent": "subtle",
-  "registries": {
-    "@abui": "https://abui.io/r/{name}.json"
-  }
+  "registries": {}
 }
