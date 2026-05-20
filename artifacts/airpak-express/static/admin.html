@@ -569,7 +569,27 @@ function closeSidebar() {
       </div>
     </div>
 
-    <!-- PAYMENT MANAGEMENT GROUP -->
+    </div>
+
+    <!-- USER MANAGEMENT GROUP -->
+    <div class="nav-group" data-group="users">
+      <div class="nav-group-header" onclick="toggleGroup('users')">
+        <span class="ngh-label">User Management</span>
+        <span class="ngh-chev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg></span>
+      </div>
+      <div class="nav-group-items">
+        <div class="nav-item" onclick="nav('users')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3 3-5 6-5s6 2 6 5"/></svg></span>
+          All Users <span class="nav-badge" style="background:#7c3aed">New</span>
+        </div>
+        <div class="nav-item" onclick="nav('roles')">
+          <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="5" cy="5" r="2.5"/><circle cx="11" cy="11" r="2.5"/><path d="M2.5 14c0-1.5 1-2.5 2.5-2.5M11 13.5c1.5 0 2.5-1 2.5-2.5"/></svg></span>
+          Role Management
+        </div>
+      </div>
+    </div>
+
+      <!-- PAYMENT MANAGEMENT GROUP -->
     <div class="nav-group" data-group="payments">
       <div class="nav-group-header" onclick="toggleGroup('payments')">
         <span class="ngh-label">Payment Management</span>
@@ -1709,6 +1729,167 @@ Airpak Express Operations Team</textarea></div>
   </div>
 </div>
 
+  <!-- USER MANAGEMENT PANEL -->
+  <div class="panel" id="panel-users">
+    <div class="section-hdr">
+      <div><h2>User Management</h2><p>Manage platform users, roles, and access</p></div>
+      <div class="hdr-actions">
+        <button class="btn btn-ghost" onclick="exportUsersCSV()" style="display:inline-flex;align-items:center;gap:5px;">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="width:13px;height:13px"><path d="M2 10v3h12v-3M8 2v8M5 7l3 3 3-3"/></svg>
+          Export CSV
+        </button>
+        <button class="btn btn-primary" onclick="openAddUserModal()">
+          <svg viewBox="0 0 16 16" fill="currentColor" style="width:13px;height:13px"><path d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V9H3a1 1 0 110-2h4V3a1 1 0 011-1z"/></svg>
+          Add User
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px;">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 12px;text-align:center;">
+        <div style="font-size:20px;font-weight:800;color:#fff;font-family:'Sarabun',sans-serif;" id="uStatTotal">24</div>
+        <div style="font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Total</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 12px;text-align:center;">
+        <div style="font-size:20px;font-weight:800;color:#4ade80;font-family:'Sarabun',sans-serif;" id="uStatActive">18</div>
+        <div style="font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Active</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 12px;text-align:center;">
+        <div style="font-size:20px;font-weight:800;color:#fbbf24;font-family:'Sarabun',sans-serif;" id="uStatPending">4</div>
+        <div style="font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Pending</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 12px;text-align:center;">
+        <div style="font-size:20px;font-weight:800;color:#a78bfa;font-family:'Sarabun',sans-serif;" id="uStatPremium">7</div>
+        <div style="font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Premium</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 12px;text-align:center;">
+        <div style="font-size:20px;font-weight:800;color:#ef4444;font-family:'Sarabun',sans-serif;" id="uStatBlocked">2</div>
+        <div style="font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Blocked</div>
+      </div>
+    </div>
+
+    <!-- Bulk Action Bar -->
+    <div id="bulkBar" style="display:none;background:rgba(205,39,39,.08);border:1px solid rgba(205,39,39,.2);border-radius:12px;padding:12px 16px;margin-bottom:14px;align-items:center;gap:10px;">
+      <span style="font-size:12px;font-weight:700;color:#fff;"><span id="bulkCount">0</span> selected</span>
+      <div style="flex:1"></div>
+      <button class="btn btn-sm btn-ghost" onclick="bulkVerifyUsers()">Verify</button>
+      <button class="btn btn-sm btn-ghost" onclick="bulkUpgradeUsers()">Upgrade</button>
+      <button class="btn btn-sm btn-ghost" onclick="bulkBlockUsers()">Block</button>
+      <button class="btn btn-sm" onclick="clearBulkUsers()" style="background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--sub);">Clear</button>
+    </div>
+
+    <!-- Search + Filter + Sort -->
+    <div style="display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap;">
+      <div style="flex:1;min-width:180px;position:relative;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--sub);pointer-events:none"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="userSearchInput" placeholder="Search by name or email..." oninput="filterUsers()" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px 10px 36px;color:#fff;font-size:13px;outline:none;font-family:'Inter',sans-serif;">
+      </div>
+      <div style="display:flex;gap:5px;">
+        <button class="filter-btn active" onclick="setUserFilter('all',this)" data-filter="all" style="background:var(--card2);color:#fff;border:1px solid var(--border);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer;">All</button>
+        <button class="filter-btn" onclick="setUserFilter('active',this)" data-filter="active" style="background:var(--card);color:var(--sub);border:1px solid var(--border);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer;">Active</button>
+        <button class="filter-btn" onclick="setUserFilter('pending',this)" data-filter="pending" style="background:var(--card);color:var(--sub);border:1px solid var(--border);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer;">Pending</button>
+        <button class="filter-btn" onclick="setUserFilter('premium',this)" data-filter="premium" style="background:var(--card);color:var(--sub);border:1px solid var(--border);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer;">Premium</button>
+        <button class="filter-btn" onclick="setUserFilter('blocked',this)" data-filter="blocked" style="background:var(--card);color:var(--sub);border:1px solid var(--border);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer;">Blocked</button>
+      </div>
+      <div style="position:relative;">
+        <button onclick="toggleUserSort(event)" style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;font-family:'Inter',sans-serif;">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="width:13px;height:13px"><path d="M2 4h12M4 8h8M6 12h4"/></svg>
+          <span id="sortLabel">Name A-Z</span>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px"><path d="M4 6l4 4 4-4"/></svg>
+        </button>
+        <div id="sortMenu" style="display:none;position:absolute;right:0;top:calc(100% + 6px);background:var(--card2);border:1px solid var(--border);border-radius:10px;overflow:hidden;z-index:100;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,.5);">
+          <div onclick="sortUsers('name-asc',this)" style="padding:10px 14px;font-size:13px;color:var(--text);cursor:pointer;border-bottom:1px solid var(--border);">Name A → Z</div>
+          <div onclick="sortUsers('name-desc',this)" style="padding:10px 14px;font-size:13px;color:var(--text);cursor:pointer;border-bottom:1px solid var(--border);">Name Z → A</div>
+          <div onclick="sortUsers('email-asc',this)" style="padding:10px 14px;font-size:13px;color:var(--text);cursor:pointer;border-bottom:1px solid var(--border);">Email A → Z</div>
+          <div onclick="sortUsers('email-desc',this)" style="padding:10px 14px;font-size:13px;color:var(--text);cursor:pointer;border-bottom:1px solid var(--border);">Email Z → A</div>
+          <div onclick="sortUsers('date-new',this)" style="padding:10px 14px;font-size:13px;color:var(--text);cursor:pointer;border-bottom:1px solid var(--border);">Newest First</div>
+          <div onclick="sortUsers('date-old',this)" style="padding:10px 14px;font-size:13px;color:var(--text);cursor:pointer;border-bottom:1px solid var(--border);">Oldest First</div>
+          <div onclick="sortUsers('shipments-asc',this)" style="padding:10px 14px;font-size:13px;color:var(--text);cursor:pointer;border-bottom:1px solid var(--border);">Shipments ↑</div>
+          <div onclick="sortUsers('shipments-desc',this)" style="padding:10px 14px;font-size:13px;color:var(--text);cursor:pointer;">Shipments ↓</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users Table -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border);">
+            <th style="padding:10px 14px;font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;width:40px;">
+              <input type="checkbox" id="selectAllUsers" onchange="toggleUserSelectAll()" style="accent-color:var(--red);cursor:pointer;">
+            </th>
+            <th style="padding:10px 14px;font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;">User</th>
+            <th style="padding:10px 14px;font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;">Email</th>
+            <th style="padding:10px 14px;font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;">Role</th>
+            <th style="padding:10px 14px;font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;">Status</th>
+            <th style="padding:10px 14px;font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;text-align:center;">Ships</th>
+            <th style="padding:10px 14px;font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;">Last Active</th>
+            <th style="padding:10px 14px;font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody"><tr><td colspan="8" style="padding:40px;text-align:center;color:var(--sub);font-size:14px;">Loading users...</td></tr></tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding:0 4px;">
+      <span style="font-size:12px;color:var(--sub);" id="uPageInfo">Showing 1-10 of 24 users</span>
+      <div style="display:flex;gap:5px;align-items:center;">
+        <button onclick="goToUserPage(currentUserPage - 1)" id="uPrevBtn" style="background:var(--card);border:1px solid var(--border);border-radius:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:var(--sub);cursor:pointer;font-size:15px;line-height:1;">&#8249;</button>
+        <div id="uPageNums" style="display:flex;gap:4px;"></div>
+        <button onclick="goToUserPage(currentUserPage + 1)" id="uNextBtn" style="background:var(--card);border:1px solid var(--border);border-radius:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:var(--sub);cursor:pointer;font-size:15px;line-height:1;">&#8250;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- USER MODALS -->
+  <div id="userModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:900;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;width:100%;max-width:440px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.5);">
+      <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+        <h3 id="userModalTitle" style="font-size:16px;font-weight:800;color:#fff;">Add User</h3>
+        <button onclick="closeUserModal()" style="background:none;border:none;color:var(--sub);cursor:pointer;font-size:20px;line-height:1;">&#215;</button>
+      </div>
+      <div style="padding:20px 24px;">
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:12px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Full Name</label>
+          <input type="text" id="userNameInput" placeholder="e.g. Jane Smith" style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:#fff;font-size:14px;outline:none;font-family:'Inter',sans-serif;box-sizing:border-box;">
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:12px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Email Address</label>
+          <input type="email" id="userEmailInput" placeholder="e.g. jane@company.co.uk" style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:#fff;font-size:14px;outline:none;font-family:'Inter',sans-serif;box-sizing:border-box;">
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:12px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Role</label>
+          <div style="display:flex;gap:8px;">
+            <button class="role-sel-btn active" onclick="selectUserRole(this,'admin')" style="flex:1;padding:10px;background:var(--card2);border:1px solid var(--border);border-radius:10px;color:var(--sub);font-size:13px;font-weight:600;cursor:pointer;">Admin</button>
+            <button class="role-sel-btn" onclick="selectUserRole(this,'business')" style="flex:1;padding:10px;background:var(--card2);border:1px solid var(--border);border-radius:10px;color:var(--sub);font-size:13px;font-weight:600;cursor:pointer;">Business</button>
+            <button class="role-sel-btn" onclick="selectUserRole(this,'user')" style="flex:1;padding:10px;background:var(--card2);border:1px solid var(--border);border-radius:10px;color:var(--sub);font-size:13px;font-weight:600;cursor:pointer;">User</button>
+          </div>
+        </div>
+        <div id="userEditId" style="display:none;"></div>
+      </div>
+      <div style="padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;">
+        <button onclick="closeUserModal()" style="padding:10px 20px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--sub);font-size:14px;font-weight:600;cursor:pointer;">Cancel</button>
+        <button onclick="confirmUserAdd()" id="userConfirmBtn" style="padding:10px 20px;background:var(--red);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;">Add User</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="blockUserModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:900;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:var(--card);border:1px solid rgba(239,68,68,.3);border-radius:16px;width:100%;max-width:400px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.5);">
+      <div style="padding:20px 24px;border-bottom:1px solid var(--border);">
+        <h3 style="font-size:16px;font-weight:800;color:#ef4444;">Block User</h3>
+        <p style="font-size:13px;color:var(--sub);margin-top:8px;">Are you sure you want to block this user? They will lose access until unblocked.</p>
+        <div id="blockUserIdVal" style="display:none;"></div>
+      </div>
+      <div style="padding:16px 24px;display:flex;gap:10px;justify-content:flex-end;">
+        <button onclick="closeBlockUserModal()" style="padding:10px 20px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--sub);font-size:14px;font-weight:600;cursor:pointer;">Cancel</button>
+        <button onclick="confirmBlockUser()" style="padding:10px 20px;background:#ef4444;border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;">Block User</button>
+      </div>
+    </div>
+  </div>
+
 <!-- ===== ADMIN MANUAL ===== -->
 <div class="panel" id="panel-manual">
   <div class="section-hdr"><div><h2>Admin Manual</h2><p>Complete guide to the Airpak Express Admin Portal</p></div></div>
@@ -2245,6 +2426,99 @@ function openClientEdit(id) {
 }
 
 // Make createParcel work from parcel-create panel
+
+// ===== USER MANAGEMENT =====
+var allUsers = [
+  {id:1,name:'Sarah Chen',email:'sarah@globalship.com',role:'admin',status:'active',premium:true,ships:47,lastActive:'2 min ago'},
+  {id:2,name:'James Wilson',email:'james@company.co.uk',role:'business',status:'active',premium:true,ships:23,lastActive:'5 min ago'},
+  {id:3,name:'Maria Garcia',email:'maria@expresslog.com',role:'user',status:'active',premium:false,ships:8,lastActive:'1 hour ago'},
+  {id:4,name:'Ahmed Hassan',email:'ahmed@tradepoint.io',role:'business',status:'active',premium:true,ships:31,lastActive:'3 hours ago'},
+  {id:5,name:'Emma Thompson',email:'emma.t@retailplus.co.uk',role:'user',status:'active',premium:false,ships:5,lastActive:'Yesterday'},
+  {id:6,name:'Raj Patel',email:'raj@supplychain.net',role:'business',status:'pending',premium:false,ships:0,lastActive:'Never'},
+  {id:7,name:'Sophie Williams',email:'sophie@designstudio.co',role:'user',status:'active',premium:true,ships:19,lastActive:'10 min ago'},
+  {id:8,name:'David Kim',email:'david@electronics.ltd',role:'user',status:'blocked',premium:false,ships:2,lastActive:'3 days ago'},
+  {id:9,name:'Lisa Brown',email:'lisa.b@medicore.com',role:'business',status:'active',premium:true,ships:15,lastActive:'30 min ago'},
+  {id:10,name:"Tom O'Brien",email:'t.obrien@airpak-express.com',role:'admin',status:'active',premium:true,ships:62,lastActive:'1 min ago'},
+  {id:11,name:'Anna Kowalski',email:'anna.k@eurotrade.eu',role:'user',status:'pending',premium:false,ships:0,lastActive:'Never'},
+  {id:12,name:'Chen Wei',email:'chen.w@asiapacific.com',role:'business',status:'active',premium:true,ships:28,lastActive:'2 hours ago'},
+  {id:13,name:'Mark Johnson',email:'mark.j@warehouse.co',role:'user',status:'active',premium:false,ships:11,lastActive:'1 day ago'},
+  {id:14,name:'Priya Sharma',email:'priya@fintech.io',role:'business',status:'premium',premium:true,ships:44,lastActive:'4 hours ago'},
+  {id:15,name:'John Smith',email:'j.smith@retail.co.uk',role:'user',status:'active',premium:false,ships:7,lastActive:'2 days ago'},
+  {id:16,name:'Rachel Green',email:'rachel@beautybrand.com',role:'user',status:'blocked',premium:false,ships:1,lastActive:'1 week ago'},
+  {id:17,name:'Michael Brown',email:'m.brown@techfirm.io',role:'business',status:'active',premium:true,ships:36,lastActive:'15 min ago'},
+  {id:18,name:'Nina Volkov',email:'nina.v@fashion.co.uk',role:'user',status:'pending',premium:false,ships:0,lastActive:'Never'},
+  {id:19,name:'Carlos Rivera',email:'c.rivera@importers.mx',role:'business',status:'active',premium:true,ships:21,lastActive:'6 hours ago'},
+  {id:20,name:'Yuki Tanaka',email:'yuki.t@logistics.jp',role:'user',status:'active',premium:true,ships:14,lastActive:'3 hours ago'},
+  {id:21,name:'Oliver Smith',email:'o.smith@startup.io',role:'user',status:'pending',premium:false,ships:0,lastActive:'Never'},
+  {id:22,name:'Patricia Lee',email:'p.lee@consultancy.com',role:'business',status:'active',premium:true,ships:29,lastActive:'1 hour ago'},
+  {id:23,name:'Kevin Walsh',email:'kevin.w@distribution.ie',role:'user',status:'active',premium:false,ships:9,lastActive:'Yesterday'},
+  {id:24,name:'Fiona Murray',email:'f.murray@medical.co.uk',role:'admin',status:'active',premium:true,ships:55,lastActive:'30 min ago'}
+];
+var currentUserPage=1,usersPerPage=10,currentUserFilter='all',currentUserSort='name-asc',selectedUserIds=[];
+function getUserInitials(n){return n.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);}
+function getUserColor(id){var c=['#CD2727','#2563eb','#7c3aed','#0d9488','#d97706','#db2777','#059669'];return c[id%c.length];}
+function getRoleLabel(r){if(r==='admin')return'<span style="background:rgba(205,39,39,.2);color:#ff6b6b;border:1px solid rgba(205,39,39,.3);border-radius:8px;padding:3px 10px;font-size:11px;font-weight:700;">Admin</span>';if(r==='business')return'<span style="background:rgba(37,99,235,.2);color:#60a5fa;border:1px solid rgba(37,99,235,.3);border-radius:8px;padding:3px 10px;font-size:11px;font-weight:700;">Business</span>';return'<span style="background:rgba(255,255,255,.06);color:rgba(255,255,255,.4);border:1px solid var(--border);border-radius:8px;padding:3px 10px;font-size:11px;font-weight:700;">User</span>';}
+function getStatusLabel(s){if(s==='active')return'<span style="background:rgba(74,222,128,.15);color:#4ade80;border-radius:8px;padding:3px 10px;font-size:11px;font-weight:700;">● Active</span>';if(s==='pending')return'<span style="background:rgba(251,191,36,.15);color:#fbbf24;border-radius:8px;padding:3px 10px;font-size:11px;font-weight:700;">○ Pending</span>';if(s==='blocked')return'<span style="background:rgba(239,68,68,.15);color:#ef4444;border-radius:8px;padding:3px 10px;font-size:11px;font-weight:700;">✕ Blocked</span>';if(s==='premium')return'<span style="background:rgba(167,139,250,.15);color:#a78bfa;border-radius:8px;padding:3px 10px;font-size:11px;font-weight:700;">★ Premium</span>';return'<span style="color:var(--sub);font-size:11px;">'+s+'</span>';}
+
+function renderUsers(){
+  var f=allUsers.filter(function(u){if(currentUserFilter==='all')return true;if(currentUserFilter==='active')return u.status==='active';if(currentUserFilter==='pending')return u.status==='pending';if(currentUserFilter==='premium')return u.premium;if(currentUserFilter==='blocked')return u.status==='blocked';return true;});
+  var s=document.getElementById('userSearchInput').value.toLowerCase();
+  if(s)f=f.filter(function(u){return u.name.toLowerCase().includes(s)||u.email.toLowerCase().includes(s);});
+  f.sort(function(a,b){if(currentUserSort==='name-asc')return a.name.localeCompare(b.name);if(currentUserSort==='name-desc')return b.name.localeCompare(a.name);if(currentUserSort==='email-asc')return a.email.localeCompare(b.email);if(currentUserSort==='email-desc')return b.email.localeCompare(a.email);if(currentUserSort==='date-new')return b.id-a.id;if(currentUserSort==='date-old')return a.id-b.id;if(currentUserSort==='shipments-asc')return a.ships-b.ships;if(currentUserSort==='shipments-desc')return b.ships-a.ships;return 0;});
+  var tp=Math.ceil(f.length/usersPerPage),st=(currentUserPage-1)*usersPerPage,pg=f.slice(st,st+usersPerPage);
+  var h='';
+  pg.forEach(function(u){var c=selectedUserIds.indexOf(u.id)!==-1?'checked':'';var init=getUserInitials(u.name);var col=getUserColor(u.id);var ub=u.status!=='blocked'?'<button onclick="openBlockUserModal('+u.id+')" style="padding:5px 10px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);border-radius:7px;color:#ef4444;font-size:11px;font-weight:600;cursor:pointer;">Block</button>':'<button onclick="unblockUser('+u.id+')" style="padding:5px 10px;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.2);border-radius:7px;color:#4ade80;font-size:11px;font-weight:600;cursor:pointer;">Unblock</button>';h+='<tr style="border-bottom:1px solid var(--border);" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background='transparent'">'+
+    '<td style="padding:10px 14px;"><input type="checkbox" value="'+u.id+'" '+c+' onchange="toggleUserCheckbox('+u.id+')" style="accent-color:var(--red);cursor:pointer;transform:scale(1.1);"></td>'+
+    '<td style="padding:10px 14px;"><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,'+col+',#ff6b6b);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">'+init+'</div><span style="font-size:13px;font-weight:600;color:#fff;">'+u.name+'</span></div></td>'+
+    '<td style="padding:10px 14px;font-size:12px;color:var(--sub);">'+u.email+'</td>'+
+    '<td style="padding:10px 14px;">'+getRoleLabel(u.role)+'</td>'+
+    '<td style="padding:10px 14px;">'+getStatusLabel(u.status)+'</td>'+
+    '<td style="padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:#fff;">'+u.ships+'</td>'+
+    '<td style="padding:10px 14px;font-size:12px;color:var(--sub);">'+u.lastActive+'</td>'+
+    '<td style="padding:10px 14px;"><div style="display:flex;gap:6px;">'+
+    '<button onclick="openAddUserModal('+u.id+')" style="padding:5px 10px;background:var(--card2);border:1px solid var(--border);border-radius:7px;color:var(--sub);font-size:11px;font-weight:600;cursor:pointer;">Edit</button>'+
+    ub+
+    '<button onclick="verifyUser('+u.id+')" style="padding:5px 10px;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.2);border-radius:7px;color:#4ade80;font-size:11px;font-weight:600;cursor:pointer;">Verify</button>'+
+    '</div></td></tr>';});
+  if(!h)h='<tr><td colspan="8" style="padding:40px;text-align:center;color:var(--sub);font-size:14px;">No users found</td></tr>';
+  document.getElementById('usersTableBody').innerHTML=h;
+  document.getElementById('uPageInfo').textContent='Showing '+(st+1)+'-'+Math.min(st+usersPerPage,f.length)+' of '+f.length+' users';
+  var hp='';for(var i=1;i<=tp;i++){var act=i===currentUserPage?'background:var(--red);color:#fff;border-color:var(--red)':'background:var(--card);color:var(--sub)';hp+='<button onclick="goToUserPage('+i+')" style="width:30px;height:30px;border-radius:8px;border:1px solid var(--border);font-size:12px;font-weight:600;cursor:pointer;'+act+'">'+i+'</button>';}
+  document.getElementById('uPageNums').innerHTML=hp;
+  document.getElementById('uPrevBtn').style.opacity=currentUserPage<=1?'0.3':'1';
+  document.getElementById('uNextBtn').style.opacity=currentUserPage>=tp?'0.3':'1';
+  document.getElementById('uStatTotal').textContent=allUsers.length;
+  document.getElementById('uStatActive').textContent=allUsers.filter(function(u){return u.status==='active'}).length;
+  document.getElementById('uStatPending').textContent=allUsers.filter(function(u){return u.status==='pending'}).length;
+  document.getElementById('uStatPremium').textContent=allUsers.filter(function(u){return u.premium}).length;
+  document.getElementById('uStatBlocked').textContent=allUsers.filter(function(u){return u.status==='blocked'}).length;
+}
+function goToUserPage(n){var f=allUsers.filter(function(u){if(currentUserFilter==='all')return true;if(currentUserFilter==='active')return u.status==='active';if(currentUserFilter==='pending')return u.status==='pending';if(currentUserFilter==='premium')return u.premium;if(currentUserFilter==='blocked')return u.status==='blocked';return true;});var tp=Math.ceil(f.length/usersPerPage);if(n<1||n>tp)return;currentUserPage=n;renderUsers();}
+function setUserFilter(f,btn){currentUserFilter=f;currentUserPage=1;document.querySelectorAll('.filter-btn').forEach(function(b){b.style.background='var(--card)';b.style.color='var(--sub)';});btn.style.background='var(--card2)';btn.style.color='#fff';renderUsers();}
+function sortUsers(key,el){currentUserSort=key;document.getElementById('sortMenu').style.display='none';var labels={'name-asc':'Name A-Z','name-desc':'Name Z-A','email-asc':'Email A-Z','email-desc':'Email Z-A','date-new':'Newest First','date-old':'Oldest First','shipments-asc':'Shipments ↑','shipments-desc':'Shipments ↓'};document.getElementById('sortLabel').textContent=labels[key]||key;renderUsers();}
+function toggleUserSort(e){e.stopPropagation();var m=document.getElementById('sortMenu');m.style.display=m.style.display==='none'?'block':'none';}
+document.addEventListener('click',function(){try{document.getElementById('sortMenu').style.display='none';}catch(e){}});
+function filterUsers(){currentUserPage=1;renderUsers();}
+function toggleUserSelectAll(){var cb=document.getElementById('selectAllUsers');document.querySelectorAll('#usersTableBody input[type="checkbox"]').forEach(function(c){c.checked=cb.checked;});selectedUserIds=cb.checked?allUsers.map(function(u){return u.id;}):[];updateBulkBar();}
+function toggleUserCheckbox(id){var i=selectedUserIds.indexOf(id);if(i!==-1)selectedUserIds.splice(i,1);else selectedUserIds.push(id);updateBulkBar();}
+function updateBulkBar(){var b=document.getElementById('bulkBar');if(selectedUserIds.length>0){b.style.display='flex';document.getElementById('bulkCount').textContent=selectedUserIds.length;}else{b.style.display='none';}}
+function bulkVerifyUsers(){selectedUserIds.forEach(function(id){var u=allUsers.find(function(x){return x.id===id;});if(u&&u.status==='pending')u.status='active';});toast('Bulk verify: '+selectedUserIds.length+' users verified','<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>');selectedUserIds=[];updateBulkBar();renderUsers();}
+function bulkUpgradeUsers(){selectedUserIds.forEach(function(id){var u=allUsers.find(function(x){return x.id===id;});if(u){u.premium=true;if(u.status==='pending')u.status='active';}});toast('Bulk upgrade: '+selectedUserIds.length+' users upgraded','<svg viewBox="0 0 16 16" fill="currentColor"><polygon points="8 1 10 6 15 6 11 10 13 15 8 12 3 15 5 10 1 6 6 6"/></svg>');selectedUserIds=[];updateBulkBar();renderUsers();}
+function bulkBlockUsers(){selectedUserIds.forEach(function(id){var u=allUsers.find(function(x){return x.id===id;});if(u)u.status='blocked';});toast('Bulk block: '+selectedUserIds.length+' users blocked','<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="5"/><path d="M5 5l6 6M11 5l-6 6"/></svg>');selectedUserIds=[];updateBulkBar();renderUsers();}
+function clearBulkUsers(){selectedUserIds=[];document.querySelectorAll('#usersTableBody input[type="checkbox"]').forEach(function(c){c.checked=false;});document.getElementById('selectAllUsers').checked=false;updateBulkBar();}
+function openAddUserModal(id){var m=document.getElementById('userModal'),t=document.getElementById('userModalTitle'),b=document.getElementById('userConfirmBtn'),e=document.getElementById('userEditId');if(id){var u=allUsers.find(function(x){return x.id===id;});if(u){t.textContent='Edit User';document.getElementById('userNameInput').value=u.name;document.getElementById('userEmailInput').value=u.email;e.textContent=id;e.style.display='block';b.textContent='Save Changes';b.setAttribute('onclick','confirmUserEdit()');document.querySelectorAll('.role-sel-btn').forEach(function(b){b.style.background='var(--card2)';b.style.color='var(--sub)';});document.querySelectorAll('.role-sel-btn').forEach(function(b){if(b.textContent.trim().toLowerCase()===u.role){b.style.background='var(--red)';b.style.color='#fff';}});selectedRole=u.role;}}else{t.textContent='Add User';document.getElementById('userNameInput').value='';document.getElementById('userEmailInput').value='';e.style.display='none';b.textContent='Add User';b.setAttribute('onclick','confirmUserAdd()');document.querySelectorAll('.role-sel-btn').forEach(function(b){b.style.background='var(--card2)';b.style.color='var(--sub)';});selectedRole='user';var btns=document.querySelectorAll('.role-sel-btn');for(var i=0;i<btns.length;i++){if(btns[i].getAttribute('onclick').indexOf("'user'")!==-1){btns[i].style.background='var(--red)';btns[i].style.color='#fff';}}}m.style.display='flex';}
+function closeUserModal(){document.getElementById('userModal').style.display='none';}
+var selectedRole='user';
+function selectUserRole(btn,role){selectedRole=role;document.querySelectorAll('.role-sel-btn').forEach(function(b){b.style.background='var(--card2)';b.style.color='var(--sub)';});btn.style.background='var(--red)';btn.style.color='#fff';}
+function confirmUserAdd(){var name=document.getElementById('userNameInput').value.trim(),email=document.getElementById('userEmailInput').value.trim();if(!name||!email){toast('Please fill in all fields','<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="5"/><path d="M8 5v3M8 10v.5"/></svg>');return;}var newId=Math.max.apply(null,allUsers.map(function(u){return u.id;}))+1;allUsers.push({id:newId,name:name,email:email,role:selectedRole,status:'pending',premium:false,ships:0,lastActive:'Just now'});toast('User added: '+name,'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>');if(typeof addAuditEntry==='function')addAuditEntry('User Created','New user: '+name+' ('+email+')','admin');closeUserModal();renderUsers();}
+function confirmUserEdit(){var id=parseInt(document.getElementById('userEditId').textContent),u=allUsers.find(function(x){return x.id===id;});if(!u)return;var name=document.getElementById('userNameInput').value.trim(),email=document.getElementById('userEmailInput').value.trim();if(!name||!email)return;var oldName=u.name;u.name=name;u.email=email;u.role=selectedRole;toast('User updated: '+name,'<svg viewBox="0 0 16 16" fill="currentColor"><path d="M11 2l3 3-8 8H3v-3l8-8z"/></svg>');if(typeof addAuditEntry==='function')addAuditEntry('User Updated',oldName+' -> '+name,'admin');closeUserModal();renderUsers();}
+function openBlockUserModal(id){document.getElementById('blockUserIdVal').textContent=id;document.getElementById('blockUserModal').style.display='flex';}
+function closeBlockUserModal(){document.getElementById('blockUserModal').style.display='none';}
+function confirmBlockUser(){var id=parseInt(document.getElementById('blockUserIdVal').textContent),u=allUsers.find(function(x){return x.id===id;});if(u){u.status='blocked';toast('User blocked: '+u.name,'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="5"/><path d="M5 5l6 6M11 5l-6 6"/></svg>');if(typeof addAuditEntry==='function')addAuditEntry('User Blocked',u.name+' ('+u.email+')','admin');}closeBlockUserModal();renderUsers();}
+function unblockUser(id){var u=allUsers.find(function(x){return x.id===id;});if(u){u.status='active';toast('User unblocked: '+u.name,'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>');if(typeof addAuditEntry==='function')addAuditEntry('User Unblocked',u.name,'admin');}renderUsers();}
+function verifyUser(id){var u=allUsers.find(function(x){return x.id===id;});if(u){u.status='active';toast('User verified: '+u.name,'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l4 4 6-7"/></svg>');if(typeof addAuditEntry==='function')addAuditEntry('User Verified',u.name,'admin');}renderUsers();}
+function exportUsersCSV(){var rows=[['Name','Email','Role','Status','Premium','Shipments','Last Active']];allUsers.forEach(function(u){rows.push([u.name,u.email,u.role,u.status,u.premium?'Yes':'No',u.ships,u.lastActive]);});var csv=rows.map(function(r){return r.join(',');}).join('\n');var blob=new Blob([csv],{type:'text/csv'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='airpak-users-'+new Date().toISOString().slice(0,10)+'.csv';a.click();toast('Users exported to CSV','<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>');}
+document.addEventListener('DOMContentLoaded',function(){renderUsers();});
 
 </script>
 

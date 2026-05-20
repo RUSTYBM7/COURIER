@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0a0a12">
+  <title>404 — Page Not Found | Airpak Express</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23CD2727'/%3E%3Cpath d='M8 16h16M16 8v16' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Sarabun:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:#0a0a12;color:#dde0f0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
+    .logo{font-family:'Sarabun',sans-serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:32px;display:flex;align-items:center;gap:10px}
+    .logo svg{width:32px;height:32px}
+    .code{font-size:clamp(80px,20vw,120px);font-weight:900;color:#CD2727;line-height:1;margin-bottom:16px;font-family:'Sarabun',sans-serif}
+    .title{font-size:clamp(20px,4vw,28px);font-weight:800;color:#fff;margin-bottom:8px}
+    .sub{font-size:15px;color:rgba(255,255,255,.45);max-width:400px;margin-bottom:32px}
+    .btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#CD2727,#9b1a1a);color:#fff;border:none;border-radius:12px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;font-family:'Inter',sans-serif;box-shadow:0 4px 16px rgba(205,39,39,.3);transition:all .2s}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(205,39,39,.4)}
+    .btn:active{transform:scale(.98)}
+  </style>
+</head>
+<body>
+  <div class="logo">
+    <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#CD2727"/><path d="M8 16h16M16 8v16" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>
+    Airpak Express
+  </div>
+  <div class="code">404</div>
+  <div class="title">Page not found</div>
+  <div class="sub" id="errMsg">The page or tracking code you're looking for doesn't exist.</div>
+  <div style="margin-top:8px">
+    <a href="dashboard.html" class="btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Go to Dashboard
+    </a>
+  </div>
+  <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var code = params.get('q') || params.get('code');
+      if (code) document.getElementById('errMsg').textContent = 'Tracking code "' + code + '" not found. Check your code and try again.';
+    })();
+  </script>
+</body>
+</html>

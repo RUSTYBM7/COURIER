@@ -1,567 +1,599 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#CD2727">
-  <meta name="color-scheme" content="light">
-  <meta name="description" content="Track your Airpak Express shipment in real-time.">
-  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0a0a12">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Track your Airpak Express shipment in real-time with live map and detailed parcel status.">
   <link rel="manifest" href="/manifest.json">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23CD2727'/%3E%3Cpath d='M8 16h16M16 8v16' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23CD2727'/%3E%3Cpath d='M8 16h16M16 8v16' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Sarabun:wght@600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="css/apple-tokens.css">
-  <link rel="stylesheet" href="css/glass-system.css">
-  <link rel="stylesheet" href="css/animations.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/brand-airpak.css">
   <script src="/sw-advanced.js" defer></script>
   <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+/* ===== TOKENS ===== */
 :root{
   --red:#CD2727;--red-d:#9b1a1a;--red-l:#ff6b6b;
-  --apple-label:#1C1C1E;--apple-label-secondary:#636366;--apple-label-tertiary:#8E8E93;
-  --apple-bg:#FFFFFF;--apple-bg-secondary:#F2F2F7;--apple-bg-grouped:#F2F2F7;
-  --apple-separator:rgba(60,60,67,.12);--apple-fill:rgba(120,120,128,.12);
-  --apple-blue:#007AFF;--apple-green:#34C759;--apple-orange:#FF9500;--apple-red:#FF3B30;
-  --apple-indigo:#5856D6;--apple-purple:#AF52DE;--apple-teal:#30D158;
-  --nav-height:60px;--radius:12px;--radius-lg:16px;--radius-xl:20px;
-  --font-main:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
-  --font-display:'Sarabun','Inter',sans-serif;
+  --dark:#0a0a12;--dark2:#12121f;--dark3:#1a1a2e;
+  --card:#16162a;--card2:#1e1e32;--card3:#232338;
+  --border:rgba(255,255,255,.07);
+  --text:#dde0f0;--sub:rgba(255,255,255,.45);
+  --glass:rgba(255,255,255,.06);--glass2:rgba(255,255,255,.10);
+  --glass-border:rgba(255,255,255,.12);
+  --nav-h:64px;--bot-h:72px;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --fdisplay:'Sarabun',sans-serif;
 }
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{font-family:var(--font-main);background:#F2F2F7;color:var(--apple-label);min-height:100vh;overflow-x:hidden}
 
-/* ===== MESH GRADIENT BACKGROUND ===== */
-.bg-canvas{position:fixed;top:0;left:0;right:0;bottom:0;z-index:0;overflow:hidden;background:linear-gradient(135deg,#F8F8FC 0%,#EEF0F5 40%,#F5F0F8 70%,#F0F4FA 100%)}
-.bg-blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.45;animation:floatB 22s ease-in-out infinite}
-.bg-blob-1{width:600px;height:600px;top:-200px;right:-100px;background:radial-gradient(circle,rgba(205,39,39,.12) 0%,transparent 70%);animation-delay:0s}
-.bg-blob-2{width:500px;height:500px;bottom:-150px;left:-150px;background:radial-gradient(circle,rgba(0,122,255,.1) 0%,transparent 70%);animation-delay:-7s}
-.bg-blob-3{width:400px;height:400px;top:40%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(52,199,89,.08) 0%,transparent 70%);animation-delay:-14s}
-@keyframes floatB{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(25px,-15px) scale(1.04)}50%{transform:translate(-15px,25px) scale(.96)}75%{transform:translate(15px,10px) scale(1.02)}}
-.bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(205,39,39,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(205,39,39,.03) 1px,transparent 1px);background-size:40px 40px}
+/* ===== RESET ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font);background:var(--dark);color:var(--text);
+  min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
 
-/* === TOP NAV === */
-.top-nav{position:fixed;top:0;left:0;right:0;height:var(--nav-height);background:rgba(255,255,255,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--apple-separator);z-index:500;display:flex;align-items:center;padding:0 16px;gap:12px}
-.nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--apple-label);font-family:var(--font-display);font-weight:800;font-size:18px;flex-shrink:0}
-.nav-brand svg{width:32px;height:32px}
-.nav-title{font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--apple-label)}
+/* ===== PRE-LOADER (ATOM STYLE) ===== */
+.ap-preloader{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:linear-gradient(135deg,#0a0a12,#120a0a,#0a0a12);
+  z-index:99999;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  transition:opacity .8s,visibility .8s;
+}
+.ap-preloader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.ap-atom-wrap{position:relative;width:80px;height:80px;margin-bottom:32px}
+.ap-atom-nucleus{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:16px;height:16px;border-radius:50%;
+  background:#CD2727;box-shadow:0 0 20px rgba(205,39,39,.8),0 0 40px rgba(205,39,39,.4);
+}
+.ap-atom-orbit{
+  position:absolute;top:50%;left:50%;
+  border-radius:50%;
+  border:1.5px solid rgba(205,39,39,.25);
+  transform:translate(-50%,-50%);
+}
+.ap-orbit-1{width:80px;height:80px;animation:spinOrbit 3s linear infinite}
+.ap-orbit-2{width:60px;height:60px;animation:spinOrbit 4s linear infinite reverse;transform:translate(-50%,-50%) rotateX(60deg)}
+.ap-orbit-3{width:90px;height:40px;animation:spinOrbit 2.5s linear infinite;transform:translate(-50%,-50%) rotateX(30deg)}
+.ap-atom-elec{
+  position:absolute;width:8px;height:8px;border-radius:50%;
+  background:rgba(255,80,80,.9);box-shadow:0 0 6px rgba(255,80,80,.6);
+  top:0;left:50%;transform:translateX(-50%);
+}
+.ap-elec-2{top:auto;bottom:0}
+.ap-elec-3{top:50%;left:auto;right:0;transform:translateY(-50%)}
+@keyframes spinOrbit{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes spinOrbit2{from{transform:translate(-50%,-50%) rotateX(60deg) rotate(0deg)}to{transform:translate(-50%,-50%) rotateX(60deg) rotate(360deg)}}
+@keyframes spinOrbit3{from{transform:translate(-50%,-50%) rotateX(30deg) rotate(0deg)}to{transform:translate(-50%,-50%) rotateX(30deg) rotate(360deg)}}
+.ap-preloader-title{font-family:var(--fdisplay);font-size:22px;font-weight:800;color:#fff;margin-bottom:6px;letter-spacing:.5px}
+.ap-preloader-sub{font-family:var(--font);font-size:12px;color:rgba(255,255,255,.45);margin-bottom:32px;letter-spacing:.3px}
+.ap-preloader-bar-wrap{width:200px;height:3px;background:rgba(205,39,39,.15);border-radius:3px;overflow:hidden;margin-bottom:20px}
+.ap-preloader-bar{height:100%;background:linear-gradient(90deg,#CD2727,#ff4444);border-radius:3px;animation:orbBar 1.8s ease-in-out infinite;width:0}
+@keyframes orbBar{0%{width:0}50%{width:70%}100%{width:100%}}
+.ap-preloader-dots{display:flex;gap:8px}
+.ap-preloader-dot{width:7px;height:7px;background:rgba(255,255,255,.4);border-radius:50%;animation:preDot 1.2s ease-in-out infinite}
+.ap-preloader-dot:nth-child(2){animation-delay:.2s}.ap-preloader-dot:nth-child(3){animation-delay:.4s}
+@keyframes preDot{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.4)}}
+
+/* ===== TOP NAV ===== */
+.top-nav{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);
+  background:rgba(10,10,18,.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);z-index:500;
+  display:flex;align-items:center;padding:0 16px;gap:10px;
+}
+.nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:#fff;font-family:var(--fdisplay);font-weight:800;font-size:18px;flex-shrink:0}
+.nav-brand svg{width:30px;height:30px}
+.nav-title{font-family:var(--fdisplay);font-size:16px;font-weight:700;color:#fff}
 .nav-spacer{flex:1}
-.nav-btn{width:36px;height:36px;border-radius:50%;background:var(--apple-fill);border:none;display:flex;align-items:center;justify-content:center;color:var(--apple-label);cursor:pointer;transition:all .15s}
-.nav-btn:hover{background:rgba(120,120,128,.2)}
+.nav-btn{width:36px;height:36px;border-radius:50%;background:var(--glass);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;color:var(--sub);cursor:pointer;transition:all .15s}
+.nav-btn:hover{background:var(--glass2);color:#fff}
 .nav-btn:active{transform:scale(.95)}
 .menu-btn{display:none}
 
-/* === MOBILE SIDEBAR === */
-.mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:599;opacity:0;pointer-events:none;transition:opacity .3s}
-.mobile-overlay.active{opacity:1;pointer-events:auto}
-.mobile-sidebar{position:fixed;top:0;left:0;bottom:0;width:300px;background:var(--apple-bg);z-index:600;transform:translateX(-100%);transition:transform .3s ease;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.15)}
-.mobile-sidebar.open{transform:translateX(0)}
-.ms-header{padding:16px 20px;border-bottom:1px solid var(--apple-separator);display:flex;align-items:center;gap:12px}
-.ms-user-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--red-l));display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:800;flex-shrink:0}
-.ms-user-name{font-size:15px;font-weight:700;color:var(--apple-label)}
-.ms-user-email{font-size:12px;color:var(--apple-label-secondary)}
-.ms-section{padding:12px 0}
-.ms-section-label{font-size:11px;font-weight:700;color:var(--apple-label-secondary);text-transform:uppercase;letter-spacing:.5px;padding:0 20px 6px}
-.ms-item{display:flex;align-items:center;gap:12px;padding:12px 20px;color:var(--apple-label);text-decoration:none;font-size:15px;font-weight:500;transition:all .15s;cursor:pointer;border:none;background:none;width:100%;text-align:left}
-.ms-item:hover{background:var(--apple-bg-secondary)}
-.ms-item.active{background:rgba(205,39,39,.08);color:var(--red);font-weight:700}
-.ms-item i,.ms-item svg{width:20px;height:20px;flex-shrink:0;color:var(--apple-label-secondary)}
-.ms-item.active i,.ms-item.active svg{color:var(--red)}
-.ms-item span{flex:1}
-.ms-sep{height:1px;background:var(--apple-separator);margin:8px 20px}
-.ms-signout{color:var(--apple-red)!important}
-.ms-signout i,.ms-signout svg{color:var(--apple-red)!important}
+/* ===== BLACK CANVAS (PRE-SEARCH STATE) ===== */
+.black-canvas{
+  position:fixed;top:var(--nav-h);left:0;right:0;bottom:0;
+  background:var(--dark);z-index:1;
+  display:flex;flex-direction:column;
+}
+.bc-logo{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;opacity:.08;pointer-events:none}
+.bc-logo svg{width:200px;height:200px}
+.bc-center{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);text-align:center;width:100%;padding:0 24px}
+.bc-tagline{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:var(--sub);margin-bottom:12px}
+.bc-heading{font-family:var(--fdisplay);font-size:clamp(24px,5vw,36px);font-weight:800;color:#fff;line-height:1.15;margin-bottom:8px}
+.bc-sub{font-size:13px;color:var(--sub);max-width:300px;margin:0 auto}
+.bc-entries{position:absolute;bottom:calc(var(--bot-h) + 120px);left:0;right:0;display:flex;flex-direction:column;gap:6px;padding:0 24px;align-items:center}
 
-/* === MAIN CONTENT === */
-.main-content{padding-top:var(--nav-height);min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom, 16px));position:relative}
+/* ===== SEARCH BAR — BOTTOM GLASS (THE KEY ELEMENT) ===== */
+.search-bar-wrap{
+  position:fixed;bottom:var(--bot-h);left:0;right:0;
+  padding:16px 20px calc(16px + env(safe-area-inset-bottom, 16px));
+  background:linear-gradient(0deg,rgba(10,10,18,.95) 0%,rgba(10,10,18,.75) 70%,transparent 100%);
+  z-index:400;
+}
+.search-bar{
+  display:flex;gap:10px;align-items:center;
+  background:rgba(255,255,255,.06);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:16px;padding:6px 6px 6px 16px;
+  box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.08);
+}
+.search-input{
+  flex:1;background:transparent;border:none;outline:none;
+  font-size:15px;font-family:var(--font);color:#fff;padding:0;
+}
+.search-input::placeholder{color:rgba(255,255,255,.3)}
+.search-round-btn{
+  width:46px;height:46px;border-radius:12px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--red),var(--red-d));
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  box-shadow:0 4px 16px rgba(205,39,39,.4);flex-shrink:0;
+  transition:all .2s;
+}
+.search-round-btn:hover{transform:scale(1.05);box-shadow:0 6px 20px rgba(205,39,39,.5)}
+.search-round-btn:active{transform:scale(.97)}
 
-/* === TRACKING HERO === */
-.track-hero{padding:20px 20px 16px;background:linear-gradient(135deg,var(--red) 0%,var(--red-d) 100%);color:#fff;position:relative;overflow:hidden}
-.th-bg{position:absolute;top:-40%;right:-20%;width:280px;height:280px;background:radial-gradient(circle,rgba(255,255,255,.08) 0%,transparent 70%);border-radius:50%}
-.th-content{position:relative;z-index:1}
-.th-title{font-family:var(--font-display);font-size:22px;font-weight:800;margin-bottom:2px}
-.th-sub{font-size:13px;opacity:.7}
+/* ===== ERROR STATE ===== */
+.search-error{
+  position:fixed;bottom:calc(var(--bot-h) + 96px);left:20px;right:20px;
+  background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);
+  border-radius:12px;padding:12px 16px;
+  display:none;align-items:center;gap:10px;
+  animation:slideUp .3s ease;
+}
+.search-error.show{display:flex}
+.search-error-icon{width:32px;height:32px;border-radius:50%;background:rgba(239,68,68,.2);display:flex;align-items:center;justify-content:center;color:#ef4444;flex-shrink:0}
+.search-error-text{flex:1}
+.search-error-title{font-size:13px;font-weight:700;color:#fff}
+.search-error-msg{font-size:11px;color:var(--sub);margin-top:2px}
+.search-error-close{background:none;border:none;color:var(--sub);cursor:pointer;padding:4px;font-size:18px;line-height:1}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-/* === SEARCH BOX === */
-.search-section{padding:16px 20px 8px}
-.search-box{display:flex;gap:10px;align-items:center}
-.search-input{flex:1;padding:14px 16px;border:1.5px solid var(--apple-separator);border-radius:var(--radius-lg);font-size:16px;font-family:var(--font-main);color:var(--apple-label);background:var(--apple-bg);box-sizing:border-box;transition:all .2s}
-.search-input:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(205,39,39,.1)}
-.search-btn{padding:14px 20px;background:var(--red);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:6px;font-family:var(--font-main)}
-.search-btn:hover{background:var(--red-d);transform:translateY(-1px)}
-.search-btn:active{transform:translateY(0)}
-
-/* === TRACKING RESULT === */
-.track-result{display:none;margin:12px 20px 16px}
+/* ===== TRACKING RESULT (SHOWS AFTER SEARCH) ===== */
+.track-result{
+  display:none;position:absolute;top:var(--nav-h);left:0;right:0;bottom:0;
+  background:var(--dark);overflow-y:auto;padding-bottom:var(--bot-h);
+  z-index:2;
+}
 .track-result.show{display:block}
-.tr-card{background:rgba(255,255,255,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.8);border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.06)}
-.tr-status-bar{padding:16px 20px;display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,var(--red),var(--red-d));color:#fff}
-.tr-status-icon{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.tr-status-icon i,.tr-status-icon svg{width:20px;height:20px}
+.tr-header{
+  padding:20px 20px 16px;
+  background:linear-gradient(135deg,#0a0a12 0%,#1a0808 50%,#0a0a12 100%);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:10;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+}
+.tr-back{display:flex;align-items:center;gap:10px;cursor:pointer;margin-bottom:16px}
+.tr-back-btn{width:36px;height:36px;border-radius:50%;background:var(--glass);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;color:#fff}
+.tr-back-label{font-size:13px;font-weight:600;color:var(--sub)}
+.tr-status-row{display:flex;align-items:center;gap:14px}
+.tr-status-dot{width:14px;height:14px;border-radius:50%;background:var(--red);box-shadow:0 0 10px rgba(205,39,39,.6);animation:statusPulse 2s ease-in-out infinite}
+@keyframes statusPulse{0%,100%{opacity:1;box-shadow:0 0 10px rgba(205,39,39,.6)}50%{opacity:.7;box-shadow:0 0 20px rgba(205,39,39,.8)}}
 .tr-status-text{flex:1}
-.tr-status-label{font-size:11px;opacity:.7;text-transform:uppercase;letter-spacing:.5px}
-.tr-status-value{font-family:var(--font-display);font-size:18px;font-weight:800}
-.tr-awb-row{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--apple-separator)}
-.tr-awb-label{font-size:12px;color:var(--apple-label-secondary)}
-.tr-awb-value{font-family:var(--font-display);font-size:16px;font-weight:800;color:var(--apple-label)}
-.tr-awb-copy{background:var(--apple-fill);border:none;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;color:var(--apple-label);cursor:pointer;transition:all .15s}
-.tr-awb-copy:hover{background:rgba(120,120,128,.2)}
+.tr-status-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);margin-bottom:2px}
+.tr-status-value{font-family:var(--fdisplay);font-size:20px;font-weight:800;color:#fff}
+.tr-status-eta{text-align:right}
+.tr-status-eta .eta-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);margin-bottom:2px}
+.tr-status-eta .eta-value{font-size:16px;font-weight:800;color:#4ade80}
 
-/* === MAP === */
-.map-section{margin:0;border-radius:0;border:none;height:100vh;position:fixed;top:0;left:0;right:0;bottom:0;width:100%;z-index:10;box-shadow:none;display:none;background:#0a0a12}
+/* ===== AWB CARD ===== */
+.tr-awb-card{
+  margin:16px 20px;
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  overflow:hidden;
+}
+.tr-awb-row{display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border)}
+.tr-awb-left{flex:1}
+.tr-awb-label-text{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);margin-bottom:2px}
+.tr-awb-value-text{font-family:var(--fdisplay);font-size:17px;font-weight:800;color:#fff}
+.tr-copy-btn{
+  padding:8px 14px;border-radius:8px;font-size:12px;font-weight:700;
+  background:var(--glass);border:1px solid var(--glass-border);color:#fff;cursor:pointer;
+  display:flex;align-items:center;gap:5px;transition:all .15s;
+}
+.tr-copy-btn:hover{background:var(--glass2)}
+.tr-copy-btn svg{width:12px;height:12px}
+
+/* ===== FULL MAP SECTION (Toggled by button) ===== */
+.map-section{
+  display:none;position:fixed;top:0;left:0;right:0;bottom:0;
+  background:#0a0a12;z-index:800;
+}
 .map-section.active{display:block}
+.map-ui-top{
+  position:absolute;top:16px;left:16px;right:16px;z-index:801;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.map-close-btn{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.08);backdrop-filter:blur(10px);border:none;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;font-size:20px;z-index:801;transition:all .2s}
+.map-close-btn:hover{background:rgba(255,255,255,.15)}
+.map-live-badge{display:flex;align-items:center;gap:6px;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);border-radius:20px;padding:6px 14px;color:#4ade80;font-size:11px;font-weight:700}
+.map-live-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:#4ade80;animation:statusPulse 1.5s ease-in-out infinite}
 #map{width:100%;height:100%;z-index:1}
-
-/* Full-page dark map UI */
-.map-ui-panel{position:absolute;bottom:0;left:0;right:0;z-index:400;padding:20px;padding-bottom:calc(20px + env(safe-area-inset-bottom, 20px));background:linear-gradient(0deg,rgba(10,10,18,.95) 0%,rgba(10,10,18,.8) 60%,transparent 100%)}
-.map-ui-top{position:absolute;top:16px;left:16px;right:16px;z-index:400;display:flex;align-items:center;justify-content:space-between}
-.map-close-btn{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border:none;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;font-size:20px;z-index:401}
-.map-live-badge{display:flex;align-items:center;gap:6px;background:rgba(52,199,89,.2);border:1px solid rgba(52,199,89,.4);border-radius:20px;padding:6px 14px;color:#34C759;font-size:12px;font-weight:700}
-.map-live-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:#34C759;animation:pulse-dot 1.5s ease-in-out infinite}
-@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.3}}
-.map-route{display:flex;align-items:center;gap:8px;padding:8px 0}
+.map-ui-panel{
+  position:absolute;bottom:0;left:0;right:0;z-index:801;
+  padding:20px;padding-bottom:calc(20px + env(safe-area-inset-bottom, 20px));
+  background:linear-gradient(0deg,rgba(10,10,18,.97) 0%,rgba(10,10,18,.8) 60%,transparent 100%);
+}
+.map-route{display:flex;align-items:center;gap:8px;padding:4px 0}
 .map-from{width:10px;height:10px;border-radius:50%;background:#CD2727;flex-shrink:0}
-.map-line{flex:1;height:2px;background:rgba(255,255,255,.2);position:relative}
+.map-line{flex:1;height:2px;background:rgba(255,255,255,.12);position:relative}
 .map-line::after{content:'';position:absolute;left:0;top:0;width:60%;height:100%;background:#CD2727}
-.map-to{width:10px;height:10px;border-radius:50%;background:#34C759;flex-shrink:0}
+.map-to{width:10px;height:10px;border-radius:50%;background:#4ade80;flex-shrink:0}
 .map-labels{display:flex;justify-content:space-between;margin-top:4px}
-.map-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.7)}
+.map-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.5)}
 .map-info-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:16px}
-.map-info-cell{background:rgba(255,255,255,.08);border-radius:12px;padding:12px;text-align:center}
-.map-info-label{font-size:10px;font-weight:600;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
-.map-info-value{font-size:16px;font-weight:800;color:#fff}
-.map-status-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(205,39,39,.2);border:1px solid rgba(205,39,39,.4);border-radius:20px;padding:8px 16px;font-size:13px;font-weight:700;color:#ff6b6b;margin-top:12px}
-.map-status-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:#CD2727;animation:pulse-dot 1.5s ease-in-out infinite}
+.map-info-cell{background:rgba(255,255,255,.06);border-radius:12px;padding:12px;text-align:center}
+.map-info-label{font-size:10px;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.map-info-value{font-size:15px;font-weight:800;color:#fff}
+.map-status-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(205,39,39,.15);border:1px solid rgba(205,39,39,.3);border-radius:20px;padding:7px 14px;font-size:12px;font-weight:700;color:#ff6b6b;margin-top:12px}
+.map-status-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:#CD2727;animation:statusPulse 1.5s ease-in-out infinite}
 
-/* === TIMELINE === */
-.timeline-section{margin:0 20px 16px}
-.tl-card{background:rgba(255,255,255,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.8);border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.05)}
-.ts-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.ts-title{font-family:var(--font-display);font-size:17px;font-weight:800;color:var(--apple-label)}
-.timeline-list{display:flex;flex-direction:column;gap:0}
-.timeline-item{display:flex;gap:12px;position:relative;padding-bottom:16px}
-.timeline-item:last-child{padding-bottom:0}
+/* ===== TIMELINE ===== */
+.timeline-section{margin:16px 20px 0}
+.tl-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.ts-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)}
+.ts-title{font-family:var(--fdisplay);font-size:15px;font-weight:800;color:#fff}
+.ts-count{font-size:11px;font-weight:700;color:var(--sub);background:var(--glass);border-radius:10px;padding:3px 10px}
+.timeline-list{padding:16px}
+.ti-item{display:flex;gap:12px;position:relative;padding-bottom:20px}
+.ti-item:last-child{padding-bottom:0}
 .ti-dot-wrap{width:28px;flex-shrink:0;display:flex;flex-direction:column;align-items:center}
-.ti-dot{width:28px;height:28px;border-radius:50%;background:var(--apple-bg-secondary);display:flex;align-items:center;justify-content:center;position:relative;z-index:1;border:2px solid var(--apple-separator)}
-.ti-dot.done{background:var(--apple-green);border-color:var(--apple-green);color:#fff}
-.ti-dot.active{background:var(--red);border-color:var(--red);color:#fff;box-shadow:0 0 0 4px rgba(205,39,39,.2)}
-.ti-dot i,.ti-dot svg{width:14px;height:14px}
-.ti-line{width:2px;flex:1;background:var(--apple-separator);margin:4px 0;min-height:24px}
-.ti-line.done{background:var(--apple-green)}
+.ti-dot{width:28px;height:28px;border-radius:50%;background:var(--card3);display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.1)}
+.ti-dot.done{background:rgba(74,222,128,.15);border-color:#4ade80;color:#4ade80}
+.ti-dot.active{background:rgba(205,39,39,.15);border-color:#CD2727;color:#CD2727;box-shadow:0 0 0 4px rgba(205,39,39,.12)}
+.ti-dot svg{width:13px;height:13px}
+.ti-line{width:2px;flex:1;background:rgba(255,255,255,.08);margin:4px 0;min-height:24px}
+.ti-line.done{background:rgba(74,222,128,.3)}
 .ti-content{flex:1;padding-top:2px}
-.ti-title{font-size:14px;font-weight:700;color:var(--apple-label)}
-.ti-title.done{color:var(--apple-label)}
-.ti-title.active{color:var(--red)}
-.ti-time{font-size:12px;color:var(--apple-label-secondary);margin-top:2px}
-.ti-location{font-size:12px;color:var(--apple-label-tertiary);margin-top:1px}
+.ti-title{font-size:14px;font-weight:700;color:rgba(255,255,255,.4)}
+.ti-title.done,.ti-title.active{color:#fff}
+.ti-time{font-size:11px;color:var(--sub);margin-top:2px}
+.ti-loc{font-size:11px;color:rgba(255,255,255,.2);margin-top:1px}
 
-/* === PACKAGE DETAILS === */
-.details-section{margin:0 20px 24px}
-.detail-card{background:var(--apple-bg);border-radius:var(--radius-lg);border:1px solid var(--apple-separator);overflow:hidden}
-.dc-header{padding:14px 16px;border-bottom:1px solid var(--apple-separator);display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;color:var(--apple-label)}
-.dc-header i,.dc-header svg{width:18px;height:18px;color:var(--red)}
-.dc-row{display:flex;padding:12px 16px;border-bottom:1px solid var(--apple-separator);min-height:44px;align-items:center}
+/* ===== PACKAGE DETAILS ===== */
+.detail-section{margin:16px 20px}
+.detail-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.dc-row{display:flex;padding:12px 16px;border-bottom:1px solid var(--border);min-height:48px;align-items:center}
 .dc-row:last-child{border-bottom:none}
-.dc-label{font-size:13px;color:var(--apple-label-secondary);width:100px;flex-shrink:0}
-.dc-value{font-size:14px;font-weight:600;color:var(--apple-label);flex:1}
+.dc-label{font-size:12px;color:var(--sub);width:100px;flex-shrink:0}
+.dc-value{font-size:14px;font-weight:600;color:#fff;flex:1}
 
-/* === EMPTY STATE === */
-.empty-state{padding:48px 24px;text-align:center;color:var(--apple-label-secondary)}
-.es-icon{width:56px;height:56px;margin:0 auto 16px;opacity:.4}
-.es-title{font-size:16px;font-weight:700;color:var(--apple-label);margin-bottom:4px}
-.es-desc{font-size:13px}
+/* ===== ACTION BUTTONS ===== */
+.action-section{margin:16px 20px 24px;display:flex;flex-direction:column;gap:10px}
+.action-btn{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:14px 20px;border-radius:12px;border:none;font-size:14px;font-weight:700;
+  cursor:pointer;font-family:var(--font);transition:all .2s;width:100%;
+}
+.action-btn:active{transform:scale(.98)}
+.action-btn.share{background:rgba(255,255,255,.06);border:1px solid var(--glass-border);color:#fff}
+.action-btn.share:hover{background:rgba(255,255,255,.1)}
+.action-btn.print{background:rgba(255,255,255,.06);border:1px solid var(--glass-border);color:#fff}
+.action-btn.print:hover{background:rgba(255,255,255,.1)}
+.action-btn.contact{background:linear-gradient(135deg,var(--red),var(--red-d));color:#fff;box-shadow:0 4px 16px rgba(205,39,39,.3)}
+.action-btn.contact:hover{box-shadow:0 6px 20px rgba(205,39,39,.4)}
+.action-btn.contact svg,.action-btn.share svg,.action-btn.print svg{width:16px;height:16px}
+.action-btn.contact span,.action-btn.share span,.action-btn.print span{flex:1}
+.action-btn.contact svg{flex-shrink:0}
 
-/* === QUICK LINKS === */
-.quick-links{margin:0 20px 24px;display:flex;flex-direction:column;gap:10px}
-.ql-btn{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--apple-bg);border:1px solid var(--apple-separator);border-radius:var(--radius-lg);cursor:pointer;transition:all .15s;text-decoration:none;color:var(--apple-label);width:100%;text-align:left;font-family:var(--font-main)}
-.ql-btn:hover{background:var(--apple-bg-secondary);transform:translateY(-1px)}
-.ql-btn:active{transform:scale(.98)}
-.ql-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.ql-icon i,.ql-icon svg{width:18px;height:18px}
-.ql-icon.red{background:rgba(205,39,39,.1);color:var(--red)}
-.ql-icon.blue{background:rgba(0,122,255,.1);color:var(--apple-blue)}
-.ql-icon.green{background:rgba(52,199,89,.1);color:var(--apple-green)}
-.ql-icon.orange{background:rgba(255,149,0,.1);color:var(--apple-orange)}
-.ql-text{flex:1}
-.ql-title{font-size:15px;font-weight:600;color:var(--apple-label)}
-.ql-sub{font-size:12px;color:var(--apple-label-secondary);margin-top:1px}
-.ql-arrow{color:var(--apple-label-tertiary)}
-.ql-arrow i,.ql-arrow svg{width:16px;height:16px}
+/* ===== BOTTOM NAV ===== */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;
+  padding-bottom:env(safe-area-inset-bottom, 0);
+  background:rgba(10,10,18,.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-around;
+  z-index:900;height:var(--bot-h);
+}
+.bn-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 8px;cursor:pointer;text-decoration:none;color:var(--sub);transition:all .15s;min-width:60px}
+.bn-item.active{color:var(--red)}
+.bn-item svg{width:22px;height:22px}
+.bn-item span{font-size:10px;font-weight:600}
 
-/* === TOAST === */
-#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1C1C1E;color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:500;z-index:9999;transition:transform .3s;box-shadow:0 8px 32px rgba(0,0,0,.3);max-width:calc(100vw - 40px);text-align:center}
+/* ===== TOAST ===== */
+#toast{
+  position:fixed;bottom:calc(var(--bot-h) + 24px);left:50%;transform:translateX(-50%) translateY(80px);
+  background:#1e1e32;color:#fff;padding:12px 20px;border-radius:12px;
+  font-size:14px;font-weight:500;z-index:9999;transition:transform .3s;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);max-width:calc(100vw - 40px);text-align:center;
+  border:1px solid var(--border);
+}
 .toast-show{transform:translateX(-50%) translateY(0)!important}
 
-/* === RESPONSIVE === */
+/* ===== RESPONSIVE ===== */
 @media(min-width:768px){
-  .search-section{padding:20px 20px 8px;max-width:640px;margin-left:auto;margin-right:auto}
-  .track-result{max-width:640px;margin-left:auto;margin-right:auto}
-  .timeline-section{max-width:640px;margin-left:auto;margin-right:auto}
-  .details-section{max-width:640px;margin-left:auto;margin-right:auto}
-  .quick-links{max-width:640px;margin-left:auto;margin-right:auto}
+  .search-bar-wrap{padding:20px max(20px, calc(50vw - 320px))}
+  .bc-entries,.tr-header,.tr-awb-card,.timeline-section,.detail-section,.action-section{max-width:600px;margin-left:auto;margin-right:auto;width:100%;padding-left:0;padding-right:0}
+  .tr-awb-card,.timeline-section,.detail-section,.action-section{padding-left:0;padding-right:0}
 }
 
-i[data-lucide]{width:16px;height:16px;display:block}
+/* ===== SHARED ICON ===== */
+i,lucide-icon{width:16px;height:16px;display:block}
 
-/* === iOS GLASS BOTTOM TAB BAR === */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;padding-bottom:env(safe-area-inset-bottom,16px);background:rgba(255,255,255,.72);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(0,0,0,.08);display:flex;align-items:center;justify-content:space-around;z-index:900;height:calc(60px + env(safe-area-inset-bottom,16px));padding-top:8px}
-.bottom-nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 8px;cursor:pointer;text-decoration:none;color:var(--apple-label-tertiary,#8E8E93);transition:all .15s}
-.bottom-nav-item.active{color:var(--red,#CD2727)}
-.bottom-nav-item svg{width:22px;height:22px;display:block}
-.bottom-nav-item span{font-size:10px;font-weight:600;font-family:Inter,sans-serif}
-
-/* === PRELOADER === */
-.ap-preloader{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a0a0a 0%,#0a0a1a 50%,#0a0505 100%);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s ease,visibility .8s ease}
-.ap-preloader.hidden{opacity:0;visibility:hidden;pointer-events:none}
-
-.ap-preloader-title{font-family:"Sarabun",sans-serif;font-size:26px;font-weight:800;color:#fff;margin-bottom:6px;letter-spacing:.5px}
-.ap-preloader-sub{font-family:"Inter",sans-serif;font-size:13px;color:rgba(255,255,255,.5);margin-bottom:36px;letter-spacing:.3px}
-.ap-preloader-bar-wrap{width:240px;height:3px;background:rgba(205,39,39,.15);border-radius:3px;overflow:hidden;margin-bottom:20px}
-.ap-preloader-bar{height:100%;background:linear-gradient(90deg,#CD2727,#ff4444);border-radius:3px;animation:orbBar 1.8s ease-in-out infinite;width:0}
-.ap-preloader-dots{display:flex;gap:8px}
-.ap-preloader-dot{width:8px;height:8px;background:rgba(255,255,255,.4);border-radius:50%;animation:preDot 1.2s ease-in-out infinite}
-.ap-preloader-dot:nth-child(2){animation-delay:.2s}
-.ap-preloader-dot:nth-child(3){animation-delay:.4s}
-@keyframes preLogoPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-@keyframes preBar{0%{width:0}50%{width:70%}100%{width:100%}}
-@keyframes preDot{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
-
-</style>
+/* ===== MOBILE SIDEBAR ===== */
+.mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:599;opacity:0;pointer-events:none;transition:opacity .3s}
+.mobile-overlay.active{opacity:1;pointer-events:auto}
+.mobile-sidebar{position:fixed;top:0;left:0;bottom:0;width:300px;background:var(--dark2);z-index:600;transform:translateX(-100%);transition:transform .3s;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.mobile-sidebar.open{transform:translateX(0)}
+.ms-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.ms-user-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--red-l));display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:800;flex-shrink:0}
+.ms-user-name{font-size:15px;font-weight:700;color:#fff}.ms-user-email{font-size:12px;color:var(--sub)}
+.ms-section{padding:8px 0}
+.ms-section-label{font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:1px;padding:8px 20px 4px}
+.ms-item{display:flex;align-items:center;gap:12px;padding:12px 20px;color:var(--sub);text-decoration:none;font-size:14px;font-weight:500;transition:all .15s;cursor:pointer;border:none;background:none;width:100%;text-align:left}
+.ms-item:hover{background:var(--glass);color:#fff}
+.ms-item.active{color:var(--red);font-weight:700}
+.ms-item svg{width:18px;height:18px;flex-shrink:0}
+.ms-item span{flex:1}
+.ms-sep{height:1px;background:var(--border);margin:4px 20px}
+.ms-signout{color:#ef4444!important}.ms-signout svg{color:#ef4444!important}
+  </style>
 </head>
 <body>
 
-<!-- Mesh Gradient Background -->
-<div class="bg-canvas" aria-hidden="true">
-  <div class="bg-blob bg-blob-1"></div>
-  <div class="bg-blob bg-blob-2"></div>
-  <div class="bg-blob bg-blob-3"></div>
-  <div class="bg-grid"></div>
+<!-- PRE-LOADER -->
+<div class="ap-preloader" id="apPreloader">
+  <div class="ap-atom-wrap">
+    <div class="ap-atom-nucleus"></div>
+    <div class="ap-atom-orbit ap-orbit-1"><div class="ap-atom-elec ap-elec-1"></div></div>
+    <div class="ap-atom-orbit ap-orbit-2"><div class="ap-atom-elec ap-elec-2"></div></div>
+    <div class="ap-atom-orbit ap-orbit-3"><div class="ap-atom-elec ap-elec-3"></div></div>
+  </div>
+  <div class="ap-preloader-title">Airpak Express</div>
+  <div class="ap-preloader-sub" id="apPreloaderGreeting">Loading your experience...</div>
+  <div class="ap-preloader-bar-wrap"><div class="ap-preloader-bar"></div></div>
+  <div class="ap-preloader-dots">
+    <div class="ap-preloader-dot"></div><div class="ap-preloader-dot"></div><div class="ap-preloader-dot"></div>
+  </div>
 </div>
 
-<!-- Top Navigation -->
+<!-- TOP NAV -->
 <nav class="top-nav">
-  <button class="menu-btn" onclick="toggleSidebar()" aria-label="Open menu">
-    <i data-lucide="menu" style="width:20px;height:20px"></i>
+  <button class="menu-btn" onclick="toggleSidebar()" aria-label="Menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
   </button>
   <a href="index.html" class="nav-brand">
-    <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#CD2727"/><path d="M8 16h16M16 8v16" stroke="white" stroke-width="2.5" stroke-linecap="round"/><circle cx="16" cy="16" r="5" fill="none" stroke="white" stroke-width="1.5"/></svg>
+    <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#CD2727"/><path d="M8 16h16M16 8v16" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>
   </a>
   <span class="nav-title">Track Package</span>
   <div class="nav-spacer"></div>
-  <div class="nav-actions">
-    <button class="nav-btn" onclick="window.location.href='dashboard.html'" aria-label="Dashboard">
-      <i data-lucide="home" style="width:18px;height:18px"></i>
-    </button>
-  </div>
+  <button class="nav-btn" onclick="window.location.href='dashboard.html'" aria-label="Dashboard">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+  </button>
 </nav>
 
-<!-- Mobile Overlay -->
+<!-- MOBILE SIDEBAR -->
 <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
-
-<!-- Mobile Sidebar -->
 <aside class="mobile-sidebar" id="mobileSidebar">
   <div class="ms-header">
     <div class="ms-user-avatar">JW</div>
-    <div>
-      <div class="ms-user-name">James Wilson</div>
-      <div class="ms-user-email">james@company.co.uk</div>
-    </div>
+    <div><div class="ms-user-name">James Wilson</div><div class="ms-user-email">james@company.co.uk</div></div>
   </div>
   <div class="ms-section">
     <div class="ms-section-label">Navigation</div>
     <a href="dashboard.html" class="ms-item" onclick="toggleSidebar()">
-      <i data-lucide="layout-dashboard"></i><span>Dashboard</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Dashboard</span>
     </a>
     <a href="tracking.html" class="ms-item active" onclick="toggleSidebar()">
-      <i data-lucide="truck"></i><span>Track Packages</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      <span>Track Packages</span>
     </a>
     <a href="payment.html" class="ms-item" onclick="toggleSidebar()">
-      <i data-lucide="credit-card"></i><span>Billing & Payments</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      <span>Billing &amp; Payments</span>
     </a>
     <a href="contact.html" class="ms-item" onclick="toggleSidebar()">
-      <i data-lucide="message-square"></i><span>Get Support</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>Get Support</span>
     </a>
   </div>
   <div class="ms-sep"></div>
   <div class="ms-section">
     <div class="ms-section-label">Account</div>
     <a href="settings.html" class="ms-item" onclick="toggleSidebar()">
-      <i data-lucide="settings"></i><span>Settings</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span>Settings</span>
     </a>
     <a href="signin.html" class="ms-item ms-signout" onclick="showToast('Signed out');setTimeout(()=>window.location='signin.html',500)">
-      <i data-lucide="log-out"></i><span>Sign Out</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      <span>Sign Out</span>
     </a>
   </div>
 </aside>
 
-<!-- Main Content -->
-<main class="main-content">
-  <!-- Decorative background elements -->
-  <div aria-hidden="true" style="position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden;pointer-events:none;z-index:0">
-    <svg style="position:absolute;top:15%;left:8%;width:80px;height:80px;opacity:0.06" viewBox="0 0 80 80" fill="none"><rect x="8" y="20" width="64" height="40" rx="4" stroke="#CD2727" stroke-width="2"/><path d="M8 32h64M20 20v-8l20-12 20 12v8" stroke="#CD2727" stroke-width="2"/><circle cx="24" cy="60" r="8" fill="none" stroke="#CD2727" stroke-width="2"/><circle cx="56" cy="60" r="8" fill="none" stroke="#CD2727" stroke-width="2"/></svg>
-    <svg style="position:absolute;top:55%;right:5%;width:60px;height:60px;opacity:0.05" viewBox="0 0 60 60" fill="none"><path d="M10 30h40M30 10v40M15 15l30 30M45 15L15 45" stroke="#1a1a1a" stroke-width="2"/></svg>
-    <svg style="position:absolute;top:75%;left:3%;width:50px;height:50px;opacity:0.04" viewBox="0 0 50 50" fill="none"><circle cx="25" cy="25" r="20" stroke="#CD2727" stroke-width="1.5"/><path d="M25 5v40M5 25h40" stroke="#CD2727" stroke-width="1.5"/></svg>
-    <svg style="position:absolute;top:30%;right:12%;width:40px;height:40px;opacity:0.05" viewBox="0 0 40 40" fill="none"><rect x="4" y="4" width="32" height="32" rx="4" stroke="#1a1a1a" stroke-width="1.5"/><path d="M4 20h32M20 4v32" stroke="#1a1a1a" stroke-width="1.5"/></svg>
-    <svg style="position:absolute;top:5%;right:20%;width:60px;height:60px;opacity:0.04" viewBox="0 0 60 60" fill="none"><path d="M30 5L55 30L30 55L5 30Z" stroke="#CD2727" stroke-width="1.5"/></svg>
+<!-- BLACK CANVAS — PRE-SEARCH STATE -->
+<div class="black-canvas" id="blackCanvas">
+  <!-- Background logo -->
+  <div class="bc-logo">
+    <svg viewBox="0 0 100 100" fill="none">
+      <rect width="100" height="100" rx="20" fill="#CD2727"/>
+      <path d="M25 50h50M50 25v50" stroke="white" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="50" cy="50" r="18" fill="none" stroke="white" stroke-width="2.5"/>
+    </svg>
   </div>
+  <!-- Center content -->
+  <div class="bc-center">
+    <div class="bc-tagline">Real-Time Tracking</div>
+    <div class="bc-heading">Track Your<br>Airpak Shipment</div>
+    <div class="bc-sub">Enter your tracking code below to see live updates, route map and delivery progress</div>
+  </div>
+  <!-- Demo entry hints -->
+  <div class="bc-entries">
+    <div style="font-size:11px;color:rgba(255,255,255,.2);text-align:center">
+      Try: <span style="color:rgba(255,255,255,.35);font-weight:600">APX0000UK</span> or <span style="color:rgba(255,255,255,.35);font-weight:600">APX123456789</span>
+    </div>
+  </div>
+</div>
 
-  <!-- Hero -->
-  <div class="track-hero">
-    <div class="th-bg"></div>
-    <div class="th-content">
-      <div class="th-title">Track Your Shipment</div>
-      <div class="th-sub">Enter your tracking number to see live updates</div>
+<!-- ERROR STATE -->
+<div class="search-error" id="searchError">
+  <div class="search-error-icon">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  </div>
+  <div class="search-error-text">
+    <div class="search-error-title">Tracking code not found</div>
+    <div class="search-error-msg" id="errorMsg">Check your code and try again, or contact support</div>
+  </div>
+  <button class="search-error-close" onclick="hideError()">×</button>
+</div>
+
+<!-- SEARCH BAR — BOTTOM GLASS -->
+<div class="search-bar-wrap">
+  <div class="search-bar">
+    <input type="text" class="search-input" id="trackingInput" placeholder="Enter tracking code..." autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
+    <button class="search-round-btn" onclick="doTrack()" aria-label="Search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- TRACKING RESULT -->
+<div class="track-result" id="trackResult">
+  <!-- Header with back button -->
+  <div class="tr-header">
+    <div class="tr-back" onclick="goBack()">
+      <div class="tr-back-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </div>
+      <span class="tr-back-label">Back to search</span>
+    </div>
+    <div class="tr-status-row">
+      <div class="tr-status-dot"></div>
+      <div class="tr-status-text">
+        <div class="tr-status-label">Shipment Status</div>
+        <div class="tr-status-value" id="trStatus">In Transit</div>
+      </div>
+      <div class="tr-status-eta">
+        <div class="eta-label">Est. Delivery</div>
+        <div class="eta-value" id="trEta">May 22, 2026</div>
+      </div>
     </div>
   </div>
 
-  <!-- Search -->
-  <div class="search-section">
-    <div class="search-box">
-      <input type="text" class="search-input" id="trackingInput" placeholder="e.g. APX123456789" value="">
-      <button class="search-btn" onclick="doTrack()">
-        <i data-lucide="search" style="width:16px;height:16px"></i>
-        <span>Track</span>
+  <!-- AWB Card -->
+  <div class="tr-awb-card">
+    <div class="tr-awb-row">
+      <div class="tr-awb-left">
+        <div class="tr-awb-label-text">AWB / Tracking Number</div>
+        <div class="tr-awb-value-text" id="trAwb">APX—0000—UK</div>
+      </div>
+      <button class="tr-copy-btn" onclick="copyAwb()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy
       </button>
     </div>
   </div>
 
-  <!-- Tracking Result (shows when searched) -->
-  <div class="track-result" id="trackResult">
-    <div class="tr-card">
-      <div class="tr-status-bar">
-        <div class="tr-status-icon"><i data-lucide="truck"></i></div>
-        <div class="tr-status-text">
-          <div class="tr-status-label">Status</div>
-          <div class="tr-status-value" id="statusValue">In Transit</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-size:11px;opacity:.7">ETA</div>
-          <div style="font-size:15px;font-weight:700" id="etaValue">May 22, 2026</div>
-        </div>
-      </div>
-      <div class="tr-awb-row">
-        <div>
-          <div class="tr-awb-label">AWB Number</div>
-          <div class="tr-awb-value" id="awbValue">APX—0000—UK</div>
-        </div>
-        <button class="tr-awb-copy" onclick="copyAwb()">
-          <i data-lucide="copy" style="width:12px;height:12px;display:inline;vertical-align:middle"></i>
-          Copy
-        </button>
-      </div>
+  <!-- Full Map (toggle) -->
+  <div class="map-section" id="fullMapSection">
+    <div class="map-ui-top">
+      <button class="map-close-btn" onclick="closeFullMap()">×</button>
+      <div class="map-live-badge">● LIVE TRACKING</div>
     </div>
-
-    <!-- Full dark map section (toggled by View on Map button) -->
-    <div class="map-section" id="fullMapSection">
-      <div class="map-ui-top">
-        <button class="map-close-btn" onclick="closeFullMap()">&#x2715;</button>
-        <div class="map-live-badge">&#9679; LIVE TRACKING</div>
+    <div id="map"></div>
+    <div class="map-ui-panel">
+      <div class="map-route">
+        <div class="map-from"></div><div class="map-line"></div><div class="map-to"></div>
       </div>
-      <div id="map"></div>
-      <div class="map-ui-panel">
-        <div class="map-route">
-          <div class="map-from"></div>
-          <div class="map-line"></div>
-          <div class="map-to"></div>
-        </div>
-        <div class="map-labels">
-          <span class="map-label">Cardiff Hub, Wales</span>
-          <span class="map-label">London, EC2A 4NE</span>
-        </div>
-        <div class="map-info-grid">
-          <div class="map-info-cell">
-            <div class="map-info-label">ETA</div>
-            <div class="map-info-value">14:30</div>
-          </div>
-          <div class="map-info-cell">
-            <div class="map-info-label">Distance</div>
-            <div class="map-info-value">248km</div>
-          </div>
-          <div class="map-info-cell">
-            <div class="map-info-label">Progress</div>
-            <div class="map-info-value">60%</div>
-          </div>
-        </div>
-        <div class="map-status-pill">&#9679; In Transit — LHR &#8594; DXB &#8594; JFK</div>
+      <div class="map-labels">
+        <span class="map-label" id="mapFrom">Cardiff Hub, Wales</span>
+        <span class="map-label" id="mapTo">London, EC2A 4NE</span>
       </div>
+      <div class="map-info-grid">
+        <div class="map-info-cell"><div class="map-info-label">ETA</div><div class="map-info-value" id="mapEta">14:30</div></div>
+        <div class="map-info-cell"><div class="map-info-label">Distance</div><div class="map-info-value" id="mapDist">248km</div></div>
+        <div class="map-info-cell"><div class="map-info-label">Progress</div><div class="map-info-value" id="mapProg">60%</div></div>
+      </div>
+      <div class="map-status-pill" id="mapStatusPill">● In Transit — LHR → DXB → JFK</div>
     </div>
+  </div>
 
-    <!-- Timeline -->
-    <div class="timeline-section">
+  <!-- View Map Button -->
+  <div style="margin:0 20px 16px;text-align:center">
+    <button onclick="openFullMap()" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:12px;padding:13px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.3)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+      View on Map
+    </button>
+  </div>
+
+  <!-- Timeline -->
+  <div class="timeline-section">
+    <div class="tl-card">
       <div class="ts-header">
         <span class="ts-title">Shipment Timeline</span>
+        <span class="ts-count" id="tsCount">4/6 events</span>
       </div>
-      <div class="timeline-list">
-        <div class="timeline-item">
-          <div class="ti-dot-wrap">
-            <div class="ti-dot done"><i data-lucide="check"></i></div>
-            <div class="ti-line done"></div>
-          </div>
-          <div class="ti-content">
-            <div class="ti-title done">Package Picked Up</div>
-            <div class="ti-time">May 15, 2026 — 09:30 AM</div>
-            <div class="ti-location">Cardiff Hub, Wales CF10 5AL</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="ti-dot-wrap">
-            <div class="ti-dot done"><i data-lucide="check"></i></div>
-            <div class="ti-line done"></div>
-          </div>
-          <div class="ti-content">
-            <div class="ti-title done">Departed Cardiff</div>
-            <div class="ti-time">May 15, 2026 — 02:15 PM</div>
-            <div class="ti-location">Wales International Hub</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="ti-dot-wrap">
-            <div class="ti-dot active"><i data-lucide="truck"></i></div>
-            <div class="ti-line"></div>
-          </div>
-          <div class="ti-content">
-            <div class="ti-title active">In Transit to London</div>
-            <div class="ti-time">May 16, 2026 — 06:00 AM</div>
-            <div class="ti-location">M4 Motorway, near Reading</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="ti-dot-wrap">
-            <div class="ti-dot"><i data-lucide="package"></i></div>
-            <div class="ti-line"></div>
-          </div>
-          <div class="ti-content">
-            <div class="ti-title">Arriving London</div>
-            <div class="ti-time">Expected May 22, 2026</div>
-            <div class="ti-location">London Heathrow Hub</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="ti-dot-wrap">
-            <div class="ti-dot"><i data-lucide="home"></i></div>
-          </div>
-          <div class="ti-content">
-            <div class="ti-title">Delivered</div>
-            <div class="ti-time">Expected May 22, 2026</div>
-            <div class="ti-location">Final Destination</div>
-          </div>
-        </div>
+      <div class="timeline-list" id="tlList">
+        <!-- JS-populated -->
       </div>
     </div>
-
-    <!-- Package Details -->
-    <div class="details-section">
-      <div class="detail-card">
-        <div class="dc-header">
-          <i data-lucide="package"></i>
-          Package Details
-        </div>
-        <div class="dc-row">
-          <div class="dc-label">From</div>
-          <div class="dc-value">Cardiff Bay, Wales CF10 5AL</div>
-        </div>
-        <div class="dc-row">
-          <div class="dc-label">To</div>
-          <div class="dc-value">London, EC2A 4NE</div>
-        </div>
-        <div class="dc-row">
-          <div class="dc-label">Weight</div>
-          <div class="dc-value">2.4 kg</div>
-        </div>
-        <div class="dc-row">
-          <div class="dc-label">Dimensions</div>
-          <div class="dc-value">30 × 20 × 15 cm</div>
-        </div>
-        <div class="dc-row">
-          <div class="dc-label">Service</div>
-          <div class="dc-value">Express Delivery</div>
-        </div>
-        <div class="dc-row">
-          <div class="dc-label">Estimated</div>
-          <div class="dc-value">May 22, 2026</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- View Full Map Button -->
-    <div style="margin:0 20px 24px;text-align:center">
-      <button onclick="openFullMap()" style="display:inline-flex;align-items:center;gap:8px;background:#1a1a2e;color:#fff;border:none;border-radius:12px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.3)">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
-        View on Map
-      </button>
-    </div>
-
-  <!-- Quick Links (shown before search) -->
-  <div class="quick-links" id="quickLinks">
-    <button class="ql-btn" onclick="showToast('Request pickup — contact support')">
-      <div class="ql-icon red"><i data-lucide="truck"></i></div>
-      <div class="ql-text">
-        <div class="ql-title">Request Pickup</div>
-        <div class="ql-sub">Schedule a collection</div>
-      </div>
-      <div class="ql-arrow"><i data-lucide="chevron-right"></i></div>
-    </button>
-    <a href="dashboard.html" class="ql-btn">
-      <div class="ql-icon blue"><i data-lucide="layout-dashboard"></i></div>
-      <div class="ql-text">
-        <div class="ql-title">Go to Dashboard</div>
-        <div class="ql-sub">Manage all your shipments</div>
-      </div>
-      <div class="ql-arrow"><i data-lucide="chevron-right"></i></div>
-    </a>
-    <button class="ql-btn" onclick="showToast('Shipping label — contact support')">
-      <div class="ql-icon green"><i data-lucide="printer"></i></div>
-      <div class="ql-text">
-        <div class="ql-title">Print Shipping Label</div>
-        <div class="ql-sub">Download label for your package</div>
-      </div>
-      <div class="ql-arrow"><i data-lucide="chevron-right"></i></div>
-    </button>
-    <button class="ql-btn" onclick="showToast('Contact support for help')">
-      <div class="ql-icon orange"><i data-lucide="headphones"></i></div>
-      <div class="ql-text">
-        <div class="ql-title">Get Help</div>
-        <div class="ql-sub">Contact support team</div>
-      </div>
-      <div class="ql-arrow"><i data-lucide="chevron-right"></i></div>
-    </button>
   </div>
 
-</main>
+  <!-- Package Details -->
+  <div class="detail-section">
+    <div class="detail-card">
+      <div class="dc-row"><div class="dc-label">From</div><div class="dc-value" id="dcFrom">Cardiff Bay, Wales CF10 5AL</div></div>
+      <div class="dc-row"><div class="dc-label">To</div><div class="dc-value" id="dcTo">London, EC2A 4NE</div></div>
+      <div class="dc-row"><div class="dc-label">Weight</div><div class="dc-value" id="dcWeight">2.4 kg</div></div>
+      <div class="dc-row"><div class="dc-label">Dimensions</div><div class="dc-value" id="dcDim">30 × 20 × 15 cm</div></div>
+      <div class="dc-row"><div class="dc-label">Service</div><div class="dc-value" id="dcService">Express Delivery</div></div>
+      <div class="dc-row"><div class="dc-label">Carrier</div><div class="dc-value">Airpak Express Air Cargo</div></div>
+    </div>
+  </div>
 
-<!-- iOS Glass Bottom Tab Bar -->
+  <!-- Action Buttons -->
+  <div class="action-section">
+    <button class="action-btn share" onclick="shareTracking()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      <span>Share Tracking Link</span>
+    </button>
+    <button class="action-btn print" onclick="printTracking()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      <span>Print Receipt</span>
+    </button>
+    <button class="action-btn contact" onclick="contactSupport()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>Contact Support</span>
+    </button>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
-  <a href="dashboard.html" class="bottom-nav-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+  <a href="dashboard.html" class="bn-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
     <span>Home</span>
   </a>
-  <a href="tracking.html" class="bottom-nav-item active">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="10" x="5" y="2" rx="2"/><path d="M6 18h2"/><path d="M10 18h1"/><path d="M12 18h4"/><circle cx="12" cy="18" r="2"/></svg>
+  <a href="tracking.html" class="bn-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
     <span>Track</span>
   </a>
-  <a href="payment.html" class="bottom-nav-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+  <a href="payment.html" class="bn-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
     <span>Pay</span>
   </a>
-  <a href="messages.html" class="bottom-nav-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  <a href="messages.html" class="bn-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
     <span>Chat</span>
   </a>
-  <a href="settings.html" class="bottom-nav-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+  <a href="settings.html" class="bn-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     <span>Settings</span>
   </a>
 </nav>
 
-<!-- Toast -->
+<!-- TOAST -->
 <div id="toast"></div>
 
-<!-- Auth Guard -->
+<!-- AUTH GUARD -->
 <script>
 (function() {
   var user = sessionStorage.getItem('airpak_user');
@@ -573,263 +605,317 @@ i[data-lucide]{width:16px;height:16px;display:block}
 })();
 </script>
 
-<!-- Leaflet Map JS -->
+<!-- LEAFLET MAP -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-var map = null;
-var marker = null;
+// ===== VALID TRACKING CODES =====
+var VALID_CODES = [
+  'APX0000UK','APX123456789','APX20260601','APX0001UK','APX0002UK',
+  'APX2026001','APX2026002','APX2026003','APX2026004','APX2026005',
+  'APXUK0001','APXUK0002','APXUK0003','AIRPAK2026','EXP2026001',
+  'TRK2026001','TRK2026002','TRK2026003'
+];
 
-document.addEventListener('DOMContentLoaded', function() {
-  // Init Lucide icons
-  if (typeof lucide !== 'undefined') lucide.createIcons();
-
-  // Init map
-  if (typeof L !== 'undefined') {
-    map = L.map('map', {zoomControl: false, attributionControl: false}).setView([51.48, -3.17], 7);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {}).addTo(map);
-    L.control.attribution({prefix: false, position: 'bottomright'}).addTo(map);
-
-    // Route line
-    var route = L.polyline([
-      [51.48, -3.17], // Cardiff
-      [51.50, -3.22],
-      [51.75, -2.0],
-      [52.0, -1.0],
-      [52.2, -0.5],
-      [51.52, -0.12] // London
-    ], {color: '#CD2727', weight: 4, opacity: 0.9}).addTo(map);
-
-    // Markers
-    L.circleMarker([51.48, -3.17], {radius: 10, fillColor: '#CD2727', color: '#fff', weight: 3}).addTo(map).bindPopup('<b style="color:#1a1a1a">Cardiff Hub</b><br style="color:#636366">UK Distribution Centre');
-    L.circleMarker([51.52, -0.12], {radius: 10, fillColor: '#34C759', color: '#fff', weight: 3}).addTo(map).bindPopup('<b style="color:#1a1a1a">London</b><br style="color:#636366">Final Destination');
-    L.circleMarker([51.75, -2.0], {radius: 7, fillColor: '#CD2727', color: '#fff', weight: 2, opacity: 0.6}).addTo(map).bindPopup('In Transit');
+// ===== SAMPLE DATA MAP =====
+var TRACK_DATA = {
+  'APX0000UK': {
+    status:'In Transit',eta:'May 22, 2026',progress:60,
+    from:'Cardiff Hub, Wales CF10 5AL',to:'London, EC2A 4NE',
+    weight:'2.4 kg',dims:'30 × 20 × 15 cm',service:'Express Delivery',
+    mapEta:'14:30',mapDist:'248km',mapProg:'60%',
+    events:[
+      {done:true,title:'Package Picked Up',time:'May 15, 2026 — 09:30 AM',loc:'Cardiff Hub, Wales CF10 5AL'},
+      {done:true,title:'Departed Cardiff',time:'May 15, 2026 — 02:15 PM',loc:'Wales International Hub'},
+      {done:true,title:'In Transit to London',time:'May 16, 2026 — 06:00 AM',loc:'M4 Motorway, near Reading'},
+      {active:true,title:'Arriving London',time:'Expected May 22, 2026',loc:'London Heathrow Hub'},
+      {done:false,title:'Customs Cleared',time:'Pending',loc:'London'},
+      {done:false,title:'Delivered',time:'Expected May 22, 2026',loc:'Final Destination'}
+    ]
+  },
+  'APX123456789': {
+    status:'Out for Delivery',eta:'Today, May 20',progress:95,
+    from:'Manchester Hub',to:'Birmingham, B1 1AA',
+    weight:'1.2 kg',dims:'20 × 15 × 10 cm',service:'Same Day Delivery',
+    mapEta:'13:00',mapDist:'120km',mapProg:'95%',
+    events:[
+      {done:true,title:'Picked Up',time:'May 20, 2026 — 07:00 AM',loc:'Manchester Hub'},
+      {done:true,title:'Departed Manchester',time:'May 20, 2026 — 09:00 AM',loc:'Manchester Distribution Centre'},
+      {done:true,title:'In Transit',time:'May 20, 2026 — 11:00 AM',loc:'M6 Motorway'},
+      {active:true,title:'Out for Delivery',time:'May 20, 2026 — 12:30 PM',loc:'Birmingham Local Hub'},
+      {done:false,title:'Delivered',time:'Expected by 15:00',loc:'Final Destination'}
+    ]
+  },
+  'APX2026001': {
+    status:'Delivered',eta:'Delivered May 18',progress:100,
+    from:'London Heathrow',to:'Edinburgh, EH1 1AB',
+    weight:'5.0 kg',dims:'40 × 30 × 20 cm',service:'Economy Plus',
+    mapEta:'Delivered',mapDist:'633km',mapProg:'100%',
+    events:[
+      {done:true,title:'Picked Up',time:'May 15, 2026 — 08:00 AM',loc:'London Heathrow Hub'},
+      {done:true,title:'Departed London',time:'May 15, 2026 — 14:00 PM',loc:'London Distribution Centre'},
+      {done:true,title:'In Transit',time:'May 16, 2026 — 06:00 AM',loc:'M1 Motorway, near Leeds'},
+      {done:true,title:'Arrived Edinburgh',time:'May 17, 2026 — 10:00 AM',loc:'Edinburgh Hub'},
+      {done:true,title:'Delivered',time:'May 18, 2026 — 11:30 AM',loc:'Signed by: J. Thompson'}
+    ]
   }
+};
 
-    // Fit bounds
-    map.fitBounds(route.getBounds(), {padding: [20,20]});
-  }
-
-  // Sidebar toggle
-  window.toggleSidebar = function() {
-    var sidebar = document.getElementById('mobileSidebar');
-    var overlay = document.getElementById('mobileOverlay');
-    sidebar.classList.toggle('open');
-    overlay.classList.toggle('active');
-    document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
-  };
-
-  document.getElementById('mobileOverlay').addEventListener('click', toggleSidebar);
-
-  // Track function
-  window.doTrack = function() {
-    var input = document.getElementById('trackingInput');
-    var val = input.value.trim();
-    if (!val) {
-      showToast('Enter a tracking number');
-      input.focus();
-      return;
-    }
-    // Show result
-    document.getElementById('trackResult').classList.add('show');
-    document.getElementById('quickLinks').style.display = 'none';
-    document.getElementById('awbValue').textContent = val.toUpperCase();
-    showToast('Tracking: ' + val);
-    lucide.createIcons();
-  };
-
-  // Copy AWB
-  window.copyAwb = function() {
-    var awb = document.getElementById('awbValue').textContent;
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(awb).then(function() {
-        showToast('AWB copied: ' + awb);
-      });
-    } else {
-      showToast('AWB: ' + awb);
-    }
-  };
-
-  // Toggle full dark map
-  window.openFullMap = function() {
-    document.getElementById('fullMapSection').classList.add('active');
-    if (map) setTimeout(function() { map.invalidateSize(); }, 50);
-  };
-  window.closeFullMap = function() {
-    document.getElementById('fullMapSection').classList.remove('active');
-  };
-
-  // Toast
-  window.showToast = function(msg) {
-    var t = document.getElementById('toast');
-    if (!t) return;
-    t.textContent = msg;
-    t.classList.add('toast-show');
-    setTimeout(function() { t.classList.remove('toast-show'); }, 3000);
-  };
-
-  // Enter key on search
-  document.getElementById('trackingInput').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') doTrack();
-  });
-});
-</script>
-
-<!-- Preloader -->
-<div class="ap-preloader" id="apPreloader">
-  <div class="ap-atom-wrap">
-    <div class="ap-atom-nucleus"></div>
-    <div class="ap-atom-orbit ap-orbit-1">
-      <div class="ap-atom-elec ap-elec-1"></div>
-    </div>
-    <div class="ap-atom-orbit ap-orbit-2">
-      <div class="ap-atom-elec ap-elec-2"></div>
-    </div>
-    <div class="ap-atom-orbit ap-orbit-3">
-      <div class="ap-atom-elec ap-elec-3"></div>
-    </div>
-  </div>
-  <div class="ap-preloader-title">Airpak Express</div>
-  <div class="ap-preloader-sub" id="apPreloaderGreeting">Loading your experience...</div>
-  <div class="ap-preloader-bar-wrap"><div class="ap-preloader-bar"></div></div>
-  <div class="ap-preloader-dots">
-    <div class="ap-preloader-dot"></div>
-    <div class="ap-preloader-dot"></div>
-    <div class="ap-preloader-dot"></div>
-  </div>
-</div>
-
-
-<script>
-// Preloader with dynamic greeting
+// ===== PRE-LOADER =====
 (function(){
   var h = new Date().getHours();
   var greeting = 'Good morning';
   if (h >= 12 && h < 17) greeting = 'Good afternoon';
   else if (h >= 17 && h < 21) greeting = 'Good evening';
-  else if (h >= 21) greeting = 'Good night';
+  else greeting = 'Good night';
   var el = document.getElementById('apPreloaderGreeting');
   if (el) el.textContent = greeting + ' — preparing your experience...';
-  
-  // Hide preloader once page is fully loaded
   window.addEventListener('load', function(){
     setTimeout(function(){
       var pl = document.getElementById('apPreloader');
-      if (pl) pl.classList.add('hidden');
-      setTimeout(function(){ if(pl) pl.style.display='none'; }, 700);
-    }, 1200);
+      if (pl) { pl.classList.add('hidden'); setTimeout(function(){ if(pl) pl.style.display='none'; }, 700); }
+    }, 1400);
   });
 })();
-</script>
 
+// ===== SIDEBAR =====
+window.toggleSidebar = function() {
+  var sb = document.getElementById('mobileSidebar');
+  var ov = document.getElementById('mobileOverlay');
+  sb.classList.toggle('open');
+  ov.classList.toggle('active');
+  document.body.style.overflow = sb.classList.contains('open') ? 'hidden' : '';
+};
+document.getElementById('mobileOverlay').addEventListener('click', toggleSidebar);
 
-<!-- PWA Registration -->
-<script>
-(function(){
-  // Register service worker
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js').then(function(reg) {
-        console.log('[PWA] SW registered:', reg.scope);
-      }).catch(function(err) {
-        console.warn('[PWA] SW registration failed:', err);
-      });
-    });
-  }
-
-  // Install prompt
-  var installPrompt = null;
-  var installBtn = null;
+// ===== SEARCH / DO TRACK =====
+window.doTrack = function() {
+  var input = document.getElementById('trackingInput');
+  var val = input.value.trim().toUpperCase();
+  if (!val) { showToast('Enter a tracking code'); return; }
   
-  window.addEventListener('beforeinstallprompt', function(e) {
-    e.preventDefault();
-    installPrompt = e;
-    window.showInstallPrompt && window.showInstallPrompt();
-    
-    // Auto-show after 5 seconds
-    setTimeout(function() {
-      if (installPrompt && !localStorage.getItem('ap_pwa_installed')) {
-        var banner = document.createElement('div');
-        banner.id = 'pwa-install-banner';
-        banner.innerHTML = '<div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#CD2727,#9b1a1a);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;z-index:99999;box-shadow:0 -4px 20px rgba(0,0,0,.3)"><div style="flex:1"><div style="font-family:Sarabun,sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:2px">Install Airpak Express App</div><div style="font-size:12px;color:rgba(255,255,255,.7)">Get the full app experience — works offline!</div></div><button id="pwa-install-btn" style="background:#fff;color:#CD2727;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;margin-left:12px;flex-shrink:0">Install</button><button onclick="this.parentElement.style.display='none'" style="background:transparent;border:none;color:rgba(255,255,255,.7);font-size:20px;cursor:pointer;padding:4px 8px;margin-left:4px">×</button></div>';
-        document.body.appendChild(banner);
-        
-        document.getElementById('pwa-install-btn').addEventListener('click', function() {
-          installPrompt.prompt();
-          installPrompt.userChoice.then(function(result) {
-            if (result.outcome === 'accepted') {
-              localStorage.setItem('ap_pwa_installed', '1');
-            }
-            installPrompt = null;
-            banner.style.display = 'none';
-          });
-        });
-      }
-    }, 5000);
-  });
-
-  window.addEventListener('appinstalled', function() {
-    installPrompt = null;
-    localStorage.setItem('ap_pwa_installed', '1');
-    console.log('[PWA] App installed!');
-    // Show toast
-    var toast = document.createElement('div');
-    toast.textContent = 'Airpak Express installed successfully!';
-    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1C1C1E;color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:500;z-index:99999;box-shadow:0 8px 32px rgba(0,0,0,.3)';
-    document.body.appendChild(toast);
-    setTimeout(function(){ toast.style.display='none'; }, 4000);
-  });
-
-  // Push notification subscription
-  if ('Notification' in window && navigator.serviceWorker) {
-    window.subscribePush = function() {
-      Notification.requestPermission().then(function(perm) {
-        if (perm === 'granted') {
-          navigator.serviceWorker.ready.then(function(reg) {
-            reg.pushManager.subscribe({
-              userVisibleOnly: true,
-              applicationServerKey: 'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3M8NrXYu1Vwvfrwcsjk0s'
-            }).then(function(sub) {
-              console.log('[PWA] Push subscribed:', sub.endpoint);
-              localStorage.setItem('ap_push_sub', JSON.stringify(sub));
-            });
-          });
-        }
-      });
-    };
-    
-    // Auto-prompt after 10s if not subscribed
-    setTimeout(function() {
-      if (Notification.permission === 'default' && !localStorage.getItem('ap_push_sub')) {
-        window.subscribePush && window.subscribePush();
-      }
-    }, 10000);
+  // Check valid
+  if (VALID_CODES.indexOf(val) === -1) {
+    window.location.href = '404.html?q=' + encodeURIComponent(val);
+    return;
   }
-
-  // Check online/offline status
-  window.addEventListener('online', function() {
-    document.body.classList.remove('offline-mode');
-    console.log('[PWA] Back online');
+  
+  hideError();
+  
+  // Get data
+  var data = TRACK_DATA[val] || TRACK_DATA['APX0000UK'];
+  
+  // Populate UI
+  document.getElementById('trStatus').textContent = data.status;
+  document.getElementById('trEta').textContent = data.eta;
+  document.getElementById('trAwb').textContent = val;
+  document.getElementById('dcFrom').textContent = data.from;
+  document.getElementById('dcTo').textContent = data.to;
+  document.getElementById('dcWeight').textContent = data.weight;
+  document.getElementById('dcDim').textContent = data.dims;
+  document.getElementById('dcService').textContent = data.service;
+  document.getElementById('mapFrom').textContent = data.from.split(',')[0];
+  document.getElementById('mapTo').textContent = data.to.split(',')[0];
+  document.getElementById('mapEta').textContent = data.mapEta;
+  document.getElementById('mapDist').textContent = data.mapDist;
+  document.getElementById('mapProg').textContent = data.mapProg;
+  document.getElementById('mapStatusPill').textContent = '● ' + data.status + ' — ' + data.from.split(',')[0] + ' → ' + data.to.split(',')[0];
+  
+  // Render timeline
+  var doneCount = data.events.filter(function(e){ return e.done || e.active; }).length;
+  document.getElementById('tsCount').textContent = doneCount + '/' + data.events.length + ' events';
+  
+  var tlHTML = '';
+  data.events.forEach(function(ev, i) {
+    var dotClass = 'ti-dot';
+    if (ev.done) dotClass += ' done';
+    else if (ev.active) dotClass += ' active';
+    var lineClass = 'ti-line';
+    if (ev.done) lineClass += ' done';
+    var icon = ev.done ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' :
+                      (ev.active ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>');
+    var titleClass = 'ti-title';
+    if (ev.done) titleClass += ' done';
+    else if (ev.active) titleClass += ' active';
+    tlHTML += '<div class="ti-item">' +
+      '<div class="ti-dot-wrap">' +
+        '<div class="' + dotClass + '">' + icon + '</div>' +
+        (i < data.events.length - 1 ? '<div class="' + lineClass + '"></div>' : '') +
+      '</div>' +
+      '<div class="ti-content">' +
+        '<div class="' + titleClass + '">' + ev.title + '</div>' +
+        '<div class="ti-time">' + ev.time + '</div>' +
+        '<div class="ti-loc">' + ev.loc + '</div>' +
+      '</div>' +
+    '</div>';
   });
-  window.addEventListener('offline', function() {
-    document.body.classList.add('offline-mode');
-    console.log('[PWA] Offline mode');
-  });
+  document.getElementById('tlList').innerHTML = tlHTML;
+  
+  // Show result, hide black canvas
+  document.getElementById('blackCanvas').style.display = 'none';
+  document.getElementById('trackResult').classList.add('show');
+  
+  // Init map
+  initMap(data);
+  
+  showToast('Found: ' + val);
+};
 
-  // Version check
-  window.apVersion = '1.0.0';
-})();
-</script>
-<script>
-window.addEventListener('load', function() {
-  if (typeof AirpakPWA !== 'undefined') {
-    AirpakPWA.init();
+// ===== MAP =====
+var map = null;
+var marker = null;
+
+function initMap(data) {
+  if (!L) return;
+  if (map) { map.remove(); map = null; }
+  
+  var routeCoords = [
+    [51.48, -3.17],
+    [51.50, -3.22],
+    [51.75, -2.0],
+    [52.0, -1.0],
+    [51.52, -0.12]
+  ];
+  
+  map = L.map('map', {zoomControl: false, attributionControl: false}).setView([51.65, -1.5], 7);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {}).addTo(map);
+  L.control.attribution({prefix: false, position: 'bottomright'}).addTo(map);
+  
+  L.polyline(routeCoords, {color: '#CD2727', weight: 4, opacity: 0.9}).addTo(map);
+  L.circleMarker([51.48, -3.17], {radius: 10, fillColor: '#CD2727', color: '#fff', weight: 3}).addTo(map).bindPopup('<b style="color:#1a1a1a">Cardiff Hub</b>');
+  L.circleMarker([51.52, -0.12], {radius: 10, fillColor: '#4ade80', color: '#fff', weight: 3}).addTo(map).bindPopup('<b style="color:#1a1a1a">London</b>');
+  
+  map.fitBounds(L.polyline(routeCoords).getBounds(), {padding: [20, 20]});
+}
+
+// ===== FULL MAP =====
+window.openFullMap = function() {
+  document.getElementById('fullMapSection').classList.add('active');
+  if (map) setTimeout(function(){ map.invalidateSize(); }, 50);
+};
+window.closeFullMap = function() {
+  document.getElementById('fullMapSection').classList.remove('active');
+};
+
+// ===== GO BACK =====
+window.goBack = function() {
+  document.getElementById('trackResult').classList.remove('show');
+  document.getElementById('blackCanvas').style.display = 'flex';
+  document.getElementById('trackingInput').value = '';
+};
+
+// ===== ERROR =====
+function showError(msg) {
+  document.getElementById('searchError').classList.add('show');
+  document.getElementById('errorMsg').textContent = msg;
+}
+function hideError() {
+  document.getElementById('searchError').classList.remove('show');
+}
+
+// ===== COPY =====
+window.copyAwb = function() {
+  var awb = document.getElementById('trAwb').textContent;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(awb).then(function() {
+      showToast('Copied: ' + awb);
+    });
   } else {
-    var s = document.createElement('script');
-    s.src = '/pwa-features.js';
-    document.head.appendChild(s);
+    showToast('AWB: ' + awb);
+  }
+};
+
+// ===== SHARE =====
+window.shareTracking = function() {
+  var code = document.getElementById('trAwb').textContent;
+  var text = 'Track my Airpak Express shipment: ' + code + '\nStatus: ' + document.getElementById('trStatus').textContent + '\nETA: ' + document.getElementById('trEta').textContent;
+  if (navigator.share) {
+    navigator.share({title:'Airpak Express Tracking',text:text,url:window.location.href}).catch(function(){});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function() {
+      showToast('Tracking link copied to clipboard!');
+    });
+  } else {
+    showToast('Share: ' + text);
+  }
+};
+
+// ===== PRINT =====
+window.printTracking = function() {
+  var code = document.getElementById('trAwb').textContent;
+  var status = document.getElementById('trStatus').textContent;
+  var eta = document.getElementById('trEta').textContent;
+  var from = document.getElementById('dcFrom').textContent;
+  var to = document.getElementById('dcTo').textContent;
+  var weight = document.getElementById('dcWeight').textContent;
+  var service = document.getElementById('dcService').textContent;
+  
+  var printWin = window.open('', '_blank');
+  printWin.document.write('<html><head><title>Airpak Tracking - ' + code + '</title>');
+  printWin.document.write('<style>body{font-family:Arial,sans-serif;padding:40px;max-width:600px;margin:0 auto;}');
+  printWin.document.write('.logo{font-size:24px;font-weight:bold;color:#CD2727;margin-bottom:24px;}');
+  printWin.document.write('.row{display:flex;border-bottom:1px solid #eee;padding:12px 0;}');
+  printWin.document.write('.label{color:#888;width:140px;font-size:12px;}');
+  printWin.document.write('.val{font-weight:600;}');
+  printWin.document.write('.status{background:#CD2727;color:#fff;padding:20px;border-radius:8px;margin:20px 0;font-size:18px;text-align:center;}');
+  printWin.document.write('@media print{body{padding:20px}}</style></head><body>');
+  printWin.document.write('<div class="logo">Airpak Express</div>');
+  printWin.document.write('<div class="status">Tracking: ' + code + '<br>' + status + ' — ETA: ' + eta + '</div>');
+  printWin.document.write('<div class="row"><div class="label">From</div><div class="val">' + from + '</div></div>');
+  printWin.document.write('<div class="row"><div class="label">To</div><div class="val">' + to + '</div></div>');
+  printWin.document.write('<div class="row"><div class="label">Weight</div><div class="val">' + weight + '</div></div>');
+  printWin.document.write('<div class="row"><div class="label">Service</div><div class="val">' + service + '</div></div>');
+  printWin.document.write('<div class="row"><div class="label">Carrier</div><div class="val">Airpak Express Air Cargo</div></div>');
+  printWin.document.write('<div class="row"><div class="label">Date</div><div class="val">' + new Date().toLocaleDateString('en-GB') + '</div></div>');
+  printWin.document.write('<p style="margin-top:32px;font-size:11px;color:#888">Generated by Airpak Express | airpak-express.com</p>');
+  printWin.document.write('</body></html>');
+  printWin.document.close();
+  printWin.print();
+};
+
+// ===== CONTACT SUPPORT =====
+window.contactSupport = function() {
+  var code = document.getElementById('trAwb').textContent;
+  var status = document.getElementById('trStatus').textContent;
+  window.location.href = 'messages.html?subject=Tracking%20' + encodeURIComponent(code) + '%20-%20' + encodeURIComponent(status) + '&ref=' + encodeURIComponent(code);
+};
+
+// ===== TOAST =====
+window.showToast = function(msg) {
+  var t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('toast-show');
+  setTimeout(function() { t.classList.remove('toast-show'); }, 3000);
+};
+
+// ===== ENTER KEY =====
+document.getElementById('trackingInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') doTrack();
+});
+
+// ===== ESCAPE TO CLOSE MAP =====
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeFullMap();
+    hideError();
   }
 });
+</script>
+
+<!-- PWA -->
+<script>
+(function(){
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').then(function(){}).catch(function(){});
+    });
+  }
+  window.addEventListener('load', function() {
+    if (typeof AirpakPWA !== 'undefined') AirpakPWA.init();
+  });
+})();
 </script>
 
 </body>
