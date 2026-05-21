@@ -8,7 +8,6 @@
       "src": "artifacts/api-server/dist/index.mjs",
       "use": "@vercel/node"
     }
-  ],
   "routes": 
     {
       "src": "/(.*)",
