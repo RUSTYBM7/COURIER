@@ -1,96 +1,101 @@
-import { defineConfig, type Plugin } from "vite";
+vite_fix = '''import path from "path";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import tailwindcss from "@tailwindcss/vite";
-import path from "path";
-import fs from "node:fs";
+import { VitePWA } from "vite-plugin-pwa";
+import { componentTagger } from "lovable-tagger";
 
-const cleanUrlsPlugin = (publicDir: string): Plugin => ({
-  name: "clean-urls",
-  configureServer(server) {
-    server.middlewares.use((req, _res, next) => {
-      if (!req.url) return next();
-      const [pathname, query] = req.url.split("?");
-      if (
-        pathname &&
-        !pathname.endsWith("/") &&
-        !path.extname(pathname) &&
-        fs.existsSync(path.join(publicDir, `${pathname}.html`))
-      ) {
-        req.url = `${pathname}.html${query ? `?${query}` : ""}`;
+// Clean URLs plugin - removes .html extension from links
+function cleanUrlsPlugin(staticDir: string) {
+  return {
+    name: "clean-urls",
+    enforce: "post" as const,
+    async generateBundle(_options: any, bundle: Record<string, any>) {
+      const fs = await import("fs");
+      const files = fs.readdirSync(staticDir).filter((f: string) => f.endsWith(".html"));
+      for (const file of files) {
+        const content = fs.readFileSync(path.join(staticDir, file), "utf-8");
+        const clean = content.replace(/href="([^"]+)\.html"/g, 'href="$1"');
+        bundle[file] = { type: "asset", source: clean, fileName: file };
       }
-      next();
-    });
-  },
-});
+    },
+  };
+}
 
-// Injects dark class into the dist index.html
-const injectDark: Plugin = {
-  name: "inject-dark",
-  apply: "build",
-  transformIndexHtml(html) {
-    const darkClass = `<script>document.documentElement.classList.add('dark');document.body.classList.add('dark');</script>`;
-    if (!html.includes("document.documentElement.classList.add('dark')")) {
-      html = html.replace("</body>", `${darkClass}\n</body>`);
-    }
-    return html;
-  },
-};
-
-const rawPort = process.env.PORT;
-const port = rawPort ? Number(rawPort) : 5173;
-const basePath = process.env.BASE_PATH ?? "/";
-const isDev = process.env.NODE_ENV !== "production";
-const isReplit = process.env.REPL_ID !== undefined;
-
-const replitPlugins = isDev && isReplit
-  ? await Promise.all([
-      import("@replit/vite-plugin-runtime-error-modal").then((m) => m.default()),
-      import("@replit/vite-plugin-cartographer").then((m) =>
-        m.cartographer({ root: path.resolve(import.meta.dirname, "..") }),
-      ),
-    ])
-  : [];
+// Dark mode injection plugin - properly injects dark class
+function injectDark() {
+  return {
+    name: "inject-dark",
+    transformIndexHtml(html: string) {
+      const darkClass = `<script>document.documentElement.classList.add('dark')</script>`;
+      // Inject before closing </head> tag
+      if (html.includes("</head>")) {
+        html = html.replace("</head>", `${darkClass}\n</head>`);
+      }
+      return html;
+    },
+  };
+}
 
 export default defineConfig({
-  base: basePath,
+  server: {
+    host: "0.0.0.0",
+    port: 8080,
+    allowedHosts: ["airpak-express.site", "www.airpak-express.site", "localhost"],
+  },
   plugins: [
     react(),
-    tailwindcss(),
-    cleanUrlsPlugin(path.resolve(import.meta.dirname, "static")),
-    injectDark,
-    ...replitPlugins,
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest: {
+        name: 'Airpak Express',
+        short_name: 'Airpak',
+        description: 'Global logistics and courier services',
+        theme_color: '#E53935',
+        background_color: '#ffffff',
+        display: 'standalone',
+        icons: [
+          {
+            src: '/icon-192x192.png',
+            sizes: '192x192',
+            type: 'image/png'
+          },
+          {
+            src: '/icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png'
+          }
+        ]
+      }
+    }),
+    componentTagger(),
+    cleanUrlsPlugin(path.resolve(import.meta.dirname, "public")),
+    injectDark(),
   ],
   resolve: {
     alias: {
-      "@": path.resolve(import.meta.dirname, "src"),
-      "@assets": path.resolve(import.meta.dirname, "..", "..", "attached_assets"),
+      "@": path.resolve(import.meta.dirname, "./src"),
     },
-    dedupe: ["react", "react-dom"],
   },
-  root: path.resolve(import.meta.dirname),
-  publicDir: path.resolve(import.meta.dirname, "static"),
   build: {
-    outDir: path.resolve(import.meta.dirname, "dist/public"),
+    outDir: "dist/public",
     emptyOutDir: true,
     rollupOptions: {
-      input: path.resolve(import.meta.dirname, "index.html"),
       output: {
-        entryFileNames: "assets/[name].js",
-        chunkFileNames: "assets/[name].js",
-        assetFileNames: "assets/[name].[ext]",
-      },
-    },
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-router': ['wouter'],
+          'vendor-ui': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-tabs'],
+          'vendor-icons': ['lucide-react'],
+        }
+      }
+    }
   },
-  server: {
-    port,
-    strictPort: true,
-    host: "0.0.0.0",
-    allowedHosts: true,
-    fs: { strict: true },
-  },
-  preview: {
-    port,
-    host: "0.0.0.0",
-    allowedHosts: true,
+  css: {
+    devSourcemap: true,
   },
 });
+'''
+
+with open('/mnt/agents/output/airpak-repair/vite.config.ts', 'w') as f:
+    f.write(vite_fix)
+
