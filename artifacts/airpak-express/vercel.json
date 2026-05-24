@@ -1,17 +1,43 @@
 {
-  "buildCommand": "echo skip",
-  "installCommand": "echo skip",
+{
+  "buildCommand": "pnpm run build",
+  "installCommand": "pnpm install",
   "outputDirectory": "dist/public",
   "framework": null,
   "cleanUrls": true,
   "rewrites": [
     { "source": "/shipnow", "destination": "/signin.html" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/shiplite", "destination": "/signin.html" },
+    { "source": "/getonline", "destination": "/signin.html" },
+    { "source": "/login", "destination": "/signin.html" },
+    { "source": "/signup", "destination": "/signup.html" },
+    { "source": "/about", "destination": "/aboutus.html" },
+    { "source": "/contact", "destination": "/contact.html" },
+    { "source": "/tracking", "destination": "/tracking.html" },
+    { "source": "/track", "destination": "/tracking.html" },
+    { "source": "/dashboard", "destination": "/dashboard.html" },
+    { "source": "/admin", "destination": "/admin-login.html" },
+    { "source": "/admin-panel", "destination": "/admin.html" },
+    { "source": "/payment", "destination": "/payment.html" },
+    { "source": "/wallet", "destination": "/payment.html" },
+    { "source": "/settings", "destination": "/settings.html" },
+    { "source": "/chat", "destination": "/chat.html" },
+    { "source": "/messages", "destination": "/chat.html" },
+    { "source": "/documents", "destination": "/documents.html" },
+    { "source": "/faq", "destination": "/faq.html" },
+    { "source": "/careers", "destination": "/careers.html" },
+    { "source": "/privacy", "destination": "/privacy.html" },
+    { "source": "/terms", "destination": "/terms.html" },
+    { "source": "/services", "destination": "/international-shipping.html" },
+    { "source": "/enterprise", "destination": "/enterprise-tools.html" },
+    { "source": "/fuel", "destination": "/fuelsurcharge.html" },
+    { "source": "/app/(.*)", "destination": "/index.html" }
   ],
   "headers": [
     { "source": "/(.*)", "headers": [
       { "key": "X-Content-Type-Options", "value": "nosniff" },
-      { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+      { "key": "X-Frame-Options", "value": "DENY" }
     ]},
     { "source": "/apps/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]},
     { "source": "/assets/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]},
