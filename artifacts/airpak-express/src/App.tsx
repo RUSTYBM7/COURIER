@@ -1,8 +1,3 @@
-
-# ============================================
-# FIX 10: App.tsx - Fix routing, add auth guards, shared nav
-# ============================================
-
 app_fix = '''import { Route, Switch } from "wouter";
 import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
