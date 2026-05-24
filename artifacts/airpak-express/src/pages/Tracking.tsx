@@ -1,295 +1,320 @@
-import { useState } from "react";
-import { AppNav } from "@/components/AppNav";
-import { AppSidebar } from "@/components/AppSidebar";
-import TimelineComponent05 from "@/components/blocks/timeline-component-05";
-import { DashboardDialog01 } from "@/components/blocks/dashboard-dialog-01";
+tracking_fix = '''import { useState, useEffect } from "react";
+import { Link, useLocation } from "wouter";
+import { useTheme } from "@/hooks/useTheme";
 import {
-  Search, Package, MapPin, Truck, CheckCircle,
-  Clock, AlertCircle, RefreshCw, Share2
+  Search, ArrowLeft, Package, Truck, MapPin, Clock, CheckCircle,
+  AlertTriangle, ChevronRight, Home, User, LogOut, Menu, X
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { AirpakLogo } from "@/components/AirpakLogo";
 
 interface TrackingEvent {
   status: string;
   location: string;
-  time: string;
-  desc: string;
-  done: boolean;
+  timestamp: string;
+  completed: boolean;
 }
 
 interface TrackingResult {
   id: string;
-  status: "delivered" | "in-transit" | "pending" | "exception";
+  status: string;
   origin: string;
   destination: string;
-  weight: string;
   service: string;
+  weight: string;
   estimatedDelivery: string;
+  progress: number;
+  currentLocation: string;
   events: TrackingEvent[];
 }
 
-const MOCK_DATA: Record<string, TrackingResult> = {
-  "APX-2024-001": {
-    id: "APX-2024-001", status: "delivered",
-    origin: "Cardiff, Wales UK", destination: "Tokyo, Japan",
-    weight: "2.3 kg", service: "International Express",
-    estimatedDelivery: "Delivered Dec 15, 2024",
-    events: [
-      { status: "Delivered", location: "Tokyo, Japan", time: "Dec 15 · 14:23", desc: "Package delivered to recipient", done: true },
-      { status: "Out for Delivery", location: "Tokyo Sorting Hub, Japan", time: "Dec 15 · 08:10", desc: "With delivery courier", done: true },
-      { status: "Customs Cleared", location: "Narita Airport, Japan", time: "Dec 14 · 16:45", desc: "Customs clearance completed", done: true },
-      { status: "In Transit", location: "London Heathrow, UK", time: "Dec 12 · 22:30", desc: "Departed international hub", done: true },
-      { status: "Picked Up", location: "Cardiff, Wales UK", time: "Dec 11 · 10:00", desc: "Package collected from sender", done: true },
-    ],
-  },
-  "APX-2024-002": {
-    id: "APX-2024-002", status: "in-transit",
-    origin: "Cardiff, Wales UK", destination: "New York, USA",
-    weight: "4.1 kg", service: "Express Shipping",
-    estimatedDelivery: "Expected Dec 20, 2024",
-    events: [
-      { status: "In Transit", location: "JFK International, New York", time: "Dec 18 · 11:20", desc: "Arrived at destination country", done: true },
-      { status: "In Transit", location: "London Heathrow, UK", time: "Dec 17 · 23:50", desc: "Departed international hub", done: true },
-      { status: "In Transit", location: "London Sorting Hub, UK", time: "Dec 17 · 15:30", desc: "Processed at hub", done: true },
-      { status: "Picked Up", location: "Cardiff, Wales UK", time: "Dec 16 · 09:15", desc: "Package collected from sender", done: true },
-      { status: "Out for Delivery", location: "New York, USA", time: "Dec 20 · (estimated)", desc: "Pending customs clearance", done: false },
-    ],
-  },
-};
-
-const STATUS_CONFIG = {
-  delivered: { color: "var(--apple-green)", bg: "rgba(52,199,89,0.12)", icon: <CheckCircle size={20} />, label: "Delivered" },
-  "in-transit": { color: "var(--apple-orange)", bg: "rgba(255,149,0,0.12)", icon: <Truck size={20} />, label: "In Transit" },
-  pending: { color: "var(--apple-blue)", bg: "rgba(0,122,255,0.12)", icon: <Clock size={20} />, label: "Pending" },
-  exception: { color: "var(--apple-red)", bg: "rgba(255,59,48,0.12)", icon: <AlertCircle size={20} />, label: "Exception" },
-};
-
-const STEPS = ["Order Placed", "Picked Up", "In Transit", "Out for Delivery", "Delivered"];
-
 export default function Tracking() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [, navigate] = useLocation();
+  const { resolvedTheme } = useTheme();
   const [query, setQuery] = useState("");
-  const [result, setResult] = useState<TrackingResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<TrackingResult | null>(null);
   const [notFound, setNotFound] = useState(false);
+  const [error, setError] = useState("");
+  const [user, setUser] = useState<any>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  async function handleSearch(e: React.FormEvent) {
-    e.preventDefault();
-    if (!query.trim()) return;
-    setLoading(true); setNotFound(false); setResult(null);
-    await new Promise(r => setTimeout(r, 700));
-    const found = MOCK_DATA[query.trim().toUpperCase()];
-    setLoading(false);
-    if (found) setResult(found);
-    else setNotFound(true);
+  // Check auth (optional for tracking - public tracking should work)
+  useEffect(() => {
+    fetch('/api/auth/me', { credentials: 'include' })
+      .then(r => r.json())
+      .then(data => setUser(data.user || null))
+      .catch(() => {});
+    
+    // Check URL params for search
+    const params = new URLSearchParams(window.location.search);
+    const searchParam = params.get('search');
+    if (searchParam) {
+      setQuery(searchParam);
+      handleSearch(null, searchParam);
+    }
+  }, []);
+
+  async function handleSearch(e: React.FormEvent | null, overrideQuery?: string) {
+    if (e) e.preventDefault();
+    
+    const searchQuery = overrideQuery || query;
+    if (!searchQuery.trim()) return;
+    
+    setLoading(true);
+    setError("");
+    setResult(null);
+    setNotFound(false);
+    
+    try {
+      const res = await fetch(`/api/tracking/${encodeURIComponent(searchQuery.trim().toUpperCase())}`, {
+        credentials: 'include'
+      });
+      
+      if (res.status === 404) {
+        setNotFound(true);
+        setLoading(false);
+        return;
+      }
+      
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error || 'Tracking lookup failed');
+        setLoading(false);
+        return;
+      }
+      
+      const data = await res.json();
+      setResult(data.shipment);
+      
+    } catch (err) {
+      setError('Network error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   }
 
-  const stepIndex = result ? Math.max(0, result.events.filter(e => e.done).length - 1) : 0;
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/signout', { method: 'POST', credentials: 'include' });
+      window.localStorage.removeItem('airpak_user');
+      setUser(null);
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case 'delivered': return <CheckCircle className="h-5 w-5 text-green-500" />;
+      case 'in_transit': return <Truck className="h-5 w-5 text-blue-500" />;
+      case 'pending': return <Clock className="h-5 w-5 text-yellow-500" />;
+      case 'exception': return <AlertTriangle className="h-5 w-5 text-red-500" />;
+      default: return <Package className="h-5 w-5 text-muted-foreground" />;
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
+    const variants: Record<string, string> = {
+      delivered: 'bg-green-500/10 text-green-600 border-green-500/20',
+      in_transit: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
+      pending: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20',
+      exception: 'bg-red-500/10 text-red-600 border-red-500/20',
+    };
+    return variants[status?.toLowerCase()] || 'bg-muted text-muted-foreground';
+  };
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--apple-bg)" }}>
-      <AppNav variant="app" showSidebar sidebarOpen={sidebarOpen} onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      <div className="dashboard-layout" style={{ paddingTop: "var(--nav-height)" }}>
-        <AppSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-
-        <main id="main-content" className="dashboard-main">
-          {/* Header */}
-          <div className="dashboard-header">
-            <div>
-              <h1 className="dashboard-title">Track Package</h1>
-              <p style={{ color: "var(--apple-label-secondary)", fontSize: "var(--text-sm)", marginTop: "var(--space-1)" }}>
-                Unit 7, Wales International Hub, Cardiff Bay, Wales CF10 5AL
-              </p>
-            </div>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <Link href="/">
+              <AirpakLogo className="h-8" />
+            </Link>
           </div>
+          
+          <div className="flex items-center gap-2">
+            {user ? (
+              <>
+                <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard')}>
+                  <Home className="h-5 w-5" />
+                </Button>
+                <Button variant="ghost" size="icon" onClick={() => navigate('/settings')}>
+                  <User className="h-5 w-5" />
+                </Button>
+                <Button variant="ghost" size="icon" onClick={handleLogout}>
+                  <LogOut className="h-5 w-5" />
+                </Button>
+              </>
+            ) : (
+              <Button variant="outline" onClick={() => navigate('/signin')}>
+                Sign In
+              </Button>
+            )}
+          </div>
+        </div>
+      </header>
 
-          {/* Search */}
-          <section aria-label="Package tracking search" className="glass-card-sm" style={{ padding: 28, borderRadius: "var(--radius-xl)", marginBottom: 24 }}>
-            <form onSubmit={handleSearch} style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-              <div style={{ position: "relative", flex: 1, minWidth: 240 }}>
-                <Search size={16} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--apple-label-tertiary)" }} aria-hidden="true" />
-                <label htmlFor="tracking-input" className="sr-only">Enter tracking number</label>
-                <input
-                  id="tracking-input"
-                  type="text"
-                  className="input"
-                  style={{ paddingLeft: 42 }}
-                  placeholder="Enter tracking number (e.g. APX-2024-001)"
-                  value={query}
-                  onChange={e => setQuery(e.target.value)}
-                  aria-label="Tracking number"
-                  aria-required="true"
-                />
+      <main className="container mx-auto px-4 py-8 max-w-3xl">
+        <div className="text-center space-y-2 mb-8">
+          <h1 className="text-3xl font-bold">Track Your Shipment</h1>
+          <p className="text-muted-foreground">Enter your Airpak Waybill (AWB) number or reference</p>
+        </div>
+        
+        <form onSubmit={(e) => handleSearch(e)} className="flex gap-2 mb-8">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input 
+              placeholder="e.g., APX-2026-001234"
+              className="pl-10"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              disabled={loading}
+            />
+          </div>
+          <Button type="submit" disabled={loading || !query.trim()}>
+            {loading ? 'Searching...' : 'Track'}
+          </Button>
+        </form>
+        
+        {error && (
+          <Card className="mb-6 border-red-500/20">
+            <CardContent className="pt-6 flex items-center gap-3 text-red-600">
+              <AlertTriangle className="h-5 w-5" />
+              <p>{error}</p>
+            </CardContent>
+          </Card>
+        )}
+        
+        {notFound && (
+          <Card className="mb-6">
+            <CardContent className="pt-6 text-center py-12">
+              <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-medium">Shipment not found</h3>
+              <p className="text-muted-foreground mt-1">
+                We couldn't find a shipment with tracking number <strong>{query}</strong>
+              </p>
+              <div className="mt-4 space-y-2 text-sm text-muted-foreground">
+                <p>Double-check your tracking number and try again.</p>
+                <p>Tracking numbers typically look like: <code className="bg-muted px-1 py-0.5 rounded">APX-2026-XXXXXX</code></p>
               </div>
-              <button type="submit" className="btn-primary" disabled={loading} aria-busy={loading} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                {loading ? <><RefreshCw size={14} className="spin" aria-hidden="true" /> Tracking…</> : <><Search size={14} aria-hidden="true" /> Track</>}
-              </button>
-            </form>
-            <p style={{ marginTop: 12, fontSize: "var(--text-sm)", color: "var(--apple-label-tertiary)" }}>
-              Try: APX-2024-001 (delivered) or APX-2024-002 (in transit)
-            </p>
-          </section>
-
-          {/* Not Found */}
-          {notFound && (
-            <div role="alert" className="glass-card-sm" style={{ padding: 32, borderRadius: "var(--radius-xl)", textAlign: "center", marginBottom: 24 }}>
-              <AlertCircle size={40} color="var(--apple-label-tertiary)" style={{ margin: "0 auto 12px" }} aria-hidden="true" />
-              <h2 style={{ marginBottom: 8 }}>No results found</h2>
-              <p style={{ color: "var(--apple-label-secondary)" }}>No shipment found for <strong>"{query}"</strong>. Check the tracking number and try again.</p>
-            </div>
-          )}
-
-          {/* Tracking Result + Timeline */}
-          {result && (() => {
-            const cfg = STATUS_CONFIG[result.status];
-            return (
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 20, alignItems: "start" }}>
-                {/* Main Card */}
-                <section aria-label="Tracking details" className="glass-card-sm" style={{ borderRadius: "var(--radius-xl)", overflow: "hidden" }}>
-                  {/* Status Banner */}
-                  <div style={{ padding: "20px 24px", borderBottom: "1px solid var(--apple-separator)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
-                    <div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                        <span style={{ padding: "3px 12px", borderRadius: 999, background: cfg.bg, color: cfg.color, fontSize: "var(--text-sm)", fontWeight: "var(--font-semibold)", display: "flex", alignItems: "center", gap: 6 }}>
-                          <span aria-hidden="true">{cfg.icon}</span>{cfg.label}
-                        </span>
-                      </div>
-                      <h2 style={{ fontSize: "var(--text-2xl)", fontWeight: "var(--font-bold)", marginBottom: 4 }}>{result.id}</h2>
-                      <p style={{ color: "var(--apple-label-secondary)", fontSize: "var(--text-sm)" }}>{result.estimatedDelivery}</p>
-                    </div>
-                    <button className="btn-secondary" style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--text-sm)" }} aria-label="Share tracking link">
-                      <Share2 size={14} aria-hidden="true" /> Share
-                    </button>
+            </CardContent>
+          </Card>
+        )}
+        
+        {result && (
+          <div className="space-y-6">
+            {/* Shipment Header */}
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Tracking Number</p>
+                    <p className="text-xl font-bold">{result.id}</p>
                   </div>
-
-                  {/* Route */}
-                  <div style={{ padding: "20px 24px", borderBottom: "1px solid var(--apple-separator)", display: "flex", alignItems: "center", gap: 20 }}>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: "var(--text-xs)", color: "var(--apple-label-tertiary)", marginBottom: 4, fontWeight: "var(--font-semibold)", textTransform: "uppercase" }}>Origin</div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 6, fontWeight: "var(--font-semibold)" }}>
-                        <MapPin size={14} color="var(--apple-blue)" aria-hidden="true" />{result.origin}
-                      </div>
-                    </div>
-                    <div style={{ color: "var(--apple-label-tertiary)", fontSize: 20 }} aria-hidden="true">→</div>
-                    <div style={{ flex: 1, textAlign: "right" }}>
-                      <div style={{ fontSize: "var(--text-xs)", color: "var(--apple-label-tertiary)", marginBottom: 4, fontWeight: "var(--font-semibold)", textTransform: "uppercase" }}>Destination</div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 6, fontWeight: "var(--font-semibold)", justifyContent: "flex-end" }}>
-                        <MapPin size={14} color="var(--apple-green)" aria-hidden="true" />{result.destination}
-                      </div>
-                    </div>
+                  <Badge variant="outline" className={getStatusBadge(result.status)}>
+                    {result.status?.replace('_', ' ')}
+                  </Badge>
+                </div>
+                
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                  <div>
+                    <p className="text-muted-foreground">From</p>
+                    <p className="font-medium">{result.origin}</p>
                   </div>
-
-                  {/* Progress Bar */}
-                  <div style={{ padding: "20px 24px", borderBottom: "1px solid var(--apple-separator)" }} aria-label="Delivery progress">
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-                      {STEPS.map((step, i) => (
-                        <div key={step} style={{ flex: 1, textAlign: "center" }}>
-                          <div style={{ width: 24, height: 24, borderRadius: "50%", background: i <= stepIndex ? "var(--apple-blue)" : "var(--apple-separator)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 6px", color: "white", transition: "background 0.3s" }} aria-hidden="true">
-                            {i <= stepIndex && <CheckCircle size={12} />}
-                          </div>
-                          <div style={{ fontSize: "var(--text-2xs)", color: i <= stepIndex ? "var(--apple-blue)" : "var(--apple-label-tertiary)", fontWeight: i === stepIndex ? "var(--font-semibold)" : "var(--font-regular)", whiteSpace: "nowrap" }}>{step}</div>
-                        </div>
-                      ))}
-                    </div>
-                    <div style={{ height: 4, background: "var(--apple-separator)", borderRadius: 2, position: "relative", marginTop: 4 }}>
-                      <div style={{ position: "absolute", left: 0, top: 0, height: "100%", width: `${(stepIndex / (STEPS.length - 1)) * 100}%`, background: "var(--apple-blue)", borderRadius: 2, transition: "width 0.5s" }} aria-hidden="true" />
-                    </div>
+                  <div>
+                    <p className="text-muted-foreground">To</p>
+                    <p className="font-medium">{result.destination}</p>
                   </div>
-
-                  {/* Event Timeline */}
-                  <div style={{ padding: "20px 24px" }}>
-                    <h3 style={{ fontSize: "var(--text-lg)", fontWeight: "var(--font-semibold)", marginBottom: 20 }}>Tracking History</h3>
-                    <ol style={{ listStyle: "none", position: "relative" }} aria-label="Shipping events">
-                      {result.events.map((ev, i) => (
-                        <li key={i} style={{ display: "flex", gap: 16, paddingBottom: i < result.events.length - 1 ? 20 : 0, position: "relative" }}>
-                          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                            <div style={{ width: 12, height: 12, borderRadius: "50%", background: ev.done ? "var(--apple-blue)" : "var(--apple-separator)", border: "2px solid", borderColor: ev.done ? "var(--apple-blue)" : "var(--apple-separator)", flexShrink: 0, zIndex: 1 }} aria-hidden="true" />
-                            {i < result.events.length - 1 && (
-                              <div style={{ flex: 1, width: 2, background: ev.done ? "var(--apple-blue)" : "var(--apple-separator)", margin: "4px 0", opacity: 0.3 }} aria-hidden="true" />
-                            )}
-                          </div>
-                          <div style={{ flex: 1, paddingBottom: 4 }}>
-                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8, marginBottom: 2 }}>
-                              <span style={{ fontWeight: "var(--font-semibold)", fontSize: "var(--text-sm)", color: ev.done ? "var(--apple-label)" : "var(--apple-label-tertiary)" }}>{ev.status}</span>
-                              <span style={{ fontSize: "var(--text-xs)", color: "var(--apple-label-tertiary)", whiteSpace: "nowrap" }}>{ev.time}</span>
-                            </div>
-                            <div style={{ fontSize: "var(--text-sm)", color: "var(--apple-label-secondary)", marginBottom: 2 }}>{ev.desc}</div>
-                            <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "var(--text-xs)", color: "var(--apple-label-tertiary)" }}>
-                              <MapPin size={10} aria-hidden="true" />{ev.location}
-                            </div>
-                          </div>
-                        </li>
-                      ))}
-                    </ol>
+                  <div>
+                    <p className="text-muted-foreground">Service</p>
+                    <p className="font-medium">{result.service}</p>
                   </div>
-                </section>
-
-                {/* Side Info */}
-                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                  <aside className="glass-card-sm" style={{ padding: 20, borderRadius: "var(--radius-xl)" }} aria-label="Package details">
-                    <h3 style={{ fontSize: "var(--text-lg)", fontWeight: "var(--font-semibold)", marginBottom: 16 }}>Package Details</h3>
-                    {[
-                      { label: "Service", value: result.service },
-                      { label: "Weight", value: result.weight },
-                      { label: "Tracking ID", value: result.id },
-                    ].map(item => (
-                      <div key={item.label} style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: "1px solid var(--apple-separator)" }}>
-                        <span style={{ fontSize: "var(--text-sm)", color: "var(--apple-label-secondary)" }}>{item.label}</span>
-                        <span style={{ fontSize: "var(--text-sm)", fontWeight: "var(--font-semibold)" }}>{item.value}</span>
-                      </div>
-                    ))}
-                  </aside>
-
-                  <div className="glass-card-sm" style={{ padding: 20, borderRadius: "var(--radius-xl)", textAlign: "center" }}>
-                    <Package size={32} color="var(--apple-label-tertiary)" style={{ margin: "0 auto 12px" }} aria-hidden="true" />
-                    <p style={{ fontSize: "var(--text-sm)", color: "var(--apple-label-secondary)", marginBottom: 12 }}>Need help with this shipment?</p>
-                    <a href="/chat" className="btn-secondary" style={{ display: "block", textAlign: "center" }}>Contact Support</a>
+                  <div>
+                    <p className="text-muted-foreground">Est. Delivery</p>
+                    <p className="font-medium">{result.estimatedDelivery}</p>
                   </div>
                 </div>
-              </div>
-            );
-          })()}
-
-          {/* Timeline Component — shown when a shipment is found */}
-          {result && (
-            <div className="mt-8">
-              <TimelineComponent05 />
-            </div>
-          )}
-
-          {/* Recent Shipments (when no search) */}
-          {!result && !notFound && !loading && (
-            <section aria-label="Your recent shipments" className="glass-card-sm" style={{ padding: 28, borderRadius: "var(--radius-xl)" }}>
-              <h2 style={{ fontSize: "var(--text-xl)", fontWeight: "var(--font-semibold)", marginBottom: 20 }}>Recent Shipments</h2>
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                {["APX-2024-001", "APX-2024-002"].map(id => {
-                  const d = MOCK_DATA[id];
-                  const cfg = STATUS_CONFIG[d.status];
-                  return (
-                    <button
-                      key={id}
-                      onClick={() => { setQuery(id); setResult(d); }}
-                      style={{ display: "flex", alignItems: "center", gap: 16, padding: "14px 16px", borderRadius: "var(--radius-lg)", border: "1.5px solid var(--apple-separator)", background: "transparent", cursor: "pointer", textAlign: "left", width: "100%", transition: "all 0.15s" }}
-                      onMouseEnter={e => (e.currentTarget.style.background = "var(--apple-fill-tertiary)")}
-                      onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
-                      aria-label={`View tracking for ${id} — ${d.status}`}
-                    >
-                      <Truck size={18} color={cfg.color} aria-hidden="true" />
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: "var(--font-semibold)", fontSize: "var(--text-sm)", marginBottom: 2 }}>{id}</div>
-                        <div style={{ fontSize: "var(--text-xs)", color: "var(--apple-label-secondary)" }}>{d.origin} → {d.destination}</div>
+                
+                <div className="mt-4">
+                  <div className="flex justify-between text-sm mb-1">
+                    <span>Progress</span>
+                    <span>{result.progress}%</span>
+                  </div>
+                  <Progress value={result.progress} className="h-2" />
+                </div>
+                
+                <div className="mt-4 flex items-center gap-2 text-sm">
+                  <MapPin className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Current location:</span>
+                  <span className="font-medium">{result.currentLocation}</span>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Timeline */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Shipment History</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {result.events?.map((event, i) => (
+                  <div key={i} className="flex items-start gap-4">
+                    <div className={`h-8 w-8 rounded-full flex items-center justify-center shrink-0 ${
+                      event.completed ? 'bg-green-500/10 text-green-500' : 'bg-muted text-muted-foreground'
+                    }`}>
+                      {event.completed ? <CheckCircle className="h-4 w-4" /> : <Clock className="h-4 w-4" />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium">{event.status}</p>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <MapPin className="h-3 w-3" />
+                        <span>{event.location}</span>
+                        <span>•</span>
+                        <span>{event.timestamp}</span>
                       </div>
-                      <span style={{ padding: "3px 10px", borderRadius: 999, background: cfg.bg, color: cfg.color, fontSize: "var(--text-xs)", fontWeight: "var(--font-semibold)" }}>{cfg.label}</span>
-                    </button>
-                  );
-                })}
+                    </div>
+                  </div>
+                )) || (
+                  <p className="text-muted-foreground text-center py-4">No tracking events available</p>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
+        
+        {/* Empty State */}
+        {!result && !notFound && !loading && !error && (
+          <Card>
+            <CardContent className="pt-6 text-center py-12">
+              <Search className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-medium">Enter a tracking number</h3>
+              <p className="text-muted-foreground mt-1">
+                Track your shipment in real-time with Airpak Express
+              </p>
+              <div className="mt-4 flex flex-wrap justify-center gap-2">
+                <Badge variant="secondary">APX-2026-001234</Badge>
+                <Badge variant="secondary">APX-2026-005678</Badge>
+                <Badge variant="secondary">APX-2026-009012</Badge>
               </div>
-            </section>
-          )}
-        </main>
-      </div>
-
-      <style>{`.spin { animation: spin 1s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } } .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }`}</style>
+            </CardContent>
+          </Card>
+        )}
+      </main>
     </div>
   );
 }
+'''
+
+with open('/mnt/agents/output/airpak-repair/Tracking.tsx', 'w') as f:
+    f.write(tracking_fix)
+
