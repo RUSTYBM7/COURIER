@@ -1,279 +1,549 @@
-import { useState } from "react";
-import { AppNav } from "@/components/AppNav";
+settings_fix = '''import { useState, useEffect } from "react";
+import { Link, useLocation } from "wouter";
 import { useTheme } from "@/hooks/useTheme";
-import { useLanguage, LANGUAGES, Lang } from "@/hooks/useLanguage";
+import {
+  ArrowLeft, User, Mail, Building, CreditCard, Shield, Bell,
+  Moon, Sun, Loader2, CheckCircle, AlertTriangle, LogOut, Camera,
+  ChevronRight, Globe, Smartphone, Key
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import {
-  User, Bell, Lock, Palette, Globe, CreditCard,
-  ChevronRight, Check, Moon, Sun, Monitor
-} from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AirpakLogo } from "@/components/AirpakLogo";
 
-type Section = "profile" | "notifications" | "privacy" | "appearance" | "language" | "billing";
-
-const NAV_ITEMS: { id: Section; icon: React.ReactNode; label: string }[] = [
-  { id: "profile", icon: <User size={18} />, label: "Profile" },
-  { id: "notifications", icon: <Bell size={18} />, label: "Notifications" },
-  { id: "privacy", icon: <Lock size={18} />, label: "Privacy & Security" },
-  { id: "appearance", icon: <Palette size={18} />, label: "Appearance" },
-  { id: "language", icon: <Globe size={18} />, label: "Language & Region" },
-  { id: "billing", icon: <CreditCard size={18} />, label: "Billing" },
-];
-
-function Field({ label, id, type = "text", value, placeholder }: { label: string; id: string; type?: string; value?: string; placeholder?: string }) {
-  const [val, setVal] = useState(value || "");
-  return (
-    <div className="field">
-      <label className="field-label" htmlFor={id}>{label}</label>
-      <input type={type} id={id} className="input" value={val} onChange={e => setVal(e.target.value)} placeholder={placeholder} />
-    </div>
-  );
-}
-
-function Toggle({ label, description, defaultChecked }: { label: string; description?: string; defaultChecked?: boolean }) {
-  const [on, setOn] = useState(defaultChecked ?? true);
-  return (
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 0", borderBottom: "1px solid var(--apple-separator)" }}>
-      <div>
-        <div style={{ fontSize: "var(--text-md)", fontWeight: "var(--font-medium)", marginBottom: description ? 2 : 0 }}>{label}</div>
-        {description && <div style={{ fontSize: "var(--text-sm)", color: "var(--apple-label-secondary)" }}>{description}</div>}
-      </div>
-      <button
-        role="switch"
-        aria-checked={on}
-        aria-label={label}
-        onClick={() => setOn(!on)}
-        style={{
-          width: 44, height: 26, borderRadius: 13, border: "none", cursor: "pointer",
-          background: on ? "var(--apple-blue)" : "var(--apple-gray-4)",
-          transition: "background 0.2s", position: "relative", flexShrink: 0
-        }}
-      >
-        <span style={{
-          position: "absolute", top: 2, left: on ? "calc(100% - 24px)" : 2,
-          width: 22, height: 22, borderRadius: "50%", background: "white",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "left 0.2s"
-        }} />
-      </button>
-    </div>
-  );
+interface UserData {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  company?: string;
+  phone?: string;
+  avatarUrl?: string;
+  plan?: string;
+  planPrice?: string;
+  emailVerified?: boolean;
+  twoFactorEnabled?: boolean;
+  notifications?: {
+    email: boolean;
+    sms: boolean;
+    push: boolean;
+    marketing: boolean;
+  };
 }
 
 export default function Settings() {
-  const [active, setActive] = useState<Section>("profile");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { theme, setTheme, resolvedTheme } = useTheme();
-  const { lang, setLang } = useLanguage();
-  const [saved, setSaved] = useState(false);
+  const [, navigate] = useLocation();
+  const { toggle, resolvedTheme } = useTheme();
+  const [user, setUser] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  
+  // Form states
+  const [name, setName] = useState("");
+  const [company, setCompany] = useState("");
+  const [phone, setPhone] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  
+  // Notification settings
+  const [emailNotif, setEmailNotif] = useState(true);
+  const [smsNotif, setSmsNotif] = useState(false);
+  const [pushNotif, setPushNotif] = useState(true);
+  const [marketingNotif, setMarketingNotif] = useState(false);
 
-  function handleSave() {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+  // Check auth and load user data
+  useEffect(() => {
+    fetch('/api/auth/me', { credentials: 'include' })
+      .then(r => r.json())
+      .then(data => {
+        if (!data.user) {
+          navigate('/signin?redirect=/settings');
+          return;
+        }
+        setUser(data.user);
+        setName(data.user.name || '');
+        setCompany(data.user.company || '');
+        setPhone(data.user.phone || '');
+        
+        // Load settings
+        return fetch('/api/me/settings', { credentials: 'include' }).then(r => r.json());
+      })
+      .then(settingsData => {
+        if (settingsData?.settings) {
+          const s = settingsData.settings;
+          setEmailNotif(s.emailNotifications ?? true);
+          setSmsNotif(s.smsNotifications ?? false);
+          setPushNotif(s.pushNotifications ?? true);
+          setMarketingNotif(s.marketingEmails ?? false);
+        }
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Settings load error:', err);
+        setError('Failed to load settings');
+        setLoading(false);
+      });
+  }, [navigate]);
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setError("");
+    setSuccess("");
+    
+    try {
+      const res = await fetch('/api/me/settings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          name,
+          company: company || undefined,
+          phone: phone || undefined
+        })
+      });
+      
+      const data = await res.json();
+      
+      if (!res.ok) {
+        setError(data.error || 'Failed to update profile');
+        setSaving(false);
+        return;
+      }
+      
+      setSuccess('Profile updated successfully');
+      setUser(prev => prev ? { ...prev, name, company, phone } : null);
+      
+    } catch (err) {
+      setError('Network error. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setError('Please fill in all password fields');
+      return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+      setError('New passwords do not match');
+      return;
+    }
+    
+    if (newPassword.length < 8) {
+      setError('New password must be at least 8 characters');
+      return;
+    }
+    
+    setSaving(true);
+    
+    try {
+      const res = await fetch('/api/auth/reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          currentPassword,
+          newPassword
+        })
+      });
+      
+      const data = await res.json();
+      
+      if (!res.ok) {
+        setError(data.error || 'Failed to change password');
+        setSaving(false);
+        return;
+      }
+      
+      setSuccess('Password changed successfully');
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      
+    } catch (err) {
+      setError('Network error. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleSaveNotifications = async () => {
+    setSaving(true);
+    setError("");
+    setSuccess("");
+    
+    try {
+      const res = await fetch('/api/me/settings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          emailNotifications: emailNotif,
+          smsNotifications: smsNotif,
+          pushNotifications: pushNotif,
+          marketingEmails: marketingNotif
+        })
+      });
+      
+      const data = await res.json();
+      
+      if (!res.ok) {
+        setError(data.error || 'Failed to update notifications');
+        setSaving(false);
+        return;
+      }
+      
+      setSuccess('Notification preferences saved');
+      
+    } catch (err) {
+      setError('Network error. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/signout', { method: 'POST', credentials: 'include' });
+      window.localStorage.removeItem('airpak_user');
+      navigate('/');
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+  };
+
+  const getInitials = (name: string) => {
+    return name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U';
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          <p className="text-muted-foreground">Loading settings...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--apple-bg)" }}>
-      <AppNav variant="app" showSidebar sidebarOpen={sidebarOpen} onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      <main id="main-content" className="pref-layout" style={{ paddingTop: "var(--nav-height)" }}>
-        {/* Settings Sidebar */}
-        <aside className="pref-sidebar" aria-label="Settings navigation">
-          <div className="pref-sidebar-header">
-            <h1 className="pref-sidebar-title">Settings</h1>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard')}>
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <Link href="/">
+              <AirpakLogo className="h-8" />
+            </Link>
           </div>
-          <nav className="pref-nav" role="navigation" aria-label="Settings sections">
-            {NAV_ITEMS.map(item => (
-              <button
-                key={item.id}
-                className={`pref-nav-item${active === item.id ? " active" : ""}`}
-                onClick={() => setActive(item.id)}
-                aria-current={active === item.id ? "page" : undefined}
-              >
-                <span aria-hidden="true">{item.icon}</span>
-                {item.label}
-                <ChevronRight size={14} style={{ marginLeft: "auto" }} aria-hidden="true" />
-              </button>
-            ))}
-          </nav>
-        </aside>
-
-        {/* Settings Content */}
-        <div style={{ flex: 1, padding: "40px 40px 80px", maxWidth: 680 }}>
-
-          {active === "profile" && (
-            <section aria-labelledby="section-profile">
-              <h2 id="section-profile" style={{ fontSize: "var(--text-3xl)", fontWeight: "var(--font-bold)", marginBottom: 32 }}>Profile</h2>
-              <div className="glass-card-sm" style={{ padding: 28, borderRadius: "var(--radius-xl)", marginBottom: 24 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 28, paddingBottom: 24, borderBottom: "1px solid var(--apple-separator)" }}>
-                  <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, var(--apple-blue), var(--apple-indigo))", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "var(--text-3xl)", color: "white", fontWeight: "var(--font-bold)" }} aria-label="User avatar">A</div>
-                  <div>
-                    <h3 style={{ fontWeight: "var(--font-semibold)", marginBottom: 4 }}>Alex Johnson</h3>
-                    <p style={{ color: "var(--apple-label-secondary)", fontSize: "var(--text-sm)", marginBottom: 12 }}>alex.johnson@company.com</p>
-                    <button className="btn-secondary" style={{ fontSize: "var(--text-sm)", padding: "6px 16px" }}>Change Photo</button>
-                  </div>
-                </div>
-                <Field label="Full Name" id="name" value="Alex Johnson" />
-                <Field label="Email address" id="email" type="email" value="alex.johnson@company.com" />
-                <Field label="Phone number" id="phone" type="tel" value="+44 7700 900142" />
-                <Field label="Company" id="company" value="Johnson Logistics Ltd" />
-                <Field label="Address" id="address" value="Unit 7, Wales International Hub" />
-              </div>
-              <button className="btn-primary" onClick={handleSave} aria-live="polite">
-                {saved ? <><Check size={16} aria-hidden="true" /> Saved!</> : "Save Changes"}
-              </button>
-            </section>
-          )}
-
-          {active === "notifications" && (
-            <section aria-labelledby="section-notif">
-              <h2 id="section-notif" style={{ fontSize: "var(--text-3xl)", fontWeight: "var(--font-bold)", marginBottom: 32 }}>Notifications</h2>
-              <div className="glass-card-sm" style={{ padding: 28, borderRadius: "var(--radius-xl)" }}>
-                <h3 style={{ fontSize: "var(--text-lg)", fontWeight: "var(--font-semibold)", marginBottom: 4 }}>Shipment Updates</h3>
-                <Toggle label="Email notifications" description="Receive shipment status updates via email" defaultChecked />
-                <Toggle label="Push notifications" description="Browser push notifications for real-time updates" defaultChecked />
-                <Toggle label="SMS updates" description="Text message alerts for delivery events" />
-                <h3 style={{ fontSize: "var(--text-lg)", fontWeight: "var(--font-semibold)", margin: "24px 0 4px" }}>Marketing</h3>
-                <Toggle label="Promotional emails" description="Special offers, news, and product updates" />
-                <Toggle label="Weekly digest" description="Weekly summary of your shipping activity" defaultChecked />
-              </div>
-            </section>
-          )}
-
-          {active === "privacy" && (
-            <section aria-labelledby="section-privacy">
-              <h2 id="section-privacy" style={{ fontSize: "var(--text-3xl)", fontWeight: "var(--font-bold)", marginBottom: 32 }}>Privacy & Security</h2>
-              <div className="glass-card-sm" style={{ padding: 28, borderRadius: "var(--radius-xl)", marginBottom: 24 }}>
-                <h3 style={{ fontSize: "var(--text-lg)", fontWeight: "var(--font-semibold)", marginBottom: 4 }}>Security</h3>
-                <Toggle label="Two-factor authentication" description="Add an extra layer of security to your account" />
-                <Toggle label="Login notifications" description="Get notified of new sign-ins to your account" defaultChecked />
-                <div style={{ padding: "16px 0" }}>
-                  <button className="btn-secondary" style={{ marginRight: 12 }}>Change Password</button>
-                  <button className="btn-secondary">View Active Sessions</button>
-                </div>
-              </div>
-              <div className="glass-card-sm" style={{ padding: 28, borderRadius: "var(--radius-xl)" }}>
-                <h3 style={{ fontSize: "var(--text-lg)", fontWeight: "var(--font-semibold)", marginBottom: 16 }}>Data & Privacy</h3>
-                <Toggle label="Data analytics" description="Help us improve by sharing anonymized usage data" defaultChecked />
-                <div style={{ padding: "16px 0" }}>
-                  <button className="btn-secondary" style={{ marginRight: 12 }}>Download My Data</button>
-                  <button style={{ color: "var(--apple-red)", background: "rgba(255,59,48,0.08)", border: "none", padding: "8px 16px", borderRadius: "var(--radius-full)", fontSize: "var(--text-sm)", fontWeight: "var(--font-semibold)", cursor: "pointer" }}>Delete Account</button>
-                </div>
-              </div>
-            </section>
-          )}
-
-          {active === "appearance" && (
-            <section aria-labelledby="section-appear">
-              <h2 id="section-appear" style={{ fontSize: "var(--text-3xl)", fontWeight: "var(--font-bold)", marginBottom: 32 }}>Appearance</h2>
-              <div className="glass-card-sm" style={{ padding: 28, borderRadius: "var(--radius-xl)" }}>
-                <h3 style={{ fontSize: "var(--text-lg)", fontWeight: "var(--font-semibold)", marginBottom: 20 }}>Theme</h3>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }} role="radiogroup" aria-label="Theme selection">
-                  {[
-                    { id: "light" as const, label: "Light", icon: <Sun size={20} /> },
-                    { id: "dark" as const, label: "Dark", icon: <Moon size={20} /> },
-                    { id: "system" as const, label: "System", icon: <Monitor size={20} /> },
-                  ].map(opt => (
-                    <button
-                      key={opt.id}
-                      role="radio"
-                      aria-checked={theme === opt.id}
-                      onClick={() => setTheme(opt.id)}
-                      style={{
-                        padding: 16, borderRadius: "var(--radius-lg)", cursor: "pointer",
-                        border: theme === opt.id ? "2px solid var(--apple-blue)" : "1.5px solid var(--apple-separator)",
-                        background: theme === opt.id ? "rgba(0,122,255,0.06)" : "transparent",
-                        display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
-                        color: theme === opt.id ? "var(--apple-blue)" : "var(--apple-label-secondary)",
-                      }}
-                    >
-                      <span aria-hidden="true">{opt.icon}</span>
-                      <span style={{ fontSize: "var(--text-sm)", fontWeight: "var(--font-medium)" }}>{opt.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </section>
-          )}
-
-          {active === "language" && (
-            <section aria-labelledby="section-lang">
-              <h2 id="section-lang" style={{ fontSize: "var(--text-3xl)", fontWeight: "var(--font-bold)", marginBottom: 32 }}>Language & Region</h2>
-              <div className="glass-card-sm" style={{ padding: 28, borderRadius: "var(--radius-xl)" }}>
-                <h3 style={{ fontSize: "var(--text-lg)", fontWeight: "var(--font-semibold)", marginBottom: 16 }}>Language</h3>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 10 }} role="radiogroup" aria-label="Language selection">
-                  {(Object.entries(LANGUAGES) as [Lang, typeof LANGUAGES[Lang]][]).map(([code, info]) => (
-                    <button
-                      key={code}
-                      role="radio"
-                      aria-checked={lang === code}
-                      onClick={() => setLang(code)}
-                      style={{
-                        padding: "12px 16px", borderRadius: "var(--radius-lg)", cursor: "pointer",
-                        border: lang === code ? "2px solid var(--apple-blue)" : "1.5px solid var(--apple-separator)",
-                        background: lang === code ? "rgba(0,122,255,0.06)" : "transparent",
-                        display: "flex", alignItems: "center", gap: 10,
-                        color: lang === code ? "var(--apple-blue)" : "var(--apple-label)",
-                      }}
-                    >
-                      <span style={{ fontSize: "var(--text-sm)", fontWeight: "var(--font-bold)" }}>{info.flag}</span>
-                      <span style={{ fontSize: "var(--text-sm)", fontWeight: "var(--font-medium)" }}>{info.label}</span>
-                    </button>
-                  ))}
-                </div>
-                <div style={{ marginTop: 28 }}>
-                  <div className="field">
-                    <label className="field-label" htmlFor="currency">Currency</label>
-                    <select id="currency" className="input" style={{ appearance: "auto" }}>
-                      <option value="GBP">GBP — British Pound (£)</option>
-                      <option value="USD">USD — US Dollar ($)</option>
-                      <option value="EUR">EUR — Euro (€)</option>
-                      <option value="AED">AED — UAE Dirham (د.إ)</option>
-                    </select>
-                  </div>
-                  <div className="field">
-                    <label className="field-label" htmlFor="timezone">Timezone</label>
-                    <select id="timezone" className="input" style={{ appearance: "auto" }}>
-                      <option>Europe/London (GMT+0)</option>
-                      <option>America/New_York (GMT-5)</option>
-                      <option>Asia/Dubai (GMT+4)</option>
-                      <option>Asia/Tokyo (GMT+9)</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </section>
-          )}
-
-          {active === "billing" && (
-            <section aria-labelledby="section-billing">
-              <h2 id="section-billing" style={{ fontSize: "var(--text-3xl)", fontWeight: "var(--font-bold)", marginBottom: 32 }}>Billing</h2>
-              <div className="glass-card-sm" style={{ padding: 28, borderRadius: "var(--radius-xl)", marginBottom: 24 }}>
-                <h3 style={{ fontSize: "var(--text-lg)", fontWeight: "var(--font-semibold)", marginBottom: 16 }}>Current Plan</h3>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <div>
-                    <div style={{ fontSize: "var(--text-2xl)", fontWeight: "var(--font-bold)", color: "var(--apple-blue)" }}>Business Pro</div>
-                    <div style={{ color: "var(--apple-label-secondary)", marginTop: 4 }}>£89/month · Renews Jan 1, 2027</div>
-                  </div>
-                  <button className="btn-secondary">Change Plan</button>
-                </div>
-              </div>
-              <div className="glass-card-sm" style={{ padding: 28, borderRadius: "var(--radius-xl)" }}>
-                <h3 style={{ fontSize: "var(--text-lg)", fontWeight: "var(--font-semibold)", marginBottom: 16 }}>Payment Method</h3>
-                <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
-                  <div style={{ padding: "8px 14px", borderRadius: 8, border: "1.5px solid var(--apple-separator)", fontWeight: "var(--font-bold)", fontSize: "var(--text-sm)" }}>VISA</div>
-                  <div>
-                    <div style={{ fontWeight: "var(--font-medium)" }}>•••• •••• •••• 4242</div>
-                    <div style={{ fontSize: "var(--text-sm)", color: "var(--apple-label-secondary)" }}>Expires 09/28</div>
-                  </div>
-                </div>
-                <button className="btn-secondary">Update Payment Method</button>
-              </div>
-            </section>
-          )}
+          <Button variant="ghost" size="icon" onClick={handleLogout}>
+            <LogOut className="h-5 w-5" />
+          </Button>
         </div>
+      </header>
+
+      <main className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">Settings</h1>
+          <p className="text-muted-foreground">Manage your account and preferences</p>
+        </div>
+        
+        {(error || success) && (
+          <div className={`mb-6 p-4 rounded-lg ${
+            error ? 'bg-destructive/10 text-destructive' : 'bg-green-500/10 text-green-600'
+          }`}>
+            <div className="flex items-center gap-2">
+              {error ? <AlertTriangle className="h-5 w-5" /> : <CheckCircle className="h-5 w-5" />}
+              <p>{error || success}</p>
+            </div>
+          </div>
+        )}
+        
+        {/* Profile Card */}
+        <Card className="mb-6">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="h-20 w-20 rounded-full bg-primary/10 flex items-center justify-center text-2xl font-bold text-primary">
+                  {user?.avatarUrl ? (
+                    <img src={user.avatarUrl} alt="" className="h-full w-full rounded-full object-cover" />
+                  ) : (
+                    getInitials(user?.name || '')
+                  )}
+                </div>
+                <Button variant="secondary" size="icon" className="absolute -bottom-1 -right-1 h-8 w-8 rounded-full">
+                  <Camera className="h-4 w-4" />
+                </Button>
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold">{user?.name}</h2>
+                <p className="text-muted-foreground">{user?.email}</p>
+                <div className="flex items-center gap-2 mt-1">
+                  <Badge variant={user?.emailVerified ? 'default' : 'secondary'}>
+                    {user?.emailVerified ? 'Verified' : 'Unverified'}
+                  </Badge>
+                  <Badge variant="outline">{user?.plan || 'Free Plan'}</Badge>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Tabs defaultValue="profile" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="profile">Profile</TabsTrigger>
+            <TabsTrigger value="security">Security</TabsTrigger>
+            <TabsTrigger value="notifications">Notifications</TabsTrigger>
+            <TabsTrigger value="billing">Billing</TabsTrigger>
+          </TabsList>
+          
+          {/* Profile Tab */}
+          <TabsContent value="profile">
+            <Card>
+              <CardHeader>
+                <CardTitle>Profile Information</CardTitle>
+                <CardDescription>Update your personal and company details</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSaveProfile} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Full Name</Label>
+                      <div className="relative">
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input 
+                          id="name" 
+                          className="pl-10"
+                          value={name}
+                          onChange={e => setName(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input 
+                          id="email" 
+                          type="email" 
+                          className="pl-10"
+                          value={user?.email || ''}
+                          disabled
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="company">Company</Label>
+                      <div className="relative">
+                        <Building className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input 
+                          id="company" 
+                          className="pl-10"
+                          value={company}
+                          onChange={e => setCompany(e.target.value)}
+                          placeholder="Your company name"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Phone</Label>
+                      <div className="relative">
+                        <Smartphone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input 
+                          id="phone" 
+                          type="tel"
+                          className="pl-10"
+                          value={phone}
+                          onChange={e => setPhone(e.target.value)}
+                          placeholder="+44 7700 900000"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex justify-end">
+                    <Button type="submit" disabled={saving}>
+                      {saving ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</> : 'Save Changes'}
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          {/* Security Tab */}
+          <TabsContent value="security">
+            <Card>
+              <CardHeader>
+                <CardTitle>Change Password</CardTitle>
+                <CardDescription>Update your password to keep your account secure</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleChangePassword} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="currentPassword">Current Password</Label>
+                    <div className="relative">
+                      <Key className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input 
+                        id="currentPassword" 
+                        type="password"
+                        className="pl-10"
+                        value={currentPassword}
+                        onChange={e => setCurrentPassword(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="newPassword">New Password</Label>
+                    <Input 
+                      id="newPassword" 
+                      type="password"
+                      value={newPassword}
+                      onChange={e => setNewPassword(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                    <Input 
+                      id="confirmPassword" 
+                      type="password"
+                      value={confirmPassword}
+                      onChange={e => setConfirmPassword(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex justify-end">
+                    <Button type="submit" disabled={saving}>
+                      {saving ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...</> : 'Update Password'}
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+            
+            <Card className="mt-4">
+              <CardHeader>
+                <CardTitle>Two-Factor Authentication</CardTitle>
+                <CardDescription>Add an extra layer of security to your account</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Shield className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <p className="font-medium">Authenticator App</p>
+                      <p className="text-sm text-muted-foreground">Use an authenticator app to generate codes</p>
+                    </div>
+                  </div>
+                  <Switch checked={user?.twoFactorEnabled || false} />
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          {/* Notifications Tab */}
+          <TabsContent value="notifications">
+            <Card>
+              <CardHeader>
+                <CardTitle>Notification Preferences</CardTitle>
+                <CardDescription>Choose how you want to be notified</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Mail className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <p className="font-medium">Email Notifications</p>
+                      <p className="text-sm text-muted-foreground">Receive updates about your shipments via email</p>
+                    </div>
+                  </div>
+                  <Switch checked={emailNotif} onCheckedChange={setEmailNotif} />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Smartphone className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <p className="font-medium">SMS Notifications</p>
+                      <p className="text-sm text-muted-foreground">Get text messages for important updates</p>
+                    </div>
+                  </div>
+                  <Switch checked={smsNotif} onCheckedChange={setSmsNotif} />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Bell className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <p className="font-medium">Push Notifications</p>
+                      <p className="text-sm text-muted-foreground">Browser push notifications for real-time updates</p>
+                    </div>
+                  </div>
+                  <Switch checked={pushNotif} onCheckedChange={setPushNotif} />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Globe className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <p className="font-medium">Marketing Emails</p>
+                      <p className="text-sm text-muted-foreground">Receive promotional offers and news</p>
+                    </div>
+                  </div>
+                  <Switch checked={marketingNotif} onCheckedChange={setMarketingNotif} />
+                </div>
+                <div className="flex justify-end">
+                  <Button onClick={handleSaveNotifications} disabled={saving}>
+                    {saving ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</> : 'Save Preferences'}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          {/* Billing Tab */}
+          <TabsContent value="billing">
+            <Card>
+              <CardHeader>
+                <CardTitle>Current Plan</CardTitle>
+                <CardDescription>Your subscription details</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <p className="font-semibold text-lg">{user?.plan || 'Free Plan'}</p>
+                    <p className="text-muted-foreground">{user?.planPrice || '£0/month'}</p>
+                  </div>
+                  <Badge variant="default">Active</Badge>
+                </div>
+                <div className="mt-4">
+                  <Button variant="outline" className="w-full">
+                    <CreditCard className="mr-2 h-4 w-4" /> Manage Billing
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );
 }
+'''
+
+with open('/mnt/agents/output/airpak-repair/Settings.tsx', 'w') as f:
+    f.write(settings_fix)
+
