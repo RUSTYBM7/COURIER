@@ -1,244 +1,330 @@
-import { useState, useRef, useEffect } from "react";
-import { AppNav } from "@/components/AppNav";
-import { AppSidebar } from "@/components/AppSidebar";
+chat_fix = '''import { useState, useEffect, useRef } from "react";
+import { Link, useLocation } from "wouter";
+import { useTheme } from "@/hooks/useTheme";
+import {
+  ArrowLeft, Send, Bot, User, Loader2, Clock,
+  Package, Search, FileText, HelpCircle, LogOut,
+  Home, Settings, Moon, Sun, AlertTriangle
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Send, Paperclip, Smile, Search, MoreHorizontal, Phone, Video } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { AirpakLogo } from "@/components/AirpakLogo";
 
-interface Message {
-  id: number;
-  role: "user" | "bot";
-  text: string;
-  time: string;
+interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+  type?: 'text' | 'tracking' | 'error';
 }
 
-const CONTACTS = [
-  { id: 1, name: "Airpak Assistant", subtitle: "AI Support · Online", initial: "A", color: "var(--apple-blue)", active: true },
-  { id: 2, name: "Billing Support", subtitle: "Last message 2h ago", initial: "B", color: "var(--apple-green)" },
-  { id: 3, name: "Customs Team", subtitle: "Last message 1d ago", initial: "C", color: "var(--apple-purple)" },
+interface QuickAction {
+  icon: React.ReactNode;
+  label: string;
+  prompt: string;
+}
+
+const QUICK_ACTIONS: QuickAction[] = [
+  { icon: <Package className="h-4 w-4" />, label: "Track shipment", prompt: "I need to track my shipment" },
+  { icon: <Search className="h-4 w-4" />, label: "Get a quote", prompt: "How much to ship a package from London to Tokyo?" },
+  { icon: <FileText className="h-4 w-4" />, label: "File a claim", prompt: "I need to file a claim for a damaged package" },
+  { icon: <HelpCircle className="h-4 w-4" />, label: "Support", prompt: "I need help with my account" },
 ];
 
-const QUICK_ACTIONS = ["Track a package", "Get a quote", "File a claim", "Contact support"];
-
-const BOT_RESPONSES: Record<string, string> = {
-  default: "I'm here to help! You can ask about tracking, quotes, billing, or any other Airpak Express service.",
-  track: "Please provide your tracking number (format: APX-YYYY-NNN) and I'll look it up right away.",
-  quote: "To get a quote, I need: origin postcode, destination country, package weight (kg), and dimensions (cm). Please share those details.",
-  claim: "I'm sorry to hear about the issue. Please provide your tracking number and describe the problem. I'll escalate to our claims team immediately.",
-  support: "Connecting you to a human agent… Average wait time is under 3 minutes. You can also reach us at support@airpak-express.site.",
-};
-
-function getBotReply(msg: string): string {
-  const lower = msg.toLowerCase();
-  if (lower.includes("track")) return BOT_RESPONSES.track;
-  if (lower.includes("quote") || lower.includes("price")) return BOT_RESPONSES.quote;
-  if (lower.includes("claim") || lower.includes("lost") || lower.includes("damage")) return BOT_RESPONSES.claim;
-  if (lower.includes("human") || lower.includes("agent") || lower.includes("support")) return BOT_RESPONSES.support;
-  return BOT_RESPONSES.default;
-}
-
-function formatTime(date: Date) {
-  return date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
-}
-
 export default function Chat() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    { id: 1, role: "bot", text: "Hi there! I'm your Airpak Express assistant. How can I help you today?", time: formatTime(new Date()) },
-  ]);
+  const [, navigate] = useLocation();
+  const { toggle, resolvedTheme } = useTheme();
+  const [user, setUser] = useState<any>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
-  const [typing, setTyping] = useState(false);
-  const [activeContact, setActiveContact] = useState(1);
-  const [searchContacts, setSearchContacts] = useState("");
-  const bottomRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Check auth (optional - chat can work for guests too)
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, typing]);
+    fetch('/api/auth/me', { credentials: 'include' })
+      .then(r => r.json())
+      .then(data => setUser(data.user || null))
+      .catch(() => {});
+  }, []);
 
-  async function sendMessage(text: string) {
-    if (!text.trim()) return;
-    const userMsg: Message = { id: Date.now(), role: "user", text: text.trim(), time: formatTime(new Date()) };
-    setMessages(prev => [...prev, userMsg]);
+  // Welcome message
+  useEffect(() => {
+    if (messages.length === 0) {
+      setMessages([{
+        id: 'welcome',
+        role: 'assistant',
+        content: `Hello! I'm your Airpak assistant. I can help you with:\n\n• Tracking shipments\n• Getting shipping quotes\n• Filing claims\n• Account questions\n\nWhat can I help you with today?`,
+        timestamp: new Date(),
+        type: 'text'
+      }]);
+    }
+  }, []);
+
+  // Auto-scroll to bottom
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  const handleSend = async (e?: React.FormEvent, overrideInput?: string) => {
+    if (e) e.preventDefault();
+    
+    const messageText = overrideInput || input;
+    if (!messageText.trim()) return;
+    
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: messageText,
+      timestamp: new Date(),
+    };
+    
+    setMessages(prev => [...prev, userMessage]);
     setInput("");
-    setTyping(true);
-    await new Promise(r => setTimeout(r, 900 + Math.random() * 600));
-    setTyping(false);
-    const botMsg: Message = { id: Date.now() + 1, role: "bot", text: getBotReply(text), time: formatTime(new Date()) };
-    setMessages(prev => [...prev, botMsg]);
-  }
+    setLoading(true);
+    setError("");
+    
+    try {
+      // Try to call backend API first
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ message: messageText })
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
+        const assistantMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: data.response,
+          timestamp: new Date(),
+          type: data.type || 'text'
+        };
+        setMessages(prev => [...prev, assistantMessage]);
+      } else {
+        // Fallback to client-side responses if API fails
+        handleFallbackResponse(messageText);
+      }
+    } catch (err) {
+      // Network error - use fallback
+      handleFallbackResponse(messageText);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(input); }
-  }
+  const handleFallbackResponse = (message: string) => {
+    const lower = message.toLowerCase();
+    let response = '';
+    let type: 'text' | 'tracking' | 'error' = 'text';
+    
+    if (lower.includes('track') || lower.includes('where') || lower.includes('shipment')) {
+      response = `I can help you track your shipment. Please visit our [Tracking page](/tracking) and enter your Airpak Waybill (AWB) number.\n\nYour tracking number typically looks like: **APX-2026-XXXXXX**`;
+      type = 'tracking';
+    } else if (lower.includes('quote') || lower.includes('price') || lower.includes('cost') || lower.includes('how much')) {
+      response = `To get an accurate shipping quote, please provide:\n\n• Origin and destination\n• Package weight and dimensions\n• Preferred service (Express, Standard, Economy, or Freight)\n\nYou can also visit our homepage and click "Get a Quote" for instant pricing.`;
+    } else if (lower.includes('claim') || lower.includes('damage') || lower.includes('lost') || lower.includes('missing')) {
+      response = `I'm sorry to hear you're having an issue. To file a claim:\n\n1. Gather your AWB number and photos of damage (if applicable)\n2. Contact our claims team at claims@airpak-express.site\n3. Or call our support line at +44 20 7946 0958\n\nClaims are typically resolved within 5-7 business days.`;
+    } else if (lower.includes('human') || lower.includes('agent') || lower.includes('support') || lower.includes('help')) {
+      response = `I'll connect you with a human agent. Our support team is available:\n\n**Phone:** +44 20 7946 0958\n**Email:** support@airpak-express.site\n**Hours:** Monday-Friday, 8:00 AM - 6:00 PM GMT\n\nFor urgent issues, please call directly.`;
+    } else if (lower.includes('account') || lower.includes('login') || lower.includes('password')) {
+      response = `For account-related issues:\n\n• **Forgot password?** Visit [Reset Password](/reset-password)\n• **Account settings?** Go to [Settings](/settings)\n• **Billing questions?** Check [Payments](/payment)\n\nNeed more help? Contact support@airpak-express.site`;
+    } else {
+      response = `I understand you're asking about: "${message}"\n\nI'm an AI assistant with limited capabilities. For complex inquiries, I recommend:\n\n• Checking our [FAQ page](/faq)\n• Contacting support at support@airpak-express.site\n• Calling +44 20 7946 0958\n\nIs there something specific about tracking, quotes, or claims I can help with?`;
+    }
+    
+    const assistantMessage: ChatMessage = {
+      id: (Date.now() + 1).toString(),
+      role: 'assistant',
+      content: response,
+      timestamp: new Date(),
+      type
+    };
+    
+    setMessages(prev => [...prev, assistantMessage]);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/signout', { method: 'POST', credentials: 'include' });
+      window.localStorage.removeItem('airpak_user');
+      setUser(null);
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+  };
+
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--apple-bg)" }}>
-      <AppNav variant="app" showSidebar sidebarOpen={sidebarOpen} onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      <div className="dashboard-layout" style={{ paddingTop: "var(--nav-height)" }}>
-        <AppSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-
-        <main id="main-content" style={{ flex: 1, display: "flex", height: "calc(100vh - var(--nav-height))", overflow: "hidden" }}>
-          {/* Contacts List */}
-          <aside style={{ width: 280, minWidth: 280, borderRight: "1px solid var(--apple-separator)", display: "flex", flexDirection: "column", background: "var(--apple-bg-secondary)" }} aria-label="Conversations list">
-            <div style={{ padding: "16px 16px 12px", borderBottom: "1px solid var(--apple-separator)" }}>
-              <h2 style={{ fontSize: "var(--text-2xl)", fontWeight: "var(--font-bold)", marginBottom: 12 }}>Messages</h2>
-              <div style={{ position: "relative" }}>
-                <Search size={14} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "var(--apple-label-tertiary)" }} aria-hidden="true" />
-                <input
-                  type="search"
-                  placeholder="Search conversations…"
-                  aria-label="Search conversations"
-                  value={searchContacts}
-                  onChange={e => setSearchContacts(e.target.value)}
-                  className="input"
-                  style={{ paddingLeft: 32, height: 36, fontSize: "var(--text-sm)" }}
-                />
-              </div>
-            </div>
-            <nav style={{ flex: 1, overflowY: "auto" }} aria-label="Conversations">
-              {CONTACTS.filter(c => c.name.toLowerCase().includes(searchContacts.toLowerCase())).map(contact => (
-                <button
-                  key={contact.id}
-                  onClick={() => setActiveContact(contact.id)}
-                  aria-pressed={activeContact === contact.id}
-                  style={{
-                    width: "100%", padding: "14px 16px", display: "flex", alignItems: "center", gap: 12,
-                    background: activeContact === contact.id ? "var(--apple-fill)" : "transparent",
-                    border: "none", cursor: "pointer", textAlign: "left",
-                    borderBottom: "1px solid var(--apple-separator)",
-                  }}
-                >
-                  <div style={{ width: 44, height: 44, borderRadius: "50%", background: contact.color, display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: "var(--font-bold)", fontSize: "var(--text-lg)", flexShrink: 0 }} aria-hidden="true">{contact.initial}</div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontWeight: "var(--font-semibold)", fontSize: "var(--text-sm)", marginBottom: 2 }}>{contact.name}</div>
-                    <div style={{ color: "var(--apple-label-secondary)", fontSize: "var(--text-xs)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{contact.subtitle}</div>
-                  </div>
-                  {contact.active && <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--apple-green)", flexShrink: 0 }} aria-label="Online" />}
-                </button>
-              ))}
-            </nav>
-          </aside>
-
-          {/* Chat Area */}
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-            {/* Chat Header */}
-            <header style={{ padding: "12px 20px", borderBottom: "1px solid var(--apple-separator)", display: "flex", alignItems: "center", gap: 12, background: "var(--apple-bg-secondary)" }}>
-              <div style={{ width: 40, height: 40, borderRadius: "50%", background: "var(--apple-blue)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: "var(--font-bold)" }} aria-hidden="true">A</div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: "var(--font-semibold)" }}>Airpak Assistant</div>
-                <div style={{ fontSize: "var(--text-xs)", color: "var(--apple-green)", display: "flex", alignItems: "center", gap: 4 }}>
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "currentColor", display: "inline-block" }} aria-hidden="true" />
-                  Online · Ready to help
-                </div>
-              </div>
-              <button className="nav-icon" aria-label="Voice call"><Phone size={18} aria-hidden="true" /></button>
-              <button className="nav-icon" aria-label="Video call"><Video size={18} aria-hidden="true" /></button>
-              <button className="nav-icon" aria-label="More options"><MoreHorizontal size={18} aria-hidden="true" /></button>
-            </header>
-
-            {/* Messages */}
-            <div role="log" aria-label="Chat messages" aria-live="polite" style={{ flex: 1, overflowY: "auto", padding: "20px", display: "flex", flexDirection: "column", gap: 16 }}>
-              {/* Quick actions */}
-              {messages.length === 1 && (
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }} aria-label="Quick actions">
-                  {QUICK_ACTIONS.map(action => (
-                    <button
-                      key={action}
-                      className="btn-secondary"
-                      style={{ fontSize: "var(--text-sm)", padding: "6px 14px" }}
-                      onClick={() => sendMessage(action)}
-                    >{action}</button>
-                  ))}
-                </div>
-              )}
-
-              {messages.map(msg => (
-                <div
-                  key={msg.id}
-                  style={{
-                    display: "flex",
-                    flexDirection: msg.role === "user" ? "row-reverse" : "row",
-                    alignItems: "flex-end", gap: 8,
-                  }}
-                >
-                  {msg.role === "bot" && (
-                    <div style={{ width: 32, height: 32, borderRadius: "50%", background: "var(--apple-blue)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontSize: "var(--text-sm)", fontWeight: "var(--font-bold)", flexShrink: 0 }} aria-hidden="true">A</div>
-                  )}
-                  <div
-                    style={{
-                      maxWidth: "68%", padding: "10px 14px", borderRadius: msg.role === "user" ? "18px 18px 4px 18px" : "18px 18px 18px 4px",
-                      background: msg.role === "user" ? "var(--apple-blue)" : "var(--apple-fill)",
-                      color: msg.role === "user" ? "white" : "var(--apple-label)",
-                      fontSize: "var(--text-md)", lineHeight: 1.5,
-                    }}
-                    role="article"
-                    aria-label={`${msg.role === "user" ? "You" : "Airpak Assistant"} at ${msg.time}: ${msg.text}`}
-                  >
-                    {msg.text}
-                    <div style={{ fontSize: "var(--text-xs)", opacity: 0.6, marginTop: 4, textAlign: msg.role === "user" ? "right" : "left" }}>{msg.time}</div>
-                  </div>
-                </div>
-              ))}
-
-              {typing && (
-                <div style={{ display: "flex", alignItems: "flex-end", gap: 8 }} aria-label="Airpak Assistant is typing">
-                  <div style={{ width: 32, height: 32, borderRadius: "50%", background: "var(--apple-blue)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontSize: "var(--text-sm)", fontWeight: "var(--font-bold)" }} aria-hidden="true">A</div>
-                  <div style={{ padding: "10px 16px", borderRadius: "18px 18px 18px 4px", background: "var(--apple-fill)", display: "flex", gap: 4, alignItems: "center" }}>
-                    {[0, 1, 2].map(i => (
-                      <span key={i} style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--apple-gray)", animation: `bounce 1.2s ${i * 0.2}s infinite` }} />
-                    ))}
-                  </div>
-                </div>
-              )}
-              <div ref={bottomRef} />
-            </div>
-
-            {/* Input */}
-            <div style={{ padding: "12px 20px", borderTop: "1px solid var(--apple-separator)", background: "var(--apple-bg-secondary)", display: "flex", gap: 10, alignItems: "flex-end" }}>
-              <button className="nav-icon" aria-label="Attach file"><Paperclip size={18} aria-hidden="true" /></button>
-              <label className="sr-only" htmlFor="chat-input">Message Airpak Assistant</label>
-              <textarea
-                id="chat-input"
-                ref={inputRef}
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Type a message… (Enter to send)"
-                rows={1}
-                style={{
-                  flex: 1, resize: "none", border: "1.5px solid var(--apple-separator)", borderRadius: 20,
-                  padding: "10px 16px", fontSize: "var(--text-md)", fontFamily: "inherit",
-                  background: "var(--apple-fill-tertiary)", color: "var(--apple-label)",
-                  maxHeight: 120, lineHeight: 1.5, outline: "none",
-                }}
-                aria-label="Message input"
-              />
-              <button className="nav-icon" aria-label="Emoji"><Smile size={18} aria-hidden="true" /></button>
-              <button
-                className="btn-primary"
-                style={{ borderRadius: "50%", width: 40, height: 40, padding: 0, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
-                onClick={() => sendMessage(input)}
-                disabled={!input.trim()}
-                aria-label="Send message"
-              >
-                <Send size={16} aria-hidden="true" />
-              </button>
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Header */}
+      <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard')}>
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <Link href="/">
+              <AirpakLogo className="h-8" />
+            </Link>
+            <div className="hidden md:flex items-center gap-2">
+              <Badge variant="secondary" className="gap-1">
+                <Bot className="h-3 w-3" />
+                AI Assistant
+              </Badge>
             </div>
           </div>
-        </main>
-      </div>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" onClick={toggle}>
+              {resolvedTheme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </Button>
+            <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard')}>
+              <Home className="h-5 w-5" />
+            </Button>
+            {user && (
+              <Button variant="ghost" size="icon" onClick={handleLogout}>
+                <LogOut className="h-5 w-5" />
+              </Button>
+            )}
+          </div>
+        </div>
+      </header>
 
-      <style>{`
-        @keyframes bounce {
-          0%, 60%, 100% { transform: translateY(0); }
-          30% { transform: translateY(-6px); }
-        }
-        .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
-      `}</style>
+      {/* Messages */}
+      <main className="flex-1 overflow-y-auto">
+        <div className="container mx-auto px-4 py-6 max-w-3xl space-y-6">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}
+            >
+              <div className={`h-8 w-8 rounded-full flex items-center justify-center shrink-0 ${
+                message.role === 'user' 
+                  ? 'bg-primary text-primary-foreground' 
+                  : 'bg-muted'
+              }`}>
+                {message.role === 'user' ? (
+                  <User className="h-4 w-4" />
+                ) : (
+                  <Bot className="h-4 w-4" />
+                )}
+              </div>
+              <div className={`max-w-[80%] space-y-1 ${
+                message.role === 'user' ? 'items-end' : 'items-start'
+              }`}>
+                <Card className={`${
+                  message.role === 'user' 
+                    ? 'bg-primary text-primary-foreground' 
+                    : message.type === 'error'
+                      ? 'border-red-500/20 bg-red-500/5'
+                      : ''
+                }`}>
+                  <CardContent className="p-3">
+                    <div className="text-sm whitespace-pre-wrap prose prose-sm max-w-none">
+                      {message.content.split('\n').map((line, i) => (
+                        <p key={i} className={line.startsWith('•') || line.startsWith('**') ? 'mb-1' : 'mb-2'}>
+                          {line}
+                        </p>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+                <span className="text-xs text-muted-foreground px-1">
+                  {formatTime(message.timestamp)}
+                </span>
+              </div>
+            </div>
+          ))}
+          
+          {loading && (
+            <div className="flex gap-3">
+              <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+                <Bot className="h-4 w-4" />
+              </div>
+              <Card>
+                <CardContent className="p-3">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Thinking...
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+          
+          {error && (
+            <div className="flex gap-3">
+              <div className="h-8 w-8 rounded-full bg-red-500/10 flex items-center justify-center">
+                <AlertTriangle className="h-4 w-4 text-red-500" />
+              </div>
+              <Card className="border-red-500/20 bg-red-500/5">
+                <CardContent className="p-3">
+                  <p className="text-sm text-red-600">{error}</p>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+          
+          <div ref={messagesEndRef} />
+        </div>
+      </main>
+
+      {/* Quick Actions */}
+      {messages.length <= 2 && (
+        <div className="border-t bg-muted/30">
+          <div className="container mx-auto px-4 py-3 max-w-3xl">
+            <p className="text-xs text-muted-foreground mb-2">Quick actions</p>
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {QUICK_ACTIONS.map((action, i) => (
+                <Button
+                  key={i}
+                  variant="outline"
+                  size="sm"
+                  className="shrink-0 gap-2"
+                  onClick={() => handleSend(undefined, action.prompt)}
+                >
+                  {action.icon}
+                  {action.label}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Input */}
+      <div className="border-t bg-background p-4">
+        <div className="container mx-auto max-w-3xl">
+          <form onSubmit={handleSend} className="flex gap-2">
+            <Input
+              placeholder="Type your message..."
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              disabled={loading}
+              className="flex-1"
+            />
+            <Button type="submit" disabled={loading || !input.trim()}>
+              <Send className="h-4 w-4" />
+            </Button>
+          </form>
+          <p className="text-xs text-muted-foreground mt-2 text-center">
+            AI assistant. For urgent matters, call +44 20 7946 0958
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
+'''
+
+with open('/mnt/agents/output/airpak-repair/Chat.tsx', 'w') as f:
+    f.write(chat_fix)
+
