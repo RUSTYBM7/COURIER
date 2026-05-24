@@ -1,80 +1,315 @@
-import { useState } from "react";
-import { Link } from "wouter";
-import { AirpakLogo } from "@/components/AirpakLogo";
+reset_fix = '''import { useState, useEffect } from "react";
+import { Link, useLocation } from "wouter";
 import { useTheme } from "@/hooks/useTheme";
-import { Moon, Sun, ArrowRight, CheckCircle } from "lucide-react";
+import {
+  ArrowLeft, Moon, Sun, Loader2, CheckCircle, AlertTriangle,
+  Mail, Lock, Eye, EyeOff
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { AirpakLogo } from "@/components/AirpakLogo";
 
 export default function ResetPassword() {
+  const [, navigate] = useLocation();
   const { toggle, resolvedTheme } = useTheme();
+  
+  // Step 1: Request reset email
   const [email, setEmail] = useState("");
+  
+  // Step 2: Enter new password (with token from URL)
+  const [token, setToken] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  
+  const [step, setStep] = useState<'request' | 'success' | 'reset' | 'complete'>('request');
   const [loading, setLoading] = useState(false);
-  const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
+  // Check for token in URL on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const urlToken = params.get('token');
+    if (urlToken) {
+      setToken(urlToken);
+      setStep('reset');
+    }
+  }, []);
+
+  // Request password reset email
+  async function handleRequestReset(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    if (!email) { setError("Please enter your email address."); return; }
+    setSuccess("");
+    
+    if (!email || !email.includes('@')) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    
     setLoading(true);
-    await new Promise(r => setTimeout(r, 800));
-    setLoading(false);
-    setSent(true);
+    
+    try {
+      const res = await fetch('/api/auth/reset-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      
+      const data = await res.json();
+      
+      // Always show success to prevent email enumeration
+      setStep('success');
+      setSuccess('If an account exists with this email, you will receive password reset instructions shortly.');
+      
+    } catch (err) {
+      setError('Network error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Reset password with token
+  async function handleResetPassword(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    
+    if (!token) {
+      setError("Invalid or expired reset link. Please request a new one.");
+      return;
+    }
+    
+    if (!newPassword || newPassword.length < 8) {
+      setError("Password must be at least 8 characters.");
+      return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+    
+    setLoading(true);
+    
+    try {
+      const res = await fetch('/api/auth/reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, newPassword })
+      });
+      
+      const data = await res.json();
+      
+      if (!res.ok) {
+        setError(data.error || 'Failed to reset password. The link may have expired.');
+        setLoading(false);
+        return;
+      }
+      
+      setStep('complete');
+      setSuccess('Your password has been reset successfully.');
+      
+    } catch (err) {
+      setError('Network error. Please try again.');
+      setLoading(false);
+    }
   }
 
   return (
-    <div id="main-content">
-      <nav className="nav-bar" style={{ position: "relative", zIndex: 100 }} role="navigation" aria-label="Auth navigation">
-        <div className="nav-left">
-          <Link href="/" className="nav-logo" aria-label="Airpak Express — Home"><AirpakLogo size={28} /><span className="nav-logo-text">Airpak Express</span></Link>
-        </div>
-        <div className="nav-right">
-          <button className="theme-toggle" onClick={toggle} aria-label={`Switch to ${resolvedTheme === "dark" ? "light" : "dark"} mode`}>
-            {resolvedTheme === "dark" ? <Sun size={18} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
-          </button>
-        </div>
-      </nav>
-
-      <main className="auth-page">
-        <div className="auth-bg-overlay" style={{ background: "linear-gradient(135deg, rgba(88,86,214,0.25) 0%, rgba(0,122,255,0.25) 100%)" }} aria-hidden="true" />
-        <div className="auth-card" style={{ maxWidth: 420 }}>
-          {!sent ? (
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <Card className="w-full max-w-md">
+        <CardContent className="pt-6 space-y-6">
+          <div className="flex items-center justify-between">
+            <AirpakLogo className="h-8" />
+            <Button variant="ghost" size="icon" onClick={toggle}>
+              {resolvedTheme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </Button>
+          </div>
+          
+          {step === 'request' && (
             <>
-              <div className="auth-header">
-                <Link href="/" className="auth-logo" aria-label="Airpak Express"><AirpakLogo size={40} /></Link>
-                <h1 className="auth-title">Reset Password</h1>
-                <p className="auth-subtitle">Enter your email and we'll send you a reset link</p>
-              </div>
-              <form className="auth-form" onSubmit={handleSubmit} noValidate>
-                {error && (
-                  <div role="alert" style={{ background: "rgba(255,59,48,0.1)", border: "1px solid rgba(255,59,48,0.3)", borderRadius: 8, padding: "10px 14px", marginBottom: 16, fontSize: "var(--text-sm)", color: "var(--apple-red)" }}>
-                    {error}
-                  </div>
-                )}
-                <div className="field">
-                  <label className="field-label" htmlFor="email">Email address</label>
-                  <input type="email" id="email" className="input" placeholder="you@company.com" value={email} onChange={e => setEmail(e.target.value)} required aria-required="true" autoComplete="email" />
+              <div className="text-center space-y-2">
+                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+                  <Mail className="h-6 w-6 text-primary" />
                 </div>
-                <button type="submit" className="btn-primary btn-block btn-lg" disabled={loading} aria-busy={loading}>
-                  {loading ? "Sending…" : <><ArrowRight size={16} aria-hidden="true" /> Send Reset Link</>}
-                </button>
+                <h1 className="text-2xl font-bold">Forgot password?</h1>
+                <p className="text-muted-foreground">
+                  No worries, we'll send you reset instructions.
+                </p>
+              </div>
+              
+              {error && (
+                <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4" />
+                    <p>{error}</p>
+                  </div>
+                </div>
+              )}
+              
+              <form onSubmit={handleRequestReset} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input 
+                      id="email" 
+                      type="email" 
+                      placeholder="you@company.com"
+                      className="pl-10"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      disabled={loading}
+                    />
+                  </div>
+                </div>
+                
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? (
+                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending...</>
+                  ) : (
+                    'Reset Password'
+                  )}
+                </Button>
               </form>
-              <p className="auth-footer">
-                Remember your password?{" "}
-                <Link href="/signin" style={{ color: "var(--apple-blue)", fontWeight: 600 }}>Sign in</Link>
-              </p>
+              
+              <Button variant="ghost" className="w-full" onClick={() => navigate('/signin')}>
+                <ArrowLeft className="mr-2 h-4 w-4" /> Back to sign in
+              </Button>
             </>
-          ) : (
-            <div style={{ textAlign: "center", padding: "40px 20px" }}>
-              <CheckCircle size={56} color="var(--apple-green)" style={{ margin: "0 auto 16px", display: "block" }} aria-hidden="true" />
-              <h2 className="auth-title">Check your email</h2>
-              <p className="auth-subtitle" style={{ marginTop: 8, marginBottom: 24 }}>
-                We've sent a password reset link to <strong>{email}</strong>
-              </p>
-              <Link href="/signin" className="btn-primary btn-block">Back to Sign In</Link>
-            </div>
           )}
-        </div>
-      </main>
+          
+          {step === 'success' && (
+            <>
+              <div className="text-center space-y-2">
+                <div className="h-12 w-12 rounded-full bg-green-500/10 flex items-center justify-center mx-auto">
+                  <CheckCircle className="h-6 w-6 text-green-500" />
+                </div>
+                <h1 className="text-2xl font-bold">Check your email</h1>
+                <p className="text-muted-foreground">
+                  {success}
+                </p>
+              </div>
+              
+              <div className="p-4 bg-muted rounded-lg text-sm text-muted-foreground">
+                <p>Didn't receive the email?</p>
+                <ul className="list-disc list-inside mt-2 space-y-1">
+                  <li>Check your spam folder</li>
+                  <li>Verify your email address is correct</li>
+                  <li>Wait a few minutes and try again</li>
+                </ul>
+              </div>
+              
+              <Button variant="outline" className="w-full" onClick={() => setStep('request')}>
+                Try another email
+              </Button>
+              
+              <Button variant="ghost" className="w-full" onClick={() => navigate('/signin')}>
+                Back to sign in
+              </Button>
+            </>
+          )}
+          
+          {step === 'reset' && (
+            <>
+              <div className="text-center space-y-2">
+                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+                  <Lock className="h-6 w-6 text-primary" />
+                </div>
+                <h1 className="text-2xl font-bold">Set new password</h1>
+                <p className="text-muted-foreground">
+                  Your new password must be different from previous passwords.
+                </p>
+              </div>
+              
+              {error && (
+                <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4" />
+                    <p>{error}</p>
+                  </div>
+                </div>
+              )}
+              
+              <form onSubmit={handleResetPassword} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="newPassword">New Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input 
+                      id="newPassword" 
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Minimum 8 characters"
+                      className="pl-10"
+                      value={newPassword}
+                      onChange={e => setNewPassword(e.target.value)}
+                      disabled={loading}
+                    />
+                    <button 
+                      type="button"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">Confirm Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input 
+                      id="confirmPassword" 
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Re-enter your password"
+                      className="pl-10"
+                      value={confirmPassword}
+                      onChange={e => setConfirmPassword(e.target.value)}
+                      disabled={loading}
+                    />
+                  </div>
+                </div>
+                
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? (
+                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Resetting...</>
+                  ) : (
+                    'Reset Password'
+                  )}
+                </Button>
+              </form>
+            </>
+          )}
+          
+          {step === 'complete' && (
+            <>
+              <div className="text-center space-y-2">
+                <div className="h-12 w-12 rounded-full bg-green-500/10 flex items-center justify-center mx-auto">
+                  <CheckCircle className="h-6 w-6 text-green-500" />
+                </div>
+                <h1 className="text-2xl font-bold">Password reset!</h1>
+                <p className="text-muted-foreground">
+                  {success} You can now sign in with your new password.
+                </p>
+              </div>
+              
+              <Button className="w-full" onClick={() => navigate('/signin')}>
+                Sign In
+              </Button>
+            </>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
+'''
+
+with open('/mnt/agents/output/airpak-repair/ResetPassword.tsx', 'w') as f:
+    f.write(reset_fix)
+
