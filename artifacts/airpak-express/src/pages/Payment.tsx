@@ -1,233 +1,358 @@
-import { useState } from "react";
-import { AppNav } from "@/components/AppNav";
-import { AppSidebar } from "@/components/AppSidebar";
+payment_fix = '''import { useState, useEffect } from "react";
+import { Link, useLocation } from "wouter";
+import { useTheme } from "@/hooks/useTheme";
+import {
+  ArrowLeft, CreditCard, Wallet, TrendingUp, Download, Plus,
+  CheckCircle, AlertTriangle, LogOut, Home, User, Settings,
+  Search, Calendar, DollarSign, ArrowUpRight, ArrowDownRight,
+  FileText, ChevronRight
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Plus, ArrowUpRight, ArrowDownLeft, CreditCard,
-  TrendingUp, TrendingDown, Filter, Download, ChevronRight
-} from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AirpakLogo } from "@/components/AirpakLogo";
 
-const CARDS = [
-  { last4: "4242", brand: "VISA", expiry: "09/28", color: "linear-gradient(135deg, #007AFF 0%, #5856D6 100%)", active: true },
-  { last4: "8832", brand: "MC", expiry: "03/27", color: "linear-gradient(135deg, #FF9500 0%, #FF3B30 100%)", active: false },
-];
+interface Transaction {
+  id: string;
+  date: string;
+  description: string;
+  type: 'credit' | 'debit';
+  amount: string;
+  status: string;
+  method?: string;
+}
 
-const TRANSACTIONS = [
-  { id: "TXN-001", desc: "Express Delivery — Tokyo", amount: -28.50, date: "Dec 15, 2024", type: "debit", status: "completed", icon: "📦" },
-  { id: "TXN-002", desc: "Wallet Top-up", amount: 200.00, date: "Dec 14, 2024", type: "credit", status: "completed", icon: "💳" },
-  { id: "TXN-003", desc: "Express Delivery — New York", amount: -42.00, date: "Dec 12, 2024", type: "debit", status: "completed", icon: "📦" },
-  { id: "TXN-004", desc: "Insurance Premium — Q4", amount: -15.99, date: "Dec 10, 2024", type: "debit", status: "completed", icon: "🛡️" },
-  { id: "TXN-005", desc: "Refund — Cancelled Shipment", amount: +22.30, date: "Dec 8, 2024", type: "credit", status: "completed", icon: "↩️" },
-  { id: "TXN-006", desc: "Business Plan — Monthly", amount: -89.00, date: "Dec 1, 2024", type: "debit", status: "completed", icon: "⭐" },
-];
+interface PaymentMethod {
+  id: string;
+  type: string;
+  last4: string;
+  expiry: string;
+  isDefault: boolean;
+}
 
-const PLANS = [
-  { name: "Starter", price: "Free", features: ["10 shipments/month", "Standard tracking", "Email support"], current: false },
-  { name: "Business Pro", price: "£89/mo", features: ["Unlimited shipments", "Priority tracking", "24/7 support", "Volume discounts", "API access"], current: true },
-  { name: "Enterprise", price: "Custom", features: ["Dedicated account manager", "SLA guarantees", "Custom integrations", "Bulk pricing"], current: false },
-];
+interface WalletData {
+  balance: string;
+  currency: string;
+  totalSpent: string;
+  totalTransactions: number;
+  transactions: Transaction[];
+  paymentMethods: PaymentMethod[];
+}
 
 export default function Payment() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activeCard, setActiveCard] = useState(0);
-  const [showTopUp, setShowTopUp] = useState(false);
-  const [topUpAmount, setTopUpAmount] = useState("");
-  const [filter, setFilter] = useState("All");
+  const [, navigate] = useLocation();
+  const { resolvedTheme } = useTheme();
+  const [user, setUser] = useState<any>(null);
+  const [wallet, setWallet] = useState<WalletData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("transactions");
 
-  const balance = 1247.50;
-  const spent = 175.49;
-  const earned = 222.30;
+  // Check auth and load payment data
+  useEffect(() => {
+    fetch('/api/auth/me', { credentials: 'include' })
+      .then(r => r.json())
+      .then(data => {
+        if (!data.user) {
+          navigate('/signin?redirect=/payment');
+          return;
+        }
+        setUser(data.user);
+        
+        // Load wallet data
+        return fetch('/api/payments/wallet', { credentials: 'include' }).then(r => r.json());
+      })
+      .then(walletData => {
+        if (walletData) setWallet(walletData);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Payment load error:', err);
+        setError('Failed to load payment data');
+        setLoading(false);
+      });
+  }, [navigate]);
 
-  const filteredTxns = TRANSACTIONS.filter(t => {
-    if (filter === "Credits") return t.type === "credit";
-    if (filter === "Debits") return t.type === "debit";
-    return true;
-  });
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/signout', { method: 'POST', credentials: 'include' });
+      window.localStorage.removeItem('airpak_user');
+      navigate('/');
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+  };
+
+  const filteredTransactions = wallet?.transactions?.filter(t =>
+    t.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    t.id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    t.amount?.includes(searchQuery)
+  ) || [];
+
+  const getStatusBadge = (status: string) => {
+    const variants: Record<string, string> = {
+      completed: 'bg-green-500/10 text-green-600 border-green-500/20',
+      pending: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20',
+      failed: 'bg-red-500/10 text-red-600 border-red-500/20',
+      refunded: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
+    };
+    return variants[status?.toLowerCase()] || 'bg-muted text-muted-foreground';
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          <p className="text-muted-foreground">Loading payment data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Card className="w-full max-w-md">
+          <CardContent className="pt-6 text-center space-y-4">
+            <AlertTriangle className="h-12 w-12 text-destructive mx-auto" />
+            <h2 className="text-xl font-semibold">Error</h2>
+            <p className="text-muted-foreground">{error}</p>
+            <Button onClick={() => window.location.reload()}>Retry</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--apple-bg)" }}>
-      <AppNav variant="app" showSidebar sidebarOpen={sidebarOpen} onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      <div className="dashboard-layout" style={{ paddingTop: "var(--nav-height)" }}>
-        <AppSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-
-        <main id="main-content" className="dashboard-main">
-          <div className="dashboard-header">
-            <div>
-              <h1 className="dashboard-title">Wallet</h1>
-              <p style={{ color: "var(--apple-label-secondary)", fontSize: "var(--text-sm)", marginTop: "var(--space-1)" }}>Manage payments and billing</p>
-            </div>
-            <button className="btn-primary" style={{ display: "flex", alignItems: "center", gap: 8 }} onClick={() => setShowTopUp(true)} aria-label="Add funds to wallet">
-              <Plus size={16} aria-hidden="true" /> Add Funds
-            </button>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard')}>
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <Link href="/">
+              <AirpakLogo className="h-8" />
+            </Link>
           </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 24 }}>
-            {/* Balance */}
-            <section aria-label="Wallet balance" className="glass-card" style={{ padding: 28, borderRadius: "var(--radius-2xl)", background: "linear-gradient(135deg, var(--apple-blue) 0%, var(--apple-indigo) 100%)", border: "none", color: "white" }}>
-              <p style={{ fontSize: "var(--text-sm)", opacity: 0.8, marginBottom: 8 }}>Available Balance</p>
-              <div style={{ fontSize: "clamp(var(--text-4xl), 4vw, var(--text-6xl))", fontWeight: "var(--font-black)", letterSpacing: "-0.03em", marginBottom: 24 }} aria-label={`Balance: £${balance.toFixed(2)}`}>
-                £{balance.toLocaleString("en-GB", { minimumFractionDigits: 2 })}
-              </div>
-              <div style={{ display: "flex", gap: 24 }}>
-                <div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 4, opacity: 0.7, fontSize: "var(--text-xs)", marginBottom: 2 }}><TrendingDown size={12} aria-hidden="true" /> Spent this month</div>
-                  <div style={{ fontWeight: "var(--font-semibold)" }}>£{spent.toFixed(2)}</div>
-                </div>
-                <div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 4, opacity: 0.7, fontSize: "var(--text-xs)", marginBottom: 2 }}><TrendingUp size={12} aria-hidden="true" /> Added this month</div>
-                  <div style={{ fontWeight: "var(--font-semibold)" }}>£{earned.toFixed(2)}</div>
-                </div>
-              </div>
-            </section>
-
-            {/* Cards */}
-            <section aria-label="Payment cards" className="glass-card-sm" style={{ padding: 24, borderRadius: "var(--radius-xl)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-                <h2 style={{ fontSize: "var(--text-lg)", fontWeight: "var(--font-semibold)" }}>Payment Cards</h2>
-                <button className="btn-ghost" style={{ fontSize: "var(--text-sm)" }} aria-label="Add new card"><Plus size={14} aria-hidden="true" /> Add Card</button>
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {CARDS.map((card, i) => (
-                  <button
-                    key={card.last4}
-                    onClick={() => setActiveCard(i)}
-                    aria-pressed={activeCard === i}
-                    aria-label={`${card.brand} ending in ${card.last4}, expires ${card.expiry}${activeCard === i ? " — selected" : ""}`}
-                    style={{
-                      display: "flex", alignItems: "center", gap: 12, padding: "12px 14px",
-                      borderRadius: "var(--radius-lg)", border: activeCard === i ? "2px solid var(--apple-blue)" : "1.5px solid var(--apple-separator)",
-                      background: activeCard === i ? "rgba(0,122,255,0.04)" : "transparent",
-                      cursor: "pointer", textAlign: "left",
-                    }}
-                  >
-                    <div style={{ width: 40, height: 26, borderRadius: 5, background: card.color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }} aria-hidden="true">
-                      <span style={{ color: "white", fontSize: "var(--text-2xs)", fontWeight: "var(--font-black)" }}>{card.brand}</span>
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: "var(--text-sm)", fontWeight: "var(--font-medium)" }}>•••• {card.last4}</div>
-                      <div style={{ fontSize: "var(--text-xs)", color: "var(--apple-label-secondary)" }}>Expires {card.expiry}</div>
-                    </div>
-                    {activeCard === i && <span style={{ fontSize: "var(--text-xs)", color: "var(--apple-blue)", fontWeight: "var(--font-semibold)" }}>Default</span>}
-                    <ChevronRight size={14} color="var(--apple-label-tertiary)" aria-hidden="true" />
-                  </button>
-                ))}
-              </div>
-            </section>
-          </div>
-
-          {/* Transactions */}
-          <section aria-label="Transaction history" className="glass-card-sm" style={{ borderRadius: "var(--radius-xl)", overflow: "hidden", marginBottom: 24 }}>
-            <div style={{ padding: "20px 24px 16px", borderBottom: "1px solid var(--apple-separator)", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-              <h2 style={{ fontSize: "var(--text-xl)", fontWeight: "var(--font-semibold)", flex: 1 }}>Transactions</h2>
-              <div style={{ display: "flex", gap: 8 }}>
-                {["All", "Credits", "Debits"].map(f => (
-                  <button
-                    key={f}
-                    onClick={() => setFilter(f)}
-                    aria-pressed={filter === f}
-                    className={filter === f ? "btn-primary" : "btn-secondary"}
-                    style={{ fontSize: "var(--text-sm)", padding: "6px 14px" }}
-                  >{f}</button>
-                ))}
-              </div>
-              <button className="btn-ghost" style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "var(--text-sm)" }} aria-label="Download transaction history">
-                <Download size={14} aria-hidden="true" /> Export
-              </button>
-            </div>
-            <div role="list" aria-label="Transactions list">
-              {filteredTxns.map((txn, i) => (
-                <div
-                  key={txn.id}
-                  role="listitem"
-                  style={{
-                    display: "flex", alignItems: "center", gap: 14, padding: "14px 24px",
-                    borderBottom: i < filteredTxns.length - 1 ? "1px solid var(--apple-separator)" : "none",
-                    transition: "background 0.1s",
-                  }}
-                  onMouseEnter={e => (e.currentTarget.style.background = "var(--apple-fill-tertiary)")}
-                  onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
-                >
-                  <div style={{ width: 40, height: 40, borderRadius: 10, background: "var(--apple-fill)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }} aria-hidden="true">{txn.icon}</div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: "var(--font-medium)", fontSize: "var(--text-sm)", marginBottom: 2 }}>{txn.desc}</div>
-                    <div style={{ fontSize: "var(--text-xs)", color: "var(--apple-label-secondary)" }}>{txn.date} · {txn.id}</div>
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                    {txn.type === "credit"
-                      ? <ArrowDownLeft size={14} color="var(--apple-green)" aria-hidden="true" />
-                      : <ArrowUpRight size={14} color="var(--apple-red)" aria-hidden="true" />
-                    }
-                    <span style={{ fontWeight: "var(--font-semibold)", color: txn.amount > 0 ? "var(--apple-green)" : "var(--apple-label)", fontSize: "var(--text-md)" }}>
-                      {txn.amount > 0 ? "+" : ""}£{Math.abs(txn.amount).toFixed(2)}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Plans */}
-          <section aria-label="Subscription plans" style={{ marginBottom: 24 }}>
-            <h2 style={{ fontSize: "var(--text-2xl)", fontWeight: "var(--font-bold)", marginBottom: 16 }}>Subscription Plans</h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
-              {PLANS.map(plan => (
-                <div
-                  key={plan.name}
-                  className={`glass-card-sm${plan.current ? "" : " glass-hover-lift"}`}
-                  style={{
-                    padding: 24, borderRadius: "var(--radius-xl)",
-                    border: plan.current ? "2px solid var(--apple-blue)" : undefined,
-                    position: "relative",
-                  }}
-                  aria-label={`${plan.name} plan, ${plan.price}${plan.current ? " — current plan" : ""}`}
-                >
-                  {plan.current && (
-                    <div style={{ position: "absolute", top: -1, right: 16, background: "var(--apple-blue)", color: "white", fontSize: "var(--text-xs)", fontWeight: "var(--font-semibold)", padding: "3px 12px", borderRadius: "0 0 8px 8px" }}>Current</div>
-                  )}
-                  <h3 style={{ fontSize: "var(--text-xl)", fontWeight: "var(--font-bold)", marginBottom: 4 }}>{plan.name}</h3>
-                  <div style={{ fontSize: "var(--text-3xl)", fontWeight: "var(--font-black)", color: "var(--apple-blue)", marginBottom: 16 }}>{plan.price}</div>
-                  <ul style={{ listStyle: "none", marginBottom: 20 }}>
-                    {plan.features.map(f => (
-                      <li key={f} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--text-sm)", color: "var(--apple-label-secondary)", marginBottom: 8 }}>
-                        <CreditCard size={13} color="var(--apple-green)" aria-hidden="true" /> {f}
-                      </li>
-                    ))}
-                  </ul>
-                  <button className={plan.current ? "btn-secondary" : "btn-primary"} style={{ width: "100%" }}>
-                    {plan.current ? "Current Plan" : plan.price === "Custom" ? "Contact Sales" : "Upgrade"}
-                  </button>
-                </div>
-              ))}
-            </div>
-          </section>
-        </main>
-      </div>
-
-      {/* Top-up Modal */}
-      {showTopUp && (
-        <div role="dialog" aria-modal="true" aria-labelledby="topup-title" style={{ position: "fixed", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.5)", backdropFilter: "blur(8px)", zIndex: 1000, padding: 20 }}>
-          <div className="glass-ultra" style={{ width: "100%", maxWidth: 400, padding: 32 }}>
-            <h2 id="topup-title" style={{ fontSize: "var(--text-2xl)", fontWeight: "var(--font-bold)", marginBottom: 20 }}>Add Funds</h2>
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>
-              {[50, 100, 200, 500].map(amt => (
-                <button key={amt} className={topUpAmount === String(amt) ? "btn-primary" : "btn-secondary"} style={{ flex: 1, minWidth: 70 }} onClick={() => setTopUpAmount(String(amt))} aria-label={`Add £${amt}`}>£{amt}</button>
-              ))}
-            </div>
-            <div className="field">
-              <label className="field-label" htmlFor="custom-amount">Custom amount (£)</label>
-              <input type="number" id="custom-amount" className="input" placeholder="0.00" value={topUpAmount} onChange={e => setTopUpAmount(e.target.value)} min="1" step="0.01" />
-            </div>
-            <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
-              <button className="btn-secondary" style={{ flex: 1 }} onClick={() => setShowTopUp(false)}>Cancel</button>
-              <button className="btn-primary" style={{ flex: 1 }} onClick={() => { alert(`£${topUpAmount} added to wallet!`); setShowTopUp(false); }}>Add £{topUpAmount || "0"}</button>
-            </div>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard')}>
+              <Home className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={() => navigate('/settings')}>
+              <Settings className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={handleLogout}>
+              <LogOut className="h-5 w-5" />
+            </Button>
           </div>
         </div>
-      )}
+      </header>
+
+      <main className="container mx-auto px-4 py-8 max-w-5xl">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">Payments & Wallet</h1>
+          <p className="text-muted-foreground">Manage your payment methods and view transaction history</p>
+        </div>
+        
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">Wallet Balance</p>
+                  <p className="text-2xl font-bold">{wallet?.balance || '£0.00'}</p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+                  <Wallet className="h-5 w-5 text-green-500" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">Total Spent</p>
+                  <p className="text-2xl font-bold">{wallet?.totalSpent || '£0.00'}</p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                  <TrendingUp className="h-5 w-5 text-blue-500" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">Transactions</p>
+                  <p className="text-2xl font-bold">{wallet?.totalTransactions || 0}</p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                  <FileText className="h-5 w-5 text-purple-500" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="mb-6">
+            <TabsTrigger value="transactions">Transactions</TabsTrigger>
+            <TabsTrigger value="methods">Payment Methods</TabsTrigger>
+            <TabsTrigger value="invoices">Invoices</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="transactions">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div>
+                    <CardTitle>Transaction History</CardTitle>
+                    <CardDescription>View all your payments and refunds</CardDescription>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input 
+                        placeholder="Search transactions..."
+                        className="pl-10 w-64"
+                        value={searchQuery}
+                        onChange={e => setSearchQuery(e.target.value)}
+                      />
+                    </div>
+                    <Button variant="outline" size="sm">
+                      <Download className="mr-2 h-4 w-4" /> Export
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left py-3 px-2">Transaction ID</th>
+                        <th className="text-left py-3 px-2">Date</th>
+                        <th className="text-left py-3 px-2">Description</th>
+                        <th className="text-left py-3 px-2">Method</th>
+                        <th className="text-right py-3 px-2">Amount</th>
+                        <th className="text-left py-3 px-2">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredTransactions.map(t => (
+                        <tr key={t.id} className="border-b last:border-0 hover:bg-muted/50">
+                          <td className="py-3 px-2 font-mono text-xs">{t.id}</td>
+                          <td className="py-3 px-2 text-muted-foreground">
+                            {new Date(t.date).toLocaleDateString()}
+                          </td>
+                          <td className="py-3 px-2">{t.description}</td>
+                          <td className="py-3 px-2">
+                            <Badge variant="outline">{t.method || 'Card'}</Badge>
+                          </td>
+                          <td className="py-3 px-2 text-right font-medium">
+                            <span className={t.type === 'credit' ? 'text-green-600' : ''}>
+                              {t.type === 'credit' ? '+' : ''}{t.amount}
+                            </span>
+                          </td>
+                          <td className="py-3 px-2">
+                            <Badge variant="outline" className={getStatusBadge(t.status)}>
+                              {t.status}
+                            </Badge>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {filteredTransactions.length === 0 && (
+                    <div className="text-center py-12">
+                      <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                      <h3 className="text-lg font-medium">No transactions found</h3>
+                      <p className="text-muted-foreground mt-1">
+                        {searchQuery ? 'Try adjusting your search' : 'Your transaction history will appear here'}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="methods">
+            <div className="space-y-4">
+              {wallet?.paymentMethods?.map(method => (
+                <Card key={method.id}>
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <CreditCard className="h-6 w-6 text-primary" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium">{method.type} •••• {method.last4}</p>
+                            {method.isDefault && (
+                              <Badge variant="default" className="text-xs">Default</Badge>
+                            )}
+                          </div>
+                          <p className="text-sm text-muted-foreground">Expires {method.expiry}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="sm">Edit</Button>
+                        <Button variant="ghost" size="sm" className="text-destructive">Remove</Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )) || (
+                <Card>
+                  <CardContent className="p-6 text-center py-12">
+                    <CreditCard className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-medium">No payment methods</h3>
+                    <p className="text-muted-foreground mt-1">Add a card to make payments</p>
+                    <Button className="mt-4">
+                      <Plus className="mr-2 h-4 w-4" /> Add Payment Method
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
+              
+              {wallet?.paymentMethods && wallet.paymentMethods.length > 0 && (
+                <Button variant="outline" className="w-full">
+                  <Plus className="mr-2 h-4 w-4" /> Add New Payment Method
+                </Button>
+              )}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="invoices">
+            <Card>
+              <CardContent className="p-6 text-center py-12">
+                <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-medium">Invoices</h3>
+                <p className="text-muted-foreground mt-1">Invoice management coming soon</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </main>
     </div>
   );
 }
+'''
+
+with open('/mnt/agents/output/airpak-repair/Payment.tsx', 'w') as f:
+    f.write(payment_fix)
+
