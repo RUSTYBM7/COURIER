@@ -29,12 +29,12 @@ const FAQS = [
 export default function FAQ() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [search, setSearch] = useState("");
-  const [openItems, setOpenItems] = useState<Set<number>>(new Set());
+  const [openItems, setOpenItems] = useState<Set<string>>(new Set());
 
-  const toggleItem = (idx: number) => {
+  const toggleItem = (id: string) => {
     const next = new Set(openItems);
-    if (next.has(idx)) next.delete(idx);
-    else next.add(idx);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
     setOpenItems(next);
   };
 
@@ -107,13 +107,13 @@ export default function FAQ() {
                   </button>
                 </div>
               )}
-              {filtered.map((faq, i) => {
-                const isOpen = openItems.has(i);
+              {filtered.map((faq) => {
+                const isOpen = openItems.has(faq.q);
                 return (
-                  <div key={i} className={`border rounded-lg transition-all ${isOpen ? "border-[#E11D2A] shadow-sm" : "border-gray-100"}`}>
+                  <div key={faq.q} className={`border rounded-lg transition-all ${isOpen ? "border-[#E11D2A] shadow-sm" : "border-gray-100"}`}>
                     <button
                       className="w-full flex items-center justify-between p-5 text-left"
-                      onClick={() => toggleItem(i)}
+                      onClick={() => toggleItem(faq.q)}
                     >
                       <span className="font-medium text-gray-900 pr-4">{faq.q}</span>
                       <ChevronDown
