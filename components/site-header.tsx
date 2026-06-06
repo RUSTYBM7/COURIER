@@ -24,7 +24,6 @@ const SERVICES = [
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [svcOpen, setSvcOpen] = useState(false);
-  const [loginOpen, setLoginOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-100">
@@ -74,31 +73,19 @@ export function SiteHeader() {
             ),
           )}
 
-          <div
-            className="relative"
-            onMouseEnter={() => setLoginOpen(true)}
-            onMouseLeave={() => setLoginOpen(false)}
+          <Link
+            href="https://shipnow.airpak-express.site"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-medium text-gray-800 hover:text-[#E11D2A] transition-colors"
           >
-            <button className="flex items-center gap-1 text-sm font-medium text-gray-800 hover:text-[#E11D2A] transition-colors">
-              Login
-              <ChevronDown className="h-3.5 w-3.5" />
-            </button>
-            {loginOpen && (
-              <div className="absolute top-full right-0 pt-2 w-48">
-                <div className="bg-white border border-gray-100 rounded-lg shadow-lg py-2">
-                  <Link href="/signin" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#E11D2A]">
-                    Customer Login
-                  </Link>
-                  <Link href="/admin" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#E11D2A]">
-                    Admin Login
-                  </Link>
-                </div>
-              </div>
-            )}
-          </div>
+            Login
+          </Link>
 
           <Link
-            href="/signup"
+            href="https://shipnow.airpak-express.site"
+            target="_blank"
+            rel="noopener noreferrer"
             className="px-5 py-2 rounded-full bg-[#E11D2A] text-white text-sm font-semibold hover:bg-[#c41723] transition-colors"
           >
             Sign Up
@@ -123,11 +110,19 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
-            <Link href="/signin" onClick={() => setOpen(false)} className="block py-2 text-sm font-medium text-gray-800">
-              Customer Login
+            <Link
+              href="https://shipnow.airpak-express.site"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="block py-2 text-sm font-medium text-gray-800"
+            >
+              Login
             </Link>
             <Link
-              href="/signup"
+              href="https://shipnow.airpak-express.site"
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => setOpen(false)}
               className="block mt-3 px-5 py-2 rounded-full bg-[#E11D2A] text-white text-sm font-semibold text-center"
             >
