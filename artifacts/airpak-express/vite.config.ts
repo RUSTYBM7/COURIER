@@ -1,4 +1,4 @@
-vite_fix = '''import path from "path";
+import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
@@ -94,8 +94,3 @@ export default defineConfig({
     devSourcemap: true,
   },
 });
-'''
-
-with open('/mnt/agents/output/airpak-repair/vite.config.ts', 'w') as f:
-    f.write(vite_fix)
-
